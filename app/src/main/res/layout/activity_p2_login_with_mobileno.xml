@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_background"
+    tools:context="com.perseverance.phando.home.profile.login.P2LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/logo"
+            layout="@layout/common_app_logo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card"
+            style="@style/LoginCardStyle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_20sdp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/_5sdp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/LoginTextStyleBlack"
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:text="Log In with mobile number" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/LoginHintTextStyleBlack"
+                    android:text="Enter mobile number"
+                    android:visibility="gone"/>
+                <!-- Email Label -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:background="@drawable/input_background"
+                    android:orientation="horizontal">
+
+                    <com.hbb20.CountryCodePicker
+                        android:id="@+id/ccp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:ccp_contentColor="@color/white"
+                        app:ccp_showFlag="false"
+                        app:ccp_autoFormatNumber="false"
+                        app:ccp_textSize="@dimen/_12sdp"
+                        app:ccp_defaultPhoneCode="91" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/LoginTextInputLayoutStyle"
+                        app:hintAnimationEnabled="false"
+                        app:hintEnabled="false">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/inputMobile"
+                            style="@style/LoginInputStyle"
+                            android:paddingLeft="0dp"
+                            android:maxLength="15"
+                            android:hint="Enter mobile number"
+                            android:inputType="phone" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/next"
+                    style="@style/LoginButtonStyle"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:text="Next" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <include
+            layout="@layout/login_link_container"
+            app:layout_constraintTop_toBottomOf="@id/card" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signup"
+            style="@style/LoginOutlineButtonStyle"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:onClick="signup"
+            android:text="SIGN UP"
+            android:textColor="@color/gray_concrete_dark"
+            app:strokeColor="@color/transparent" />
+
+    </LinearLayout>
+</ScrollView>

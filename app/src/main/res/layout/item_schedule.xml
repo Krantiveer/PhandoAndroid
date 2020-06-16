@@ -1,0 +1,66 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_app"
+    android:paddingTop="@dimen/_10sdp"
+    android:paddingBottom="@dimen/_10sdp"
+    android:paddingLeft="@dimen/_5sdp"
+    android:paddingRight="@dimen/_5sdp"
+    android:foreground="?attr/selectableItemBackground"
+    android:weightSum="3"
+    android:gravity="left"
+    android:orientation="horizontal">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/programName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:focusable="false"
+            android:layout_weight="1"
+            android:focusableInTouchMode="false"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/white"
+            android:padding="@dimen/_5sdp"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="false"
+            />
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/programDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/white"
+            android:padding="@dimen/_5sdp"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="false"
+            />
+
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/programStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:focusable="false"
+            android:layout_weight="1"
+            android:focusableInTouchMode="false"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/white"
+            android:padding="@dimen/_5sdp"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="false"
+            />
+
+
+</LinearLayout>

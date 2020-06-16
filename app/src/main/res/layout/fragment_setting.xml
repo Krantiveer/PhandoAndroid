@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_app"
+    android:orientation="vertical">
+
+<include
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    layout="@layout/app_toolbar"/>
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/btnShare"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:background="#535353"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="left|center_vertical"
+        android:padding="@dimen/_11sdp"
+        android:text="Share"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sdp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_concrete_light" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/btnRate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="0dp"
+        android:background="#535353"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="left|center_vertical"
+        android:padding="@dimen/_11sdp"
+        android:text="Rate"
+        android:textColor="@color/white"
+        android:textSize="@dimen/_12sdp" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/help"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="left"
+        android:padding="@dimen/_11sdp"
+        android:text="Help"
+        android:textColor="@color/gray_clouds_dark"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="left"
+        android:padding="@dimen/_11sdp"
+        android:text="Terms of Service"
+        android:textColor="@color/gray_clouds_dark"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/privacyPolicy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="left"
+        android:padding="@dimen/_11sdp"
+        android:text="Privacy Policy"
+        android:textColor="@color/gray_clouds_dark"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="bold" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/aboutus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="left"
+        android:padding="@dimen/_11sdp"
+        android:text="About Us"
+        android:textColor="@color/gray_clouds_dark"
+        android:textSize="@dimen/_12sdp"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/_50sdp"/>
+
+</LinearLayout>

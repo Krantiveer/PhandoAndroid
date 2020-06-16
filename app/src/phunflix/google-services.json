@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "459140423662",
+    "firebase_url": "https://phunflix-90bba.firebaseio.com",
+    "project_id": "phunflix-90bba",
+    "storage_bucket": "phunflix-90bba.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:459140423662:android:afc71b26279e580c1938ff",
+        "android_client_info": {
+          "package_name": "com.perseverance.phunflix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "459140423662-pjjll3edven9iavhn6isfs48ul8mu41t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.perseverance.phunflix",
+            "certificate_hash": "fbff25ba14f3b75dbb087e6c7a3353cd9e9b1c18"
+          }
+        },
+        {
+          "client_id": "459140423662-34puioltvo1drfa6dni8vqnblgk7n55q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd52NPGKwyeRuqDZaXz4mVia3Plu9LvUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "459140423662-34puioltvo1drfa6dni8vqnblgk7n55q.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

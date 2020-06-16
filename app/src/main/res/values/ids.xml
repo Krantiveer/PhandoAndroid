@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <item name="drag_view" type="id"/>
+    <item name="second_view" type="id"/>
+    <item name="exo_replay" type="id"/>
+    <item name="exo_orientation" type="id"/>
+    <item name="exo_minimize" type="id"/>
+    <item name="video_title" type="id"/>
+    <item name="video_previous" type="id"/>
+    <item name="video_next" type="id"/>
+    <item name="video_fav" type="id"/>
+
+    <item name="player_fragment_title" type="id"/>
+    <item name="related_Parent" type="id"/>
+
+    <item name="video_pause" type="id"/>
+    <item name="video_play" type="id"/>
+    <item name="video_replay" type="id"/>
+    <item name="video_thumbnail" type="id"/>
+    <item name="progress_layout" type="id"/>
+
+</resources>

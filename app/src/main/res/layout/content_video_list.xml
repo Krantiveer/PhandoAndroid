@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_video_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".home.VideoListActivity"
+    android:background="@color/bg_app"
+    tools:showIn="@layout/activity_video_list">
+
+    <FrameLayout
+        android:id="@+id/video_list_screen_bottom_banner_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+
+    <com.perseverance.phando.ui.WaitingWheel
+        android:id="@+id/footer_progress_video_list"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/video_list_screen_bottom_banner_container"
+        android:visibility="gone"
+        app:matProg_barColor="@color/progress_bar_color"
+        app:matProg_progressIndeterminate="true"
+        app:matProg_rimColor="@color/progress_rim_color" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipetorefresh_base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/footer_progress_video_list">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/lbl_no_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_horizontal"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingTop="64dp"
+        android:textColor="@color/red_light"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

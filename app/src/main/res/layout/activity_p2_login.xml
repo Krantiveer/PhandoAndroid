@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_background"
+    android:orientation="vertical"
+    tools:context="com.perseverance.phando.home.profile.login.P2LoginActivity">
+
+    <include
+        android:id="@+id/logo"
+        layout="@layout/common_app_logo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        style="@style/LoginCardStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20sdp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/LoginTextStyleBlack"
+                android:text="@string/app_name_hint"
+                android:layout_gravity="center"
+                android:textSize="@dimen/_18sdp"
+                android:layout_marginBottom="@dimen/_10sdp"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/mobileLogin"
+                style="@style/LoginButtonStyle"
+                android:text="Login with mobile number" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/signup"
+                style="@style/LoginOutlineButtonStyle"
+                android:text="Sign Up" />
+            <LinearLayout
+                android:id="@+id/loginWith"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:orientation="horizontal"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:background="@color/gray_concrete_dark" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/LoginTextStyleBlack"
+                    android:text="Or login with"
+                    android:textStyle="normal"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:textColor="@color/gray_concrete_dark"
+                    android:textSize="@dimen/_12sdp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:background="@color/gray_concrete_dark" />
+            </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_10sdp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/linkMobile"
+                        style="@style/LoginImageStyle"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_mobile" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/linkEmail"
+                        style="@style/LoginImageStyle"
+                        app:srcCompat="@drawable/ic_login_email" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/linkGmail"
+                        style="@style/LoginImageStyle"
+                        app:srcCompat="@drawable/ic_gmail" />
+
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/linkFacebook"
+                        style="@style/LoginImageStyle"
+                        app:srcCompat="@drawable/ic_facebook" />
+                </LinearLayout>
+
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+</LinearLayout>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_background"
+    android:orientation="vertical"
+    >
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/login_background"
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:theme="@style/HomeToolbarTheme"
+            app:titleTextColor="@color/white" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <include
+        android:id="@+id/logo"
+        layout="@layout/common_app_logo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
+        style="@style/LoginCardStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_20sdp"
+            android:gravity="center"
+            android:orientation="vertical">
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/LoginTextStyleBlack"
+                android:text="Create new password"
+                android:layout_marginBottom="@dimen/_20sdp"/>
+            <!-- Password Label -->
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/LoginHintTextStyleBlack"
+                android:text="New Password"
+                android:visibility="gone"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/LoginTextInputLayoutStyle"
+                app:hintAnimationEnabled="false"
+                app:hintEnabled="false"
+                app:passwordToggleTint="#7a8086"
+                app:passwordToggleEnabled="true">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password1"
+                    style="@style/LoginInputStyle"
+                    android:hint="New Password"
+                    android:inputType="textPassword" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/label_password"
+                style="@style/LoginHintTextStyleBlack"
+                android:text="Confirm New Password"
+                android:visibility="gone"/>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/LoginTextInputLayoutStyle"
+                app:passwordToggleTint="#7a8086"
+                android:layout_marginTop="@dimen/_12sdp"
+                app:passwordToggleEnabled="true"
+                app:hintAnimationEnabled="false"
+                app:hintEnabled="false">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password2"
+                    style="@style/LoginInputStyle"
+                    android:inputType="textPassword"
+                    android:hint="Confirm New Password"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/updatePassword"
+                style="@style/LoginButtonStyle"
+                android:text="Update Password" />
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</LinearLayout>

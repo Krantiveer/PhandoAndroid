@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2016 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <style name="TrackSelectionDialogThemeOverlay" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+    <item name="background">@color/cardview_dark_background</item>
+    <item name="windowNoTitle">false</item>
+  </style>
+
+  <style name="alertDialog" parent="Theme.AppCompat.Dialog.Alert">
+    <item name="android:windowBackground">@android:color/black</item>
+<!--    <item name="android:background">@android:color/black</item>-->
+<!--    <item name="android:textColor">@android:color/black</item>-->
+<!--    <item name="android:textColorPrimary">@android:color/black</item>-->
+<!--    <item name="android:textColorSecondary">@android:color/black</item>-->
+<!--    <item name="textColorAlertDialogListItem">@android:color/black</item>-->
+  </style>
+  <style name="PlayerTheme" parent="Theme.AppCompat.Dialog.Alert">
+    <!--    <item name="android:windowBackground">@android:color/white</item>-->
+    <item name="windowNoTitle">true</item>
+<!--        <item name="android:textColor">@android:color/holo_red_light</item>-->
+<!--        <item name="android:textColorPrimary">@android:color/holo_blue_bright</item>-->
+<!--        <item name="android:textColorSecondary">@android:color/holo_green_light</item>-->
+<!--    <item name="textColorAlertDialogListItem">@android:color/holo_purple</item>&ndash;&gt;-->
+<!--    <item name="android:windowBackground">@android:color/white</item>-->
+
+<!--    <item name="android:editTextColor">#295055</item>-->
+<!--    <item name="android:textColorTertiary">#554FB2BF</item>-->
+<!--    <item name="android:textColorPrimaryInverse">#FFC107</item>-->
+<!--    <item name="android:textColorSecondaryInverse">#009688</item>-->
+<!--    <item name="android:textColorTertiaryInverse">#CDDC39</item>-->
+
+<!--    <item name="colorPrimary">#554FB2BF</item>-->
+<!--    <item name="colorPrimaryDark">#009688</item>-->
+<!--    <item name="colorAccent">#CDDC39</item>-->
+  </style>
+
+  <style name="PlayerTheme.Spherical">
+    <item name="surface_type">spherical_gl_surface_view</item>
+  </style>
+<!--  <style name="TrackSelectionDialogThemeOverlay" parent="ThemeOverlay.AppCompat.Dialog.Alert">-->
+<!--    <item name="windowNoTitle">false</item>-->
+<!--  </style>-->
+</resources>

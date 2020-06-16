@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    app:startDestination="@id/P2LoginActivity">
+
+
+    <fragment
+        android:id="@+id/P2LoginActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2LoginActivity"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/P2LoginWithEmailActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2LoginWithEmailActivity">
+
+    </fragment>
+    <fragment
+        android:id="@+id/P2LoginWithMobileNoActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2LoginWithMobileNoActivity">
+
+    </fragment>
+    <fragment
+        android:id="@+id/P2SignupActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2SignupActivity"
+        android:label="P2SignupActivity" />
+    <fragment
+        android:id="@+id/P2ForgotPasswordActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2ForgotPasswordActivity"
+        android:label="P2ForgotPasswordActivity" />
+    <fragment
+        android:id="@+id/P2OTPVerificationActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2OTPVerificationActivity"
+        android:label="P2OTPVerificationActivity" />
+    <fragment
+        android:id="@+id/P2SetPasswordActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2SetPasswordActivity"
+        android:label="P2SetPasswordActivity" />
+    <fragment
+        android:id="@+id/P2ChangePasswordOTPVerificationActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2ChangePasswordOTPVerificationActivity"
+        android:label="P2ChangePasswordOTPVerificationActivity" />
+    <fragment
+        android:id="@+id/P2PasswordChangedActivity"
+        android:name="com.perseverance.phando.home.profile.login.P2PasswordChangedActivity"
+        android:label="P2PasswordChangedActivity" />
+</navigation>

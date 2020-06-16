@@ -1,0 +1,10 @@
+
+keytool -exportcert -list -v \
+-alias sadhna -keystore /home/qainfotech/Drive1/QA_Project/ZuloTV/OTTAndroid/app/src/sadhnatv/sadhna.jks
+
+SHA1: 81:08:14:13:A4:41:14:3D:A4:28:1E:93:CE:70:5B:19:FB:68:7A:A7
+
+
+keytool -exportcert -alias sadhna -keystore/home/qainfotech/Drive1/QA_Project/ZuloTV/OTTAndroid/app/src/sadhnatv/sadhna.jks | openssl sha1 -binary | openssl base64
+
+2jmj7l5rSw0yVb/vlWAYkK/YBwk=

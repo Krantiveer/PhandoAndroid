@@ -1,0 +1,124 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/container_base_home"
+    android:background="@color/bg_app"
+    android:clickable="true"
+    tools:context=".home.videolist.BaseFragment">
+
+    <com.perseverance.phando.ui.WaitingWheel
+        android:id="@+id/footer_progress_base"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        app:matProg_barColor="@color/progress_bar_color"
+        app:matProg_progressIndeterminate="true"
+        app:matProg_rimColor="@color/progress_rim_color" />
+    <LinearLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/red_light"
+        android:paddingTop="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_10sdp"
+        android:paddingLeft="@dimen/_5sdp"
+        android:paddingRight="@dimen/_5sdp"
+        android:weightSum="3"
+        android:gravity="left"
+        android:orientation="horizontal">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/programName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:focusable="false"
+            android:layout_weight="1"
+            android:maxLength="35"
+            android:focusableInTouchMode="false"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/white"
+            android:padding="@dimen/_5sdp"
+            android:text="Program Name"
+            android:textStyle="bold"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="false"
+            />
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/programDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/white"
+            android:padding="@dimen/_5sdp"
+            android:text="Date"
+            android:textStyle="bold"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="false"
+            />
+
+
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/programStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:focusable="false"
+            android:layout_weight="1"
+            android:focusableInTouchMode="false"
+            android:textSize="@dimen/_12sdp"
+            android:textColor="@color/white"
+            android:padding="@dimen/_5sdp"
+            android:text="Start Time"
+            android:textStyle="bold"
+            app:hintEnabled="true"
+            app:hintAnimationEnabled="false"
+            />
+
+
+    </LinearLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipetorefresh_base"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/container"
+        android:layout_above="@id/footer_progress_base">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_base"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!--<android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/footer_progress_dm"/>-->
+
+    <TextView
+        android:id="@+id/lbl_no_video_base"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_horizontal"
+        android:paddingTop="64dp"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:textColor="@color/red_light"
+        android:textSize="16sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/login_background"
+    android:orientation="vertical"
+    tools:context="com.perseverance.phando.home.profile.login.BaseUserLoginActivity">
+
+    <LinearLayout
+        android:id="@+id/loginWith"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/_30sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:background="@color/gray_concrete_dark" />
+
+        <com.google.android.material.textview.MaterialTextView
+            style="@style/LoginTextStyleBlack"
+            android:text="Or login with"
+            android:paddingLeft="@dimen/_10sdp"
+            android:gravity="center"
+            android:textStyle="normal"
+            android:textColor="@color/gray_concrete_dark"
+            android:textSize="@dimen/_12sdp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_30sdp"
+            android:background="@color/gray_concrete_dark" />
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        style="@style/LoginCardStyle"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/loginWith">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_10sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/linkMobile"
+                style="@style/LoginImageStyle"
+                app:srcCompat="@drawable/ic_mobile" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/linkEmail"
+                style="@style/LoginImageStyle"
+                app:srcCompat="@drawable/ic_login_email" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/linkGmail"
+                style="@style/LoginImageStyle"
+                app:srcCompat="@drawable/ic_gmail" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/linkFacebook"
+                style="@style/LoginImageStyle"
+                app:srcCompat="@drawable/ic_facebook" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

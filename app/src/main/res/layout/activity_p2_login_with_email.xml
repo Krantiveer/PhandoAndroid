@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/login_background"
+    tools:context="com.perseverance.phando.home.profile.login.P2LoginActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/logo"
+            layout="@layout/common_app_logo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card"
+            style="@style/LoginCardStyle"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/logo">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_20sdp"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:paddingTop="@dimen/_10sdp">
+
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/label_email"
+                    style="@style/LoginHintTextStyleBlack"
+                    android:text="Email"
+                    android:visibility="gone"/>
+                <!-- Email Label -->
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoginTextInputLayoutStyle"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/inputEmail"
+                        style="@style/LoginInputStyle"
+                        android:hint="Email"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Password Label -->
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/label_password"
+                    style="@style/LoginHintTextStyleBlack"
+                    android:text="Password"
+                    android:visibility="gone"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/LoginTextInputLayoutStyle"
+                    app:passwordToggleTint="#7a8086"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    app:passwordToggleEnabled="true">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/inputPassword"
+                        style="@style/LoginInputStyle"
+                        android:hint="Password"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/login"
+                    style="@style/LoginButtonStyle"
+                    android:text="Login" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="@style/LoginTextStyleBlack"
+                    android:id="@+id/forgotPassword"
+                    android:layout_width="match_parent"
+                    android:text="Forgot password?"
+                    android:onClick="forgotPassword"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingTop="@dimen/_5sdp"
+                    android:textColor="@color/gray_concrete_dark"
+                    android:textSize="@dimen/_12sdp"
+                    android:gravity="center"
+                    android:textStyle="normal"
+                    app:strokeColor="@color/transparent" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <include
+            layout="@layout/login_link_container"
+            app:layout_constraintTop_toBottomOf="@id/card" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/signup"
+            style="@style/LoginOutlineButtonStyle"
+            android:text="SIGN UP"
+            android:onClick="signup"
+            android:textColor="@color/gray_concrete_dark"
+            app:strokeColor="@color/transparent" />
+
+    </LinearLayout>
+</ScrollView>

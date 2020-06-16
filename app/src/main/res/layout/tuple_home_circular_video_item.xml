@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_video"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground"
+    android:padding="@dimen/_3sdp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circular_background"
+        android:padding="@dimen/_1sdp">
+        <ImageView
+            android:id="@+id/img_thumbnail"
+            android:layout_width="444dp"
+            android:layout_height="444dp"
+            app:srcCompat="@drawable/ic_circular_play_placeholder"
+            android:adjustViewBounds="true"
+            android:scaleType="fitCenter"
+            android:contentDescription="@string/app_name"
+            />
+
+        <!--<ImageView
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_alignTop="@+id/img_thumbnail"
+            android:layout_alignRight="@+id/img_thumbnail"
+            android:background="@drawable/duration_textview_round_rect_border"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            app:srcCompat="@drawable/ic_play_arrow_black_24dp"
+            android:visibility="gone"
+            android:id="@+id/free"/>-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="@dimen/_20sdp"-->
+<!--            android:layout_height="@dimen/_20sdp"-->
+<!--            android:layout_alignTop="@+id/img_thumbnail"-->
+<!--            android:layout_alignRight="@+id/img_thumbnail"-->
+<!--            android:layout_marginTop="@dimen/_5sdp"-->
+<!--            android:layout_marginRight="@dimen/_5sdp"-->
+<!--            app:srcCompat="@drawable/star"-->
+<!--            android:visibility="gone"-->
+<!--            android:id="@+id/free"/>-->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img_thumbnail"
+            android:layout_alignRight="@+id/img_thumbnail"
+            android:visibility="gone"
+            android:id="@+id/free"
+            android:textColor="@color/white"
+            android:text="Premium"
+            android:paddingLeft="@dimen/_2sdp"
+            android:paddingRight="@dimen/_2sdp"
+            android:layout_margin="@dimen/_5sdp"
+            android:textSize="@dimen/_8sdp"
+            android:background="#F6B126"/>
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/img_thumbnail"
+            android:layout_alignRight="@+id/img_thumbnail"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_8sdp"
+            android:fontFamily="@font/asap"
+            android:background="@drawable/duration_textview_round_rect_border"
+            android:layout_marginBottom="@dimen/_5sdp"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/txtTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_3sdp"
+        android:ellipsize="end"
+        android:fontFamily="@font/asap"
+        android:lineSpacingExtra="@dimen/_2sdp"
+        android:maxLines="2"
+        android:minLines="2"
+        android:visibility="gone"
+        android:textColor="@color/video_title_color"
+        android:textSize="@dimen/_10sdp"
+        tools:ignore="MissingPrefix"
+        />
+</LinearLayout>

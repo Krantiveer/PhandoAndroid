@@ -59,4 +59,5 @@
     <string name="tunneling">Request multimedia tunneling</string>
     <string name="track_bitrate">%1$d Kbps</string>
     <string name="track_resolution">%1$d</string>
+    <string name="off">Off</string>
 </resources>

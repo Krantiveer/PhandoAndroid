@@ -7,5 +7,7 @@ public interface PhandoPlayerCallback {
     void  onPlayerEvent(PlayerTrackingEvent playerTrackingEvent);
     void  onPlayerProgress(long time);
     void  onDownloadStateChanged();
+    void  onSettingClicked();
+    void  onOrientationClicked();
 
 }

@@ -1,5 +1,6 @@
 package com.perseverance.phando.home.mediadetails
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -24,6 +25,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.newgendroid.news.utils.AppDialogListener
@@ -286,19 +288,40 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
+        nextEpisode.gone()
         playerThumbnailContainer.gone()
         phandoPlayerView.visible()
         val intent = Intent()
         val uri = Uri.parse(mediaUrl)
+        // val uri = Uri.parse("https://seventv.livebox.co.in/sevenwonderstvhls/live.m3u8")
+
+        val subtitleUri = ArrayList<String>()
+        mediaMetadata?.cc_files?.let {
+            if (it.isNotEmpty()) {
+                it.forEach { ccInfo ->
+                    subtitleUri.add("${ccInfo.url},${ccInfo.mime_type},${ccInfo.language_code}")
+                }
+
+            }
+        }
+        var isLive = false
+        mediaMetadata?.is_live?.let {
+            isLive = it == 1
+        }
+
+        val subtitleInfo: VideoPlayerMetadata.SubtitleInfo? = if (subtitleUri == null || subtitleUri.isEmpty()) null else VideoPlayerMetadata.SubtitleInfo(
+                subtitleUri,
+                "application/ttml+xml",
+                "en")
         val sample: VideoPlayerMetadata = UriSample(
                 null,
                 uri,
                 null,
-                false,
+                isLive,
                 null,
                 if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
                 null,
-                null)
+                subtitleInfo)
         intent.putExtra(
                 PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
         val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
@@ -306,6 +329,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
         intent.putExtra(PhandoPlayerView.PLAYER_LOGO, R.mipmap.ic_launcher)
         intent.putExtra(PhandoPlayerView.KEY_POSITION, seekTo)
+
+
         sample.addToIntent(intent)
         phandoPlayerView.setVideoData(intent)
         phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
@@ -319,41 +344,17 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         }
 
         setContentView(R.layout.activity_video_details)
-        TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS)
-        //setSupportActionBar(toolbar)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            //toggleHideyBar()
-
-            handler.postDelayed(landscopeRunnable, 200)
-
+            landscope()
         } else {
-            handler.postDelayed(portrateRunnable, 200)
+            portrate()
         }
-        window.decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            // Note that system bars will only be "visible" if none of the
-            // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                // TODO: The system bars are visible. Make any desired
-                // adjustments to your UI, such as showing the action bar or
-                // other navigational controls.
-                if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    if (!isFullScreen()) {
-                        // toggleHideyBar()
 
-                    }
-
-                }
-            } else {
-                // TODO: The system bars are NOT visible. Make any desired
-                // adjustments to your UI, such as hiding the action bar or
-                // other navigational controls.
-            }
-        }
         val decoration = BaseRecycleMarginDecoration(this@MediaDetailActivity)
         recyclerView.addItemDecoration(decoration)
-
 
         playerViewModel.getVideoDetailMutableLiveData().observe(this, videoMetadataModelObserver)
         playerViewModel.getNextEpisodeVideoDetailMutableLiveData().observe(this, nextVideoMetadataModelObserver)
@@ -431,17 +432,6 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     STATE_COMPLETED -> {
                         downloadResume.gone()
                         downloadStop.gone()
-//                        DialogUtils.showDialog(this@MediaDetailActivity, "Alert!", "Do you want to delete saved video", "Yes", "No", object : AppDialogListener {
-//                            override fun onNegativeButtonPressed() {
-//
-//                            }
-//
-//                            override fun onPositiveButtonPressed() {
-//                                VideoSdkUtil.deleteDownloadedInfo(application, mediaMetadata?.media_url)
-//                            }
-//
-//                        })
-
                     }
                     STATE_DOWNLOADING -> {
                         downloadResume.gone()
@@ -461,37 +451,13 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     STATE_RESTARTING -> {
 
                     }
-//
-//                    3 -> {
-//
-//                    }
-//                    2 -> {
-//                        toast("Media is being download")
-//
-//                    }
-//                    0, 1, 4, 5 -> {
-//                        val videoPlayerMetadata = UriSample(
-//                                null,
-//                                Uri.parse(mediaMetadata?.media_url),
-//                                null,
-//                                false,
-//                                null,
-//                                null,
-//                                null,
-//                                null)
-//                        val downloadMetadata = Gson().toJson(DownloadMetadata(mediaMetadata?.media_id,
-//                                mediaMetadata?.type, mediaMetadata?.title, mediaMetadata?.detail, mediaMetadata?.thumbnail, mediaMetadata?.media_url,
-//                                mediaMetadata?.getOtherText()))
-//
-//                        phandoPlayerView.startDownload(videoPlayerMetadata, downloadMetadata)
-//                    }
-//                    else -> {
-//
-//                    }
                 }
                 mBottomSheetDialog.show()
             } ?: run {
                 mediaMetadata?.media_url?.let {
+                    if (it.isNullOrEmpty()){
+                        return@let
+                    }
                     val videoPlayerMetadata = UriSample(
                             null,
                             Uri.parse(it),
@@ -514,21 +480,12 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
         }
         watchNow.setOnClickListener {
-            //mediaMetadata?.trailers?.get(0)?.let { it1 -> onItemClick(it1) }
             playVideo()
 
 
         }
 
-        playerSetting.setOnClickListener {
-            phandoPlayerView.openSettings()
-        }
-        orientation.setOnClickListener {
-            changeOrientation()
-        }
-        headerBack.setOnClickListener {
-            onBackPressed()
-        }
+
         viewMore.setOnClickListener {
             if (videoDescription.visibility == View.VISIBLE) {
                 videoDescription.gone()
@@ -651,6 +608,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         isPlayerstartSent = false
         detailContent.visible()
         this.mediaplaybackData = mediaplaybackData
+
         if (!isVideoPlayed) {
             play.visible()
         }
@@ -743,6 +701,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         }
         actionControlers.visible()
         this.mediaMetadata = mediaplaybackData.data
+        mediaMetadata?.is_live?.let {
+            download.isEnabled= it==0
+        }
         playerViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
         videoTitle.text = mediaMetadata?.title
         videoDescription.text = mediaMetadata?.detail
@@ -771,6 +732,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
 
         mListener = object : SimpleOrientationEventListener(this@MediaDetailActivity) {
+            @SuppressLint("SourceLockedOrientationActivity")
             override fun onChanged(lastOrientation: Int, orientation: Int) {
                 if (Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) != 1) {
                     return
@@ -778,17 +740,17 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
                 // Toast.makeText(this@MediaDetailActivity,""+getResources().getConfiguration().orientation,Toast.LENGTH_SHORT).show()
                 when (orientation) {
-                    SimpleOrientationEventListener.ORIENTATION_LANDSCAPE -> {
+                    ORIENTATION_LANDSCAPE -> {
                         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
 
                     }
-                    SimpleOrientationEventListener.ORIENTATION_LANDSCAPE_REVERSE -> {
+                    ORIENTATION_LANDSCAPE_REVERSE -> {
                         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE
                     }
-                    SimpleOrientationEventListener.ORIENTATION_PORTRAIT -> {
+                    ORIENTATION_PORTRAIT -> {
                         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                     }
-                    SimpleOrientationEventListener.ORIENTATION_PORTRAIT_REVERSE -> {
+                    ORIENTATION_PORTRAIT_REVERSE -> {
                         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_REVERSE_PORTRAIT
                     }
                 }
@@ -806,7 +768,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         if (play.visibility != View.VISIBLE) {
             playVideo()
         } else {
-            if (mediaMetadata!!.last_watch_time > 0) {
+            if (mediaMetadata!!.last_watch_time > 0||mediaMetadata?.is_live==1) {
                 playVideo()
             }
         }
@@ -849,6 +811,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     private fun changeOrientation() {
         val currentOrientation = resources.configuration.orientation
 
@@ -865,60 +828,42 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
     }
 
-    fun runHandler(orientation: Int) {
-        Handler().postDelayed({
-            requestedOrientation = orientation
-        }, 1000)
-
-    }
-
-    val portrateRunnable = Runnable {
-        portrate()
-    }
-    val landscopeRunnable = Runnable {
-        landscope()
-    }
-
     fun landscope() {
-        //val width = Util.getScreenWidth(this@MediaDetailActivity)
+        root.fitsSystemWindows = false;
+        root.requestApplyInsets()
         hideSystemUI()
-        val width = window.decorView.width
-        val height = Util.getScreenHeight(this@MediaDetailActivity)
-        fragmentContainer.requestLayout()
-        fragmentContainer.layoutParams.height = height
-        fragmentContainer.layoutParams.width = width
-//        window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-//        window.decorView.apply {
-//            systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
-//        }
-
-
+        handler.post {
+            val width = window.decorView.width
+            val height = Util.getScreenHeight(this@MediaDetailActivity)
+            fragmentContainer.requestLayout()
+            fragmentContainer.layoutParams.height = height
+            fragmentContainer.layoutParams.width = width
+        }
     }
 
     fun portrate() {
+        root.fitsSystemWindows = true;
+        root.requestApplyInsets()
         showSystemUI()
-        val width = Util.getScreenWidthForVideo(this@MediaDetailActivity)
-        //  val width = window.decorView.width
-        val height = Util.getScreenHeightForVideo(this@MediaDetailActivity)
-        fragmentContainer.requestLayout()
-        fragmentContainer.layoutParams.height = height
-        fragmentContainer.layoutParams.width = width
-        //  window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        handler.post {
+            val width = Util.getScreenWidthForVideo(this@MediaDetailActivity)
+            val height = Util.getScreenHeightForVideo(this@MediaDetailActivity)
+            fragmentContainer.requestLayout()
+            fragmentContainer.layoutParams.height = height
+            fragmentContainer.layoutParams.width = width
+        }
         setRelatedVideo()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         handler.removeCallbacksAndMessages(null)
-        toggleHideyBar()
         when (newConfig.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
-                handler.postDelayed(landscopeRunnable, 200)
-                orientation.setImageResource(R.drawable.player_screen_zoom_out)
+                landscope()
             }
             Configuration.ORIENTATION_PORTRAIT -> {
-                handler.postDelayed(portrateRunnable, 200)
-                orientation.setImageResource(R.drawable.player_screen_zoom_in)
+                portrate()
 
             }
         }
@@ -974,9 +919,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         }
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     override fun onBackPressed() {
-        val currentOrientation = resources.configuration.orientation
-        when (currentOrientation) {
+        when (resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 super.onBackPressed()
             }
@@ -1079,6 +1024,28 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
     }
 
+    override fun onOrientationClicked() {
+        changeOrientation()
+    }
+
+    override fun onSettingClicked() {
+        val mBottomSheetDialog = BottomSheetDialog(this)
+        val sheetView: View = layoutInflater.inflate(R.layout.bottomsheet_settings_control_options, null)
+        mBottomSheetDialog.setContentView(sheetView)
+        val settingVideoQuality = sheetView.findViewById<TextView>(R.id.settingVideoQuality)
+        val settingVideoCC = sheetView.findViewById<TextView>(R.id.settingVideoCC)
+        settingVideoQuality.setOnClickListener {
+            phandoPlayerView.openVideoSettings()
+            mBottomSheetDialog.dismiss()
+        }
+        settingVideoCC.setOnClickListener {
+            phandoPlayerView.openCCSettings()
+            mBottomSheetDialog.dismiss()
+        }
+        mBottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        mBottomSheetDialog.show()
+    }
+
     override fun onPlayerEvent(playerTrackingEvent: PlayerTrackingEvent?) {
         playerTrackingEvent?.let {
             val eventData = java.lang.StringBuilder()
@@ -1089,280 +1056,233 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             eventData.append(mediaMetadata?.title)
 
             if (it.action == "playerstart") {
-                if (!isPlayerstartSent){
+                if (!isPlayerstartSent) {
                     TrackingUtils.sendVideoEvent(eventData.toString(), it.action)
-                TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS, eventData.toString())
-                isPlayerstartSent = true
-            } else {
-            }
-
-        } else {
-            TrackingUtils.sendVideoEvent(eventData.toString(), it.action)
-            when (it.action) {
-                "adplay" -> {
-                    imgHeaderImage.gone()
+                    TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS, eventData.toString())
+                    isPlayerstartSent = true
+                } else {
                 }
-                "aderror" -> imgHeaderImage.visible()
-                "adended" -> imgHeaderImage.visible()
-                "play-100" -> {
-                    mediaMetadata?.next_media?.let {
-                        nextMediaMetadata?.let {
-                            onGetVideoMetaDataSuccess(it)
+            } else {
+                TrackingUtils.sendVideoEvent(eventData.toString(), it.action)
+                when (it.action) {
+                    "adplay" -> {
+                        imgHeaderImage.gone()
+                    }
+                    "aderror" -> imgHeaderImage.visible()
+                    "adended" -> imgHeaderImage.visible()
+                    "play-100" -> {
+                        mediaMetadata?.next_media?.let {
+                            nextMediaMetadata?.let {
+                                onGetVideoMetaDataSuccess(it)
+                            }
                         }
                     }
-                }
-                else -> {
-                }
+                    else -> {
+                    }
 
+                }
             }
         }
+
     }
 
-}
+    override fun onPlayerProgress(currentProgress: Long) {
+        if (isTrailerPlaying) {
+            return
+        }
+        mediaMetadata?.next_media?.let {
 
-override fun onPlayerProgress(currentProgress: Long) {
-    if (isTrailerPlaying) {
-        return
-    }
-    mediaMetadata?.next_media?.let {
-
-        if (it.next_episode_start_time > 0) {
-            if (currentProgress in it.next_episode_start_time..phandoPlayerView.totalDuration) {
-                nextMediaMetadata?.let {
-                    if (nextEpisode.visibility != View.VISIBLE) {
-                        nextEpisode.visible()
+            if (it.next_episode_start_time > 0) {
+                if (currentProgress in it.next_episode_start_time..phandoPlayerView.totalDuration) {
+                    nextMediaMetadata?.let {
+                        if (nextEpisode.visibility != View.VISIBLE) {
+                            nextEpisode.visible()
+                        }
+                    }
+                } else {
+                    if (nextEpisode.visibility == View.VISIBLE) {
+                        nextEpisode.gone()
                     }
                 }
-            } else {
-                if (nextEpisode.visibility == View.VISIBLE) {
-                    nextEpisode.gone()
-                }
             }
         }
-    }
-    mediaMetadata?.intro?.let {
+        mediaMetadata?.intro?.let {
 
-        if (it.startTime > 0) {
-            if (currentProgress in it.startTime..it.endTime - 1) {
-                if (skipIntro.visibility != View.VISIBLE) {
-                    skipIntro.visible()
-                }
-            } else {
-                if (skipIntro.visibility == View.VISIBLE) {
-                    skipIntro.gone()
-                }
-            }
-
-        }
-    }
-}
-
-override fun onDownloadStateChanged() {
-    mediaMetadata?.media_url?.let {
-        playerViewModel.refreshDownloadStatus(it)
-    }
-
-}
-
-override fun updateSettingButton(enable: Boolean) {
-    playerSetting.isEnabled = enable
-}
-
-override fun onConrolVisibilityChange(visibility: Int) {
-    when (visibility) {
-        View.VISIBLE -> {
-            headerBack.visible()
-            orientation?.visible()
-            playerSetting.visible()
-        }
-        else -> {
-            headerBack.invisible()
-            orientation?.invisible()
-            playerSetting.invisible()
-            supportActionBar?.hide()
-        }
-    }
-
-}
-
-fun toggleHideyBar() {
-
-    // BEGIN_INCLUDE (get_current_ui_flags)
-    // The UI options currently enabled are represented by a bitfield.
-    // getSystemUiVisibility() gives us that bitfield.
-    val uiOptions: Int = getWindow().getDecorView().getSystemUiVisibility()
-    var newUiOptions = uiOptions
-    // END_INCLUDE (get_current_ui_flags)
-    // BEGIN_INCLUDE (toggle_ui_flags)
-    // Navigation bar hiding:  Backwards compatible to ICS.
-    if (Build.VERSION.SDK_INT >= 14) {
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-    }
-
-    // Status bar hiding: Backwards compatible to Jellybean
-    if (Build.VERSION.SDK_INT >= 16) {
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
-    }
-
-    // Immersive mode: Backward compatible to KitKat.
-    // Note that this flag doesn't do anything by itself, it only augments the behavior
-    // of HIDE_NAVIGATION and FLAG_FULLSCREEN.  For the purposes of this sample
-    // all three flags are being toggled together.
-    // Note that there are two immersive mode UI flags, one of which is referred to as "sticky".
-    // Sticky immersive mode differs in that it makes the navigation and status bars
-    // semi-transparent, and the UI flag does not get cleared when the user interacts with
-    // the screen.
-    if (Build.VERSION.SDK_INT >= 18) {
-        newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-    }
-    getWindow().getDecorView().setSystemUiVisibility(newUiOptions)
-    //END_INCLUDE (set_ui_flags)
-}
-
-fun isFullScreen(): Boolean {
-    return window.attributes.flags and
-            WindowManager.LayoutParams.FLAG_FULLSCREEN != 0
-}
-
-override fun onWindowFocusChanged(hasFocus: Boolean) {
-    super.onWindowFocusChanged(hasFocus)
-    if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-        hideSystemUI()
-    }
-}
-
-private fun hideSystemUI() {
-    // root.fitsSystemWindows = false
-    // Enables regular immersive mode.
-    // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
-    // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-    window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-            // Set the content to appear under the system bars so that the
-            // content doesn't resize when the system bars hide and show.
-            or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-            // Hide the nav bar and status bar
-            or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_FULLSCREEN)
-}
-
-// Shows the system bars by removing all the flags
-// except for the ones that make the content appear under the system bars.
-private fun showSystemUI() {
-    // root.fitsSystemWindows = true
-    window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-            or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-}
-
-//Payment
-private fun createOrder(paymentType: String, mediaId: String, type: String) {
-    val map: MutableMap<String, String> = HashMap()
-    map["payment_type"] = paymentType
-    map["media_id"] = mediaId
-    map["type"] = type
-
-    subscriptionsViewModel.createOrder(map).observe(this, androidx.lifecycle.Observer {
-
-        progressBar.gone()
-
-        when (it?.status) {
-            LoadingStatus.LOADING -> {
-                progressBar.visible()
-            }
-            LoadingStatus.ERROR -> {
-                progressBar.gone()
-                it.message?.let {
-                    Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
-                }
-            }
-            LoadingStatus.SUCCESS -> {
-                progressBar.gone()
-                if (it.data?.is_subscribed == 1) {
-                    playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+            if (it.startTime > 0) {
+                if (currentProgress in it.startTime..it.endTime - 1) {
+                    if (skipIntro.visibility != View.VISIBLE) {
+                        skipIntro.visible()
+                    }
                 } else {
-                    startPayment(it.data)
+                    if (skipIntro.visibility == View.VISIBLE) {
+                        skipIntro.gone()
+                    }
                 }
 
             }
-
         }
-
-    })
-}
-
-private fun startPayment(orderResponse: CreateOrderResponse?) {
-
-    orderResponse?.let { createOrderResponse ->
-        val activity: Activity = this
-        val co = Checkout()
-        co.setKeyID(createOrderResponse.key)
-        try {
-            razorpayOrdertId = createOrderResponse.gateway_order_id
-            val options = JSONObject()
-            options.put("name", createOrderResponse.app_name)
-            options.put("description", createOrderResponse.description)
-            options.put("amount", (createOrderResponse.order_details.amount * 100).toString())
-            options.put("order_id", createOrderResponse.gateway_order_id)
-
-            val prefill = JSONObject()
-            prefill.put("email", createOrderResponse.user_email)
-            prefill.put("contact", createOrderResponse.user_mobile)
-
-            options.put("prefill", prefill)
-
-            co.open(activity, options)
-
-        } catch (e: Exception) {
-            razorpayOrdertId = null
-            toast("Error in payment: " + e.message)
-            e.printStackTrace()
-        }
-    } ?: toast("Error in payment. Unable to get order ")
-
-}
-
-override fun onPaymentError(p0: Int, p1: String?) {
-    // Log.e("razorpay", "$p0 : $p1")
-}
-
-override fun onPaymentSuccess(razorpayPaymentId: String?) {
-    if (razorpayPaymentId == null) {
-        toast("Payment failed")
-        return
     }
-    //Log.e("razorpay", "$razorpayPaymentId")
-    val map: MutableMap<String, String> = HashMap()
-    map["razorpay_order_id"] = razorpayOrdertId!!
-    map["razorpay_payment_id"] = razorpayPaymentId
 
-    subscriptionsViewModel.updateOrderOnServer(map).observe(this@MediaDetailActivity, androidx.lifecycle.Observer {
-
-        progressBar.gone()
-
-        when (it?.status) {
-            LoadingStatus.LOADING -> {
-                progressBar.visible()
-            }
-            LoadingStatus.ERROR -> {
-                progressBar.gone()
-                it.message?.let {
-                    toast(it)
-                }
-            }
-            LoadingStatus.SUCCESS -> {
-                progressBar.gone()
-                it.data?.message?.let { it1 -> toast(it1) }
-                if (it.data?.status.equals("success", true)) {
-                    playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
-                }
-            }
-
+    override fun onDownloadStateChanged() {
+        mediaMetadata?.media_url?.let {
+            playerViewModel.refreshDownloadStatus(it)
         }
 
-    })
-}
+    }
+
+    override fun updateSettingButton(enable: Boolean) {
+
+    }
+
+    override fun onConrolVisibilityChange(visibility: Int) {
+        when (visibility) {
+            View.VISIBLE -> {
+                supportActionBar?.show()
+            }
+            else -> {
+                supportActionBar?.hide()
+            }
+        }
+
+    }
+
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            hideSystemUI()
+        }
+    }
+
+    private fun hideSystemUI() {
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                // Set the content to appear under the system bars so that the
+                // content doesn't resize when the system bars hide and show.
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                // Hide the nav bar and status bar
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
+
+    }
+
+    private fun showSystemUI() {
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
+    }
+
+    //Payment
+    private fun createOrder(paymentType: String, mediaId: String, type: String) {
+        val map: MutableMap<String, String> = HashMap()
+        map["payment_type"] = paymentType
+        map["media_id"] = mediaId
+        map["type"] = type
+
+        subscriptionsViewModel.createOrder(map).observe(this, androidx.lifecycle.Observer {
+
+            progressBar.gone()
+
+            when (it?.status) {
+                LoadingStatus.LOADING -> {
+                    progressBar.visible()
+                }
+                LoadingStatus.ERROR -> {
+                    progressBar.gone()
+                    it.message?.let {
+                        Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
+                    }
+                }
+                LoadingStatus.SUCCESS -> {
+                    progressBar.gone()
+                    if (it.data?.is_subscribed == 1) {
+                        playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+                    } else {
+                        startPayment(it.data)
+                    }
+
+                }
+
+            }
+
+        })
+    }
+
+    private fun startPayment(orderResponse: CreateOrderResponse?) {
+
+        orderResponse?.let { createOrderResponse ->
+            val activity: Activity = this
+            val co = Checkout()
+            co.setKeyID(createOrderResponse.key)
+            try {
+                razorpayOrdertId = createOrderResponse.gateway_order_id
+                val options = JSONObject()
+                options.put("name", createOrderResponse.app_name)
+                options.put("description", createOrderResponse.description)
+                options.put("amount", (createOrderResponse.order_details.amount * 100).toString())
+                options.put("order_id", createOrderResponse.gateway_order_id)
+
+                val prefill = JSONObject()
+                prefill.put("email", createOrderResponse.user_email)
+                prefill.put("contact", createOrderResponse.user_mobile)
+
+                options.put("prefill", prefill)
+
+                co.open(activity, options)
+
+            } catch (e: Exception) {
+                razorpayOrdertId = null
+                toast("Error in payment: " + e.message)
+                e.printStackTrace()
+            }
+        } ?: toast("Error in payment. Unable to get order ")
+
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?) {
+        // Log.e("razorpay", "$p0 : $p1")
+    }
+
+    override fun onPaymentSuccess(razorpayPaymentId: String?) {
+        if (razorpayPaymentId == null) {
+            toast("Payment failed")
+            return
+        }
+        //Log.e("razorpay", "$razorpayPaymentId")
+        val map: MutableMap<String, String> = HashMap()
+        map["razorpay_order_id"] = razorpayOrdertId!!
+        map["razorpay_payment_id"] = razorpayPaymentId
+
+        subscriptionsViewModel.updateOrderOnServer(map).observe(this@MediaDetailActivity, androidx.lifecycle.Observer {
+
+            progressBar.gone()
+
+            when (it?.status) {
+                LoadingStatus.LOADING -> {
+                    progressBar.visible()
+                }
+                LoadingStatus.ERROR -> {
+                    progressBar.gone()
+                    it.message?.let {
+                        toast(it)
+                    }
+                }
+                LoadingStatus.SUCCESS -> {
+                    progressBar.gone()
+                    it.data?.message?.let { it1 -> toast(it1) }
+                    if (it.data?.status.equals("success", true)) {
+                        playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+                    }
+                }
+
+            }
+
+        })
+    }
 
 
 }

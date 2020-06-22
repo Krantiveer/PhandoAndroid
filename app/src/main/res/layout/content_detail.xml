@@ -212,17 +212,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_1sdp"
             android:background="#0F161F" />
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/purchaseNote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:text=""
-            android:visibility="gone"
-            android:textColor="@color/red_normal"
-            android:textSize="@dimen/_11sdp"
-            android:paddingTop="@dimen/_10sdp"
-            android:paddingLeft="@dimen/_10sdp"/>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -282,7 +272,20 @@
                 android:src="@drawable/ic_detail_arrow_down" />
         </LinearLayout>
 
-
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/purchaseNote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="vhgvhg"
+            android:visibility="gone"
+            android:drawableLeft="@drawable/ic_info"
+            android:drawableTint="#CF6679"
+            android:textColor="#CF6679"
+            android:drawablePadding="@dimen/_3sdp"
+            android:textSize="@dimen/_11sdp"
+            android:paddingTop="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_10sdp"/>
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/videoDescription"
             android:layout_width="match_parent"

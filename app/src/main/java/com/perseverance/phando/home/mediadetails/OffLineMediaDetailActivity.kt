@@ -13,10 +13,13 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
 import com.newgendroid.news.utils.AppDialogListener
 import com.perseverance.patrikanews.utils.getViewModel
@@ -31,7 +34,16 @@ import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
+import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.activity_video_details_offline.*
+import kotlinx.android.synthetic.main.activity_video_details_offline.detailContent
+import kotlinx.android.synthetic.main.activity_video_details_offline.fragmentContainer
+import kotlinx.android.synthetic.main.activity_video_details_offline.phandoPlayerView
+import kotlinx.android.synthetic.main.activity_video_details_offline.play
+import kotlinx.android.synthetic.main.activity_video_details_offline.playerThumbnail
+import kotlinx.android.synthetic.main.activity_video_details_offline.playerThumbnailContainer
+import kotlinx.android.synthetic.main.activity_video_details_offline.root
+import kotlinx.android.synthetic.main.activity_video_details_offline.toolbar
 import kotlinx.android.synthetic.main.content_detail_offline.*
 
 class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPlayerCallback {
@@ -99,13 +111,13 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
         }
 
         setContentView(R.layout.activity_video_details_offline)
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            handler.postDelayed(landscopeRunnable, 200)
-
+            landscope()
         } else {
-            handler.postDelayed(portrateRunnable, 200)
+            portrate()
         }
         val decoration = BaseRecycleMarginDecoration(this@OffLineMediaDetailActivity)
         recyclerView.addItemDecoration(decoration)
@@ -163,15 +175,6 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
             playVideo()
 
         }
-        playerSetting.setOnClickListener {
-            phandoPlayerView.openSettings()
-        }
-        orientation.setOnClickListener {
-            changeOrientation()
-        }
-        headerBack.setOnClickListener {
-            onBackPressed()
-        }
         viewMore.setOnClickListener {
             if (videoDescription.visibility == View.VISIBLE) {
                 videoDescription.gone()
@@ -223,46 +226,42 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
         }
 
     }
-
-    val portrateRunnable = Runnable {
-        portrate()
-    }
-    val landscopeRunnable = Runnable {
-        landscope()
-    }
-
     fun landscope() {
+        root.fitsSystemWindows = false;
+        root.requestApplyInsets()
         hideSystemUI()
-        val width = window.decorView.width
-        val height = Util.getScreenHeight(this@OffLineMediaDetailActivity)
-        fragmentContainer.requestLayout()
-        fragmentContainer.layoutParams.height = height
-        fragmentContainer.layoutParams.width = width
-
+        handler.post {
+            val width = window.decorView.width
+            val height = Util.getScreenHeight(this@OffLineMediaDetailActivity)
+            fragmentContainer.requestLayout()
+            fragmentContainer.layoutParams.height = height
+            fragmentContainer.layoutParams.width = width
+        }
     }
 
     fun portrate() {
+        root.fitsSystemWindows = true;
+        root.requestApplyInsets()
         showSystemUI()
-        val width = Util.getScreenWidthForVideo(this@OffLineMediaDetailActivity)
-        val height = Util.getScreenHeightForVideo(this@OffLineMediaDetailActivity)
-        fragmentContainer.requestLayout()
-        fragmentContainer.layoutParams.height = height
-        fragmentContainer.layoutParams.width = width
+        handler.post {
+            val width = Util.getScreenWidthForVideo(this@OffLineMediaDetailActivity)
+            val height = Util.getScreenHeightForVideo(this@OffLineMediaDetailActivity)
+            fragmentContainer.requestLayout()
+            fragmentContainer.layoutParams.height = height
+            fragmentContainer.layoutParams.width = width
+        }
         setRelatedVideo()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         handler.removeCallbacksAndMessages(null)
-        toggleHideyBar()
         when (newConfig.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
-                handler.postDelayed(landscopeRunnable, 200)
-                orientation.setImageResource(R.drawable.player_screen_zoom_out)
+                landscope()
             }
             Configuration.ORIENTATION_PORTRAIT -> {
-                handler.postDelayed(portrateRunnable, 200)
-                orientation.setImageResource(R.drawable.player_screen_zoom_in)
+                portrate()
 
             }
         }
@@ -313,6 +312,29 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
 
     }
 
+
+    override fun onOrientationClicked() {
+        changeOrientation()
+    }
+
+    override fun onSettingClicked() {
+        val mBottomSheetDialog = BottomSheetDialog(this)
+        val sheetView: View = layoutInflater.inflate(R.layout.bottomsheet_settings_control_options, null)
+        mBottomSheetDialog.setContentView(sheetView)
+        val settingVideoQuality = sheetView.findViewById<TextView>(R.id.settingVideoQuality)
+        val settingVideoCC = sheetView.findViewById<TextView>(R.id.settingVideoCC)
+        settingVideoQuality.setOnClickListener {
+            phandoPlayerView.openVideoSettings()
+            mBottomSheetDialog.dismiss()
+        }
+        settingVideoCC.setOnClickListener {
+            phandoPlayerView.openCCSettings()
+            mBottomSheetDialog.dismiss()
+        }
+        mBottomSheetDialog.behavior.state = BottomSheetBehavior.STATE_EXPANDED
+        mBottomSheetDialog.show()
+    }
+
     override fun onPlayerEvent(playerTrackingEvent: PlayerTrackingEvent?) {
 
     }
@@ -330,42 +352,20 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
 
     override fun updateSettingButton(enable: Boolean) {
 
-        playerSetting.isEnabled = false
     }
 
     override fun onConrolVisibilityChange(visibility: Int) {
         when (visibility) {
             View.VISIBLE -> {
-                headerBack.visible()
-                orientation?.visible()
-                playerSetting.visible()
+                supportActionBar?.show()
             }
             else -> {
-                headerBack.invisible()
-                orientation?.invisible()
-                playerSetting.invisible()
                 supportActionBar?.hide()
             }
         }
 
     }
 
-    fun toggleHideyBar() {
-
-        val uiOptions: Int = getWindow().getDecorView().getSystemUiVisibility()
-        var newUiOptions = uiOptions
-        if (Build.VERSION.SDK_INT >= 14) {
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-        }
-        if (Build.VERSION.SDK_INT >= 16) {
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_FULLSCREEN
-        }
-        if (Build.VERSION.SDK_INT >= 18) {
-            newUiOptions = newUiOptions xor View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        }
-        getWindow().getDecorView().setSystemUiVisibility(newUiOptions)
-
-    }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
@@ -375,15 +375,23 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
     }
 
     private fun hideSystemUI() {
+        // Enables regular immersive mode.
+        // For "lean back" mode, remove SYSTEM_UI_FLAG_IMMERSIVE.
+        // Or for "sticky immersive," replace it with SYSTEM_UI_FLAG_IMMERSIVE_STICKY
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                // Set the content to appear under the system bars so that the
+                // content doesn't resize when the system bars hide and show.
                 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                // Hide the nav bar and status bar
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
+
     }
+
     private fun showSystemUI() {
-        // root.fitsSystemWindows = true
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)

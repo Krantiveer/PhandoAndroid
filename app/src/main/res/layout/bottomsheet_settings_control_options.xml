@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_history_menu_bottom"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/grey"
+    app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/_11sdp"
+        android:paddingTop="@dimen/_11sdp"
+        android:paddingRight="@dimen/_10sdp"
+        android:paddingBottom="@dimen/_5sdp"
+        android:background="@color/white"
+        android:text="Select an option"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14sdp" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/settingVideoQuality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_marginTop="1dp"
+        android:background="@color/white"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="left"
+        android:padding="@dimen/_11sdp"
+        android:text="Quality Setting"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14sdp"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/settingVideoCC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="left"
+        android:layout_marginTop="1dp"
+        android:background="@color/white"
+        android:padding="@dimen/_11sdp"
+        android:text="CC"
+        android:layout_marginBottom="1dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/_14sdp" />
+
+<View
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_50sdp"
+    android:background="@color/white"/>
+</LinearLayout>

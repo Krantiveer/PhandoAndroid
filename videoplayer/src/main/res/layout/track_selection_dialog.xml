@@ -20,12 +20,13 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:background="#262F39"
         android:padding="10dp"
-        android:text="Video Quality"
+        android:text="Setting"
         android:textAppearance="@android:style/TextAppearance.Medium" />
 
     <com.videoplayer.HeightWrappingViewPager

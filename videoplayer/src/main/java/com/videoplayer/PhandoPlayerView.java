@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.media.MediaDrm;
 import android.net.Uri;
@@ -19,6 +20,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -49,6 +52,7 @@ import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer;
 import com.google.android.exoplayer2.mediacodec.MediaCodecUtil;
 import com.google.android.exoplayer2.offline.DownloadHelper;
 import com.google.android.exoplayer2.offline.DownloadRequest;
+import com.google.android.exoplayer2.offline.StreamKey;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -68,6 +72,7 @@ import com.google.android.exoplayer2.trackselection.MappingTrackSelector;
 import com.google.android.exoplayer2.trackselection.RandomTrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.ui.DefaultTimeBar;
 import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DataSource;
@@ -85,7 +90,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 
-public class PhandoPlayerView extends FrameLayout implements View.OnClickListener,
+public class PhandoPlayerView extends FrameLayout implements
         LifecycleObserver {
 
     // Activity extras.
@@ -161,6 +166,12 @@ public class PhandoPlayerView extends FrameLayout implements View.OnClickListene
     private TrackGroupArray lastSeenTrackGroupArray;
     private int startWindow;
     private long startPosition;
+    private TextView exo_position;
+    private TextView exo_duration;
+    private DefaultTimeBar exo_progress;
+    private TextView live;
+    private ImageButton playerControlSetting;
+    private ImageButton playerControlOrientation;
     // private PlayerNotificationManager playerNotificationManager;
     private PhandoPlayerCallback phandoPlayerCallback;
 
@@ -211,7 +222,20 @@ public class PhandoPlayerView extends FrameLayout implements View.OnClickListene
             CookieHandler.setDefault(DEFAULT_COOKIE_MANAGER);
         }
         playerView = findViewById(R.id.player_view);
+        exo_duration = findViewById(R.id.exo_duration);
+        exo_position = findViewById(R.id.exo_position);
+        live = findViewById(R.id.live);
+        exo_progress = findViewById(R.id.exo_progress);
+
         //debugTextView = findViewById(R.id.debug_text_view);
+        playerControlOrientation = findViewById(R.id.playerControlOrientation);
+        playerControlSetting = findViewById(R.id.playerControlSetting);
+        playerControlOrientation.setOnClickListener(v -> {
+            phandoPlayerCallback.onOrientationClicked();
+        });
+        playerControlSetting.setOnClickListener(v -> {
+            phandoPlayerCallback.onSettingClicked();
+        });
         playerView.setControllerVisibilityListener(new PlayerControlView.VisibilityListener() {
 
             @Override
@@ -380,15 +404,40 @@ public class PhandoPlayerView extends FrameLayout implements View.OnClickListene
         startPosition = intent.getLongExtra(KEY_POSITION, 0) * 1000;
         this.intent = intent;
         initializePlayer();
+        boolean isLive = intent.getBooleanExtra(IS_LIVE_EXTRA, false) ;
+        if(isLive){
+            exo_position.setVisibility(View.GONE);
+            exo_duration.setVisibility(View.GONE);
+            exo_progress.setVisibility(View.GONE);
+            live.setVisibility(View.VISIBLE);
+        }else {
+            exo_position.setVisibility(View.VISIBLE);
+            exo_duration.setVisibility(View.VISIBLE);
+            exo_progress.setVisibility(View.VISIBLE);
+            live.setVisibility(View.GONE);
+        }
     }
 
 
-    public void openSettings() {
+    public void openVideoSettings() {
         if (!isShowingTrackSelectionDialog
                 && TrackSelectionDialog.willHaveContent(trackSelector)) {
             isShowingTrackSelectionDialog = true;
             TrackSelectionDialog trackSelectionDialog =
                     TrackSelectionDialog.createForTrackSelector(
+                            trackSelector,
+                            /* onDismissListener= */ dismissedDialog -> isShowingTrackSelectionDialog = false);
+            trackSelectionDialog
+                    .show(((AppCompatActivity) getContext()).getSupportFragmentManager(), /* tag= */ null);
+        }
+    }
+
+    public void openCCSettings() {
+        if (!isShowingTrackSelectionDialog
+                && SubtitleTrackSelectionDialog.willHaveContent(trackSelector)) {
+            isShowingTrackSelectionDialog = true;
+            SubtitleTrackSelectionDialog trackSelectionDialog =
+                    SubtitleTrackSelectionDialog.createForTrackSelector(
                             trackSelector,
                             /* onDismissListener= */ dismissedDialog -> isShowingTrackSelectionDialog = false);
             trackSelectionDialog
@@ -414,37 +463,6 @@ public class PhandoPlayerView extends FrameLayout implements View.OnClickListene
                     renderersFactory);
         }
     }
-
-    @Override
-    public void onClick(View view) {
-
-        if (!isShowingTrackSelectionDialog
-                && TrackSelectionDialog.willHaveContent(trackSelector)) {
-            isShowingTrackSelectionDialog = true;
-            TrackSelectionDialog trackSelectionDialog =
-                    TrackSelectionDialog.createForTrackSelector(
-                            trackSelector,
-                            /* onDismissListener= */ dismissedDialog -> isShowingTrackSelectionDialog = false);
-            trackSelectionDialog
-                    .show(((AppCompatActivity) getContext()).getSupportFragmentManager(), /* tag= */ null);
-        }
-    }
-
-    // PlaybackControlView.PlaybackPreparer implementation
-
-//  @Override
-//  public void preparePlayback() {
-//    player.retry();
-//  }
-
-    // PlaybackControlView.VisibilityListener implementation
-
-//  @Override
-//  public void onVisibilityChange(int visibility) {
-//    debugRootView.setVisibility(visibility);
-//  }
-
-    // Internal methods
 
     private void initializePlayer() {
         if (player == null) {
@@ -502,50 +520,6 @@ public class PhandoPlayerView extends FrameLayout implements View.OnClickListene
         }
         player.prepare(mediaSource, !haveStartPosition, false);
         updateButtonVisibility();
-        int playerLogo = intent.getIntExtra(PLAYER_LOGO, 0);
-//        playerNotificationManager = PlayerNotificationManager.createWithNotificationChannel(
-//                getContext(),
-//                "PLAYBACK_CHANNEL_ID",
-//                R.string.libname,
-//                1,
-//                new PlayerNotificationManager.MediaDescriptionAdapter() {
-//                    @Override
-//                    public String getCurrentContentTitle(Player player) {
-//                        return playerTitle;
-//                    }
-//
-//                    @Nullable
-//                    @Override
-//                    public PendingIntent createCurrentContentIntent(Player player) {
-//                        Intent intent = new Intent();
-//                        String CUSTOM_ACTION = "com.action.videoplayer";
-//                        intent.setAction(CUSTOM_ACTION);
-//                        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0011, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                        return pendingIntent;
-//                    }
-//
-//                    @Nullable
-//                    @Override
-//                    public String getCurrentContentText(Player player) {
-//                        return null;
-//                    }
-//
-//                    @Nullable
-//                    @Override
-//                    public Bitmap getCurrentLargeIcon(Player player, PlayerNotificationManager.BitmapCallback callback) {
-//                        Bitmap bitmapIcon = BitmapFactory.decodeResource(getResources(), playerLogo);
-//                        return bitmapIcon;
-//                    }
-//                }
-//        );
-
-
-        //playerNotificationManager.setPlayer(player);
-        //playerNotificationManager.setUseStopAction(true);
-
-
-        //mediaSessionConnector.setPlayer(player, null, customAction1.class);
-
     }
 
     @Nullable
@@ -877,6 +851,7 @@ public class PhandoPlayerView extends FrameLayout implements View.OnClickListene
         boolean enableButton = player != null && TrackSelectionDialog.willHaveContent(trackSelector);
         if (phandoPlayerCallback != null) {
             phandoPlayerCallback.updateSettingButton(enableButton);
+            playerControlSetting.setEnabled(enableButton);
         }
         // selectTracksButton.setEnabled(enableButton);
     }
@@ -1146,6 +1121,15 @@ public class PhandoPlayerView extends FrameLayout implements View.OnClickListene
         public void onReceive(Context context, Intent intent) {
             if (phandoPlayerCallback != null)
                 phandoPlayerCallback.onDownloadStateChanged();
+        }
+    }
+    @Override
+    protected void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+            playerControlOrientation.setImageResource(R.drawable.player_screen_zoom_out);
+        }else {
+            playerControlOrientation.setImageResource(R.drawable.player_screen_zoom_in);
         }
     }
 }

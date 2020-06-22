@@ -34,6 +34,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
@@ -41,12 +42,13 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector.Selecti
 import com.google.android.exoplayer2.trackselection.MappingTrackSelector.MappedTrackInfo;
 import com.google.android.exoplayer2.util.Assertions;
 import com.google.android.material.tabs.TabLayout;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /** Dialog to select tracks. */
-public final class TrackSelectionDialog extends DialogFragment {
+public  class SubtitleTrackSelectionDialog extends DialogFragment {
 
   private final SparseArray<TrackSelectionViewFragment> tabFragments;
   private final ArrayList<Integer> tabTrackTypes;
@@ -60,6 +62,7 @@ public final class TrackSelectionDialog extends DialogFragment {
    * specified {@link DefaultTrackSelector} in its current state.
    */
   public static boolean willHaveContent(DefaultTrackSelector trackSelector) {
+
     MappedTrackInfo mappedTrackInfo = trackSelector.getCurrentMappedTrackInfo();
     return mappedTrackInfo != null && willHaveContent(mappedTrackInfo);
   }
@@ -69,6 +72,7 @@ public final class TrackSelectionDialog extends DialogFragment {
    * specified {@link MappedTrackInfo}.
    */
   public static boolean willHaveContent(MappedTrackInfo mappedTrackInfo) {
+
     for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {
       if (showTabForRenderer(mappedTrackInfo, i)) {
         return true;
@@ -85,11 +89,12 @@ public final class TrackSelectionDialog extends DialogFragment {
    * @param onDismissListener A {@link DialogInterface.OnDismissListener} to call when the dialog is
    *     dismissed.
    */
-  public static TrackSelectionDialog createForTrackSelector(
-      DefaultTrackSelector trackSelector, DialogInterface.OnDismissListener onDismissListener) {
+  public static SubtitleTrackSelectionDialog createForTrackSelector(
+          DefaultTrackSelector trackSelector, DialogInterface.OnDismissListener onDismissListener) {
+
     MappedTrackInfo mappedTrackInfo =
         Assertions.checkNotNull(trackSelector.getCurrentMappedTrackInfo());
-    TrackSelectionDialog trackSelectionDialog = new TrackSelectionDialog();
+    SubtitleTrackSelectionDialog trackSelectionDialog = new SubtitleTrackSelectionDialog();
     DefaultTrackSelector.Parameters parameters = trackSelector.getParameters();
     trackSelectionDialog.init(
         /* titleId= */ R.string.track_selection_title,
@@ -134,7 +139,7 @@ public final class TrackSelectionDialog extends DialogFragment {
    * @param onDismissListener {@link DialogInterface.OnDismissListener} called when the dialog is
    *     dismissed.
    */
-  public static TrackSelectionDialog createForMappedTrackInfoAndParameters(
+  public static SubtitleTrackSelectionDialog createForMappedTrackInfoAndParameters(
       int titleId,
       MappedTrackInfo mappedTrackInfo,
       DefaultTrackSelector.Parameters initialParameters,
@@ -142,7 +147,7 @@ public final class TrackSelectionDialog extends DialogFragment {
       boolean allowMultipleOverrides,
       DialogInterface.OnClickListener onClickListener,
       DialogInterface.OnDismissListener onDismissListener) {
-    TrackSelectionDialog trackSelectionDialog = new TrackSelectionDialog();
+    SubtitleTrackSelectionDialog trackSelectionDialog = new SubtitleTrackSelectionDialog();
     trackSelectionDialog.init(
         titleId,
         mappedTrackInfo,
@@ -154,7 +159,7 @@ public final class TrackSelectionDialog extends DialogFragment {
     return trackSelectionDialog;
   }
 
-  public TrackSelectionDialog() {
+  public SubtitleTrackSelectionDialog() {
     tabFragments = new SparseArray<>();
     tabTrackTypes = new ArrayList<>();
     // Retain instance across activity re-creation to prevent losing access to init data.
@@ -240,7 +245,7 @@ public final class TrackSelectionDialog extends DialogFragment {
     TabLayout tabLayout = dialogView.findViewById(R.id.track_selection_dialog_tab_layout);
     ViewPager viewPager = dialogView.findViewById(R.id.track_selection_dialog_view_pager);
     TextView dialogTitle =  dialogView.findViewById(R.id.dialogTitle);
-    dialogTitle.setText("Video Quality");
+    dialogTitle.setText("CC");
     Button cancelButton = dialogView.findViewById(R.id.track_selection_dialog_cancel_button);
     Button okButton = dialogView.findViewById(R.id.track_selection_dialog_ok_button);
     viewPager.setAdapter(new FragmentAdapter(getChildFragmentManager()));
@@ -265,10 +270,15 @@ public final class TrackSelectionDialog extends DialogFragment {
   }
 
   private static boolean isSupportedTrackType(int trackType) {
+//    if (trackType==mTrackType){
+//      return true;
+//    }else {
+//      return false;
+//    }
     switch (trackType) {
-      case C.TRACK_TYPE_VIDEO:
-    //  case C.TRACK_TYPE_AUDIO:
-    //  case C.TRACK_TYPE_TEXT:
+      //case C.TRACK_TYPE_VIDEO:
+      //case C.TRACK_TYPE_AUDIO:
+      case C.TRACK_TYPE_TEXT:
         return true;
       default:
         return false;
@@ -357,9 +367,11 @@ public final class TrackSelectionDialog extends DialogFragment {
           inflater.inflate(
               R.layout.exo_track_selection_dialog, container, /* attachToRoot= */ false);
       AppTrackSelectionView trackSelectionView = rootView.findViewById(R.id.exo_track_selection_view);
-      trackSelectionView.setShowDisableOption(false);
+      trackSelectionView.setShowDisableOption(true);
       trackSelectionView.setAllowMultipleOverrides(allowMultipleOverrides);
       trackSelectionView.setAllowAdaptiveSelections(allowAdaptiveSelections);
+      trackSelectionView.disableView.setText(R.string.off);
+      trackSelectionView.defaultView.setVisibility(View.GONE);
       trackSelectionView.init(
           mappedTrackInfo, rendererIndex, isDisabled, overrides, /* listener= */ this);
       return rootView;

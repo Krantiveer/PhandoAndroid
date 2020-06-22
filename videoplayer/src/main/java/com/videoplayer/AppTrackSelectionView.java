@@ -70,8 +70,8 @@ public class AppTrackSelectionView extends LinearLayout {
 
     private final int selectableItemBackgroundResourceId;
     private final LayoutInflater inflater;
-    private final CheckedTextView disableView;
-    private final CheckedTextView defaultView;
+    public final CheckedTextView disableView;
+    public final CheckedTextView defaultView;
     private final ComponentListener componentListener;
     private final SparseArray<SelectionOverride> overrides;
 
@@ -311,11 +311,17 @@ public class AppTrackSelectionView extends LinearLayout {
                 // String info = trackNameProvider.getTrackName(group.getFormat(trackIndex));
                 String info = trackNameProvider.getTrackName(format.getFormat());
                 String[] split = info.split(",");
-                String resolition = split[0] + "p";
+                String resolition = split[0];
                 if (split.length > 1 && !TextUtils.isEmpty(split[1].trim())) {
+                    resolition+="p";
                     resolition += " (" + split[1].trim() + ")";
                 }
-                trackView.setText(resolition);
+                if (resolition.equalsIgnoreCase(getContext().getString(R.string.exo_track_unknown))){
+                    trackView.setVisibility(View.GONE);
+                }else {
+                    trackView.setText(resolition);
+                }
+
                 if (mappedTrackInfo.getTrackSupport(rendererIndex, groupIndex, format.getOriginalIndex())
                         == RendererCapabilities.FORMAT_HANDLED) {
                     trackView.setFocusable(true);

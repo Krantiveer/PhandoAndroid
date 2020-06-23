@@ -15,6 +15,7 @@ import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
@@ -41,9 +42,11 @@ class ProfileActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         title = "Profile"
         observeUserProfile()
-        userProfileViewModel.refreshUserProfile()
-
         btnSubscribe.setOnClickListener {
+            if (!Utils.isNetworkAvailable(this@ProfileActivity)){
+                toast(BaseConstants.NETWORK_ERROR)
+                return@setOnClickListener
+            }
             if (btnSubscribe.text.equals("Subscribe")) {
                 val intent = Intent(this@ProfileActivity, SubscriptionPackageActivity::class.java)
                 startActivityForResult(intent, 101)
@@ -54,12 +57,20 @@ class ProfileActivity : AppCompatActivity() {
             }
         }
         btnBilling.setOnClickListener {
+            if (!Utils.isNetworkAvailable(this@ProfileActivity)){
+                toast(BaseConstants.NETWORK_ERROR)
+                return@setOnClickListener
+            }
                 val token = PreferencesUtils.getLoggedStatus()
                 val url = FeatureConfigClass().baseUrl + "billinghistory?token=" + token
                 Util.openWebview(this@ProfileActivity, url)
         }
 
         updateProfile.setOnClickListener {
+            if (!Utils.isNetworkAvailable(this@ProfileActivity)){
+                toast(BaseConstants.NETWORK_ERROR)
+                return@setOnClickListener
+            }
             val token = PreferencesUtils.getLoggedStatus()
             val url = FeatureConfigClass().baseUrl + "updateUserProfile?token=" + token
             MyLog.e("updateUserProfile", url)

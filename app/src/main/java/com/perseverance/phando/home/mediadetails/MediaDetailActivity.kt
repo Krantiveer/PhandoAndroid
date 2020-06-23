@@ -12,7 +12,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
 import android.text.Html
+import android.text.Spannable
 import android.text.Spanned
+import android.text.style.StrikethroughSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -28,8 +30,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.gson.Gson
-import com.newgendroid.news.utils.AppDialogListener
-import com.perseverance.patrikanews.utils.*
+import com.perseverance.patrikanews.utils.getViewModel
+import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.toast
+import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
@@ -65,8 +69,9 @@ import java.util.*
 
 class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPlayerCallback, PaymentResultListener, PurchaseOptionSelection {
     private var razorpayOrdertId: String? = null
-
+    val STRIKE_THROUGH_SPAN = StrikethroughSpan()
     companion object {
+
         // Important: These constants are persisted into DownloadIndex. Do not change them.
         const val STATE_QUEUED = 0
 
@@ -406,7 +411,20 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         }
 
         download.setOnClickListener {
-            //playerViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
+            val token = PreferencesUtils.getLoggedStatus()
+            if (token.isEmpty()) {
+                message.setOnClickListener {
+                    val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
+                    startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                }
+                return@setOnClickListener
+            }
+            when (mediaplaybackData.mediaCode) {
+                "package_media", "rent_or_buy", "only_rent", "only_buy" -> {
+                    toast("This is a premium content. Please purchase to download.")
+                    return@setOnClickListener
+                }
+            }
             playerViewModel.downloadStatus.value?.let {
                 val mBottomSheetDialog = BottomSheetDialog(this)
                 val sheetView: View = layoutInflater.inflate(R.layout.fragment_download_control_options, null)
@@ -455,9 +473,10 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 mBottomSheetDialog.show()
             } ?: run {
                 mediaMetadata?.media_url?.let {
-                    if (it.isNullOrEmpty()){
+                    if (it.isNullOrEmpty()) {
                         return@let
                     }
+
                     val videoPlayerMetadata = UriSample(
                             null,
                             Uri.parse(it),
@@ -637,16 +656,43 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 packageMedia.gone()
                 actionControlersBuy.visible()
                 mediaplaybackData.purchase_option.forEach {
-                    when (it.key) {
-                        "rent_price" -> {
-                            rentMedia.text = "Rent from Rs ${it.value}"
-                            rentMedia.tag = it
+
+                    if (it.discount_percentage > 0) {
+
+                        val discount = (it.value * it.discount_percentage) / 100
+                        when (it.key) {
+                            "rent_price" -> {
+                                val originalPrice= "Rent at INR  ${it.value}/-"
+                                rentMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val spannable = rentMedia.getText() as Spannable
+                                spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                                rentMedia.tag = it
+                                rentMedia.isEnabled = false
+                            }
+                            "purchase_price" -> {
+                                val originalPrice= "Buy at INR  ${it.value}/-"
+                                buyMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val spannable = buyMedia.getText() as Spannable
+                                spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                buyMedia.tag = it
+                            }
                         }
-                        "purchase_price" -> {
-                            buyMedia.text = "Buy from Rs ${it.value}"
-                            buyMedia.tag = it
+
+                    } else {
+                        when (it.key) {
+                            "rent_price" -> {
+                                rentMedia.text = "Rent at INR ${it.value}/-"
+                                rentMedia.tag = it
+                                rentMedia.isEnabled = false
+                            }
+                            "purchase_price" -> {
+                                buyMedia.text = "Buy at INR ${it.value}/-"
+                                buyMedia.tag = it
+                            }
                         }
                     }
+
                 }
             }
             "only_rent" -> {
@@ -657,8 +703,17 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 mediaplaybackData.purchase_option.forEach {
                     when (it.key) {
                         "rent_price" -> {
-                            rentMedia.text = "Rent from Rs ${it.value}"
-                            rentMedia.tag = it
+                            if (it.discount_percentage > 0) {
+                                val originalPrice= "Rent at INR  ${it.value}/-"
+                                val discount = (it.value * it.discount_percentage) / 100
+                                rentMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val spannable = rentMedia.getText() as Spannable
+                                spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                            }else{
+                                rentMedia.text = "Rent at INR ${it.value}/-"
+                                rentMedia.tag = it
+                            }
                         }
 
                     }
@@ -671,10 +726,19 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 actionControlersBuy.visible()
                 mediaplaybackData.purchase_option.forEach {
                     when (it.key) {
-
                         "purchase_price" -> {
-                            buyMedia.text = "Buy from Rs ${it.value}"
-                            buyMedia.tag = it
+                            if (it.discount_percentage > 0) {
+                                val originalPrice= "Buy at INR  ${it.value}/-"
+                                val discount = (it.value * it.discount_percentage) / 100
+                                buyMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val spannable = buyMedia.getText() as Spannable
+                                spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                            }else{
+                                buyMedia.text = "Buy at INR ${it.value}/-"
+                                buyMedia.tag = it
+                            }
+
                         }
                     }
                 }
@@ -685,24 +749,53 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 packageMedia.gone()
                 actionControlersBuy.visible()
                 mediaplaybackData.purchase_option.forEach {
-                    when (it.key) {
-                        "rent_price" -> {
-                            rentMedia.text = "Rented from Rs ${it.value}"
-                            rentMedia.tag = it
-                            rentMedia.isEnabled = false
+
+                    if (it.discount_percentage > 0) {
+                        val discount = (it.value * it.discount_percentage) / 100
+                        when (it.key) {
+                            "rent_price" -> {
+                                val originalPrice= "Rent at INR  ${it.value}/-"
+                                rentMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val spannable = rentMedia.getText() as Spannable
+                                spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                                rentMedia.tag = it
+                                rentMedia.isEnabled = false
+                            }
+                            "purchase_price" -> {
+                                val originalPrice= "Buy at INR  ${it.value}/-"
+                                buyMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val spannable = buyMedia.getText() as Spannable
+                                spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+
+                                buyMedia.tag = it
+                            }
                         }
-                        "purchase_price" -> {
-                            buyMedia.text = "Buy from Rs ${it.value}"
-                            buyMedia.tag = it
+
+                    } else {
+                        when (it.key) {
+                            "rent_price" -> {
+                                rentMedia.text = "Rent at INR ${it.value}/-"
+                                rentMedia.tag = it
+                                rentMedia.isEnabled = false
+                            }
+                            "purchase_price" -> {
+                                buyMedia.text = "Buy at INR ${it.value}/-"
+                                buyMedia.tag = it
+                            }
                         }
                     }
+
                 }
             }
         }
         actionControlers.visible()
         this.mediaMetadata = mediaplaybackData.data
         mediaMetadata?.is_live?.let {
-            download.isEnabled= it==0
+            download.isEnabled = it == 0
+            if (it==1){
+                txtPlay.text="Go Live"
+            }
         }
         playerViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
         videoTitle.text = mediaMetadata?.title
@@ -768,7 +861,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         if (play.visibility != View.VISIBLE) {
             playVideo()
         } else {
-            if (mediaMetadata!!.last_watch_time > 0||mediaMetadata?.is_live==1) {
+            if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
                 playVideo()
             }
         }

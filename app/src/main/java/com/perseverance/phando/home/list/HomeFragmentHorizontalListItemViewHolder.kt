@@ -22,10 +22,10 @@ class HomeFragmentHorizontalListItemViewHolder(itemView: View, listener: Adapter
         }
         override fun onBind(item: Video) {
             itemView.tag = item
-            if(item.isFree == 0) { // if paid video then show premium icon
-                itemView.free.visible()
-            }else{
+            if(item.isFree == 1) { // if paid video then show premium icon
                 itemView.free.gone()
+            }else{
+                itemView.free.visible()
             }
 
             itemView.img_thumbnail.resizeView(ListItemThumbnail())

@@ -1,12 +1,15 @@
 package com.perseverance.phando.retrofit;
 
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 
 import com.google.gson.Gson;
 import com.perseverance.phando.BuildConfig;
 import com.perseverance.phando.Session;
 import com.perseverance.phando.factory.FeatureConfigFactory;
 import com.perseverance.phando.utils.PreferencesUtils;
+import com.perseverance.phando.utils.Utils;
 import com.qait.sadhna.LoginActivity;
 
 import java.io.IOException;
@@ -119,8 +122,12 @@ public class ApiClient {
     static class RequestInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
-            final String token = PreferencesUtils.getLoggedStatus();
 
+            if(!Utils.isNetworkAvailable(Session.Companion.getInstance())){
+                throw new NoConnectivityException();
+            }
+
+            final String token = PreferencesUtils.getLoggedStatus();
             Request newRequest  = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer " + token)
                     .addHeader("Content-Type", "application/json; charset=utf-8")
@@ -131,4 +138,13 @@ public class ApiClient {
         }
 
     }
+    public static class NoConnectivityException extends IOException {
+
+        @Override
+        public String getMessage() {
+            return "No Internet Connection";
+
+        }
+    }
+
 }

@@ -10,17 +10,10 @@ import androidx.fragment.app.Fragment
  * A simple [Fragment] subclass.
  */
 open class BaseHomeFragment : Fragment() {
-    private lateinit var activity: AppCompatActivity
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        imgHeaderImage.setOnClickListener {
-//            activity.onBackPressed()
-//        }
-    }
-
+    protected lateinit var appCompatActivity: AppCompatActivity
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        activity = context as AppCompatActivity
+        appCompatActivity = context as AppCompatActivity
 
     }
 

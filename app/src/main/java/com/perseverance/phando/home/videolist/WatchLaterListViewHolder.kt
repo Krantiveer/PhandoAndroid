@@ -11,7 +11,12 @@ import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.genericAdopter.BaseViewHolder
 import com.perseverance.phando.resize.ListItemThumbnail
 import com.perseverance.phando.utils.Utils
+import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 import kotlinx.android.synthetic.main.tuple_video.view.*
+import kotlinx.android.synthetic.main.tuple_video.view.duration
+import kotlinx.android.synthetic.main.tuple_video.view.free
+import kotlinx.android.synthetic.main.tuple_video.view.img_thumbnail
+import kotlinx.android.synthetic.main.tuple_video.view.txtTitle
 
 class WatchLaterListViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<WatchLaterVideo, AdapterClickListener>(itemView, listener) {
 
@@ -21,11 +26,12 @@ class WatchLaterListViewHolder(itemView: View, listener: AdapterClickListener) :
     }
     override fun onBind(item: WatchLaterVideo) {
         itemView.tag = item
-        if(item.isFree == 0) { // if paid video then show premium icon
-            itemView.free.visible()
-        }else{
+        if(item.isFree == 1) { // if paid video then show premium icon
             itemView.free.gone()
+        }else{
+            itemView.free.visible()
         }
+
 
         if (TextUtils.isEmpty(item.thumbnail)) {
 

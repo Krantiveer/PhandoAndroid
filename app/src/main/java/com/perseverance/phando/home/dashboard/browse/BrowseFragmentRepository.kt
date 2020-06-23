@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.APIData
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.home.dashboard.models.BrowseData
@@ -65,7 +66,11 @@ class BrowseListRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<List<BrowseData>>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                }
             }
         })
 
@@ -88,7 +93,11 @@ class BrowseListRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<List<CategoryTab>>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                }
             }
         })
 

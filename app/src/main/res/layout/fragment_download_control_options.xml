@@ -56,7 +56,7 @@
         android:gravity="left"
         android:padding="@dimen/_11sdp"
         android:background="@color/white"
-        android:text="Stop"
+        android:text="Pause"
         android:textColor="@color/black"
         android:textSize="@dimen/_14sdp" />
 <View

@@ -11,7 +11,12 @@ import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.genericAdopter.BaseViewHolder
 import com.perseverance.phando.resize.ListItemThumbnail
 import com.perseverance.phando.utils.Utils
+import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 import kotlinx.android.synthetic.main.tuple_home_video_item_list_style.view.*
+import kotlinx.android.synthetic.main.tuple_home_video_item_list_style.view.duration
+import kotlinx.android.synthetic.main.tuple_home_video_item_list_style.view.free
+import kotlinx.android.synthetic.main.tuple_home_video_item_list_style.view.img_thumbnail
+import kotlinx.android.synthetic.main.tuple_home_video_item_list_style.view.txtTitle
 
 class HomeFragmentVerticalListItemViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<Video, AdapterClickListener>(itemView, listener) {
 
@@ -21,11 +26,12 @@ class HomeFragmentVerticalListItemViewHolder(itemView: View, listener: AdapterCl
         }
         override fun onBind(item: Video) {
             itemView.tag = item
-            if(item.isFree == 0) { // if paid video then show premium icon
-                itemView.free.visible()
-            }else{
+            if(item.isFree == 1) { // if paid video then show premium icon
                 itemView.free.gone()
+            }else{
+                itemView.free.visible()
             }
+
 
             itemView.img_thumbnail.resizeView(ListItemThumbnail())
             Utils.displayImage(itemView.context, item.thumbnail,

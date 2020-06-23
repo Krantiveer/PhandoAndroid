@@ -93,14 +93,14 @@
             android:textColor="#ffffff"
             android:textSize="14sp"
             android:textStyle="bold" />
-        <androidx.appcompat.widget.AppCompatTextView
+        <TextView
             android:id="@+id/live"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:text="Live"
-            android:visibility="gone"
+            android:gravity="center"
+            android:visibility="visible"
             android:textColor="#ffffff"
             android:textSize="14sp"
             android:textStyle="bold"/>

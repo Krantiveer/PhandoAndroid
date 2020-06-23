@@ -3,6 +3,7 @@ package com.perseverance.phando.home.series
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.retrofit.ApiClient
@@ -35,7 +36,11 @@ class SeriesRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<TVSeriesResponseData>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                }
             }
         })
 

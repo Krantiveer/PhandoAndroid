@@ -12,6 +12,11 @@ import com.perseverance.phando.genericAdopter.BaseViewHolder
 import com.perseverance.phando.resize.GridItemThumbnail
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.tuple_grid_video_item.view.*
+import kotlinx.android.synthetic.main.tuple_grid_video_item.view.duration
+import kotlinx.android.synthetic.main.tuple_grid_video_item.view.free
+import kotlinx.android.synthetic.main.tuple_grid_video_item.view.img_thumbnail
+import kotlinx.android.synthetic.main.tuple_grid_video_item.view.txtTitle
+import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 
 class GridItemViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<Video, AdapterClickListener>(itemView, listener) {
 
@@ -21,11 +26,12 @@ class GridItemViewHolder(itemView: View, listener: AdapterClickListener) : BaseV
         }
         override fun onBind(item: Video) {
             itemView.tag = item
-            if(item.isFree == 0) { // if paid video then show premium icon
-                itemView.free.visible()
-            }else{
+            if(item.isFree == 1) { // if paid video then show premium icon
                 itemView.free.gone()
+            }else{
+                itemView.free.visible()
             }
+
 
             itemView.img_thumbnail.resizeView(GridItemThumbnail())
             Utils.displayImage(itemView.context, item.thumbnail,

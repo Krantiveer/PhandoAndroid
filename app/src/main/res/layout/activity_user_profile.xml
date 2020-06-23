@@ -43,7 +43,6 @@
                     android:layout_width="@dimen/_120sdp"
                     android:layout_height="@dimen/_120sdp"
                     android:padding="@dimen/_5sdp"
-                    android:background="@color/black"
                     app:srcCompat="@drawable/ic_user_avatar" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -159,33 +158,33 @@
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:text="Billing" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/btnLogout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="left|center_vertical"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="#535353"
-                    android:padding="@dimen/_11sdp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_12sdp"
-                    android:text="Logout" />
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/btnDownloads"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
                     android:foreground="?attr/selectableItemBackground"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="1dp"
                     android:background="#535353"
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"
                     android:text="Downloads" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/btnLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:layout_marginTop="1dp"
+                    android:background="#535353"
+                    android:padding="@dimen/_11sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    android:text="Logout" />
+
 
 
             </LinearLayout>

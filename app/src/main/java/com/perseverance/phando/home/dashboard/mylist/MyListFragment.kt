@@ -48,7 +48,12 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
             LoadingStatus.ERROR ->{
                 progressBar.gone()
                 swipetorefresh_base.isRefreshing = false
-                message.text = "Unable to fetch data"
+                it.message?.let {
+                    message.text=it
+                }?: kotlin.run {
+                    message.text = "Unable to fetch data"
+                }
+
                 message.visible()
             }
             LoadingStatus.SUCCESS ->{
@@ -79,7 +84,7 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
         toolbarTitle.text="My List"
         myListViewModel.getMyList().observe(viewLifecycleOwner, videoListViewModelObserver)
         myListViewModel.message.observe(viewLifecycleOwner, Observer {
-            Toast.makeText(activity,it,Toast.LENGTH_LONG).show()
+            Toast.makeText(appCompatActivity,it,Toast.LENGTH_LONG).show()
         })
 
         val manager = LinearLayoutManager(activity)
@@ -87,7 +92,7 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
         recyclerView.setHasFixedSize(true)
         val decoration = BaseRecycleMarginDecoration(activity)
         recyclerView.addItemDecoration(decoration)
-        adapter = MyListAdapter(activity!!, this)
+        adapter = MyListAdapter(appCompatActivity, this)
         val videos = ArrayList<Video>()
         adapter?.items = videos
         recyclerView.adapter = adapter

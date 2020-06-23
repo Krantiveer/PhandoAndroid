@@ -20,4 +20,6 @@
     <string name="otp_hint_for_resent">Didn\'t receive OTP?</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="network_error">Please check your internet connection and try again.</string>
+
 </resources>

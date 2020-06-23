@@ -6,12 +6,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.media.MediaDrm;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.BulletSpan;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Pair;
@@ -225,6 +231,11 @@ public class PhandoPlayerView extends FrameLayout implements
         exo_duration = findViewById(R.id.exo_duration);
         exo_position = findViewById(R.id.exo_position);
         live = findViewById(R.id.live);
+        SpannableString spannable = new SpannableString("Live");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            spannable.setSpan(new BulletSpan(10, Color.RED,12), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+        live.setText(spannable);
         exo_progress = findViewById(R.id.exo_progress);
 
         //debugTextView = findViewById(R.id.debug_text_view);

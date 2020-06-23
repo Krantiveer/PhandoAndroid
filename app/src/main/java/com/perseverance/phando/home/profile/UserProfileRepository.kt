@@ -3,6 +3,9 @@ package com.perseverance.phando.home.profile
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
+import com.perseverance.phando.Constants
+import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
@@ -34,7 +37,12 @@ class UserProfileRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<UserProfileData>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load profile data"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load profile data"))
+                }
+
             }
         })
 
@@ -60,7 +68,11 @@ class UserProfileRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to login user"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to login"))
+                }
             }
         })
         return data
@@ -85,7 +97,11 @@ class UserProfileRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to login"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to login"))
+                }
             }
         })
         return data
@@ -112,7 +128,11 @@ class UserProfileRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to register user"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to register user"))
+                }
             }
         })
         return data
@@ -138,7 +158,11 @@ class UserProfileRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to get OTP"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to get otp"))
+                }
             }
         })
         return data
@@ -164,7 +188,11 @@ class UserProfileRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to verify OTP"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to verify otp"))
+                }
             }
         })
         return data
@@ -187,7 +215,11 @@ class UserProfileRepository(private val application: Application) {
             }
 
             override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
-                data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                if (t is ApiClient.NoConnectivityException){
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                }else{
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                }
             }
         })
 

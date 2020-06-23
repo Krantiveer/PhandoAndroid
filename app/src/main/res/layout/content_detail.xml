@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_app"
-    android:paddingBottom="@dimen/_50sdp">
+    android:background="@color/bg_app">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,6 +28,7 @@
                 android:backgroundTint="@color/buy"
                 android:gravity="center"
                 android:text="Buy"
+                android:textAllCaps="false"
                 android:textSize="@dimen/_10sdp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/rentMedia"
                 app:layout_constraintEnd_toStartOf="@+id/rentMedia"
@@ -41,6 +41,7 @@
                 android:backgroundTint="@color/buy"
                 android:fontFamily="@font/asap"
                 android:text="Rent"
+                android:textAllCaps="false"
                 android:textSize="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/packageMedia"
@@ -53,6 +54,7 @@
                 android:backgroundTint="@color/buy"
                 android:gravity="center"
                 android:text="Subscribe"
+                android:textAllCaps="false"
                 android:textSize="@dimen/_10sdp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/rentMedia"
                 app:layout_constraintEnd_toEndOf="parent"

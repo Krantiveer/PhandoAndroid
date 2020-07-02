@@ -14,6 +14,8 @@ import androidx.fragment.app.FragmentActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.newgendroid.news.utils.AppDialogListener
 import com.perseverance.phando.R
+import com.perseverance.phando.Session
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.splash.BaseSplashActivity
 
 /**
@@ -270,6 +272,10 @@ object DialogUtils {
             alertDialog.show()
         }
 
+    }
+
+    fun showNetworkErrorToast() {
+        Toast.makeText(Session.instance,BaseConstants.NETWORK_ERROR,Toast.LENGTH_LONG).show()
     }
 
 

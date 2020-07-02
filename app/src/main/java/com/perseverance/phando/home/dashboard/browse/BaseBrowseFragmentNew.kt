@@ -13,10 +13,12 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.google.gson.Gson
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
@@ -47,6 +49,7 @@ import com.perseverance.phando.utils.Utils
 import com.qait.sadhna.LoginActivity
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_browse_new.*
+import kotlinx.android.synthetic.main.fragment_browse_new.progressBar
 
 
 abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickListener {
@@ -55,7 +58,7 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
         ViewModelProviders.of(this).get(BrowseFragmentViewModel::class.java)
     }
     private val userProfileViewModel by lazy {
-        ViewModelProviders.of(this).get(UserProfileViewModel::class.java)
+        ViewModelProvider(this).get(UserProfileViewModel::class.java)
     }
 
     private var adapter: HomeFragmentParentListAdapter? = null
@@ -155,6 +158,7 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
             }
 
             LoadingStatus.SUCCESS -> {
+                PreferencesUtils.saveObject("profile",it.data)
                 Utils.displayCircularProfileImage(activity, it.data?.user?.image,
                         R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
 
@@ -254,14 +258,21 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
 
         }
         Util.hideKeyBoard(requireActivity())
+        val strProfile = PreferencesUtils.getStringPreferences("profile")
+        val userProfileData = Gson().fromJson(strProfile,UserProfileData::class.java)
+        userProfileData?.let {
+            Utils.displayCircularProfileImage(context, it.user?.image,
+                    R.drawable.ic_user_avatar,R.drawable.ic_user_avatar,imgHeaderProfile)
+        }
         observeUserProfile()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode==LoginActivity.REQUEST_CODE_LOGIN && resultCode== Activity.RESULT_OK){
-            val intent = Intent(context, ProfileActivity::class.java)
-            startActivity(intent)
+//            val intent = Intent(context, ProfileActivity::class.java)
+//            startActivity(intent)
+
         }
     }
 

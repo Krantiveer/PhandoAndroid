@@ -2,9 +2,12 @@ package com.perseverance.phando.home.mediadetails.payment
 
 import android.content.Context
 import android.os.Bundle
+import android.text.Spannable
+import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
@@ -28,7 +31,12 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val purchaseOption = arguments?.getParcelable<PurchaseOption>("payment_option")!!
-        rentPriceInfo.text = "Rs ${purchaseOption?.value}"
+        var price= number2digits(purchaseOption?.value)
+        if (purchaseOption.discount_percentage > 0) {
+            val discount = (purchaseOption.value * purchaseOption.discount_percentage) / 100
+            price = number2digits(purchaseOption?.value - discount)
+        }
+        rentPriceInfo.text = "INR ${price}"
         when (purchaseOption.key) {
             "rent_price" -> {
                 rentPriceType.text="Renting a video"
@@ -46,5 +54,8 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
             purchaseOptionSelection.onPurchaseOptionSelected(purchaseOption)
             dismiss()
         }
+    }
+    fun number2digits(number: Float): String {
+        return String.format("%.2f", number)
     }
 }

@@ -12,7 +12,6 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/circular_background"
         android:padding="@dimen/_1sdp">
         <ImageView
             android:id="@+id/img_thumbnail"

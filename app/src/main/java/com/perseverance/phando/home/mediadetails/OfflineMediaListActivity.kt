@@ -41,7 +41,7 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
         recyclerView.addItemDecoration(decoration)
         adapter = OfflineMediaListAdapter(this@OfflineMediaListActivity, this)
         recyclerView.adapter = adapter
-        refreshList()
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -83,7 +83,7 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
     }
     override fun onResume() {
         super.onResume()
-
+        refreshList()
         LocalBroadcastManager.getInstance(this).registerReceiver(downloadBroadcastReceiver,
                 IntentFilter("download_event"))
     }

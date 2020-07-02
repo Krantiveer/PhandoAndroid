@@ -1,12 +1,15 @@
 package com.perseverance.phando.home.profile.login
 
+import android.content.IntentFilter
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.perseverance.phando.R
 import com.perseverance.phando.data.BaseResponse
+import com.perseverance.phando.utils.MyLog
 import kotlinx.android.synthetic.main.activity_p2_otp_verification.*
 import java.util.concurrent.TimeUnit
 
@@ -17,6 +20,8 @@ abstract class P2BaseOTPVerificationActivity : BaseUserLoginActivity() {
     protected lateinit var countryCode: String
 
     abstract fun verifyOTP()
+    var smsBroadcastReceiver: MySMSBroadcastReceiver? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_p2_otp_verification, container, false)
     }
@@ -94,8 +99,48 @@ abstract class P2BaseOTPVerificationActivity : BaseUserLoginActivity() {
         inputOTP.setOTP("")
         startTimer()
 
+
     }
-//    override fun onBackPressed() {
-//        finish()
-//    }
+
+    private fun startSmsRetriever() {
+        SmsRetriever.getClient(appCompatActivity).also {
+            it.startSmsRetriever()
+                    .addOnSuccessListener {
+                        MyLog.e("LISTENING_SUCCESS")
+                    }
+                    .addOnFailureListener {
+                        MyLog.e("LISTENING_FAILURE")
+                    }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        registerBroadcastReceiver()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        appCompatActivity.unregisterReceiver(smsBroadcastReceiver)
+    }
+
+    private fun registerBroadcastReceiver() {
+        smsBroadcastReceiver = MySMSBroadcastReceiver().also {
+            it.smsBroadcastReceiverListener = object : MySMSBroadcastReceiver.SmsBroadcastReceiverListener {
+                override fun onSuccess(otp: String?) {
+                    otp?.let {
+                        inputOTP.setOTP(it)
+                    }
+
+                }
+
+                override fun onFailure() {
+                }
+            }
+        }
+        val intentFilter = IntentFilter(SmsRetriever.SMS_RETRIEVED_ACTION)
+        appCompatActivity.registerReceiver(smsBroadcastReceiver, intentFilter)
+
+    }
+
 }

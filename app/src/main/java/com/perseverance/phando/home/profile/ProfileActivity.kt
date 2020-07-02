@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.gson.Gson
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
@@ -20,10 +21,7 @@ import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
 import com.perseverance.phando.splash.SplashActivity
-import com.perseverance.phando.utils.MyLog
-import com.perseverance.phando.utils.PreferencesUtils
-import com.perseverance.phando.utils.Util
-import com.perseverance.phando.utils.Utils
+import com.perseverance.phando.utils.*
 import com.qait.sadhna.LoginActivity
 import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_user_profile.*
@@ -41,10 +39,10 @@ class ProfileActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         title = "Profile"
-        observeUserProfile()
+
         btnSubscribe.setOnClickListener {
             if (!Utils.isNetworkAvailable(this@ProfileActivity)){
-                toast(BaseConstants.NETWORK_ERROR)
+                DialogUtils.showNetworkErrorToast()
                 return@setOnClickListener
             }
             if (btnSubscribe.text.equals("Subscribe")) {
@@ -58,7 +56,7 @@ class ProfileActivity : AppCompatActivity() {
         }
         btnBilling.setOnClickListener {
             if (!Utils.isNetworkAvailable(this@ProfileActivity)){
-                toast(BaseConstants.NETWORK_ERROR)
+                DialogUtils.showNetworkErrorToast()
                 return@setOnClickListener
             }
                 val token = PreferencesUtils.getLoggedStatus()
@@ -68,7 +66,7 @@ class ProfileActivity : AppCompatActivity() {
 
         updateProfile.setOnClickListener {
             if (!Utils.isNetworkAvailable(this@ProfileActivity)){
-                toast(BaseConstants.NETWORK_ERROR)
+                DialogUtils.showNetworkErrorToast()
                 return@setOnClickListener
             }
             val token = PreferencesUtils.getLoggedStatus()
@@ -103,7 +101,29 @@ class ProfileActivity : AppCompatActivity() {
             val intent = Intent(this@ProfileActivity, OfflineMediaListActivity::class.java)
             startActivity(intent)
         }
+        val strProfile = PreferencesUtils.getStringPreferences("profile")
+        val userProfileData = Gson().fromJson(strProfile,UserProfileData::class.java)
+        userProfileData?.let {
+            progressBar.gone()
+            userName.visible()
+            userName.text = it.user?.name
+            userEmail.text = it.user?.email
+            it.user?.mobile?.let {
+                userMobile.text =it
+            }?: userMobile.gone()
 
+            Utils.displayCircularProfileImage(this@ProfileActivity, it.user?.image,
+                    R.drawable.ic_user_avatar,R.drawable.ic_user_avatar,avatar)
+
+            it.is_subscribed?.let {
+                if (it==0){
+                    btnSubscribe.text="Subscribe"
+                }else{
+                    btnSubscribe.text="View Subscriptions"
+                }
+            }
+        }
+        observeUserProfile()
     }
 
     private fun observeUserProfile() {

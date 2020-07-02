@@ -166,6 +166,10 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
 
                 override fun onPositiveButtonPressed() {
                     VideoSdkUtil.deleteDownloadedInfo(application, this@OffLineMediaDetailActivity.downloadMetadata?.media_url)
+                   Handler().postDelayed({
+                       finish()
+                   },1000)
+
                 }
 
             })

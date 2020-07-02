@@ -20,8 +20,10 @@ public class DownloadMetadata implements Serializable {
     String media_url;
     @SerializedName("otherText")
     String otherText;
+    @SerializedName("cc_url")
+    String cc_url;
 
-    public DownloadMetadata(String media_id, String type, String title, String description, String thumbnail, String media_url,String otherText) {
+    public DownloadMetadata(String media_id, String type, String title, String description, String thumbnail, String media_url,String otherText,String cc_url) {
         this.media_id = media_id;
         this.type = type;
         this.description = description;
@@ -29,6 +31,7 @@ public class DownloadMetadata implements Serializable {
         this.thumbnail = thumbnail;
         this.media_url = media_url;
         this.otherText = otherText;
+        this.cc_url = cc_url;
     }
 
     public String getMedia_id() {
@@ -85,5 +88,13 @@ public class DownloadMetadata implements Serializable {
 
     public void setOtherText(String otherText) {
         this.otherText = otherText;
+    }
+
+    public String getCc_url() {
+        return cc_url;
+    }
+
+    public void setCc_url(String cc_url) {
+        this.cc_url = cc_url;
     }
 }

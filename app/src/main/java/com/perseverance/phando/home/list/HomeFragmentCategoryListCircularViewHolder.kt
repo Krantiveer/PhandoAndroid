@@ -32,23 +32,13 @@ class HomeFragmentCategoryListCircularViewHolder(itemView: View, listener: Adapt
             itemView.free.visible()
         }
 
-
-        if (TextUtils.isEmpty(item.thumbnail)) {
-            // itemView.img_thumbnail.resizeView(ListItemThumbnail())
-            Utils.displayCircularImage(itemView.context, Utils.createHeaderThumbnailUrl(item),
-                    R.drawable.ic_circular_play_placeholder,
-                    R.drawable.ic_circular_play_placeholder, itemView.img_thumbnail)
-        } else {
-            // itemView.img_thumbnail.resizeView(ListItemThumbnail())
-            Utils.displayCircularImage(itemView.context, item.thumbnail,
-                    R.drawable.ic_circular_play_placeholder,
-                    R.drawable.ic_circular_play_placeholder, itemView.img_thumbnail)
-        }
+        Utils.displayImage(itemView.context, item.circular_thumbnail,
+                R.drawable.ic_circular_play_placeholder,
+                R.drawable.ic_circular_play_placeholder, itemView.img_thumbnail)
         itemView.img_thumbnail.resizeView(ListItemCircularThumbnail())
 
         itemView.txtTitle.text = item.title
         itemView.duration.text = item.formatedDuration
 
-        // itemView.invalidate()
     }
     }

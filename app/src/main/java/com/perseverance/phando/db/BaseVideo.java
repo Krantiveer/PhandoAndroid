@@ -91,6 +91,18 @@ public class BaseVideo implements Serializable {
         this.lastWatchTime = lastWatchTime;
     }
 
+    @SerializedName("circular_thumbnail")
+    private String circular_thumbnail;
+
+    public String getCircular_thumbnail() {
+        return circular_thumbnail;
+    }
+
+    public void setCircular_thumbnail(String circular_thumbnail) {
+        this.circular_thumbnail = circular_thumbnail;
+    }
+
+
     private String videoUrl;
     private String videoAdUrl;
     private int languageCode;

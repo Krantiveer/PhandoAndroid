@@ -63,7 +63,6 @@ import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.activity_video_details.progressBar
 import kotlinx.android.synthetic.main.content_detail.*
 import kotlinx.android.synthetic.main.content_detail.recyclerView
-import kotlinx.android.synthetic.main.fragment_mylist.*
 import org.json.JSONObject
 import java.util.*
 
@@ -413,10 +412,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         download.setOnClickListener {
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
-                message.setOnClickListener {
                     val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
                     startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
-                }
+
                 return@setOnClickListener
             }
             when (mediaplaybackData.mediaCode) {
@@ -452,6 +450,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                         downloadStop.gone()
                     }
                     STATE_DOWNLOADING -> {
+                        downloadDelete.text="Cancel"
                         downloadResume.gone()
                     }
                     STATE_FAILED -> {
@@ -488,7 +487,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                             null)
                     val downloadMetadata = Gson().toJson(DownloadMetadata(mediaMetadata?.media_id,
                             mediaMetadata?.type, mediaMetadata?.title, mediaMetadata?.detail, mediaMetadata?.thumbnail, mediaMetadata?.media_url,
-                            mediaMetadata?.getOtherText()))
+                            mediaMetadata?.getOtherText(),""))
                     phandoPlayerView.startDownload(videoPlayerMetadata, downloadMetadata)
                 }
             }
@@ -533,10 +532,10 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         rentMedia.setOnClickListener {
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
-                message.setOnClickListener {
+
                     val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
                     startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
-                }
+
 
             } else {
                 val purchaseOptionBottomSheetFragment = PurchaseOptionBottomSheetFragment()
@@ -564,11 +563,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         packageMedia.setOnClickListener {
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
-                message.setOnClickListener {
+
                     val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
                     startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
-                }
-
             } else {
                 val intent = Intent(this@MediaDetailActivity, SubscriptionPackageActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_PACKAGE)
@@ -662,17 +659,16 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
-                                val originalPrice= "Rent at INR  ${it.value}/-"
-                                rentMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val originalPrice= "Rent at INR  ${number2digits(it.value)}/-"
+                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                                 rentMedia.tag = it
-                                rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                val originalPrice= "Buy at INR  ${it.value}/-"
-                                buyMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val originalPrice= "Buy at INR  ${number2digits(it.value)}/-"
+                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                                 buyMedia.tag = it
@@ -682,12 +678,11 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     } else {
                         when (it.key) {
                             "rent_price" -> {
-                                rentMedia.text = "Rent at INR ${it.value}/-"
+                                rentMedia.text = "Rent at INR ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
-                                rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                buyMedia.text = "Buy at INR ${it.value}/-"
+                                buyMedia.text = "Buy at INR ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
                         }
@@ -704,14 +699,14 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     when (it.key) {
                         "rent_price" -> {
                             if (it.discount_percentage > 0) {
-                                val originalPrice= "Rent at INR  ${it.value}/-"
+                                val originalPrice= "Rent at INR  ${number2digits(it.value)}/-"
                                 val discount = (it.value * it.discount_percentage) / 100
-                                rentMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                             }else{
-                                rentMedia.text = "Rent at INR ${it.value}/-"
+                                rentMedia.text = "Rent at INR ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                             }
                         }
@@ -728,14 +723,14 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     when (it.key) {
                         "purchase_price" -> {
                             if (it.discount_percentage > 0) {
-                                val originalPrice= "Buy at INR  ${it.value}/-"
+                                val originalPrice= "Buy at INR  ${number2digits(it.value)}/-"
                                 val discount = (it.value * it.discount_percentage) / 100
-                                buyMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                             }else{
-                                buyMedia.text = "Buy at INR ${it.value}/-"
+                                buyMedia.text = "Buy at INR ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
 
@@ -754,8 +749,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
-                                val originalPrice= "Rent at INR  ${it.value}/-"
-                                rentMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val originalPrice= "Rent at INR  ${number2digits(it.value)}/-"
+                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -763,8 +758,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                                 rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                val originalPrice= "Buy at INR  ${it.value}/-"
-                                buyMedia.setText("$originalPrice  ${it.value - discount}/-", TextView.BufferType.SPANNABLE)
+                                val originalPrice= "Buy at INR  ${number2digits(it.value)}/-"
+                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
@@ -775,12 +770,12 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     } else {
                         when (it.key) {
                             "rent_price" -> {
-                                rentMedia.text = "Rent at INR ${it.value}/-"
+                                rentMedia.text = "Rent at INR ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                                 rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                buyMedia.text = "Buy at INR ${it.value}/-"
+                                buyMedia.text = "Buy at INR ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
                         }
@@ -1377,5 +1372,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         })
     }
 
-
+   fun number2digits(number: Float): String {
+      return String.format("%.2f", number)
+   }
 }

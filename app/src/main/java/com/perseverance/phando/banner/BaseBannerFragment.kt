@@ -21,6 +21,7 @@ import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.fragment_banner_list.*
+import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 
 open class BaseBannerFragment : Fragment() {
 
@@ -30,7 +31,7 @@ open class BaseBannerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            banner = arguments!!.getSerializable(ARG_BANNER) as Video?
+            banner = requireArguments().getSerializable(ARG_BANNER) as Video?
         }
     }
 
@@ -43,10 +44,10 @@ open class BaseBannerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         banner?.let {
-            if (it.isFree == 0) { // if paid video then show premium icon
-                free.visible()
-            } else {
+            if (it.isFree == 1) { // if paid video then show premium icon
                 free.gone()
+            } else {
+                free.visible()
             }
         }
         Utils.displayImage(activity, banner?.thumbnail,

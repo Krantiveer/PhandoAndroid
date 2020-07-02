@@ -253,6 +253,10 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         if (query.isNullOrBlank()){
             return
         }
+        if (!Utils.isNetworkAvailable(appCompatActivity)){
+            DialogUtils.showNetworkErrorToast()
+            return
+        }
         progressBar.visible()
         val presenter = SearchPresenterImpl(this)
         presenter.search(pageCount, query, showProgress,dataFilters)

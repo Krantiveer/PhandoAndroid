@@ -30,7 +30,8 @@
                 android:text="Buy"
                 android:textAllCaps="false"
                 android:textSize="@dimen/_10sdp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/rentMedia"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/rentMedia"
                 app:layout_constraintStart_toStartOf="parent" />
 
@@ -44,6 +45,7 @@
                 android:textAllCaps="false"
                 android:textSize="@dimen/_10sdp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/packageMedia"
                 app:layout_constraintStart_toEndOf="@+id/buyMedia" />
 
@@ -56,7 +58,8 @@
                 android:text="Subscribe"
                 android:textAllCaps="false"
                 android:textSize="@dimen/_10sdp"
-                app:layout_constraintBaseline_toBaselineOf="@+id/rentMedia"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/rentMedia" />
 
@@ -68,25 +71,26 @@
             android:layout_height="@dimen/_1sdp"
             android:background="#0F161F" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/actionControlers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/black"
             android:gravity="center"
-            android:orientation="horizontal"
             android:paddingTop="@dimen/_10sdp"
-            android:paddingBottom="@dimen/_10sdp"
-            android:weightSum="5">
+            android:paddingBottom="@dimen/_10sdp">
 
             <LinearLayout
                 android:id="@+id/watchNow"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginBottom="13dp"
                 android:clickable="true"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/like"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgPlay"
@@ -107,12 +111,16 @@
 
             <LinearLayout
                 android:id="@+id/like"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginEnd="1dp"
+                android:layout_marginRight="1dp"
                 android:clickable="true"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toStartOf="@+id/share"
+                app:layout_constraintStart_toEndOf="@+id/watchNow"
+                app:layout_constraintTop_toTopOf="@+id/watchNow">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgLike"
@@ -133,12 +141,14 @@
 
             <LinearLayout
                 android:id="@+id/share"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:clickable="true"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toStartOf="@+id/download"
+                app:layout_constraintStart_toEndOf="@+id/like"
+                app:layout_constraintTop_toTopOf="@+id/like">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgShare"
@@ -160,12 +170,15 @@
 
             <LinearLayout
                 android:id="@+id/download"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:clickable="true"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@+id/favorite"
+                app:layout_constraintStart_toEndOf="@+id/share"
+                app:layout_constraintTop_toTopOf="@+id/share">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgDownload"
@@ -185,12 +198,14 @@
 
             <LinearLayout
                 android:id="@+id/favorite"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:clickable="true"
                 android:gravity="center"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/download"
+                app:layout_constraintTop_toTopOf="@+id/download">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgMyList"
@@ -208,7 +223,7 @@
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 
-        </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
             android:layout_width="match_parent"

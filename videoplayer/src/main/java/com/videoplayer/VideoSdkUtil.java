@@ -15,20 +15,39 @@ import java.util.List;
 
 public class VideoSdkUtil {
 
-    public static List<DownloadMetadata> getDownloadedVideo(Application application) {
-        List<DownloadMetadata> downloadMetadataList = new ArrayList<>();
+    public static List<String> getDownloadedVideo(Application application) {
+        List<String> downloadMetadataList = new ArrayList<>();
         DownloadTracker downloadTracker = ((VideoPlayerApplication) application).getDownloadTracker();
         HashMap<Uri, Download> downloads = downloadTracker.getDownloads();
         for (Uri key : downloads.keySet()) {
-            Log.e("download", key.toString());
-            String fromUtf8Bytes = Util.fromUtf8Bytes(downloads.get(key).request.data);
-            Log.e("download", fromUtf8Bytes);
-            DownloadMetadata downloadMetadata = new Gson().fromJson(fromUtf8Bytes, DownloadMetadata.class);
-            downloadMetadataList.add(downloadMetadata);
-            Log.e("download", downloadMetadata.toString());
+            downloadMetadataList.add(key.toString());
         }
         return downloadMetadataList;
     }
+
+
+    public static void deleteAllDownloadedVideo(Application application) {
+        DownloadTracker downloadTracker = ((VideoPlayerApplication) application).getDownloadTracker();
+        HashMap<Uri, Download> downloads = downloadTracker.getDownloads();
+        for (Uri key : downloads.keySet()) {
+                downloadTracker.deleteDownload(key);
+        }
+    }
+
+//    public static List<DownloadMetadata> getDownloadedVideo(Application application) {
+//        List<DownloadMetadata> downloadMetadataList = new ArrayList<>();
+//        DownloadTracker downloadTracker = ((VideoPlayerApplication) application).getDownloadTracker();
+//        HashMap<Uri, Download> downloads = downloadTracker.getDownloads();
+//        for (Uri key : downloads.keySet()) {
+//            Log.e("download", key.toString());
+//            String fromUtf8Bytes = Util.fromUtf8Bytes(downloads.get(key).request.data);
+//            Log.e("download", fromUtf8Bytes);
+//            DownloadMetadata downloadMetadata = new Gson().fromJson(fromUtf8Bytes, DownloadMetadata.class);
+//            downloadMetadataList.add(downloadMetadata);
+//            Log.e("download", downloadMetadata.toString());
+//        }
+//        return downloadMetadataList;
+//    }
 
     public static DownloadInfo getDownloadedInfo(Application application, String uri) {
         if (TextUtils.isEmpty(uri)) {

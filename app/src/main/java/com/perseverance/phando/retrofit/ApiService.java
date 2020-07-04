@@ -10,6 +10,8 @@ import com.perseverance.phando.home.dashboard.models.BrowseData;
 import com.perseverance.phando.home.dashboard.models.CategoryTab;
 import com.perseverance.phando.home.dashboard.mylist.UpdateMyListResponse;
 import com.perseverance.phando.home.mediadetails.MediaMetadata;
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadataResponse;
+import com.perseverance.phando.home.mediadetails.downloads.MediaUrlResponse;
 import com.perseverance.phando.home.mediadetails.payment.MediaplaybackData;
 import com.perseverance.phando.home.profile.UserProfileData;
 import com.perseverance.phando.home.profile.login.SocialLoggedInUser;
@@ -25,6 +27,7 @@ import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -200,4 +203,18 @@ public interface ApiService {
     @GET("countrycodes")
     Call<List<CountryCode>> getCountrycodes();
 
+
+    @POST("saveUserDownload")
+    @FormUrlEncoded
+    Call<BaseResponse> saveUserDownload(@FieldMap Map<String, String> bodyMap);
+
+    @POST("removeUserDownload")
+    @FormUrlEncoded
+    Call<BaseResponse> removeUserDownload(@Field("document_id[]") ArrayList<String> document_id);
+
+    @GET("userDownload")
+    Call<DownloadMetadataResponse> getUserDownload();
+
+    @GET("mediaUrl")
+    Call<MediaUrlResponse> getMediaUrl(@Query("document_id") String documentId);
 }

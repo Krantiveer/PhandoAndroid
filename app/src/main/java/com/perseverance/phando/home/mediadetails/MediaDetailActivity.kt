@@ -29,7 +29,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.Gson
 import com.perseverance.patrikanews.utils.getViewModel
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
@@ -39,11 +38,13 @@ import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
+import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.db.BaseVideo
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.home.mediadetails.payment.MediaplaybackData
 import com.perseverance.phando.home.mediadetails.payment.PurchaseOption
 import com.perseverance.phando.home.mediadetails.payment.PurchaseOptionBottomSheetFragment
@@ -65,10 +66,16 @@ import kotlinx.android.synthetic.main.content_detail.*
 import kotlinx.android.synthetic.main.content_detail.recyclerView
 import org.json.JSONObject
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPlayerCallback, PaymentResultListener, PurchaseOptionSelection {
     private var razorpayOrdertId: String? = null
     val STRIKE_THROUGH_SPAN = StrikethroughSpan()
+    val downloadMetadataDao by lazy {
+        AppDatabase.getInstance(this)?.downloadMetadataDao()
+    }
+
     companion object {
 
         // Important: These constants are persisted into DownloadIndex. Do not change them.
@@ -119,7 +126,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     var isTrailerPlaying = false
     var isPlayerstartSent = false
 
-    val playerViewModel by lazy {
+    val mediaDetailViewModel by lazy {
         getViewModel<MediaDetailViewModel>()
     }
     var nextMediaMetadata: MediaplaybackData? = null
@@ -360,17 +367,17 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         val decoration = BaseRecycleMarginDecoration(this@MediaDetailActivity)
         recyclerView.addItemDecoration(decoration)
 
-        playerViewModel.getVideoDetailMutableLiveData().observe(this, videoMetadataModelObserver)
-        playerViewModel.getNextEpisodeVideoDetailMutableLiveData().observe(this, nextVideoMetadataModelObserver)
-        playerViewModel.message.observe(this, messageObserver)
+        mediaDetailViewModel.getVideoDetailMutableLiveData().observe(this, videoMetadataModelObserver)
+        mediaDetailViewModel.getNextEpisodeVideoDetailMutableLiveData().observe(this, nextVideoMetadataModelObserver)
+        mediaDetailViewModel.message.observe(this, messageObserver)
 
-        playerViewModel.isInWishlist.observe(this, favoriteObserver)
-        playerViewModel.isLiked.observe(this, likeObserver)
-        playerViewModel.isDisliked.observe(this, dislikeObserver)
-        playerViewModel.downloadStatus.observe(this, downloadObserver)
+        mediaDetailViewModel.isInWishlist.observe(this, favoriteObserver)
+        mediaDetailViewModel.isLiked.observe(this, likeObserver)
+        mediaDetailViewModel.isDisliked.observe(this, dislikeObserver)
+        mediaDetailViewModel.downloadStatus.observe(this, downloadObserver)
 
         val video = intent?.getSerializableExtra(ARG_VIDEO) as BaseVideo
-        playerViewModel.refreshMediaMetadata(video)
+        mediaDetailViewModel.refreshMediaMetadata(video)
         MyLog.d("Player Image", video.thumbnail)
         Utils.displayImage(this, video.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
         favorite.setOnClickListener {
@@ -379,8 +386,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
                 startActivity(intent)
             } else {
-                playerViewModel.reloadTrigger.value?.let {
-                    playerViewModel.addToMyList(it.entryId, it.mediaType)
+                mediaDetailViewModel.reloadTrigger.value?.let {
+                    mediaDetailViewModel.addToMyList(it.entryId, it.mediaType)
                 }
             }
 
@@ -391,8 +398,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
                 startActivity(intent)
             } else {
-                playerViewModel.reloadTrigger.value?.let {
-                    playerViewModel.addToLike(it.entryId, it.mediaType)
+                mediaDetailViewModel.reloadTrigger.value?.let {
+                    mediaDetailViewModel.addToLike(it.entryId, it.mediaType)
                 }
             }
 
@@ -412,8 +419,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         download.setOnClickListener {
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
-                    val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
-                    startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
 
                 return@setOnClickListener
             }
@@ -423,7 +430,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     return@setOnClickListener
                 }
             }
-            playerViewModel.downloadStatus.value?.let {
+            mediaDetailViewModel.downloadStatus.value?.let {
                 val mBottomSheetDialog = BottomSheetDialog(this)
                 val sheetView: View = layoutInflater.inflate(R.layout.fragment_download_control_options, null)
                 mBottomSheetDialog.setContentView(sheetView)
@@ -431,7 +438,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 val downloadResume = sheetView.findViewById<TextView>(R.id.downloadResume)
                 val downloadStop = sheetView.findViewById<TextView>(R.id.downloadStop)
                 downloadDelete.setOnClickListener {
-                    VideoSdkUtil.deleteDownloadedInfo(application, mediaMetadata?.media_url)
+                    deleteDownload()
                     mBottomSheetDialog.dismiss()
                 }
                 downloadResume.setOnClickListener {
@@ -450,7 +457,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                         downloadStop.gone()
                     }
                     STATE_DOWNLOADING -> {
-                        downloadDelete.text="Cancel"
+                        downloadDelete.text = "Cancel"
                         downloadResume.gone()
                     }
                     STATE_FAILED -> {
@@ -471,25 +478,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 }
                 mBottomSheetDialog.show()
             } ?: run {
-                mediaMetadata?.media_url?.let {
-                    if (it.isNullOrEmpty()) {
-                        return@let
-                    }
+                startDownload()
 
-                    val videoPlayerMetadata = UriSample(
-                            null,
-                            Uri.parse(it),
-                            null,
-                            false,
-                            null,
-                            null,
-                            null,
-                            null)
-                    val downloadMetadata = Gson().toJson(DownloadMetadata(mediaMetadata?.media_id,
-                            mediaMetadata?.type, mediaMetadata?.title, mediaMetadata?.detail, mediaMetadata?.thumbnail, mediaMetadata?.media_url,
-                            mediaMetadata?.getOtherText(),""))
-                    phandoPlayerView.startDownload(videoPlayerMetadata, downloadMetadata)
-                }
             }
         }
         play.setOnClickListener {
@@ -533,8 +523,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
 
-                    val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
-                    startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
 
 
             } else {
@@ -564,14 +554,81 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
 
-                    val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
-                    startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             } else {
                 val intent = Intent(this@MediaDetailActivity, SubscriptionPackageActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_PACKAGE)
             }
         }
 
+    }
+
+    private fun startDownload() {
+        mediaMetadata?.media_url?.let {
+            if (it.isNullOrEmpty()) {
+                return@let
+            }
+            progressBar.visible()
+            val param = HashMap<String, String>()
+            param["document_id"] = mediaMetadata?.document_media_id!!.toString()
+            mediaDetailViewModel.saveUserDownload(param).observe(this, Observer {
+                val result = it ?: return@Observer
+
+                when (result.status) {
+                    LoadingStatus.SUCCESS -> {
+                        val videoPlayerMetadata = UriSample(
+                                null,
+                                Uri.parse(mediaMetadata?.media_url),
+                                null,
+                                false,
+                                null,
+                                null,
+                                null,
+                                null)
+                        phandoPlayerView.startDownload(videoPlayerMetadata, mediaMetadata?.title)
+                        downloadMetadataDao?.insert(DownloadMetadata(mediaMetadata?.document_media_id!!.toString(),
+                                mediaMetadata?.title,
+                                mediaMetadata?.detail,
+                                mediaMetadata?.thumbnail,
+                                mediaMetadata?.media_url
+
+                        ))
+                        progressBar.gone()
+                    }
+                    LoadingStatus.ERROR -> {
+                        progressBar.gone()
+                        result.message?.let { it1 -> toast(it1) }
+                    }
+                }
+            })
+
+        }
+    }
+
+    private fun deleteDownload() {
+        mediaMetadata?.media_url?.let {
+            if (it.isNullOrEmpty()) {
+                return@let
+            }
+            progressBar.visible()
+            val param = ArrayList<String>()
+            param.add(mediaMetadata?.document_media_id!!.toString())
+            mediaDetailViewModel.removeUserDownload(param).observe(this, Observer {
+                val result = it ?: return@Observer
+                progressBar.gone()
+                when (result.status) {
+                    LoadingStatus.SUCCESS -> {
+                        downloadMetadataDao?.deleteById(mediaMetadata?.document_media_id.toString())
+                        VideoSdkUtil.deleteDownloadedInfo(application, mediaMetadata?.media_url)
+                    }
+                    LoadingStatus.ERROR -> {
+                        result.message?.let { it1 -> toast(it1) }
+                    }
+                }
+            })
+
+        }
     }
 
     private fun playVideo() {
@@ -659,7 +716,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
-                                val originalPrice= "Rent at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Rent at INR  ${number2digits(it.value)}/-"
                                 rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -667,7 +724,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                                 rentMedia.tag = it
                             }
                             "purchase_price" -> {
-                                val originalPrice= "Buy at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Buy at INR  ${number2digits(it.value)}/-"
                                 buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -699,13 +756,13 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     when (it.key) {
                         "rent_price" -> {
                             if (it.discount_percentage > 0) {
-                                val originalPrice= "Rent at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Rent at INR  ${number2digits(it.value)}/-"
                                 val discount = (it.value * it.discount_percentage) / 100
                                 rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-                            }else{
+                            } else {
                                 rentMedia.text = "Rent at INR ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                             }
@@ -723,13 +780,13 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     when (it.key) {
                         "purchase_price" -> {
                             if (it.discount_percentage > 0) {
-                                val originalPrice= "Buy at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Buy at INR  ${number2digits(it.value)}/-"
                                 val discount = (it.value * it.discount_percentage) / 100
                                 buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
-                            }else{
+                            } else {
                                 buyMedia.text = "Buy at INR ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
@@ -749,7 +806,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
-                                val originalPrice= "Rent at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Rent at INR  ${number2digits(it.value)}/-"
                                 rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -758,7 +815,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                                 rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                val originalPrice= "Buy at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Buy at INR  ${number2digits(it.value)}/-"
                                 buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -788,11 +845,11 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         this.mediaMetadata = mediaplaybackData.data
         mediaMetadata?.is_live?.let {
             download.isEnabled = it == 0
-            if (it==1){
-                txtPlay.text="Go Live"
+            if (it == 1) {
+                txtPlay.text = "Go Live"
             }
         }
-        playerViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
+        mediaDetailViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
         videoTitle.text = mediaMetadata?.title
         videoDescription.text = mediaMetadata?.detail
         //Utils.makeTextViewResizable(videoDescription, 3, "View More", true)
@@ -847,9 +904,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         }
         mListener?.enable()
 
-        playerViewModel.isInWishlist.postValue(mediaMetadata?.is_wishlist)
-        playerViewModel.isLiked.postValue(mediaMetadata?.is_like)
-        playerViewModel.isDisliked.postValue(mediaMetadata?.is_dislike)
+        mediaDetailViewModel.isInWishlist.postValue(mediaMetadata?.is_wishlist)
+        mediaDetailViewModel.isLiked.postValue(mediaMetadata?.is_like)
+        mediaDetailViewModel.isDisliked.postValue(mediaMetadata?.is_dislike)
         setRelatedVideo()
 
 
@@ -861,7 +918,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             }
         }
         mediaMetadata?.next_media?.let {
-            playerViewModel.getNextEpisodeMediaMetadata(BaseVideo().apply {
+            mediaDetailViewModel.getNextEpisodeMediaMetadata(BaseVideo().apply {
                 mediaType = it.type
                 entryId = it.id.toString()
             })
@@ -976,7 +1033,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     }
 
     private fun shareVideoUrl() {
-        playerViewModel.reloadTrigger.value?.let {
+        mediaDetailViewModel.reloadTrigger.value?.let {
             val title = videoTitle.text.toString()
             val mediaType = it.mediaType
             it.entryId?.let {
@@ -1041,7 +1098,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         mediaMetadata?.let { mediaMetaData ->
             phandoPlayerView.currentPosition?.let {
                 if (it > 0) {
-                    playerViewModel.setContinueWatchingTime(mediaMetaData?.document_media_id.toString(), it.toString())
+                    mediaDetailViewModel.setContinueWatchingTime(mediaMetaData?.document_media_id.toString(), it.toString())
                 }
             }
 
@@ -1053,7 +1110,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         when (requestCode) {
             LoginActivity.REQUEST_CODE_LOGIN -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
                 } else {
 
                 }
@@ -1061,21 +1118,21 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
             REQUEST_CODE_RENT -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
                 } else {
 
                 }
             }
             REQUEST_CODE_BUY -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
                 } else {
 
                 }
             }
             REQUEST_CODE_PACKAGE -> {
                 if (resultCode == Activity.RESULT_OK) {
-                    playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
                 } else {
 
                 }
@@ -1096,7 +1153,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     startActivity(intent)
                 } else {
                     Utils.displayImage(this, data.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
-                    playerViewModel.refreshMediaMetadata(data)
+                    mediaDetailViewModel.refreshMediaMetadata(data)
                 }
             }
 
@@ -1213,7 +1270,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
     override fun onDownloadStateChanged() {
         mediaMetadata?.media_url?.let {
-            playerViewModel.refreshDownloadStatus(it)
+            mediaDetailViewModel.refreshDownloadStatus(it)
         }
 
     }
@@ -1288,7 +1345,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 LoadingStatus.SUCCESS -> {
                     progressBar.gone()
                     if (it.data?.is_subscribed == 1) {
-                        playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+                        mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
                     } else {
                         startPayment(it.data)
                     }
@@ -1363,7 +1420,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     progressBar.gone()
                     it.data?.message?.let { it1 -> toast(it1) }
                     if (it.data?.status.equals("success", true)) {
-                        playerViewModel.refreshMediaMetadata(playerViewModel.reloadTrigger.value)
+                        mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
                     }
                 }
 
@@ -1372,7 +1429,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         })
     }
 
-   fun number2digits(number: Float): String {
-      return String.format("%.2f", number)
-   }
+    fun number2digits(number: Float): String {
+        return String.format("%.2f", number)
+    }
 }

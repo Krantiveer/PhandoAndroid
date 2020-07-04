@@ -15,6 +15,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
@@ -24,6 +25,7 @@ import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
+import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.db.Category
 import com.perseverance.phando.db.Filter
 import com.perseverance.phando.db.Video
@@ -37,6 +39,7 @@ import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.list.HomeFragmentParentListAdapter
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.home.profile.ProfileActivity
 import com.perseverance.phando.home.profile.UserProfileData
 import com.perseverance.phando.home.profile.UserProfileViewModel
@@ -50,9 +53,11 @@ import com.qait.sadhna.LoginActivity
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_browse_new.*
 import kotlinx.android.synthetic.main.fragment_browse_new.progressBar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
-abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickListener {
+abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickListener {
 
     private val browseFragmentViewModel by lazy {
         ViewModelProviders.of(this).get(BrowseFragmentViewModel::class.java)
@@ -63,10 +68,10 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
 
     private var adapter: HomeFragmentParentListAdapter? = null
     private var browseFragmentCategoryTabListAdapter: BrowseFragmentCategoryTabListAdapter? = null
-    private var categoryTabListList:ArrayList<CategoryTab> = ArrayList<CategoryTab>()
+    private var categoryTabListList: ArrayList<CategoryTab> = ArrayList<CategoryTab>()
     val dataFilters = DataFilters()
-    var categoryTab :CategoryTab?=null
-    var nestedScrollView : NestedScrollView?=null
+    var categoryTab: CategoryTab? = null
+    var nestedScrollView: NestedScrollView? = null
 
     val browseDataViewModelObserver = Observer<DataLoadingStatus<List<BrowseData>>> {
 
@@ -81,11 +86,11 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
                 progressBar.gone()
                 adapter = HomeFragmentParentListAdapter(activity as Context, this, childFragmentManager)
                 recyclerViewUpcomingVideos.adapter = adapter
-                it.data?.let { browseDataList->
-                    if (browseDataList.isNotEmpty()){
+                it.data?.let { browseDataList ->
+                    if (browseDataList.isNotEmpty()) {
                         val headerBrowseData = browseDataList.get(0)
                         headerBrowseData?.let { browseData ->
-                            setBannerSlider(browseDataList,browseData)
+                            setBannerSlider(browseDataList, browseData)
                             /*if (browseData.displayType == "TOP_BANNER") {
                                 homeHeaderView?.setData(browseData.list)
                                 (browseDataList as ArrayList).removeAt(0)
@@ -95,10 +100,10 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
                             }*/
                         }
                         nestedScrollView?.visible()
-                    }else{
+                    } else {
                         nestedScrollView?.gone()
 
-                        Toast.makeText(activity,"No data to display!",Toast.LENGTH_LONG).show()
+                        Toast.makeText(activity, "No data to display!", Toast.LENGTH_LONG).show()
                     }
 
                     adapter?.addAll(browseDataList)
@@ -122,20 +127,20 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
             LoadingStatus.SUCCESS -> {
 
 
-                it.data?.let { browseDataList->
-                    if (browseDataList.isNotEmpty()){
+                it.data?.let { browseDataList ->
+                    if (browseDataList.isNotEmpty()) {
                         categoryTabListList = browseDataList as ArrayList<CategoryTab>
                         categoryTabListList.map {
-                            it.show=true
-                            it.showFilter=false
+                            it.show = true
+                            it.showFilter = false
 
                         }
-                        browseFragmentCategoryTabListAdapter = BrowseFragmentCategoryTabListAdapter(activity as Context,this)
-                        filterRecyclerView.adapter =  browseFragmentCategoryTabListAdapter
+                        browseFragmentCategoryTabListAdapter = BrowseFragmentCategoryTabListAdapter(activity as Context, this)
+                        filterRecyclerView.adapter = browseFragmentCategoryTabListAdapter
                         browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
                         //filterRecyclerView.itemAnimator = SlideInLeftAnimator()
 
-                    }else{
+                    } else {
 
                     }
 
@@ -153,17 +158,41 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
         when (it?.status) {
             LoadingStatus.ERROR -> {
                 it.message?.let {
-                   // Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
+                    // Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
                 }
             }
 
             LoadingStatus.SUCCESS -> {
-                PreferencesUtils.saveObject("profile",it.data)
+                PreferencesUtils.saveObject("profile", it.data)
                 Utils.displayCircularProfileImage(activity, it.data?.user?.image,
                         R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
+                lifecycleScope.launch(Dispatchers.IO) {
+                    syncDownload(it.data?.user_downloads)
+                }
 
             }
 
+        }
+
+    }
+
+    private suspend fun syncDownload(userDownloads: List<DownloadMetadata>?) {
+        val downloadMetadataDao = activity?.let { AppDatabase.getInstance(it)?.downloadMetadataDao() }
+        val allData = downloadMetadataDao?.getAllData()
+        if (allData != null) {
+            if (allData.isEmpty()) {
+                userDownloads?.let { downloadMetadataDao.insertAll(it) }
+            } else {
+                val allDeleted = downloadMetadataDao?.getDeletedDownload()
+                if (allDeleted == null || allDeleted.isEmpty()) {
+                    return
+                }
+                val idList = ArrayList<String>()
+                allDeleted.map {
+                    idList.add(it.document_id)
+                }
+                userProfileViewModel.removeUserDownload(idList)
+            }
         }
 
     }
@@ -197,12 +226,12 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
             setFilterGravity(Gravity.CENTER)
             categoryTabListList.map {
 
-                    it.show=true
-                    it.showFilter=false
+                it.show = true
+                it.showFilter = false
 
             }
             browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
-            categoryTab=null
+            categoryTab = null
         }
 
         closeButton.setOnClickListener(View.OnClickListener {
@@ -231,12 +260,12 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
 
                     }
                     BottomSheetBehavior.STATE_SETTLING -> {
-                            filters.adapter = null
-                            filters.layoutManager = LinearLayoutManager(activity)
-                            val allFilterAdapter = FilterAdapter(activity as Context, this@BaseBrowseFragmentNew)
-                            filters.adapter = allFilterAdapter
-                            val filterList = categoryTab?.filters as ArrayList
-                            allFilterAdapter.addAll(filterList)
+                        filters.adapter = null
+                        filters.layoutManager = LinearLayoutManager(activity)
+                        val allFilterAdapter = FilterAdapter(activity as Context, this@BaseBrowseFragmentNew)
+                        filters.adapter = allFilterAdapter
+                        val filterList = categoryTab?.filters as ArrayList
+                        allFilterAdapter.addAll(filterList)
 
                     }
                 }
@@ -249,7 +278,7 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
                 val intent = Intent(context, LoginActivity::class.java)
-                startActivityForResult(intent,LoginActivity.REQUEST_CODE_LOGIN)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             } else {
 
                 val intent = Intent(context, ProfileActivity::class.java)
@@ -259,17 +288,17 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
         }
         Util.hideKeyBoard(requireActivity())
         val strProfile = PreferencesUtils.getStringPreferences("profile")
-        val userProfileData = Gson().fromJson(strProfile,UserProfileData::class.java)
+        val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
         userProfileData?.let {
             Utils.displayCircularProfileImage(context, it.user?.image,
-                    R.drawable.ic_user_avatar,R.drawable.ic_user_avatar,imgHeaderProfile)
+                    R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
         }
         observeUserProfile()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode==LoginActivity.REQUEST_CODE_LOGIN && resultCode== Activity.RESULT_OK){
+        if (requestCode == LoginActivity.REQUEST_CODE_LOGIN && resultCode == Activity.RESULT_OK) {
 //            val intent = Intent(context, ProfileActivity::class.java)
 //            startActivity(intent)
 
@@ -338,7 +367,7 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
 
 
                 }
-               // genresFilter.text = data.name
+                // genresFilter.text = data.name
                 browseFragmentViewModel.refreshData(dataFilters)
                 if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
@@ -347,60 +376,60 @@ abstract class  BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClick
                 }
             }
 
-            is CategoryTab->{
+            is CategoryTab -> {
 
-                if (data.isFilter){
+                if (data.isFilter) {
                     if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                         sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
                     } else {
                         sheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
                     }
-                }else{
+                } else {
                     categoryTab?.let {
-                        if (it.displayName==data.displayName){
+                        if (it.displayName == data.displayName) {
                             return
                         }
                     }
                     categoryTab = data
                     categoryTabListList.map {
-                        if (it == data){
-                            it.show=true
-                            it.showFilter=true
-                            if (it.filters.isNotEmpty()){
+                        if (it == data) {
+                            it.show = true
+                            it.showFilter = true
+                            if (it.filters.isNotEmpty()) {
                                 it.filters.map {
-                                    it.isSelected=false
+                                    it.isSelected = false
                                 }
                                 it.filters?.get(0)?.isSelected = true
                             }
-                        }else{
-                            it.show=false
-                            it.showFilter=false
+                        } else {
+                            it.show = false
+                            it.showFilter = false
                         }
 
                     }
                     browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
                     dataFilters.apply {
                         type = categoryTab!!.type
-                        genre_id=""
-                        filter=""
-                        
+                        genre_id = ""
+                        filter = ""
+
                     }
                     browseFragmentViewModel.refreshData(dataFilters)
                     setFilterGravity(Gravity.LEFT)
                 }
             }
-            is com.perseverance.phando.home.dashboard.models.Filter ->{
+            is com.perseverance.phando.home.dashboard.models.Filter -> {
                 dataFilters.apply {
-                    genre_id = if (type!="GENRES") data.id else ""
-                    filter = if (type=="GENRES") data.id else ""
+                    genre_id = if (type != "GENRES") data.id else ""
+                    filter = if (type == "GENRES") data.id else ""
 
                 }
                 categoryTabListList.map {
                     it.filters.map {
-                        if (it.id==data.id){
-                            it.isSelected=true
-                        }else{
-                            it.isSelected=false
+                        if (it.id == data.id) {
+                            it.isSelected = true
+                        } else {
+                            it.isSelected = false
                         }
                     }
 

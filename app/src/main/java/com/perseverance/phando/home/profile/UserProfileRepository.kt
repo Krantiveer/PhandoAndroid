@@ -226,5 +226,21 @@ class UserProfileRepository(private val application: Application) {
 
         return data
     }
+    suspend fun removeUserDownload(param: ArrayList<String>): DataLoadingStatus<BaseResponse> {
+        try {
+            val response = apiService.removeUserDownload(param).execute()
+            if (response.isSuccessful) {
+                return DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body())
+            } else {
+                return DataLoadingStatus(LoadingStatus.ERROR, "Unable to remove download")
+            }
 
+        } catch (e: Exception) {
+            if (e is ApiClient.NoConnectivityException) {
+                return DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR)
+            } else {
+                return DataLoadingStatus(LoadingStatus.ERROR, "Unable to remove download")
+            }
+        }
+    }
 }

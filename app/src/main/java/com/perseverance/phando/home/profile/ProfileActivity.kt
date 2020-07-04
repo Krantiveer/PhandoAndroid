@@ -17,6 +17,7 @@ import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
+import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
@@ -30,6 +31,9 @@ class ProfileActivity : AppCompatActivity() {
 
     private val userProfileViewModel by lazy {
         ViewModelProvider(this).get(UserProfileViewModel::class.java)
+    }
+    val downloadMetadataDao by lazy{
+        AppDatabase.getInstance(this@ProfileActivity)?.downloadMetadataDao()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,6 +88,8 @@ class ProfileActivity : AppCompatActivity() {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, resources.getString(R.string.yes)
             ) { dialog, which ->
                 PreferencesUtils.setLoggedIn("")
+                downloadMetadataDao?.deleteAll()
+                VideoSdkUtil.deleteAllDownloadedVideo(this@ProfileActivity.application)
                 finish()
             }
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, resources.getString(R.string.no)
@@ -93,8 +99,8 @@ class ProfileActivity : AppCompatActivity() {
         }
 
         btnDownloads.setOnClickListener {
-            val downloadedVideoList = VideoSdkUtil.getDownloadedVideo(this.application)
-            if (downloadedVideoList.isEmpty()) {
+            val allData = downloadMetadataDao?.getAllDownloadData()
+            if (allData == null||allData.isEmpty()) {
                 toast("Download is empty")
                 return@setOnClickListener
             }

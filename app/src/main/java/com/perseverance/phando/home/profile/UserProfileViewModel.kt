@@ -4,12 +4,14 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.liveData
 import com.perseverance.phando.base.BaseViewModel
 import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.profile.login.SocialLoggedInUser
 import com.perseverance.phando.retrofit.Cred
 import com.perseverance.phando.retrofit.LoginResponse
+import kotlinx.coroutines.Dispatchers
 
 
 class UserProfileViewModel(application: Application) : BaseViewModel(application) {
@@ -18,8 +20,9 @@ class UserProfileViewModel(application: Application) : BaseViewModel(application
     private val reloadTrigger = MutableLiveData<Boolean>()
 
     //profile
-    var data: LiveData<DataLoadingStatus<UserProfileData>> = Transformations.switchMap(reloadTrigger) {
+   private var data: LiveData<DataLoadingStatus<UserProfileData>> = Transformations.switchMap(reloadTrigger) {
         userProfileRepository.fetchProfileData()
+
     }
 
     fun getUserProfile(): LiveData<DataLoadingStatus<UserProfileData>> = data
@@ -107,6 +110,10 @@ class UserProfileViewModel(application: Application) : BaseViewModel(application
 
     fun verifyOTPForForgotPassword(map :Map<String,String>) {
         verifyOTPForForgotPasswordTrigger.postValue(map)
+    }
+    fun removeUserDownload(param: ArrayList<String>) = liveData(Dispatchers.IO) {
+
+        emit(userProfileRepository.removeUserDownload(param))
     }
 
 }

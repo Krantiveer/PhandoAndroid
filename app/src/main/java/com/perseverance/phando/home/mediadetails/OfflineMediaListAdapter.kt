@@ -8,7 +8,7 @@ import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.genericAdopter.BaseViewHolder
 import com.perseverance.phando.genericAdopter.GenericRecyclerViewAdapter
-import com.videoplayer.DownloadMetadata
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 
 
 class OfflineMediaListAdapter(context: Context, listener: AdapterClickListener) : GenericRecyclerViewAdapter<DownloadMetadata, AdapterClickListener, BaseViewHolder<DownloadMetadata, AdapterClickListener>>(context, listener) {

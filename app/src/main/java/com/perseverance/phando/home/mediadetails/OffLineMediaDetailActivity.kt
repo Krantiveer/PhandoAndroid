@@ -5,11 +5,9 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
-import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -20,22 +18,20 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.gson.Gson
 import com.newgendroid.news.utils.AppDialogListener
 import com.perseverance.patrikanews.utils.getViewModel
 import com.perseverance.patrikanews.utils.gone
-import com.perseverance.patrikanews.utils.invisible
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
+import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.genericAdopter.AdapterClickListener
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.utils.BaseRecycleMarginDecoration
 import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
-import kotlinx.android.synthetic.main.activity_video_details.*
-import kotlinx.android.synthetic.main.activity_video_details_offline.*
 import kotlinx.android.synthetic.main.activity_video_details_offline.detailContent
 import kotlinx.android.synthetic.main.activity_video_details_offline.fragmentContainer
 import kotlinx.android.synthetic.main.activity_video_details_offline.phandoPlayerView
@@ -76,7 +72,9 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
     private val handler = Handler()
     private var downloadMetadata: DownloadMetadata? = null
 
-
+    val downloadMetadataDao by lazy {
+        AppDatabase.getInstance(this)?.downloadMetadataDao()
+    }
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
         playerThumbnailContainer.gone()
         phandoPlayerView.visible()
@@ -127,7 +125,7 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
         detailContent.visible()
         videoTitle.text = downloadMetadata?.title
         videoDescription.text = downloadMetadata?.description
-        otherInfo.text = downloadMetadata?.otherText
+        otherInfo.gone()
 
 
         mListener = object : SimpleOrientationEventListener(this@OffLineMediaDetailActivity) {
@@ -165,6 +163,9 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
                 }
 
                 override fun onPositiveButtonPressed() {
+                    downloadMetadataDao?.insert(downloadMetadata!!.apply {
+                       status=1
+                    })
                     VideoSdkUtil.deleteDownloadedInfo(application, this@OffLineMediaDetailActivity.downloadMetadata?.media_url)
                    Handler().postDelayed({
                        finish()
@@ -200,19 +201,20 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
     }
 
     private fun setRelatedVideo() {
-        val downloadedVideoList = VideoSdkUtil.getDownloadedVideo(this.application)
-        if (downloadedVideoList.isNotEmpty()) {
-            relatedContainer.visible()
-            val manager = GridLayoutManager(this@OffLineMediaDetailActivity, 2)
-            recyclerView.layoutManager = manager
-            recyclerView.setHasFixedSize(true)
-            val adapter = SavedMediaListAdapter(this@OffLineMediaDetailActivity, this)
-            adapter.items = downloadedVideoList
-            recyclerView.adapter = adapter
-        } else {
-            relatedContainer.gone()
-        }
 
+        downloadMetadataDao?.getAllDownloadLiveData()?.observe(this, Observer {
+            if (it.isNotEmpty()) {
+                relatedContainer.visible()
+                val manager = GridLayoutManager(this@OffLineMediaDetailActivity, 2)
+                recyclerView.layoutManager = manager
+                recyclerView.setHasFixedSize(true)
+                val adapter = SavedMediaListAdapter(this@OffLineMediaDetailActivity, this)
+                adapter.items = it
+                recyclerView.adapter = adapter
+            } else {
+                relatedContainer.gone()
+            }
+        })
     }
 
     private fun changeOrientation() {

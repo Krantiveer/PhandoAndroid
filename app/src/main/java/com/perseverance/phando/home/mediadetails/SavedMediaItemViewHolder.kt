@@ -9,9 +9,9 @@ import com.perseverance.phando.R
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.genericAdopter.BaseViewHolder
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.resize.GridItemThumbnail
 import com.perseverance.phando.utils.Utils
-import com.videoplayer.DownloadMetadata
 import kotlinx.android.synthetic.main.tuple_grid_video_item.view.*
 
 class SavedMediaItemViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<DownloadMetadata, AdapterClickListener>(itemView, listener) {

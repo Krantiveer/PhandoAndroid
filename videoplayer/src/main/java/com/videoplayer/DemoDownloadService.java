@@ -106,10 +106,8 @@ public class DemoDownloadService extends DownloadService {
         @Override
         public void onDownloadChanged(DownloadManager manager, Download download) {
             Notification notification;
-            DownloadMetadata downloadMetadata = new Gson().fromJson(Util.fromUtf8Bytes(download.request.data), DownloadMetadata.class);
-            String title = downloadMetadata.title;
+            String title = Util.fromUtf8Bytes(download.request.data);
             Intent intent = new Intent("download_event");
-            intent.putExtra("refresh", true);
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
             if (download.state == Download.STATE_COMPLETED) {
                 Intent sendIntent = new Intent();

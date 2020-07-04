@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.perseverance.phando.db.dao.*
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 
 
 @Database(entities = arrayOf(
@@ -14,8 +15,9 @@ import com.perseverance.phando.db.dao.*
         WatchLaterVideo::class,
         FavoriteVideo::class,
         Language::class,
-        APIData::class
-), version = 2)
+        APIData::class,
+        DownloadMetadata::class
+), version = 3)
 @TypeConverters(RoomDataTypeConvertor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
@@ -24,6 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun favoriteVideoDao(): FavoriteVideoDao
     abstract fun languageDao(): LanguageDao
     abstract fun apiDataDao(): APIDataDao
+    abstract fun downloadMetadataDao(): DownloadMetadataDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

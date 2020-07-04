@@ -5,13 +5,14 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.appcompat.widget.PopupMenu
+import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.resizeView
 import com.perseverance.phando.R
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.genericAdopter.BaseViewHolder
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.resize.ListItemThumbnail
 import com.perseverance.phando.utils.Utils
-import com.videoplayer.DownloadMetadata
 import kotlinx.android.synthetic.main.item_my_list.view.*
 
 
@@ -29,7 +30,7 @@ class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener)
         itemView.img_thumbnail.resizeView(ListItemThumbnail(),true)
         itemView.title.text = downloadMetadata.title
         itemView.details.text = downloadMetadata.description
-        itemView.rating.text = downloadMetadata.otherText
+        itemView.rating.gone()
         itemView.option.setOnClickListener {
             val wrapper: Context = ContextThemeWrapper(itemView.context, R.style.popup_option)
             val popup = PopupMenu(wrapper, itemView.option)
@@ -39,7 +40,7 @@ class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener)
 
                     return when (item?.itemId) {
                         R.id.menu_delete ->{
-                            listener.onItemClick(downloadMetadata.media_url)
+                            listener.onItemClick(downloadMetadata.document_id)
                             true
                         }
 

@@ -14,7 +14,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcelable;
-import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.BulletSpan;
@@ -58,7 +57,6 @@ import com.google.android.exoplayer2.mediacodec.MediaCodecRenderer;
 import com.google.android.exoplayer2.mediacodec.MediaCodecUtil;
 import com.google.android.exoplayer2.offline.DownloadHelper;
 import com.google.android.exoplayer2.offline.DownloadRequest;
-import com.google.android.exoplayer2.offline.StreamKey;
 import com.google.android.exoplayer2.source.BehindLiveWindowException;
 import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
@@ -194,7 +192,7 @@ public class PhandoPlayerView extends FrameLayout implements
     private AdsLoader adsLoader;
     private Uri loadedAdTagUri;
     private Intent intent;
-    BroadcastReceiver downloadBroadcastReceiver = new DownloadBroadcastReceiver();
+    BroadcastReceiver downloadBroadcastReceiver = new PlayerDownloadBroadcastReceiver();
 
     public PhandoPlayerView(Context context) {
         super(context);
@@ -1127,7 +1125,7 @@ public class PhandoPlayerView extends FrameLayout implements
 
     }
 
-    public class DownloadBroadcastReceiver extends BroadcastReceiver {
+    public class PlayerDownloadBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (phandoPlayerCallback != null)

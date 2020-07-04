@@ -141,7 +141,13 @@ public class DownloadTracker {
                     context, DemoDownloadService.class, download.request.id, /* foreground= */ false);
         }
     }
-
+    public void deleteDownload(Uri uri) {
+        Download download = downloads.get(uri);
+        if (download != null) {
+            DownloadService.sendRemoveDownload(
+                    context, DemoDownloadService.class, download.request.id, /* foreground= */ false);
+        }
+    }
     public void pauseDownload() {
         DownloadService.sendPauseDownloads(
                 context, DemoDownloadService.class, /* foreground= */ false);

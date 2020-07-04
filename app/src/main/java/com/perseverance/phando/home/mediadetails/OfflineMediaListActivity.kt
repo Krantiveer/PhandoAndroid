@@ -7,18 +7,18 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.newgendroid.news.utils.AppDialogListener
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.phando.R
+import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.genericAdopter.AdapterClickListener
+import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.utils.BaseRecycleMarginDecoration
 import com.perseverance.phando.utils.DialogUtils
-import com.videoplayer.DownloadMetadata
-import com.videoplayer.PhandoPlayerView
 import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_offline_media.*
 
@@ -26,6 +26,9 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
 
     var adapter: OfflineMediaListAdapter? = null
     var downloadBroadcastReceiver: BroadcastReceiver = DownloadBroadcastReceiver()
+    val downloadMetadataDao by lazy {
+        AppDatabase.getInstance(this)?.downloadMetadataDao()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +44,15 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
         recyclerView.addItemDecoration(decoration)
         adapter = OfflineMediaListAdapter(this@OfflineMediaListActivity, this)
         recyclerView.adapter = adapter
+        downloadMetadataDao?.getAllDownloadLiveData()?.observe(this, Observer {
+            if (it.isNotEmpty()) {
+                adapter?.items = it
+
+            }else{
+                toast("Download is empty")
+                finish()
+            }
+        })
 
     }
 
@@ -54,16 +66,6 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
         }
     }
 
-    fun refreshList() {
-        val downloadedVideoList = VideoSdkUtil.getDownloadedVideo(this.application)
-        if (downloadedVideoList.isNotEmpty()) {
-            adapter?.items = downloadedVideoList
-        }else{
-            toast("Download is empty")
-            finish()
-        }
-    }
-
     override fun onItemClick(data: Any) {
         if (data is DownloadMetadata) {
             startActivity(OffLineMediaDetailActivity.getDetailIntent(this@OfflineMediaListActivity as Context, data as DownloadMetadata))
@@ -72,9 +74,9 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
                 override fun onNegativeButtonPressed() {
 
                 }
-
                 override fun onPositiveButtonPressed() {
                     VideoSdkUtil.deleteDownloadedInfo(application, data as String)
+                    downloadMetadataDao?.deleteById(data)
 
                 }
 
@@ -83,7 +85,6 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
     }
     override fun onResume() {
         super.onResume()
-        refreshList()
         LocalBroadcastManager.getInstance(this).registerReceiver(downloadBroadcastReceiver,
                 IntentFilter("download_event"))
     }
@@ -99,8 +100,8 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
             intent?.let {
                if (it.getBooleanExtra("refresh",false)){
                    Handler().postDelayed(Runnable {
-                       refreshList()
-                   },1000)
+                     //  adapter?.notifyDataSetChanged()
+                   },500)
 
                }
             }

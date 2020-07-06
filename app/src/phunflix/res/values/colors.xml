@@ -64,4 +64,5 @@
     <color name="login_background">#262F39</color>
     <color name="login_card_background">#2F3943</color>
     <color name="login_blue">#00A7DB</color>
+    <color name="video_detail_icon_tint">@color/login_blue</color>
 </resources>

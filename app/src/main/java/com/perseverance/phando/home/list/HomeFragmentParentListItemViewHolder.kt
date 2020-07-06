@@ -26,7 +26,7 @@ open class HomeFragmentParentListItemViewHolder(itemView: View, listener: Adapte
         itemView.txt_title.text = item.title
         val linearLayoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         itemView.recyclerview_home_items.layoutManager = linearLayoutManager
-        val recyclerAdapter = HomeFragmentChildListAdapter(itemView.context, listener,item.displayType)
+        val recyclerAdapter = HomeFragmentChildListAdapter(itemView.context, listener,item.displayType,item.image_orientation)
         recyclerAdapter.items = videos as MutableList<Video>
         itemView.recyclerview_home_items.adapter = recyclerAdapter
 

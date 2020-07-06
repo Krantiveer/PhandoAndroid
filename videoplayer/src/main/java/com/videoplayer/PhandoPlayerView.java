@@ -454,24 +454,24 @@ public class PhandoPlayerView extends FrameLayout implements
         }
     }
 
-    public void startDownload(VideoPlayerMetadata intentAsSample, String playerTitle) {
-        int downloadUnsupportedStringId = getDownloadUnsupportedStringId(intentAsSample);
-        if (downloadUnsupportedStringId != 0) {
-            Toast.makeText(getContext(), downloadUnsupportedStringId, Toast.LENGTH_LONG)
-                    .show();
-        } else {
-            VideoPlayerMetadata.UriSample uriSample = (VideoPlayerMetadata.UriSample) intentAsSample;
-            RenderersFactory renderersFactory =
-                    //videoPlayerApplication.buildRenderersFactory(isNonNullAndChecked(preferExtensionDecodersMenuItem));
-                    videoPlayerApplication.buildRenderersFactory(false);
-            downloadTracker.toggleDownload(
-                    ((AppCompatActivity) getContext()).getSupportFragmentManager(),
-                    playerTitle,
-                    uriSample.uri,
-                    uriSample.extension,
-                    renderersFactory);
-        }
-    }
+//    public void startDownload(VideoPlayerMetadata intentAsSample, String playerTitle) {
+//        int downloadUnsupportedStringId = getDownloadUnsupportedStringId(intentAsSample);
+//        if (downloadUnsupportedStringId != 0) {
+//            Toast.makeText(getContext(), downloadUnsupportedStringId, Toast.LENGTH_LONG)
+//                    .show();
+//        } else {
+//            VideoPlayerMetadata.UriSample uriSample = (VideoPlayerMetadata.UriSample) intentAsSample;
+//            RenderersFactory renderersFactory =
+//                    //videoPlayerApplication.buildRenderersFactory(isNonNullAndChecked(preferExtensionDecodersMenuItem));
+//                    videoPlayerApplication.buildRenderersFactory(false);
+//            downloadTracker.toggleDownload(
+//                    ((AppCompatActivity) getContext()).getSupportFragmentManager(),
+//                    playerTitle,
+//                    uriSample.uri,
+//                    uriSample.extension,
+//                    renderersFactory);
+//        }
+//    }
 
     private void initializePlayer() {
         if (player == null) {
@@ -1047,27 +1047,27 @@ public class PhandoPlayerView extends FrameLayout implements
                 : (" par:" + String.format(Locale.US, "%.02f", pixelAspectRatio));
     }
 
-    private int getDownloadUnsupportedStringId(VideoPlayerMetadata sample) {
-
-        if (sample instanceof VideoPlayerMetadata.PlaylistSample) {
-            return R.string.download_playlist_unsupported;
-        }
-        VideoPlayerMetadata.UriSample uriSample = (VideoPlayerMetadata.UriSample) sample;
-        if (uriSample.drmInfo != null) {
-            return R.string.download_drm_unsupported;
-        }
-        if (uriSample.isLive) {
-            return R.string.download_live_unsupported;
-        }
-//        if (uriSample.adTagUri != null) {
-//            return R.string.download_ads_unsupported;
+//    private int getDownloadUnsupportedStringId(VideoPlayerMetadata sample) {
+//
+//        if (sample instanceof VideoPlayerMetadata.PlaylistSample) {
+//            return R.string.download_playlist_unsupported;
 //        }
-        String scheme = uriSample.uri.getScheme();
-        if (!("http".equals(scheme) || "https".equals(scheme))) {
-            return R.string.download_scheme_unsupported;
-        }
-        return 0;
-    }
+//        VideoPlayerMetadata.UriSample uriSample = (VideoPlayerMetadata.UriSample) sample;
+//        if (uriSample.drmInfo != null) {
+//            return R.string.download_drm_unsupported;
+//        }
+//        if (uriSample.isLive) {
+//            return R.string.download_live_unsupported;
+//        }
+////        if (uriSample.adTagUri != null) {
+////            return R.string.download_ads_unsupported;
+////        }
+//        String scheme = uriSample.uri.getScheme();
+//        if (!("http".equals(scheme) || "https".equals(scheme))) {
+//            return R.string.download_scheme_unsupported;
+//        }
+//        return 0;
+//    }
 
     private static boolean isNonNullAndChecked(@Nullable MenuItem menuItem) {
         // Temporary workaround for layouts that do not inflate the options menu.

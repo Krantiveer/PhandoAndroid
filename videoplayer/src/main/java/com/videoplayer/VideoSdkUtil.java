@@ -4,7 +4,11 @@ import android.app.Application;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.exoplayer2.RenderersFactory;
 import com.google.android.exoplayer2.offline.Download;
 import com.google.android.exoplayer2.util.Util;
 import com.google.gson.Gson;
@@ -80,5 +84,47 @@ public class VideoSdkUtil {
         downloadTracker.resumeDownload();
     }
 
+    public static void startDownload(AppCompatActivity appCompatActivity,VideoPlayerMetadata intentAsSample, String playerTitle) {
+        VideoPlayerApplication videoPlayerApplication = (VideoPlayerApplication) appCompatActivity.getApplication();
+        DownloadTracker downloadTracker = videoPlayerApplication.getDownloadTracker();
+
+        int downloadUnsupportedStringId = getDownloadUnsupportedStringId(intentAsSample);
+        if (downloadUnsupportedStringId != 0) {
+            Toast.makeText(videoPlayerApplication, downloadUnsupportedStringId, Toast.LENGTH_LONG)
+                    .show();
+        } else {
+            VideoPlayerMetadata.UriSample uriSample = (VideoPlayerMetadata.UriSample) intentAsSample;
+            RenderersFactory renderersFactory =
+                    //videoPlayerApplication.buildRenderersFactory(isNonNullAndChecked(preferExtensionDecodersMenuItem));
+                    videoPlayerApplication.buildRenderersFactory(false);
+            downloadTracker.toggleDownload(
+                    appCompatActivity.getSupportFragmentManager(),
+                    playerTitle,
+                    uriSample.uri,
+                    uriSample.extension,
+                    renderersFactory);
+        }
+    }
+    private static int getDownloadUnsupportedStringId(VideoPlayerMetadata sample) {
+
+        if (sample instanceof VideoPlayerMetadata.PlaylistSample) {
+            return R.string.download_playlist_unsupported;
+        }
+        VideoPlayerMetadata.UriSample uriSample = (VideoPlayerMetadata.UriSample) sample;
+        if (uriSample.drmInfo != null) {
+            return R.string.download_drm_unsupported;
+        }
+        if (uriSample.isLive) {
+            return R.string.download_live_unsupported;
+        }
+//        if (uriSample.adTagUri != null) {
+//            return R.string.download_ads_unsupported;
+//        }
+        String scheme = uriSample.uri.getScheme();
+        if (!("http".equals(scheme) || "https".equals(scheme))) {
+            return R.string.download_scheme_unsupported;
+        }
+        return 0;
+    }
 
 }

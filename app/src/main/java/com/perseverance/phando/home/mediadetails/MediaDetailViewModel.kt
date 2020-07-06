@@ -2,7 +2,7 @@ package com.perseverance.phando.home.mediadetails
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.perseverance.phando.db.BaseVideo
+import com.perseverance.phando.db.Video
 import com.perseverance.phando.home.dashboard.mylist.UpdateMyListResponse
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.mediadetails.payment.MediaplaybackData
@@ -22,8 +22,8 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     private var mediaDetailRepository: MediaDetailRepository = MediaDetailRepository(application)
 
-    val reloadTrigger = MutableLiveData<BaseVideo>()
-    val nextEpisodeReloadTrigger = MutableLiveData<BaseVideo>()
+    val reloadTrigger = MutableLiveData<Video>()
+    val nextEpisodeReloadTrigger = MutableLiveData<Video>()
 
     var mediaMetadata: LiveData<DataLoadingStatus<MediaplaybackData>> = Transformations.switchMap(reloadTrigger) {
         mediaDetailRepository.callForVideoDetails(it)
@@ -151,7 +151,7 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     fun getVideoDetailMutableLiveData(): LiveData<DataLoadingStatus<MediaplaybackData>> = mediaMetadata
 
-    fun refreshMediaMetadata(baseVideo: BaseVideo?) {
+    fun refreshMediaMetadata(baseVideo: Video?) {
         baseVideo?.let {
             reloadTrigger.value = it
         }
@@ -160,7 +160,7 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     fun getNextEpisodeVideoDetailMutableLiveData(): LiveData<DataLoadingStatus<MediaplaybackData>> = nextEpisodeMediaMetadata
 
-    fun getNextEpisodeMediaMetadata(baseVideo: BaseVideo?) {
+    fun getNextEpisodeMediaMetadata(baseVideo: Video?) {
         baseVideo?.let {
             nextEpisodeReloadTrigger.value = it
         }
@@ -203,6 +203,9 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     fun getMediaUrl(documentId: String) = liveData(Dispatchers.IO) {
         emit(mediaDetailRepository.getMediaUrl(documentId))
+    }
+    fun getMediaUrlAndStartDownload(documentId: String) = liveData(Dispatchers.IO) {
+        emit(mediaDetailRepository.getMediaUrlAndStartDownload(documentId))
     }
 
     interface Callback {

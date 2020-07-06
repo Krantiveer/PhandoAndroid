@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.tuple_grid_video_item.view.img_thumbnail
 import kotlinx.android.synthetic.main.tuple_grid_video_item.view.txtTitle
 import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 
-class GridItemViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<Video, AdapterClickListener>(itemView, listener) {
+class GridItemViewHolder(itemView: View, listener: AdapterClickListener,val imageOrientation: Int?=0) : BaseViewHolder<Video, AdapterClickListener>(itemView, listener) {
 
         init {
             itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
@@ -26,19 +26,19 @@ class GridItemViewHolder(itemView: View, listener: AdapterClickListener) : BaseV
         }
         override fun onBind(item: Video) {
             itemView.tag = item
-            if(item.isFree == 1) { // if paid video then show premium icon
+            if(item.is_free == 1) { // if paid video then show premium icon
                 itemView.free.gone()
             }else{
                 itemView.free.visible()
             }
 
 
-            itemView.img_thumbnail.resizeView(GridItemThumbnail())
-            Utils.displayImage(itemView.context, item.thumbnail,
+            itemView.img_thumbnail.resizeView(GridItemThumbnail(imageOrientation))
+            Utils.displayImage(itemView.context,  if (imageOrientation==0) item.thumbnail else item.poster,
                     R.drawable.video_placeholder,
                     R.drawable.error_placeholder, itemView.img_thumbnail)
             itemView.txtTitle.text = item.title
-            itemView.duration.text = item.formatedDuration
+            itemView.duration.text = item.getFormatedDuration()
             if(BuildConfig.APPLICATION_ID.equals("com.perseverance.jm31")){
                 itemView.txtTitle.visible()
                 itemView.duration.visible()

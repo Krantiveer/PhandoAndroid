@@ -10,7 +10,7 @@ import com.perseverance.phando.genericAdopter.BaseViewHolder
 import com.perseverance.phando.genericAdopter.GenericRecyclerViewAdapter
 
 
-class HomeFragmentChildListAdapter(context: Context, listener: AdapterClickListener, val displayType: String) : GenericRecyclerViewAdapter<Video, AdapterClickListener, BaseViewHolder<Video, AdapterClickListener>>(context, listener) {
+class HomeFragmentChildListAdapter(context: Context, listener: AdapterClickListener, val displayType: String, val imageOrientation: Int?=0) : GenericRecyclerViewAdapter<Video, AdapterClickListener, BaseViewHolder<Video, AdapterClickListener>>(context, listener) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Video, AdapterClickListener> {
@@ -23,18 +23,18 @@ class HomeFragmentChildListAdapter(context: Context, listener: AdapterClickListe
                 return HomeFragmentCategoryListCircularViewHolder(inflate(R.layout.tuple_home_circular_video_item, parent), listener)
             }
             "GRID" ->{
-                return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener)
+                return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener,imageOrientation)
             }
             "List" ->{
 
-                return HomeFragmentVerticalListItemViewHolder(inflate(R.layout.tuple_home_video_item_list_style, parent), listener)
+                return HomeFragmentVerticalListItemViewHolder(inflate(R.layout.tuple_home_video_item_list_style, parent), listener,imageOrientation)
             }
             "CONTINUE_WATCHING" ->{
-                return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener)
+                return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener, imageOrientation)
              //   return HomeFragmentContinueWatchingItemViewHolder(inflate(R.layout.tuple_home_video_item_list_style, parent), listener)
             }
             else ->{
-                return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener)
+                return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener, imageOrientation)
             }
         }
 

@@ -14,7 +14,7 @@ import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
-import com.perseverance.phando.db.BaseVideo
+import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
@@ -30,7 +30,7 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
 
     private var waitingDialog: WaitingDialog? = null
     private var adapter: SeriesListAdapter? = null
-    private lateinit var baseVideo: BaseVideo
+    private lateinit var baseVideo: Video
     private  val homeViewModel by lazy {
         ViewModelProviders.of(this).get(SeriesViewModel::class.java)
     }
@@ -66,9 +66,9 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
-        baseVideo = intent.getSerializableExtra(Key.CATEGORY) as BaseVideo
+        baseVideo = intent.getParcelableExtra(Key.CATEGORY)
         supportActionBar!!.title = baseVideo.title
-        homeViewModel.callForSeries(baseVideo.entryId).observe(this, videoListViewModelObserver)
+        homeViewModel.callForSeries(baseVideo.id.toString()).observe(this, videoListViewModelObserver)
 
         recycler_view_base.layoutManager = LinearLayoutManager(this@SeriesActivity)
         //recycler_view_base.setHasFixedSize(true)
@@ -121,12 +121,12 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
             }
                tvSeriesResponseData.seasons.get(0).episodes.get(0).let {
                    if (Utils.isNetworkAvailable(this@SeriesActivity)) {
-                       val baseVideo = BaseVideo()
-                       baseVideo.entryId = it.id.toString()
+                       val baseVideo = Video()
+                       baseVideo.id = it.id
                        baseVideo.thumbnail = it.thumbnail
                        baseVideo.title = it.id.toString()
-                       baseVideo.isFree = it.is_free
-                       baseVideo.mediaType = it.type
+                       baseVideo.is_free = it.is_free
+                       baseVideo.type = it.type
                        startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
                        Utils.animateActivity(this@SeriesActivity, "next")
                    } else {
@@ -169,12 +169,12 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
     override fun onItemClick(data: Any) {
         var episode = data as Episode
         if (Utils.isNetworkAvailable(this@SeriesActivity)) {
-            val baseVideo = BaseVideo()
-            baseVideo.entryId = episode.id.toString()
+            val baseVideo = Video()
+            baseVideo.id = episode.id
             baseVideo.thumbnail = episode.thumbnail
             baseVideo.title = episode.id.toString()
-            baseVideo.isFree = episode.is_free
-            baseVideo.mediaType = episode.type
+            baseVideo.is_free = episode.is_free
+            baseVideo.type = episode.type
             startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
             Utils.animateActivity(this@SeriesActivity, "next")
         } else {

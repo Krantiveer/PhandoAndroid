@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.data.BaseResponse
-import com.perseverance.phando.db.BaseVideo
+import com.perseverance.phando.db.Video
 import com.perseverance.phando.home.dashboard.mylist.UpdateMyListResponse
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
@@ -26,10 +26,10 @@ class MediaDetailRepository(private val application: Application) {
 
     private val apiService by lazy { ApiClient.getLoginClient().create(ApiService::class.java) }
 
-    fun callForVideoDetails(video: BaseVideo): MutableLiveData<DataLoadingStatus<MediaplaybackData>> {
+    fun callForVideoDetails(video: Video): MutableLiveData<DataLoadingStatus<MediaplaybackData>> {
         var data: MutableLiveData<DataLoadingStatus<MediaplaybackData>> = MutableLiveData<DataLoadingStatus<MediaplaybackData>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, ""))
-        val call = apiService.getMediaMatadata(video.entryId, video.mediaType) as Call<MediaplaybackData>
+        val call = apiService.getMediaMatadata(video.id.toString(), video.type) as Call<MediaplaybackData>
         call.enqueue(object : Callback<MediaplaybackData> {
             override fun onResponse(call: Call<MediaplaybackData>?, response: Response<MediaplaybackData>) {
                 if (response.isSuccessful) {
@@ -63,12 +63,13 @@ class MediaDetailRepository(private val application: Application) {
 
         } catch (e: Exception) {
             if (e is ApiClient.NoConnectivityException) {
-               return DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR)
+                return DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR)
             } else {
                 return DataLoadingStatus(LoadingStatus.ERROR, "Unable to download")
             }
         }
     }
+
     suspend fun removeUserDownload(param: ArrayList<String>): DataLoadingStatus<BaseResponse> {
         try {
             val response = apiService.removeUserDownload(param).execute()
@@ -86,6 +87,7 @@ class MediaDetailRepository(private val application: Application) {
             }
         }
     }
+
     suspend fun getUserDownload(): DataLoadingStatus<DownloadMetadataResponse> {
         try {
             val response = apiService.userDownload.execute()
@@ -103,12 +105,42 @@ class MediaDetailRepository(private val application: Application) {
             }
         }
     }
-    suspend fun getMediaUrl(documentId:String): DataLoadingStatus<MediaUrlResponse> {
+
+    suspend fun getMediaUrl(documentId: String): DataLoadingStatus<MediaUrlResponse> {
 
         try {
             val response = apiService.getMediaUrl(documentId).execute()
             if (response.isSuccessful) {
                 return DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body())
+            } else {
+                return DataLoadingStatus(LoadingStatus.ERROR, "Unable to download")
+            }
+
+        } catch (e: Exception) {
+            if (e is ApiClient.NoConnectivityException) {
+                return DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR)
+            } else {
+                return DataLoadingStatus(LoadingStatus.ERROR, "Unable to download")
+            }
+        }
+    }
+
+    suspend fun getMediaUrlAndStartDownload(documentId: String): DataLoadingStatus<MediaUrlResponse> {
+
+        try {
+            val response = apiService.getMediaUrl(documentId).execute()
+            if (response.isSuccessful) {
+                val urlResponse = DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body())
+                val param = HashMap<String, String>()
+                param["document_id"] = documentId
+                val response = apiService.saveUserDownload(param).execute()
+                if (response.isSuccessful) {
+                    return urlResponse
+                } else {
+                    return DataLoadingStatus(LoadingStatus.ERROR, "Unable to download")
+                }
+
+
             } else {
                 return DataLoadingStatus(LoadingStatus.ERROR, "Unable to download")
             }

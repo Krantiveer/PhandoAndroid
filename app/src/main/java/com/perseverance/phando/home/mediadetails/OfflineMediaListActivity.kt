@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
@@ -12,15 +13,23 @@ import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.newgendroid.news.utils.AppDialogListener
+import com.perseverance.patrikanews.utils.getViewModel
+import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
+import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.genericAdopter.AdapterClickListener
+import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.utils.BaseRecycleMarginDecoration
 import com.perseverance.phando.utils.DialogUtils
+import com.perseverance.phando.utils.Utils
+import com.videoplayer.VideoPlayerMetadata
 import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_offline_media.*
+import kotlinx.android.synthetic.main.activity_offline_media.toolbar
 
 class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
 
@@ -29,7 +38,9 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
     val downloadMetadataDao by lazy {
         AppDatabase.getInstance(this)?.downloadMetadataDao()
     }
-
+    val mediaDetailViewModel by lazy {
+        getViewModel<MediaDetailViewModel>()
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_offline_media)
@@ -48,7 +59,7 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
             if (it.isNotEmpty()) {
                 adapter?.items = it
 
-            }else{
+            } else {
                 toast("Download is empty")
                 finish()
             }
@@ -68,12 +79,63 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
 
     override fun onItemClick(data: Any) {
         if (data is DownloadMetadata) {
-            startActivity(OffLineMediaDetailActivity.getDetailIntent(this@OfflineMediaListActivity as Context, data as DownloadMetadata))
+            if (data.media_url.isNullOrEmpty()) {
+
+                DialogUtils.showDialog(this@OfflineMediaListActivity, "Alert!", "Media is not downloaded. Do you want to download?", "Yes", "No", object : AppDialogListener {
+                    override fun onNegativeButtonPressed() {
+
+                    }
+
+                    override fun onPositiveButtonPressed() {
+                        if (!Utils.isNetworkAvailable(this@OfflineMediaListActivity)) {
+                            toast(BaseConstants.NETWORK_ERROR)
+                        }else{
+                            progressBar.visible()
+                            mediaDetailViewModel.getMediaUrlAndStartDownload(data.document_id).observe(this@OfflineMediaListActivity, Observer {
+                                val result = it ?: return@Observer
+
+                                when (result.status) {
+                                    LoadingStatus.SUCCESS -> {
+                                        val videoPlayerMetadata = VideoPlayerMetadata.UriSample(
+                                                null,
+                                                Uri.parse(result.data?.media_url),
+                                                null,
+                                                false,
+                                                null,
+                                                null,
+                                                null,
+                                                null)
+                                        VideoSdkUtil.startDownload(this@OfflineMediaListActivity,videoPlayerMetadata, data?.title)
+                                        downloadMetadataDao?.insert(DownloadMetadata(data?.document_id,
+                                                data?.title,
+                                                data?.description,
+                                                data?.thumbnail,
+                                                data?.media_url
+
+                                        ))
+                                        progressBar.gone()
+                                    }
+                                    LoadingStatus.ERROR -> {
+                                        progressBar.gone()
+                                        result.message?.let { it1 -> toast(it1) }
+                                    }
+                                }
+                            })
+                        }
+
+                    }
+
+                })
+            } else {
+                startActivity(OffLineMediaDetailActivity.getDetailIntent(this@OfflineMediaListActivity as Context, data as DownloadMetadata))
+
+            }
         } else {
             DialogUtils.showDialog(this@OfflineMediaListActivity, "Alert!", "Do you want to delete saved video", "Yes", "No", object : AppDialogListener {
                 override fun onNegativeButtonPressed() {
 
                 }
+
                 override fun onPositiveButtonPressed() {
                     VideoSdkUtil.deleteDownloadedInfo(application, data as String)
                     downloadMetadataDao?.deleteById(data)
@@ -83,6 +145,7 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
             })
         }
     }
+
     override fun onResume() {
         super.onResume()
         LocalBroadcastManager.getInstance(this).registerReceiver(downloadBroadcastReceiver,
@@ -95,15 +158,15 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(downloadBroadcastReceiver)
     }
 
-   inner class DownloadBroadcastReceiver : BroadcastReceiver() {
+    inner class DownloadBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             intent?.let {
-               if (it.getBooleanExtra("refresh",false)){
-                   Handler().postDelayed(Runnable {
-                     //  adapter?.notifyDataSetChanged()
-                   },500)
+                if (it.getBooleanExtra("refresh", false)) {
+                    Handler().postDelayed(Runnable {
+                        //  adapter?.notifyDataSetChanged()
+                    }, 500)
 
-               }
+                }
             }
         }
     }

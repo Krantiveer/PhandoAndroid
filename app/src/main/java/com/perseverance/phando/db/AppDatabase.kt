@@ -12,18 +12,14 @@ import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 @Database(entities = arrayOf(
         Category::class,
         Filter::class,
-        WatchLaterVideo::class,
-        FavoriteVideo::class,
         Language::class,
         APIData::class,
         DownloadMetadata::class
-), version = 3)
+), version = 4)
 @TypeConverters(RoomDataTypeConvertor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
     abstract fun filterDao(): FilterDao
-    abstract fun watchLaterVideoDao(): WatchLaterVideoDao
-    abstract fun favoriteVideoDao(): FavoriteVideoDao
     abstract fun languageDao(): LanguageDao
     abstract fun apiDataDao(): APIDataDao
     abstract fun downloadMetadataDao(): DownloadMetadataDao

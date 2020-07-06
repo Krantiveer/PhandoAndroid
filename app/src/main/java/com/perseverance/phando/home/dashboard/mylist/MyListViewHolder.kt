@@ -1,7 +1,6 @@
 package com.perseverance.phando.home.dashboard.mylist
 
 import android.content.Context
-import android.text.TextUtils
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.view.ContextThemeWrapper
@@ -26,23 +25,14 @@ class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseVie
     }
     override fun onBind(video: Video) {
         itemView.tag = video
-
-        if (TextUtils.isEmpty(video.thumbnail)) {
-
-            Utils.displayImage(itemView.context, Utils.createHeaderThumbnailUrl(video),
-                    R.drawable.new_video_placeholder,
-                    R.drawable.new_error_placeholder, itemView.img_thumbnail)
-        } else {
-
-            Utils.displayImage(itemView.context, video.thumbnail,
-                    R.drawable.video_placeholder,
-                    R.drawable.video_placeholder, itemView.img_thumbnail)
-        }
+        Utils.displayImage(itemView.context, video.thumbnail,
+                R.drawable.video_placeholder,
+                R.drawable.video_placeholder, itemView.img_thumbnail)
         itemView.img_thumbnail.resizeView(ListItemThumbnail(),true)
         itemView.title.text = video.title
 
         video.rating?.let {
-            itemView.rating.text = it
+            itemView.rating.text = it.toString()
         }?:itemView.rating.gone()
 
 
@@ -60,7 +50,7 @@ class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseVie
 
                     return when (item?.itemId) {
                         R.id.menu_delete ->{
-                            listener.onItemClick("${video.entryId},${video.mediaType}")
+                            listener.onItemClick("${video.id},${video.type}")
                             true
                         }
 
@@ -71,8 +61,5 @@ class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseVie
             })
             popup.show()
         }
-
-
-
     }
     }

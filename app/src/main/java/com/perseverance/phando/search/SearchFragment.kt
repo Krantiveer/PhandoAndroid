@@ -78,7 +78,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         }
         recyclerView.addOnScrollListener(endlessScrollListener!!)
         val videos = ArrayList<Video>()
-        adapter = BaseCategoryListAdapter(activity!!, this)
+        adapter = BaseCategoryListAdapter(requireActivity(), this)
         adapter!!.items = videos
         recyclerView.adapter = adapter
 //        searchView.setOnQueryTextFocusChangeListener(object : View.OnFocusChangeListener{
@@ -270,7 +270,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         */
             /*startActivity(MediaDetailActivity.getDetailIntent(this, item))
             Utils.animateActivity(this, "next")*/
-            if("T".equals(item.mediaType)){
+            if("T".equals(item.type)){
                 val intent = Intent(activity, SeriesActivity::class.java)
                 intent.putExtra(Key.CATEGORY, item)
                 startActivity(intent)
@@ -351,10 +351,10 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
                 }
             }
 
-            is BaseVideo -> {
+            is Video -> {
                 if (Utils.isNetworkAvailable(activity)) {
                     val video = data
-                    if ("T".equals(video.mediaType)) {
+                    if ("T".equals(video.type)) {
                         val intent = Intent(activity, SeriesActivity::class.java)
                         intent.putExtra(Key.CATEGORY, video)
                         startActivity(intent)

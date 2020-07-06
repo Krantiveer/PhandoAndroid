@@ -16,7 +16,6 @@ import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
-import com.perseverance.phando.db.BaseVideo
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.BaseHomeFragment
@@ -135,7 +134,7 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onItemClick(data: Any) {
         when(data){
-            is BaseVideo ->{
+            is Video ->{
                 if (Utils.isNetworkAvailable(activity)) {
                     startActivity(MediaDetailActivity.getDetailIntent(activity as Context, data))
                     Utils.animateActivity(activity, "next")

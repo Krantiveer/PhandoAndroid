@@ -8,7 +8,7 @@ class BannerFragment : BaseBannerFragment() {
         fun newInstance(banner: Video): BannerFragment {
             val fragment = BannerFragment()
             val args = Bundle()
-            args.putSerializable(ARG_BANNER, banner)
+            args.putParcelable(ARG_BANNER, banner)
             fragment.arguments = args
             return fragment
         }

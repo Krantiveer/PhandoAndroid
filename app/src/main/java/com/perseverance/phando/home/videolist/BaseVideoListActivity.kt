@@ -14,7 +14,6 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
-import com.perseverance.phando.db.BaseVideo
 import com.perseverance.phando.db.Category
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
@@ -34,6 +33,7 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
     private lateinit var id: String
     private lateinit var title: String
     private lateinit var type: String
+    private var imageOrientation: Int=0
     private var adapter: BaseCategoryListAdapter? = null
     private var endlessScrollListener: EndlessScrollListener? = null
     private var pCount: Int = 0
@@ -56,6 +56,7 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
         id = intent.getStringExtra("id")
         title=intent.getStringExtra("title")
         type=intent.getStringExtra("type")
+        imageOrientation=intent.getIntExtra("imageOrientation",0)
         setTitle(title)
         homeViewModel = ViewModelProviders.of(this).get(MediaListViewModel::class.java)
 
@@ -66,7 +67,7 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
         recycler_view_base.setHasFixedSize(true)
         val decoration = BaseRecycleMarginDecoration(this@BaseVideoListActivity)
         recycler_view_base.addItemDecoration(decoration)
-        adapter = BaseCategoryListAdapter(this@BaseVideoListActivity, this)
+        adapter = BaseCategoryListAdapter(this@BaseVideoListActivity, this,imageOrientation)
         val videos = ArrayList<Video>()
         adapter?.items = videos
         recycler_view_base.adapter = adapter
@@ -195,9 +196,9 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
             startActivity(intent)*/
             /*startActivity(MediaDetailActivity.getDetailIntent(this@BaseActivity as Context, data as BaseVideo))
             Utils.animateActivity(this@BaseActivity, "next")*/
-            if(data is BaseVideo) {
+            if(data is Video) {
                 val video = data
-                if("T".equals(video.mediaType)){
+                if("T".equals(video.type)){
                     val intent = Intent(this@BaseVideoListActivity, SeriesActivity::class.java)
                     intent.putExtra(Key.CATEGORY, video)
                     startActivity(intent)

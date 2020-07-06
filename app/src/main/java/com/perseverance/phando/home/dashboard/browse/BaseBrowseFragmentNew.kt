@@ -323,7 +323,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
         when (data) {
             is Video -> {
                 if (Utils.isNetworkAvailable(activity)) {
-                    if ("T".equals(data.mediaType)) {
+                    if ("T".equals(data.type)) {
                         val intent = Intent(activity, SeriesActivity::class.java)
                         intent.putExtra(Key.CATEGORY, data)
                         startActivity(intent)
@@ -341,6 +341,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                         putExtra("id", data.id.toString())
                         putExtra("title", data.title)
                         putExtra("type", dataFilters.type)
+                        putExtra("imageOrientation", data.image_orientation)
                     }
                     startActivity(intent)
                 }

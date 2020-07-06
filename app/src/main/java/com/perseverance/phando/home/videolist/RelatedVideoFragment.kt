@@ -54,7 +54,7 @@ class RelatedVideoFragment : Fragment() , AdapterClickListener {
 //            it?.let {
 //                progressBar.visible()
 //                errorText.gone()
-//                playerViewModel.callForRelatedVideos(it.entryId, false, it.mediaType)
+//                playerViewModel.callForRelatedVideos(it.entryId, false, it.type)
 //            }
 //
 //        })
@@ -86,7 +86,7 @@ class RelatedVideoFragment : Fragment() , AdapterClickListener {
 
     override fun onItemClick(data: Any) {
         data as Video
-        if ("T".equals(data.mediaType)) {
+        if ("T".equals(data.type)) {
             val intent = Intent(activity, SeriesActivity::class.java)
             intent.putExtra(Key.CATEGORY, data)
             startActivity(intent)

@@ -38,9 +38,6 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.MalformedJsonException;
 import com.perseverance.phando.R;
 import com.perseverance.phando.constants.BaseConstants;
-import com.perseverance.phando.db.FavoriteVideo;
-import com.perseverance.phando.db.Video;
-import com.perseverance.phando.db.WatchLaterVideo;
 import com.perseverance.phando.resize.ListItemThumbnail;
 import com.perseverance.phando.resize.ThumbnailResizer;
 import com.perseverance.phando.retrofit.NullResponseError;
@@ -69,48 +66,6 @@ import static com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.wi
  */
 public class Utils {
 
-
-    public static String createHeaderThumbnailUrl(Video item) {
-
-        String thumbNailUrl;
-        if (BaseConstants.MEDIA_TYPE_M3U8.equals(item.getMediaType())) {
-            thumbNailUrl = String.format("%s%s/m_%s_4.png", item.getCdnUrl(), item.getEntryId(), item.getEntryId());
-            MyLog.e("Header thumbnail Url: (M3U8)" + thumbNailUrl);
-            return thumbNailUrl;
-        }
-
-        thumbNailUrl = String.format("%sm_%s_4.png", item.getCdnUrl(), item.getEntryId());
-        MyLog.e("Header thumbnail Url: (MP4)" + thumbNailUrl);
-        return thumbNailUrl;
-    }
-
-    public static String createHeaderThumbnailUrl(FavoriteVideo item) {
-
-        String thumbNailUrl;
-        if (BaseConstants.MEDIA_TYPE_M3U8.equals(item.getMediaType())) {
-            thumbNailUrl = String.format("%s%s/m_%s_4.png", item.getCdnUrl(), item.getEntryId(), item.getEntryId());
-            MyLog.e("Header thumbnail Url: (M3U8)" + thumbNailUrl);
-            return thumbNailUrl;
-        }
-
-        thumbNailUrl = String.format("%sm_%s_4.png", item.getCdnUrl(), item.getEntryId());
-        MyLog.e("Header thumbnail Url: (MP4)" + thumbNailUrl);
-        return thumbNailUrl;
-    }
-
-    public static String createHeaderThumbnailUrl(WatchLaterVideo item) {
-
-        String thumbNailUrl;
-        if (BaseConstants.MEDIA_TYPE_M3U8.equals(item.getMediaType())) {
-            thumbNailUrl = String.format("%s%s/m_%s_4.png", item.getCdnUrl(), item.getEntryId(), item.getEntryId());
-            MyLog.e("Header thumbnail Url: (M3U8)" + thumbNailUrl);
-            return thumbNailUrl;
-        }
-
-        thumbNailUrl = String.format("%sm_%s_4.png", item.getCdnUrl(), item.getEntryId());
-        MyLog.e("Header thumbnail Url: (MP4)" + thumbNailUrl);
-        return thumbNailUrl;
-    }
 
     public static void displayRoundedImage(final Context activity, final String url, final int placeHolder, final int errorPlaceholder, final ImageView imageView) {
         RequestOptions requestOptions = new RequestOptions()
@@ -196,7 +151,7 @@ public class Utils {
         ThumbnailResizer thumbnailResizer = new ListItemThumbnail();
         double imageWidth = thumbnailResizer.getWidth() * 1.0;
         String imageUrl = "https://imstool.phando.com/?image_url=" + url + "&width=" + imageWidth + "&service=resize&aspect_ratio=true";
-        MyLog.e("imageUrl", imageUrl);
+       // MyLog.e("imageUrl", imageUrl);
         if (activity != null) {
             Glide.with(activity)
                     .setDefaultRequestOptions(new RequestOptions().timeout(30000))

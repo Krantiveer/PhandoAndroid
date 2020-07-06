@@ -14,7 +14,6 @@ import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
-import com.perseverance.phando.db.BaseVideo
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.home.series.SeriesActivity
@@ -31,7 +30,7 @@ open class BaseBannerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            banner = requireArguments().getSerializable(ARG_BANNER) as Video?
+            banner = requireArguments().getParcelable(ARG_BANNER)
         }
     }
 
@@ -44,7 +43,7 @@ open class BaseBannerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         banner?.let {
-            if (it.isFree == 1) { // if paid video then show premium icon
+            if (it.is_free == 1) { // if paid video then show premium icon
                 free.gone()
             } else {
                 free.visible()
@@ -56,21 +55,14 @@ open class BaseBannerFragment : Fragment() {
 
         imgThumbnail.setOnClickListener {
 
-            banner?.entryId?.let {
+            banner?.id?.let {
                 if (Utils.isNetworkAvailable(activity)) {
-                    val baseVideo = BaseVideo(banner)
-
-                    baseVideo.entryId = it
-                    baseVideo.thumbnail = banner?.thumbnail
-                    baseVideo.title = banner?.title
-                    baseVideo.isFree = banner!!.isFree
-                    //  baseVideo.mediaType = banner?.subtitle
-                    if ("T".equals(baseVideo.mediaType)) {
+                     if ("T".equals(banner!!.type)) {
                         val intent = Intent(activity, SeriesActivity::class.java)
-                        intent.putExtra(Key.CATEGORY, baseVideo)
+                        intent.putExtra(Key.CATEGORY, banner)
                         startActivity(intent)
                     } else {
-                        startActivity(MediaDetailActivity.getDetailIntent(activity as Context, baseVideo))
+                        startActivity(MediaDetailActivity.getDetailIntent(activity as Context, banner!!))
                         Utils.animateActivity(activity, "next")
                     }
                     /*startActivity(MediaDetailActivity.getDetailIntent(activity as Context, baseVideo))

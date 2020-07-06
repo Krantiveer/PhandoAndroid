@@ -39,7 +39,6 @@ import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.AppDatabase
-import com.perseverance.phando.db.BaseVideo
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
@@ -102,8 +101,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         const val REQUEST_CODE_BUY = 112
         const val REQUEST_CODE_PACKAGE = 113
         const val ARG_VIDEO = "param_video"
-        fun getDetailIntent(context: Context, video: BaseVideo): Intent {
-            if (video.isFree == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
+        fun getDetailIntent(context: Context, video: Video): Intent {
+            if (video.is_free == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
                 val intent = Intent(context, LoginActivity::class.java)
                 return intent
             } else {
@@ -112,7 +111,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 intent.apply {
                     val arg = Bundle()
                     arg.apply {
-                        putSerializable(ARG_VIDEO, video)
+                        putParcelable(ARG_VIDEO, video)
                     }
                     putExtras(arg)
                 }
@@ -146,16 +145,6 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 it.message?.let {
                     Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
                 }
-//                if (it.message.equals("Please Subscribe")) {
-//                    val intent = Intent(this@MediaDetailActivity, SubscriptionPackageActivity::class.java)
-//                    startActivityForResult(intent, 101)
-//                } else {
-//                    it.message?.let {
-//                        Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
-//                        mediaMetadata = null
-//                    }
-//
-//                }
 
             }
             LoadingStatus.SUCCESS -> {
@@ -227,6 +216,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 }
                 STATE_DOWNLOADING -> {
                     txtDownload?.text = "${it.progress}%"
+                    imgDownload.setImageResource(R.drawable.ic_detail_download_inprogress)
                 }
                 STATE_FAILED -> {
                     txtDownload?.text = "Download"
@@ -376,7 +366,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         mediaDetailViewModel.isDisliked.observe(this, dislikeObserver)
         mediaDetailViewModel.downloadStatus.observe(this, downloadObserver)
 
-        val video = intent?.getSerializableExtra(ARG_VIDEO) as BaseVideo
+        val video:Video = intent?.getParcelableExtra(ARG_VIDEO)!!
         mediaDetailViewModel.refreshMediaMetadata(video)
         MyLog.d("Player Image", video.thumbnail)
         Utils.displayImage(this, video.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
@@ -387,7 +377,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 startActivity(intent)
             } else {
                 mediaDetailViewModel.reloadTrigger.value?.let {
-                    mediaDetailViewModel.addToMyList(it.entryId, it.mediaType)
+
+                    mediaDetailViewModel.addToMyList(it.id.toString(), it.type!!)
                 }
             }
 
@@ -399,14 +390,14 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 startActivity(intent)
             } else {
                 mediaDetailViewModel.reloadTrigger.value?.let {
-                    mediaDetailViewModel.addToLike(it.entryId, it.mediaType)
+                    mediaDetailViewModel.addToLike(it.id.toString(), it.type!!)
                 }
             }
 
         }
 //        dislike.setOnClickListener {
 //            playerViewModel.reloadTrigger.value?.let {
-//                playerViewModel.addToDislike(it.entryId, it.mediaType)
+//                playerViewModel.addToDislike(it.entryId, it.type)
 //            }
 //        }
         if (BuildConfig.APPLICATION_ID == "com.perseverance.anvitonmovies") {
@@ -586,7 +577,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                                 null,
                                 null,
                                 null)
-                        phandoPlayerView.startDownload(videoPlayerMetadata, mediaMetadata?.title)
+                        VideoSdkUtil.startDownload(this@MediaDetailActivity,videoPlayerMetadata, mediaMetadata?.title)
                         downloadMetadataDao?.insert(DownloadMetadata(mediaMetadata?.document_media_id!!.toString(),
                                 mediaMetadata?.title,
                                 mediaMetadata?.detail,
@@ -918,9 +909,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             }
         }
         mediaMetadata?.next_media?.let {
-            mediaDetailViewModel.getNextEpisodeMediaMetadata(BaseVideo().apply {
-                mediaType = it.type
-                entryId = it.id.toString()
+            mediaDetailViewModel.getNextEpisodeMediaMetadata(Video().apply {
+                type = it.type
+                id = it.id
             })
         }
 
@@ -1035,8 +1026,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     private fun shareVideoUrl() {
         mediaDetailViewModel.reloadTrigger.value?.let {
             val title = videoTitle.text.toString()
-            val mediaType = it.mediaType
-            it.entryId?.let {
+            val mediaType = it.type
+            it.id?.let {
                 var url = FeatureConfigClass().baseUrl + "watch/"
                 if (mediaType.equals("E")) {
                     url += "tvshow/episode/"
@@ -1147,7 +1138,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         when (data) {
             is Video -> {
 
-                if ("T".equals(data.mediaType)) {
+                if ("T".equals(data.type)) {
                     val intent = Intent(this@MediaDetailActivity, SeriesActivity::class.java)
                     intent.putExtra(Key.CATEGORY, data)
                     startActivity(intent)

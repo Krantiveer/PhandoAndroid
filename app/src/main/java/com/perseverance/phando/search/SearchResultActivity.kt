@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
-import com.perseverance.phando.db.BaseVideo
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
@@ -115,7 +114,7 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
         */
             /*startActivity(MediaDetailActivity.getDetailIntent(this, item))
             Utils.animateActivity(this, "next")*/
-            if("T".equals(item.mediaType)){
+            if("T".equals(item.type)){
                 val intent = Intent(this@SearchResultActivity, SeriesActivity::class.java)
                 intent.putExtra(Key.CATEGORY, item)
                 startActivity(intent)
@@ -205,9 +204,9 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
             startActivity(intent);*/
             /*startActivity(MediaDetailActivity.getDetailIntent(this, data as Video))
             Utils.animateActivity(this, "next")*/
-            if(data is BaseVideo) {
+            if(data is Video) {
                 val video = data
-                if("T".equals(video.mediaType)){
+                if("T".equals(video.type)){
                     val intent = Intent(this@SearchResultActivity, SeriesActivity::class.java)
                     intent.putExtra(Key.CATEGORY, video)
                     startActivity(intent)

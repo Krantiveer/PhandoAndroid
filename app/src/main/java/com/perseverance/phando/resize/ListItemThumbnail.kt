@@ -2,11 +2,19 @@ package com.perseverance.phando.resize
 
 import com.perseverance.phando.Session
 
-class ListItemThumbnail (): ThumbnailResizer {
+class ListItemThumbnail(imageOrientation: Int? = 0) : ThumbnailResizer {
     val WIDTH_SCALE_FACTOR = 0.40
-    val HEIGHT_SCALE_FACTOR = 0.56
+    var HEIGHT_SCALE_FACTOR = 0.56
 
-    private var screenWidth :Int = Session.instance.resources.displayMetrics.widthPixels
+    init {
+        imageOrientation?.let {
+            if (it == 1) {
+                HEIGHT_SCALE_FACTOR=1.33
+            }
+        }
+    }
+
+    private var screenWidth: Int = Session.instance.resources.displayMetrics.widthPixels
 
     override fun getHeight(): Int {
         return (getWidth() * HEIGHT_SCALE_FACTOR).toInt()

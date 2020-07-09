@@ -54,7 +54,7 @@ import com.perseverance.phando.payment.subscription.CreateOrderResponse
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
 import com.perseverance.phando.payment.subscription.SubscriptionsViewModel
 import com.perseverance.phando.utils.*
-import com.qait.sadhna.LoginActivity
+import com.perseverance.phando.home.profile.login.LoginActivity
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
 import com.videoplayer.*
@@ -64,7 +64,6 @@ import kotlinx.android.synthetic.main.activity_video_details.progressBar
 import kotlinx.android.synthetic.main.content_detail.*
 import kotlinx.android.synthetic.main.content_detail.recyclerView
 import org.json.JSONObject
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -1193,13 +1192,13 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
             if (it.action == "playerstart") {
                 if (!isPlayerstartSent) {
-                    TrackingUtils.sendVideoEvent(eventData.toString(), it.action)
+                    TrackingUtils.sendVideoEvent(eventData.toString(),mediaMetadata?.analytics_category_id, it.action)
                     TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS, eventData.toString())
                     isPlayerstartSent = true
                 } else {
                 }
             } else {
-                TrackingUtils.sendVideoEvent(eventData.toString(), it.action)
+                TrackingUtils.sendVideoEvent(eventData.toString(),mediaMetadata?.analytics_category_id, it.action)
                 when (it.action) {
                     "adplay" -> {
                         imgHeaderImage.gone()

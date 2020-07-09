@@ -12,6 +12,7 @@ import com.perseverance.phando.retrofit.NullResponseError
 import com.videoplayer.DownloadInfo
 import com.videoplayer.VideoSdkUtil
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Response
 
@@ -169,24 +170,9 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
 
 
     fun setContinueWatchingTime(id: String, time: String) {
-        val call = apiService.setContinueWatchingTime(id, time) as Call<UpdateMyListResponse>
-        call.enqueue(object : retrofit2.Callback<UpdateMyListResponse> {
-            override fun onResponse(call: Call<UpdateMyListResponse>?, response: Response<UpdateMyListResponse>?) {
-                if (response == null || response.errorBody() != null) {
-
-                } else {
-                    response.body()?.let {
-
-                    }
-
-                }
-            }
-
-            override fun onFailure(call: Call<UpdateMyListResponse>?, t: Throwable?) {
-
-            }
-
-        })
+       viewModelScope.launch(Dispatchers.IO){
+           mediaDetailRepository.setContinueWatchingTime(id,time)
+       }
     }
 
     fun saveUserDownload(param: HashMap<String, String>) = liveData(Dispatchers.IO) {

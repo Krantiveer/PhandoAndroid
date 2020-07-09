@@ -4,15 +4,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.home.dashboard.HomeActivity
-import com.perseverance.phando.utils.PreferencesUtils
-import com.perseverance.phando.utils.Utils
-import com.qait.sadhna.LoginActivity
+import com.perseverance.phando.utils.AppSignatureHelper
 import kotlinx.android.synthetic.main.activity_splash.*
 
 
@@ -47,7 +46,7 @@ open class BaseSplashActivity : AppCompatActivity() {
             }
         })
         imageView.startAnimation(animation)
-
+        Log.v("hash", AppSignatureHelper(this).getAppSignatures().get(0));
 
     }
 

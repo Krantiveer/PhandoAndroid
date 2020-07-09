@@ -40,6 +40,7 @@ import com.perseverance.phando.R;
 import com.perseverance.phando.constants.BaseConstants;
 import com.perseverance.phando.resize.ListItemThumbnail;
 import com.perseverance.phando.resize.ThumbnailResizer;
+import com.perseverance.phando.retrofit.ApiClient;
 import com.perseverance.phando.retrofit.NullResponseError;
 import com.perseverance.phando.retrofit.ServerResponseError;
 
@@ -372,7 +373,7 @@ public class Utils {
 
         if (error == null) {
             return BaseConstants.APPLICATION_ERROR;
-        } else if (error instanceof UnknownHostException) {
+        } else if (error instanceof UnknownHostException||error instanceof ApiClient.NoConnectivityException) {
             return BaseConstants.NETWORK_ERROR;
         } else if (error instanceof ConnectException) {
             return BaseConstants.SERVER_CONNECTION_ERROR;

@@ -23,10 +23,10 @@ object TrackingUtils {
         MyLog.e("GA tracker sent: $screenName")
     }
 
-    fun sendVideoEvent(label: String?,action: String?) {
+    fun sendVideoEvent(label: String?,category:String?,action: String?) {
         Log.e("VideoEvent",label+" "+action)
         gaTracker?.send(HitBuilders.EventBuilder()
-                .setCategory("Phando Video")
+                .setCategory(if (category.isNullOrEmpty()) "Phando Video" else category)
                 .setLabel(label)
                 .setAction(action)
                 .build())

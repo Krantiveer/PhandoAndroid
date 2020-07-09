@@ -51,6 +51,12 @@ class MediaDetailRepository(private val application: Application) {
         })
         return data
     }
+    suspend fun setContinueWatchingTime(id: String, time: String) {
+        try {
+           apiService.setContinueWatchingTime(id, time).execute()
+        } catch (e: Exception) {
+        }
+    }
 
     suspend fun saveUserDownload(param: HashMap<String, String>): DataLoadingStatus<BaseResponse> {
         try {

@@ -1,8 +1,6 @@
 package com.perseverance.phando.retrofit;
 
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
 import com.google.gson.Gson;
 import com.perseverance.phando.BuildConfig;
@@ -10,7 +8,7 @@ import com.perseverance.phando.Session;
 import com.perseverance.phando.factory.FeatureConfigFactory;
 import com.perseverance.phando.utils.PreferencesUtils;
 import com.perseverance.phando.utils.Utils;
-import com.qait.sadhna.LoginActivity;
+import com.perseverance.phando.home.profile.login.LoginActivity;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

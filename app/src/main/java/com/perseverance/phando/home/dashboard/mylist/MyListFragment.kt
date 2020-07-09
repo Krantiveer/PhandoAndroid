@@ -23,7 +23,7 @@ import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.utils.*
-import com.qait.sadhna.LoginActivity
+import com.perseverance.phando.home.profile.login.LoginActivity
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.fragment_mylist.*
 
@@ -101,7 +101,7 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
         if (token.isEmpty()) {
             message.setOnClickListener {
                 val intent = Intent(context, LoginActivity::class.java)
-                startActivityForResult(intent,LoginActivity.REQUEST_CODE_LOGIN)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             }
 
         } else {
@@ -114,7 +114,7 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode==LoginActivity.REQUEST_CODE_LOGIN && resultCode== Activity.RESULT_OK){
+        if (requestCode== LoginActivity.REQUEST_CODE_LOGIN && resultCode== Activity.RESULT_OK){
             loadVideos(0, true)
         }
     }

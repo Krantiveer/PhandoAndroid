@@ -25,7 +25,6 @@ class UserProfileRepository(private val application: Application) {
         var data:MutableLiveData<DataLoadingStatus<UserProfileData>> = MutableLiveData<DataLoadingStatus<UserProfileData>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
         val call = apiService.userProfile
-
         call.enqueue(object : Callback<UserProfileData> {
             override fun onResponse(call: Call<UserProfileData>, response: Response<UserProfileData>) {
              if (response.isSuccessful){
@@ -39,7 +38,8 @@ class UserProfileRepository(private val application: Application) {
 
             override fun onFailure(call: Call<UserProfileData>?, t: Throwable?) {
                 if (t is ApiClient.NoConnectivityException){
-                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                   // data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, null))
                 }else{
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load profile data"))
                 }

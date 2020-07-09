@@ -16,14 +16,11 @@ import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
-import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
-import com.perseverance.phando.splash.SplashActivity
 import com.perseverance.phando.utils.*
-import com.qait.sadhna.LoginActivity
 import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_user_profile.*
 

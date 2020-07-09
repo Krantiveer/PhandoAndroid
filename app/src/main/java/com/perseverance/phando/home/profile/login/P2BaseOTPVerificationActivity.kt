@@ -41,7 +41,7 @@ abstract class P2BaseOTPVerificationActivity : BaseUserLoginActivity() {
         mobileNo =  arguments?.getString("MOBILE")!!
         countryCode = arguments?.getString("COUNTRY_CODE")!!
         mobile.text = "+$countryCode$mobileNo"
-
+        startSmsRetriever()
     }
 
 //    override fun onCreate(savedInstanceState: Bundle?) {

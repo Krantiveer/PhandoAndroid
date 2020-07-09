@@ -39,26 +39,9 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name="com.perseverance.phando.home.profile.login.LoginActivity"
-            android:label="Login"
-            android:screenOrientation="sensorPortrait"></activity>
-        <activity
-            android:name="com.perseverance.phando.home.profile.login.LoginWithOTPActivity"
-            android:label="Verify OTP"
-            android:screenOrientation="sensorPortrait"></activity>
         <activity
             android:name=".home.series.SeriesActivity"
             android:label="Series"
-            android:screenOrientation="sensorPortrait"></activity>
-        <activity
-            android:name="com.perseverance.phando.home.profile.login.RegisterActivity"
-            android:label="Register"
-            android:screenOrientation="sensorPortrait"></activity>
-        <activity
-            android:name="com.perseverance.phando.home.profile.login.ForgotPasswordActivity"
-            android:label="Forgot Password"
             android:screenOrientation="sensorPortrait"></activity>
         <activity
             android:name="com.perseverance.phando.payment.subscription.SubscriptionPackageActivity"
@@ -80,16 +63,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name=".search.SearchActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:label="@string/action_search"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/AppTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".home.dashboard.HomeActivityNew" />
         </activity>
         <activity
             android:name=".search.SearchResultActivity"
@@ -124,47 +97,15 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".home.videolist.FavoriteListActivity"
-            android:screenOrientation="sensorPortrait" />
-        <activity
-            android:name=".home.videolist.WatchLaterListActivity"
-            android:screenOrientation="sensorPortrait" />
-        <activity
             android:name=".home.profile.ProfileActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".customtab.WebviewActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
-            android:name=".home.profile.login.P2LoginActivity"
+            android:name=".home.profile.login.LoginActivity"
             android:screenOrientation="portrait"></activity>
-        <activity
-            android:name="com.qait.sadhna.LoginActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".home.profile.login.P2LoginWithMobileNoActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".home.profile.login.P2LoginWithEmailActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".home.profile.login.P2OTPVerificationActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".home.profile.login.P2SignupActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".home.profile.login.P2ChangePasswordOTPVerificationActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".home.profile.login.P2PasswordChangedActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".home.profile.login.P2ForgotPasswordActivity"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".home.profile.login.P2SetPasswordActivity"
-            android:screenOrientation="portrait"></activity>
+
 
     </application>
 

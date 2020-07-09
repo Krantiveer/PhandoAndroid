@@ -16,6 +16,7 @@
         android:paddingBottom="@dimen/_5sdp"
         android:background="@color/white"
         android:text="Select an option"
+        android:textStyle="bold"
         android:textColor="@color/black"
         android:textSize="@dimen/_14sdp" />
     <androidx.appcompat.widget.AppCompatTextView

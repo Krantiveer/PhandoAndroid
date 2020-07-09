@@ -49,7 +49,7 @@ import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.PreferencesUtils
 import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
-import com.qait.sadhna.LoginActivity
+import com.perseverance.phando.home.profile.login.LoginActivity
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_browse_new.*
 import kotlinx.android.synthetic.main.fragment_browse_new.progressBar

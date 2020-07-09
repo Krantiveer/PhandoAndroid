@@ -39,7 +39,7 @@ class MediaListViewModel(application : Application) : AndroidViewModel(applicati
 
             override fun onFailure(call: Call<List<Video>>?, t: Throwable?) {
 
-                    videoListMutableLiveData.postValue(VideosModel(arrayListOf(), null, pageCount, null))
+                    videoListMutableLiveData.postValue(VideosModel(arrayListOf(), null, pageCount, t))
 
             }
         })

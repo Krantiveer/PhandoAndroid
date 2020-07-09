@@ -35,7 +35,7 @@
                     android:background="@color/white"
                     android:padding="@dimen/_2sdp"
                     android:scaleType="fitXY"
-                    android:src="@drawable/splash_logo"
+                    android:src="@drawable/app_logo"
                     android:visibility="gone" />
 
 
@@ -85,7 +85,7 @@
                 <ImageView
                     android:layout_width="@dimen/_110sdp"
                     android:layout_height="@dimen/_110sdp"
-                    android:src="@drawable/splash_logo" />
+                    android:src="@drawable/app_logo" />
             </LinearLayout>
 
             <LinearLayout

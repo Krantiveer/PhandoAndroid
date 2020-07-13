@@ -287,13 +287,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
 
         }
         Util.hideKeyBoard(requireActivity())
-        val strProfile = PreferencesUtils.getStringPreferences("profile")
-        val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
-        userProfileData?.let {
-            Utils.displayCircularProfileImage(context, it.user?.image,
-                    R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
-        }
-        observeUserProfile()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -458,5 +452,13 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
     override fun onResume() {
         super.onResume()
         userProfileViewModel.refreshUserProfile()
+        val strProfile = PreferencesUtils.getStringPreferences("profile")
+        val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
+        userProfileData?.let {
+            Utils.displayCircularProfileImage(context, it.user?.image,
+                    R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
+        }?:Utils.displayCircularProfileImage(context, "",
+                R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
+        observeUserProfile()
     }
 }

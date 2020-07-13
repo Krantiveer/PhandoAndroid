@@ -21,9 +21,14 @@ import retrofit2.Response
  */
 class MediaDetailViewModel(application: Application) : AndroidViewModel(application) {
 
+
+
     private var mediaDetailRepository: MediaDetailRepository = MediaDetailRepository(application)
 
     val reloadTrigger = MutableLiveData<Video>()
+    val loginFor = MutableLiveData<Int>().apply {
+        0
+    }
     val nextEpisodeReloadTrigger = MutableLiveData<Video>()
 
     var mediaMetadata: LiveData<DataLoadingStatus<MediaplaybackData>> = Transformations.switchMap(reloadTrigger) {

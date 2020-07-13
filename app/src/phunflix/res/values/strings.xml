@@ -19,10 +19,8 @@
     <string name="label_related_video">Related Videos</string>
     <string name="label_series">Series</string>
 
-    <string name="facebook_app_id">2393629944262141</string>
-    <string name="fb_login_protocol_scheme">fb2393629944262141</string>
-
-<!--    <string name="web_client_id">AIzaSyDo0Hyxtjbd0LgjfeIpBvaK6qVfnWRHL78</string>-->
+    <string name="facebook_app_id">123</string>
+    <string name="fb_login_protocol_scheme">123</string>
     <string name="Rs">\u20B9</string>
 
 

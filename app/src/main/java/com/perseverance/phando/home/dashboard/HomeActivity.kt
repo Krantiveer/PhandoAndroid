@@ -17,6 +17,7 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.newgendroid.news.utils.AppDialogListener
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
@@ -25,6 +26,7 @@ import com.perseverance.phando.search.SearchActivity
 import com.perseverance.phando.search.SearchResultActivity
 import com.perseverance.phando.splash.AppInfo
 import com.perseverance.phando.splash.AppInfoModel
+import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.TrackingUtils
 import com.perseverance.phando.utils.Utils
@@ -70,7 +72,19 @@ class HomeActivity : AppCompatActivity(),
         homeActivityViewModel.callForAppInfo()
         homeActivityViewModel.callCountryCode()
         TrackingUtils.sendScreenTracker( BaseConstants.HOME)
+        val msg = intent.getStringExtra("msg")
+        msg?.let {
+            DialogUtils.showDialog(this,"Error!",it,"Close",null,object : AppDialogListener {
+                override fun onNegativeButtonPressed() {
 
+                }
+
+                override fun onPositiveButtonPressed() {
+
+                }
+
+            })
+        }
     }
 
 

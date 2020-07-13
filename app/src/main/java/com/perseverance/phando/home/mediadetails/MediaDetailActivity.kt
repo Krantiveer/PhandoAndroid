@@ -29,10 +29,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.perseverance.patrikanews.utils.getViewModel
-import com.perseverance.patrikanews.utils.gone
-import com.perseverance.patrikanews.utils.toast
-import com.perseverance.patrikanews.utils.visible
+import com.perseverance.patrikanews.utils.*
 import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
@@ -75,6 +72,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     }
 
     companion object {
+        const val LOGIN_FOR_RENT = 1
+        const val LOGIN_FOR_BUY = 2
+        const val LOGIN_FOR_PACKAGE = 3
 
         // Important: These constants are persisted into DownloadIndex. Do not change them.
         const val STATE_QUEUED = 0
@@ -365,7 +365,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         mediaDetailViewModel.isDisliked.observe(this, dislikeObserver)
         mediaDetailViewModel.downloadStatus.observe(this, downloadObserver)
 
-        val video:Video = intent?.getParcelableExtra(ARG_VIDEO)!!
+        val video: Video = intent?.getParcelableExtra(ARG_VIDEO)!!
         mediaDetailViewModel.refreshMediaMetadata(video)
         MyLog.d("Player Image", video.thumbnail)
         Utils.displayImage(this, video.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
@@ -514,7 +514,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             if (token.isEmpty()) {
 
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
-                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                startActivityForResult(intent, REQUEST_CODE_RENT)
 
 
             } else {
@@ -530,7 +530,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             if (token.isEmpty()) {
 
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
-                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                startActivityForResult(intent, REQUEST_CODE_BUY)
 
             } else {
                 val purchaseOptionBottomSheetFragment = PurchaseOptionBottomSheetFragment()
@@ -545,10 +545,10 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             if (token.isEmpty()) {
 
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
-                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                startActivityForResult(intent, REQUEST_CODE_PACKAGE)
             } else {
                 val intent = Intent(this@MediaDetailActivity, SubscriptionPackageActivity::class.java)
-                startActivityForResult(intent, REQUEST_CODE_PACKAGE)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             }
         }
 
@@ -576,7 +576,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                                 null,
                                 null,
                                 null)
-                        VideoSdkUtil.startDownload(this@MediaDetailActivity,videoPlayerMetadata, mediaMetadata?.title)
+                        VideoSdkUtil.startDownload(this@MediaDetailActivity, videoPlayerMetadata, mediaMetadata?.title)
                         downloadMetadataDao?.insert(DownloadMetadata(mediaMetadata?.document_media_id!!.toString(),
                                 mediaMetadata?.title,
                                 mediaMetadata?.detail,
@@ -914,7 +914,24 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             })
         }
 
-
+//        when (mediaplaybackData.mediaCode) {
+//            "free", "rented", "buyed", "package_purchased" -> {
+//
+//            }
+//            else -> {
+//                when (mediaDetailViewModel.loginFor.value) {
+//                    LOGIN_FOR_BUY -> {
+//                        buyMedia.performClick()
+//                    }
+//                    LOGIN_FOR_RENT -> {
+//                        rentMedia.performClick()
+//                    }
+//                    LOGIN_FOR_PACKAGE -> {
+//                        packageMedia.performClick()
+//                    }
+//                }
+//            }
+//        }
     }
 
     private fun setRelatedVideo() {
@@ -1101,6 +1118,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             LoginActivity.REQUEST_CODE_LOGIN -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+                    mediaDetailViewModel.loginFor.value= 0
                 } else {
 
                 }
@@ -1109,6 +1127,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_RENT -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_RENT
                 } else {
 
                 }
@@ -1116,6 +1135,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_BUY -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_BUY
                 } else {
 
                 }
@@ -1123,6 +1143,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_PACKAGE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_PACKAGE
                 } else {
 
                 }
@@ -1144,6 +1165,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 } else {
                     Utils.displayImage(this, data.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
                     mediaDetailViewModel.refreshMediaMetadata(data)
+                    mediaDetailViewModel.loginFor.value= 0
                 }
             }
 
@@ -1192,13 +1214,13 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
             if (it.action == "playerstart") {
                 if (!isPlayerstartSent) {
-                    TrackingUtils.sendVideoEvent(eventData.toString(),mediaMetadata?.analytics_category_id, it.action)
+                    TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
                     TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS, eventData.toString())
                     isPlayerstartSent = true
                 } else {
                 }
             } else {
-                TrackingUtils.sendVideoEvent(eventData.toString(),mediaMetadata?.analytics_category_id, it.action)
+                TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
                 when (it.action) {
                     "adplay" -> {
                         imgHeaderImage.gone()
@@ -1336,6 +1358,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     progressBar.gone()
                     if (it.data?.is_subscribed == 1) {
                         mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+                        mediaDetailViewModel.loginFor.value= 0
                     } else {
                         startPayment(it.data)
                     }
@@ -1411,6 +1434,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     it.data?.message?.let { it1 -> toast(it1) }
                     if (it.data?.status.equals("success", true)) {
                         mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+                        mediaDetailViewModel.loginFor.value= 0
                     }
                 }
 

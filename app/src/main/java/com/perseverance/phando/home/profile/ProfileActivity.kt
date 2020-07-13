@@ -85,6 +85,7 @@ class ProfileActivity : AppCompatActivity() {
             alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, resources.getString(R.string.yes)
             ) { dialog, which ->
                 PreferencesUtils.setLoggedIn("")
+                PreferencesUtils.deleteAllPreferences()
                 downloadMetadataDao?.deleteAll()
                 VideoSdkUtil.deleteAllDownloadedVideo(this@ProfileActivity.application)
                 finish()

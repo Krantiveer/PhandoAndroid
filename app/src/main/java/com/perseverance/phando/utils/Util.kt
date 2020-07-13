@@ -39,6 +39,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
+@Suppress("DEPRECATION")
 class Util {
     private val SHOW_LOG = true
     private val TAG = "Util"

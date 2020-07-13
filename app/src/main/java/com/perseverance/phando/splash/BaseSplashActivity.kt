@@ -46,7 +46,7 @@ open class BaseSplashActivity : AppCompatActivity() {
             }
         })
         imageView.startAnimation(animation)
-        Log.v("hash", AppSignatureHelper(this).getAppSignatures().get(0));
+
 
     }
 

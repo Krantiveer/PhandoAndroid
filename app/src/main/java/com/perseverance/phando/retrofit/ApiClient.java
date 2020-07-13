@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.perseverance.phando.BuildConfig;
 import com.perseverance.phando.Session;
 import com.perseverance.phando.factory.FeatureConfigFactory;
+import com.perseverance.phando.home.dashboard.HomeActivity;
 import com.perseverance.phando.utils.PreferencesUtils;
 import com.perseverance.phando.utils.Utils;
 import com.perseverance.phando.home.profile.login.LoginActivity;
@@ -100,15 +101,15 @@ public class ApiClient {
                 ErrorModel errorModel  = new Gson().fromJson(bodyString, ErrorModel.class);
                 if (errorModel.getMessage().equalsIgnoreCase("You've been logged out because we have detected another login from your ID on a different device. You are not allowed to login on more than one device at a time.")
                 || errorModel.getStatus_code() != null && errorModel.getStatus_code().equalsIgnoreCase("E0002")){
-                    Intent loginIntent = new Intent(Session.Companion.getInstance(), LoginActivity.class);
+                    PreferencesUtils.setLoggedIn("");
+                    PreferencesUtils.deleteAllPreferences();
+                    Intent loginIntent = new Intent(Session.Companion.getInstance(), HomeActivity.class);
                     loginIntent.putExtra("msg",errorModel.getMessage());
                     loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     Session.Companion.getInstance().startActivity(loginIntent);
                     errorModel.setMessage(null);
-                    PreferencesUtils.setLoggedIn("");
+
                 }
-
-
                 return response.newBuilder().body(ResponseBody.create(contentType, new Gson().toJson(errorModel))).build();
 
             }

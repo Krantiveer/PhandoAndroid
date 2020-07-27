@@ -288,15 +288,11 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
         }
         Util.hideKeyBoard(requireActivity())
 
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == LoginActivity.REQUEST_CODE_LOGIN && resultCode == Activity.RESULT_OK) {
-//            val intent = Intent(context, ProfileActivity::class.java)
-//            startActivity(intent)
-
+        notificationContainer.setOnClickListener {
+            startActivity(Intent(activity,NotificationListActivity::class.java))
         }
+
+        PreferencesUtils.saveIntegerPreferences("NOTIFICATION_COUNT",10)
     }
 
     abstract fun setTopBannserHeight()
@@ -460,5 +456,25 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
         }?:Utils.displayCircularProfileImage(context, "",
                 R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
         observeUserProfile()
+        val notifications = AppDatabase.getInstance(activity!!)?.notificationDao()?.getAllNotifications()
+        notificationContainer.visibility = if(notifications == null || notifications.isEmpty()) View.GONE else View.VISIBLE
+        if (!(notifications == null || notifications.isEmpty())) {
+            try {
+                val mCartItemCount = PreferencesUtils.getIntegerPreferences("NOTIFICATION_COUNT")
+                cart_badge?.let {
+                    if (mCartItemCount == 0) {
+                        if (it.visibility != View.GONE) {
+                            it.visibility = View.GONE;
+                        }
+                    } else {
+                        it.setText(mCartItemCount.toString())
+                        if (it.visibility != View.VISIBLE) {
+                            it.visibility = View.VISIBLE;
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
     }
 }

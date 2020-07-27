@@ -82,6 +82,9 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTop"
             android:theme="@style/AppThemeVideo" />
+      <activity
+            android:name=".notification.NotificationListActivity"
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".home.mediadetails.OffLineMediaDetailActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
@@ -105,7 +108,17 @@
         <activity
             android:name=".home.profile.login.LoginActivity"
             android:screenOrientation="portrait"></activity>
-
+<service
+            android:name=".AdsUtil.AdNetworkService"
+            android:exported="false" />
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true"/>
+        <service android:name=".notification.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
 

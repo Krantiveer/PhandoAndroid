@@ -551,7 +551,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             }
         }
-
+    ad.loadAds(BannerType.SCREEN_DETAIL)
     }
 
     private fun startDownload() {

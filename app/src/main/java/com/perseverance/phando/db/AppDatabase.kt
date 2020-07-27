@@ -5,6 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.perseverance.phando.AdsUtil.AdModel
+import com.perseverance.phando.AdsUtil.AdModelDao
 import com.perseverance.phando.db.dao.*
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 
@@ -14,7 +16,8 @@ import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
         Filter::class,
         Language::class,
         APIData::class,
-        DownloadMetadata::class
+        DownloadMetadata::class,
+        AdModel::class
 ), version = 4)
 @TypeConverters(RoomDataTypeConvertor::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -23,6 +26,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun languageDao(): LanguageDao
     abstract fun apiDataDao(): APIDataDao
     abstract fun downloadMetadataDao(): DownloadMetadataDao
+    abstract fun adModelDao(): AdModelDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

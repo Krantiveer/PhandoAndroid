@@ -18,6 +18,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.newgendroid.news.utils.AppDialogListener
+import com.perseverance.phando.AdsUtil.BannerType
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
@@ -85,6 +86,7 @@ class HomeActivity : AppCompatActivity(),
 
             })
         }
+ ad.loadAds(BannerType.SCREEN_HOME)
     }
 
 

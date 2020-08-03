@@ -9,6 +9,8 @@ import com.perseverance.phando.AdsUtil.AdModel
 import com.perseverance.phando.AdsUtil.AdModelDao
 import com.perseverance.phando.db.dao.*
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
+import com.perseverance.phando.notification.NotificationDao
+import com.perseverance.phando.notification.NotificationData
 
 
 @Database(entities = arrayOf(
@@ -17,7 +19,8 @@ import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
         Language::class,
         APIData::class,
         DownloadMetadata::class,
-        AdModel::class
+        AdModel::class,
+        NotificationData::class
 ), version = 4)
 @TypeConverters(RoomDataTypeConvertor::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -27,6 +30,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun apiDataDao(): APIDataDao
     abstract fun downloadMetadataDao(): DownloadMetadataDao
     abstract fun adModelDao(): AdModelDao
+    abstract fun notificationDao(): NotificationDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

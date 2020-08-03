@@ -25,7 +25,6 @@ import com.perseverance.phando.R
 import com.perseverance.phando.Session
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.AppDatabase
-import com.perseverance.phando.db.BaseVideo
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.utils.MyLog
@@ -69,11 +68,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             val notificationModel = NotificationData()
             AppDatabase.getInstance(this)?.notificationDao()?.insert(notificationModel)
-            val baseVideo = BaseVideo()
-            baseVideo.entryId = id
+            val baseVideo = NotificationData()
+            baseVideo.id = id
             baseVideo.thumbnail = thumbnail
             baseVideo.title = title
-            baseVideo.isFree = isFree!!.toInt()
+            baseVideo.is_free = isFree!!.toInt()
 
             if (thumbnail.isNullOrBlank()) {
                 sendNotification(title = title, body = detail, baseVideo = baseVideo)

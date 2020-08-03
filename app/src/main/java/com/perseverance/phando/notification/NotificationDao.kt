@@ -20,7 +20,7 @@ interface NotificationDao {
     @Query("SELECT * FROM NotificationData")
     fun getAllNotifications(): List<NotificationData>
 
-    @Query("DELETE FROM NotificationData WHERE dbID = :id")
+    @Query("DELETE FROM NotificationData")
     fun deleteNotifications(id:String): Int
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

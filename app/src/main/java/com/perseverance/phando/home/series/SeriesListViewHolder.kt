@@ -34,7 +34,7 @@ class SeriesListViewHolder(itemView: View, listener: AdapterClickListener) : Bas
                 itemView.txt_title.text = "No Episodes found"
 
             } else {
-                itemView.txt_title.text = "Season " + item.season_no
+                itemView.txt_title.text = item.title
 
             }
         }

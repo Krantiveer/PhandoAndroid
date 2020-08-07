@@ -24,6 +24,9 @@ import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.TrackingUtils
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_series.*
+import kotlinx.android.synthetic.main.activity_series.otherInfo
+import kotlinx.android.synthetic.main.activity_series.viewMore
+import kotlinx.android.synthetic.main.content_detail.*
 
 class SeriesActivity : AppCompatActivity(), AdapterClickListener {
 
@@ -76,6 +79,15 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
         val videos = ArrayList<SeriesData>()
         adapter?.items = videos
         recycler_view_base.adapter = adapter
+        viewMore.setOnClickListener {
+            if (seriesDescription.visibility == View.VISIBLE) {
+                seriesDescription.gone()
+                viewMore.setImageResource(R.drawable.ic_detail_arrow_down)
+            } else {
+                seriesDescription.visible()
+                viewMore.setImageResource(R.drawable.ic_detail_arrow_up)
+            }
+        }
         TrackingUtils.sendScreenTracker( BaseConstants.CATEGORY_VIDEO)
     }
 
@@ -85,10 +97,8 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
 
         banner_img.visibility = View.VISIBLE
         // banner_img.layoutParams.height = Utils.getSeriesBannerProportionalHeight(this@SeriesActivity);
-
-        txt_video_description.visibility = View.VISIBLE
-        txt_video_description.text = tvSeriesResponseData.detail
-        Utils.makeTextViewResizable(txt_video_description, 3, "View More", true)
+        seriesTitle.text=tvSeriesResponseData.title
+        seriesDescription.text = tvSeriesResponseData.detail
 
         val otherText = StringBuilder()
 
@@ -116,23 +126,41 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
             if (tvSeriesResponseData.seasons.isNullOrEmpty()){
                 return@setOnClickListener
             }
-            if (tvSeriesResponseData.seasons.get(0).episodes.isNullOrEmpty()){
-                return@setOnClickListener
+               val seasons = tvSeriesResponseData.seasons
+               if (seasons.isNotEmpty()){
+                   val lastSeason = seasons.get(seasons.size - 1)
+                   lastSeason.trailer?.let {
+                    if (Utils.isNetworkAvailable(this@SeriesActivity)) {
+
+                        val baseVideo = Video()
+                        baseVideo.id = it.id
+                        baseVideo.thumbnail = lastSeason.thumbnail
+                        baseVideo.title = lastSeason.title
+                        baseVideo.is_free = lastSeason.is_free
+                        baseVideo.type = it.type
+                        startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
+                        Utils.animateActivity(this@SeriesActivity, "next")
+                    } else {
+                        DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+                    }
+
+                }?:return@setOnClickListener
+
             }
-               tvSeriesResponseData.seasons.get(0).episodes.get(0).let {
-                   if (Utils.isNetworkAvailable(this@SeriesActivity)) {
-                       val baseVideo = Video()
-                       baseVideo.id = it.id
-                       baseVideo.thumbnail = it.thumbnail
-                       baseVideo.title = it.id.toString()
-                       baseVideo.is_free = it.is_free
-                       baseVideo.type = it.type
-                       startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
-                       Utils.animateActivity(this@SeriesActivity, "next")
-                   } else {
-                       DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
-                   }
-               }
+//               tvSeriesResponseData.seasons.get(0).episodes.get(0).let {
+//                   if (Utils.isNetworkAvailable(this@SeriesActivity)) {
+//                       val baseVideo = Video()
+//                       baseVideo.id = it.id
+//                       baseVideo.thumbnail = it.thumbnail
+//                       baseVideo.title = it.id.toString()
+//                       baseVideo.is_free = it.is_free
+//                       baseVideo.type = it.type
+//                       startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
+//                       Utils.animateActivity(this@SeriesActivity, "next")
+//                   } else {
+//                       DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+//                   }
+//               }
 
         }
 

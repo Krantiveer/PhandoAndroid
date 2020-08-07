@@ -64,34 +64,81 @@
                 app:layout_constraintRight_toRightOf="@id/banner_img"
                 app:layout_constraintTop_toTopOf="@id/banner_img" />
 
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txt_video_description"
+            <LinearLayout
+                android:id="@+id/textInfoContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3sdp"
-                android:ellipsize="end"
-                android:fontFamily="@font/asap"
-                android:lineSpacingExtra="@dimen/_2sdp"
-                android:maxLines="3"
-                android:text=""
-                android:textColor="@color/video_title_color"
-                android:textSize="@dimen/_12sdp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/banner_img" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/otherInfo"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_3sdp"
+                android:gravity="center"
+                android:orientation="horizontal"
                 android:animateLayoutChanges="true"
-                android:textColor="@color/gray_clouds_light"
-                android:textSize="@dimen/_10sdp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/txt_video_description"></androidx.appcompat.widget.AppCompatTextView>
+                app:layout_constraintTop_toBottomOf="@id/banner_img">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:paddingTop="@dimen/_10sdp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/seriesTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_18sdp" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="left|top"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/ratingLogo"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:drawableLeft="@drawable/ic_rating"
+                            android:ellipsize="end"
+                            android:textSize="@dimen/_11sdp"
+                            android:visibility="gone" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/otherInfo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:paddingTop="@dimen/_10sdp"
+                            android:paddingRight="@dimen/_10sdp"
+                            android:text=""
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_11sdp" />
+                    </LinearLayout>
+                </LinearLayout>
+                <androidx.appcompat.widget.AppCompatImageButton
+                    android:id="@+id/viewMore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:src="@drawable/ic_detail_arrow_down" />
+            </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/seriesDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:paddingLeft="@dimen/_10sdp"
+                android:paddingTop="@dimen/_10sdp"
+                android:paddingRight="@dimen/_10sdp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_11sdp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/textInfoContainer"
+                android:visibility="gone" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_view_base"
@@ -101,7 +148,8 @@
                 android:layout_gravity="center_horizontal"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/otherInfo" />
+                app:layout_constraintTop_toBottomOf="@id/seriesDescription" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

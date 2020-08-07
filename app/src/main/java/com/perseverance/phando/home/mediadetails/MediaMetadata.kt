@@ -27,6 +27,7 @@ data class MediaMetadata(
         val rating: Int,
         val released: String,
         val maturity_rating: String,
+        val media_reference_type: String,
         val tags: String,
         val thumbnail: String,
         val thumbnail_vertical: String,

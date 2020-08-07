@@ -656,21 +656,34 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
     }
 
-    private fun playVideoTrailer(trailerUrl: String) {
-        play.gone()
-        isVideoPlayed = true
-        isTrailerPlaying = true
-        setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = trailerUrl)
+    private fun playVideoTrailer( trailerUrl: String?=null) {
+        var url = trailerUrl
+        if (url.isNullOrEmpty()){
+            mediaMetadata?.trailers?.let {
+                if (it.isNotEmpty()){
+                    url = it[0].media_url
+                }
+            }
+
+        }
+        url?.let {
+            play.gone()
+            isVideoPlayed = true
+            isTrailerPlaying = true
+            setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = it)
+        }
+
     }
 
     override fun onPurchaseOptionSelected(purchaseOption: PurchaseOption) {
         createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type)
     }
 
-    fun onGetVideoMetaDataSuccess(mediaplaybackData: MediaplaybackData) {
+    private fun onGetVideoMetaDataSuccess(mediaplaybackData: MediaplaybackData) {
         isPlayerstartSent = false
         detailContent.visible()
         this.mediaplaybackData = mediaplaybackData
+        this.mediaMetadata = mediaplaybackData.data
 
         if (!isVideoPlayed) {
             play.visible()
@@ -687,14 +700,22 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         when (mediaplaybackData.mediaCode) {
             "free", "rented", "buyed", "package_purchased" -> {
                 actionControlersBuy.gone()
+                mediaMetadata?.media_reference_type?.let {
+                    if (it=="media_trailor"){
+                      playVideoTrailer(mediaMetadata?.media_url)
+                    }
+                }
+
             }
             "package_media" -> {
+                playVideoTrailer()
                 rentMedia.gone()
                 buyMedia.gone()
                 packageMedia.visible()
                 actionControlersBuy.visible()
             }
             "rent_or_buy" -> {
+                playVideoTrailer()
                 rentMedia.visible()
                 buyMedia.visible()
                 packageMedia.gone()
@@ -738,6 +759,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 }
             }
             "only_rent" -> {
+                playVideoTrailer()
                 rentMedia.visible()
                 buyMedia.gone()
                 packageMedia.gone()
@@ -762,6 +784,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 }
             }
             "only_buy" -> {
+                playVideoTrailer()
                 rentMedia.gone()
                 buyMedia.visible()
                 packageMedia.gone()
@@ -832,7 +855,6 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             }
         }
         actionControlers.visible()
-        this.mediaMetadata = mediaplaybackData.data
         mediaMetadata?.is_live?.let {
             download.isEnabled = it == 0
             if (it == 1) {
@@ -914,24 +936,6 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             })
         }
 
-//        when (mediaplaybackData.mediaCode) {
-//            "free", "rented", "buyed", "package_purchased" -> {
-//
-//            }
-//            else -> {
-//                when (mediaDetailViewModel.loginFor.value) {
-//                    LOGIN_FOR_BUY -> {
-//                        buyMedia.performClick()
-//                    }
-//                    LOGIN_FOR_RENT -> {
-//                        rentMedia.performClick()
-//                    }
-//                    LOGIN_FOR_PACKAGE -> {
-//                        packageMedia.performClick()
-//                    }
-//                }
-//            }
-//        }
     }
 
     private fun setRelatedVideo() {
@@ -970,11 +974,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         when (currentOrientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                // runHandler(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
             }
             Configuration.ORIENTATION_LANDSCAPE -> {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                // runHandler(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             }
         }
 

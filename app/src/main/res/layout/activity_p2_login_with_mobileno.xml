@@ -41,7 +41,7 @@
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/LoginHintTextStyleBlack"
                     android:text="Enter mobile number"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
                 <!-- Email Label -->
                 <LinearLayout
                     android:layout_width="match_parent"

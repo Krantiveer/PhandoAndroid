@@ -22,7 +22,6 @@ import retrofit2.Response
 class MediaDetailViewModel(application: Application) : AndroidViewModel(application) {
 
 
-
     private var mediaDetailRepository: MediaDetailRepository = MediaDetailRepository(application)
 
     val reloadTrigger = MutableLiveData<Video>()
@@ -175,9 +174,9 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
 
 
     fun setContinueWatchingTime(id: String, time: String) {
-       viewModelScope.launch(Dispatchers.IO){
-           mediaDetailRepository.setContinueWatchingTime(id,time)
-       }
+        viewModelScope.launch(Dispatchers.IO) {
+            mediaDetailRepository.setContinueWatchingTime(id, time)
+        }
     }
 
     fun saveUserDownload(param: HashMap<String, String>) = liveData(Dispatchers.IO) {
@@ -195,6 +194,7 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
     fun getMediaUrl(documentId: String) = liveData(Dispatchers.IO) {
         emit(mediaDetailRepository.getMediaUrl(documentId))
     }
+
     fun getMediaUrlAndStartDownload(documentId: String) = liveData(Dispatchers.IO) {
         emit(mediaDetailRepository.getMediaUrlAndStartDownload(documentId))
     }

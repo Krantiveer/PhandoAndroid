@@ -27,6 +27,7 @@ data class MediaMetadata(
         val rating: Int,
         val released: String,
         val maturity_rating: String,
+        val media_reference_type: String,
         val tags: String,
         val thumbnail: String,
         val thumbnail_vertical: String,
@@ -34,16 +35,16 @@ data class MediaMetadata(
         val type: String,
         val is_like: Int,
         val is_dislike: Int,
-        val is_live: Int?=0,
+        val is_live: Int? = 0,
         val vast_url: String,
         val document_media_id: Int,
-        val last_watch_time: Long=0,
-        val next_media: NextMedia?=null,
-        val intro: IntroInfo?=null,
-        val series: Series?=null,
-        val cc_files: List<CcFile>?= arrayListOf(),
+        val last_watch_time: Long = 0,
+        val next_media: NextMedia? = null,
+        val intro: IntroInfo? = null,
+        val series: Series? = null,
+        val cc_files: List<CcFile>? = arrayListOf(),
         val analytics_category_id: String?
-){
+) {
     fun getOtherText(): String {
         val otherText = StringBuilder()
 

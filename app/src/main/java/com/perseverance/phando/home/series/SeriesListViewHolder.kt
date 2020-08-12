@@ -20,21 +20,21 @@ class SeriesListViewHolder(itemView: View, listener: AdapterClickListener) : Bas
         itemView.txt_see_all.gone()
         itemView.txt_title.tag = item
         itemView.txt_see_all.tag = item
-       // itemView.home_widget.setBackgroundColor(itemView.resources.getColor(R.color.black))
-        if(BuildConfig.APPLICATION_ID.equals("com.perseverance.jm31")){
+        // itemView.home_widget.setBackgroundColor(itemView.resources.getColor(R.color.black))
+        if (BuildConfig.APPLICATION_ID.equals("com.perseverance.jm31")) {
             if (item.episodes.isEmpty()) {
                 itemView.txt_title.text = "No data found"
 
             } else {
-                itemView.txt_title.text ="Chapter "+item.season_no +" - "+item.season_title
+                itemView.txt_title.text = "Chapter " + item.season_no + " - " + item.season_title
 
             }
-        }else {
+        } else {
             if (item.episodes.isEmpty()) {
                 itemView.txt_title.text = "No Episodes found"
 
             } else {
-                itemView.txt_title.text = "Season " + item.season_no
+                itemView.txt_title.text = item.title
 
             }
         }
@@ -42,7 +42,7 @@ class SeriesListViewHolder(itemView: View, listener: AdapterClickListener) : Bas
         val linearLayoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
         itemView.recyclerview_home_items.layoutManager = linearLayoutManager
         val recyclerAdapter = EpisodeListAdapter(itemView.context, listener)
-        recyclerAdapter.items =item.episodes
+        recyclerAdapter.items = item.episodes
         itemView.recyclerview_home_items.adapter = recyclerAdapter
 
 

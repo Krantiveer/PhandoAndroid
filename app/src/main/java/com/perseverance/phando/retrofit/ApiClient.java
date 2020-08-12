@@ -98,14 +98,14 @@ public class ApiClient {
                 ResponseBody body = response.body();
                 String bodyString = body.string();
                 MediaType contentType = body.contentType();
-                ErrorModel errorModel  = new Gson().fromJson(bodyString, ErrorModel.class);
+                ErrorModel errorModel = new Gson().fromJson(bodyString, ErrorModel.class);
                 if (errorModel.getMessage().equalsIgnoreCase("You've been logged out because we have detected another login from your ID on a different device. You are not allowed to login on more than one device at a time.")
-                || errorModel.getStatus_code() != null && errorModel.getStatus_code().equalsIgnoreCase("E0002")){
+                        || errorModel.getStatus_code() != null && errorModel.getStatus_code().equalsIgnoreCase("E0002")) {
                     PreferencesUtils.setLoggedIn("");
                     PreferencesUtils.deleteAllPreferences();
                     Intent loginIntent = new Intent(Session.Companion.getInstance(), HomeActivity.class);
-                    loginIntent.putExtra("msg",errorModel.getMessage());
-                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    loginIntent.putExtra("msg", errorModel.getMessage());
+                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     Session.Companion.getInstance().startActivity(loginIntent);
                     errorModel.setMessage(null);
 
@@ -118,16 +118,17 @@ public class ApiClient {
         }
 
     }
+
     static class RequestInterceptor implements Interceptor {
         @Override
         public Response intercept(Chain chain) throws IOException {
 
-            if(!Utils.isNetworkAvailable(Session.Companion.getInstance())){
+            if (!Utils.isNetworkAvailable(Session.Companion.getInstance())) {
                 throw new NoConnectivityException();
             }
 
             final String token = PreferencesUtils.getLoggedStatus();
-            Request newRequest  = chain.request().newBuilder()
+            Request newRequest = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer " + token)
                     .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept", "application/json; charset=utf-8")
@@ -137,6 +138,7 @@ public class ApiClient {
         }
 
     }
+
     public static class NoConnectivityException extends IOException {
 
         @Override

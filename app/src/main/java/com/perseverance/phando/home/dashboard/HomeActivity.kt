@@ -33,9 +33,9 @@ import com.perseverance.phando.utils.TrackingUtils
 import com.perseverance.phando.utils.Utils
 
 class HomeActivity : AppCompatActivity(),
-        BottomNavigationView.OnNavigationItemSelectedListener{
+        BottomNavigationView.OnNavigationItemSelectedListener {
 
-   // private var mCustomTabActivityHelper: CustomTabActivityHelper? = null
+    // private var mCustomTabActivityHelper: CustomTabActivityHelper? = null
     private var selectedTab = 0
     private var doubleBackToExitPressedOnce = false
 
@@ -49,22 +49,22 @@ class HomeActivity : AppCompatActivity(),
             onGetAppInfoSuccess(appInfoModel.appInfo)
         }
     }
-    var navController: NavController?=null
+    var navController: NavController? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-          setContentView(R.layout.activity_home)
+        setContentView(R.layout.activity_home)
 
-      //  mCustomTabActivityHelper = CustomTabActivityHelper()
+        //  mCustomTabActivityHelper = CustomTabActivityHelper()
 
-         val navView: BottomNavigationView = findViewById(R.id.bottomNavigation)
-         navController = findNavController(R.id.nav_host_fragment)
-         navView.setupWithNavController(navController!!)
+        val navView: BottomNavigationView = findViewById(R.id.bottomNavigation)
+        navController = findNavController(R.id.nav_host_fragment)
+        navView.setupWithNavController(navController!!)
 //         navView.setOnNavigationItemSelectedListener {item ->
 //
 //            onNavDestinationSelected(item, Navigation.findNavController(this, R.id.nav_host_fragment))
 //
 //        }
-       // navView.setOnNavigationItemSelectedListener(this)
+        // navView.setOnNavigationItemSelectedListener(this)
 
         homeActivityViewModel.getAppInfoMutableLiveData().observe(this, appInfoModelObserver)
         homeActivityViewModel.callForGenres()
@@ -72,10 +72,10 @@ class HomeActivity : AppCompatActivity(),
         homeActivityViewModel.callLanguage()
         homeActivityViewModel.callForAppInfo()
         homeActivityViewModel.callCountryCode()
-        TrackingUtils.sendScreenTracker( BaseConstants.HOME)
+        TrackingUtils.sendScreenTracker(BaseConstants.HOME)
         val msg = intent.getStringExtra("msg")
         msg?.let {
-            DialogUtils.showDialog(this,"Error!",it,"Close",null,object : AppDialogListener {
+            DialogUtils.showDialog(this, "Error!", it, "Close", null, object : AppDialogListener {
                 override fun onNegativeButtonPressed() {
 
                 }
@@ -86,7 +86,7 @@ class HomeActivity : AppCompatActivity(),
 
             })
         }
- ad.loadAds(BannerType.SCREEN_HOME)
+        //ad.loadAds(BannerType.SCREEN_HOME)
     }
 
 
@@ -170,16 +170,16 @@ class HomeActivity : AppCompatActivity(),
 
     override fun onStart() {
         super.onStart()
-       // mCustomTabActivityHelper?.bindCustomTabsService(this)
+        // mCustomTabActivityHelper?.bindCustomTabsService(this)
     }
 
     override fun onStop() {
         super.onStop()
-      //  mCustomTabActivityHelper?.unbindCustomTabsService(this)
+        //  mCustomTabActivityHelper?.unbindCustomTabsService(this)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        Toast.makeText(this,item.toString(),Toast.LENGTH_LONG).show()
+        Toast.makeText(this, item.toString(), Toast.LENGTH_LONG).show()
         return true
     }
 }

@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/login_background"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
+
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
@@ -42,15 +42,16 @@
             android:layout_margin="@dimen/_20sdp"
             android:gravity="center"
             android:orientation="vertical">
+
             <com.google.android.material.textview.MaterialTextView
                 style="@style/LoginTextStyleBlack"
                 android:text="Create new password"
-                android:layout_marginBottom="@dimen/_20sdp"/>
+                android:layout_marginBottom="@dimen/_20sdp" />
             <!-- Password Label -->
             <com.google.android.material.textview.MaterialTextView
                 style="@style/LoginHintTextStyleBlack"
                 android:text="New Password"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/LoginTextInputLayoutStyle"
@@ -70,7 +71,7 @@
                 android:id="@+id/label_password"
                 style="@style/LoginHintTextStyleBlack"
                 android:text="Confirm New Password"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/LoginTextInputLayoutStyle"
@@ -84,7 +85,7 @@
                     android:id="@+id/password2"
                     style="@style/LoginInputStyle"
                     android:inputType="textPassword"
-                    android:hint="Confirm New Password"/>
+                    android:hint="Confirm New Password" />
             </com.google.android.material.textfield.TextInputLayout>
 
 

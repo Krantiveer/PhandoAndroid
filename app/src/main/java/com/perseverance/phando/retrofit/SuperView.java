@@ -6,5 +6,6 @@ package com.perseverance.phando.retrofit;
 
 public interface SuperView {
     void showProgress(String message);
+
     void dismissProgress();
 }

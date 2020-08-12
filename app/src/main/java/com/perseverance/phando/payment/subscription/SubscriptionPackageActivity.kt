@@ -155,7 +155,7 @@ class SubscriptionPackageActivity : AppCompatActivity(), DataAdapter.OnClickList
 
 
     override fun onPaymentError(p0: Int, p1: String?) {
-       // Log.e("razorpay", "$p0 : $p1")
+        // MyLog.e("razorpay", "$p0 : $p1")
     }
 
     override fun onPaymentSuccess(razorpayPaymentId: String?) {
@@ -189,7 +189,6 @@ class SubscriptionPackageActivity : AppCompatActivity(), DataAdapter.OnClickList
                         setResult(Activity.RESULT_OK)
                         finish()
                     }
-
 
 
                 }

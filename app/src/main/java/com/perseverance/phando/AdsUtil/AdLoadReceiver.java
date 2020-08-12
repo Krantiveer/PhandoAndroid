@@ -13,5 +13,6 @@ public abstract class AdLoadReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         onAdLoaded();
     }
+
     public abstract void onAdLoaded();
 }

@@ -26,7 +26,7 @@ open class BaseFragment : Fragment() {
 
     }
 
-    fun showProgress(message: String?=null) {
+    fun showProgress(message: String? = null) {
         appCompatActivity?.let {
             if (!it.isFinishing) {
                 waitingDialog?.let { waitingDialog ->

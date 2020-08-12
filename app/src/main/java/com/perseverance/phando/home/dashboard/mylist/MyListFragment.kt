@@ -38,31 +38,31 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
 
     private val videoListViewModelObserver = Observer<DataLoadingStatus<List<Video>>> {
         message.gone()
-        when(it.status){
+        when (it.status) {
 
-            LoadingStatus.LOADING ->{
+            LoadingStatus.LOADING -> {
                 progressBar.visible()
 
             }
-            LoadingStatus.ERROR ->{
+            LoadingStatus.ERROR -> {
                 progressBar.gone()
                 swipetorefresh_base.isRefreshing = false
                 it.message?.let {
-                    message.text=it
-                }?: kotlin.run {
+                    message.text = it
+                } ?: kotlin.run {
                     message.text = "Unable to fetch data"
                 }
 
                 message.visible()
             }
-            LoadingStatus.SUCCESS ->{
+            LoadingStatus.SUCCESS -> {
                 progressBar.gone()
                 if (swipetorefresh_base.isRefreshing) {
                     swipetorefresh_base.isRefreshing = false
                 }
                 adapter?.clear()
                 adapter?.addAll(it.data)
-                if (it.data!!.isEmpty()){
+                if (it.data!!.isEmpty()) {
                     message.text = "Add videos to your list to save \nand watch them later"
                     message.visible()
                 }
@@ -80,10 +80,10 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarTitle.text="My List"
+        toolbarTitle.text = "My List"
         myListViewModel.getMyList().observe(viewLifecycleOwner, videoListViewModelObserver)
         myListViewModel.message.observe(viewLifecycleOwner, Observer {
-            Toast.makeText(appCompatActivity,it,Toast.LENGTH_LONG).show()
+            Toast.makeText(appCompatActivity, it, Toast.LENGTH_LONG).show()
         })
 
         val manager = LinearLayoutManager(activity)
@@ -114,7 +114,7 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode== LoginActivity.REQUEST_CODE_LOGIN && resultCode== Activity.RESULT_OK){
+        if (requestCode == LoginActivity.REQUEST_CODE_LOGIN && resultCode == Activity.RESULT_OK) {
             loadVideos(0, true)
         }
     }
@@ -125,16 +125,14 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
     }
 
 
-
     override fun onRefresh() {
         loadVideos(0, false)
     }
 
 
-
     override fun onItemClick(data: Any) {
-        when(data){
-            is Video ->{
+        when (data) {
+            is Video -> {
                 if (Utils.isNetworkAvailable(activity)) {
                     startActivity(MediaDetailActivity.getDetailIntent(activity as Context, data))
                     Utils.animateActivity(activity, "next")
@@ -142,9 +140,9 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
                     DialogUtils.showMessage(activity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
                 }
             }
-            is String ->{
+            is String -> {
                 val tempData = data.split(",")
-                myListViewModel.removeFromMyList(tempData[0],tempData[1])
+                myListViewModel.removeFromMyList(tempData[0], tempData[1])
             }
         }
 

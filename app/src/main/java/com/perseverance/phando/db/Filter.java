@@ -18,7 +18,7 @@ public class Filter implements Serializable {
     @PrimaryKey
     @NotNull
     @SerializedName("key")
-    private String key ="";
+    private String key = "";
 
     @SerializedName("title")
     private String title;

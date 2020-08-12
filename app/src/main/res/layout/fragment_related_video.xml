@@ -15,6 +15,7 @@
         android:textColor="@color/white"
         android:fontFamily="@font/asap"
         android:visibility="gone" />
+
     <TextView
         android:id="@+id/info"
         android:layout_below="@+id/errorText"

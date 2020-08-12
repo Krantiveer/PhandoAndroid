@@ -49,7 +49,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         val callback = object : OnBackPressedCallback(true /* enabled by default */) {
 
             override fun handleOnBackPressed() {
-                Toast.makeText(activity,"Search",Toast.LENGTH_LONG).show()
+                Toast.makeText(activity, "Search", Toast.LENGTH_LONG).show()
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(this, callback)
@@ -72,7 +72,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
             override fun onLoadMore(currentPage: Int) {
                 //footerProgress.setVisibility(View.VISIBLE);
                 pageCount = currentPage
-               // footerProgress.setVisibility(View.VISIBLE)
+                // footerProgress.setVisibility(View.VISIBLE)
                 loadSearchResult(query, false)
             }
         }
@@ -103,7 +103,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
             override fun onQueryTextSubmit(newText: String?): Boolean {
 
                 newText?.let {
-                    if (it.length>0) {
+                    if (it.length > 0) {
                         query = newText
                         loadSearchResult(query, true)
                     }
@@ -119,22 +119,22 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
                     override fun onTick(millisUntilFinished: Long) {}
                     override fun onFinish() {
                         newText?.let {
-                            if (TextUtils.isEmpty(newText)){
+                            if (TextUtils.isEmpty(newText)) {
                                 query = ""
-                                error.text=""
+                                error.text = ""
                                 error.gone()
 
                             }
 
 
-                            if (it.length>0) {
+                            if (it.length > 0) {
 //                        error.text=""
 //                        error.gone()
                                 query = newText
                                 loadSearchResult(query, true)
-                            }else{
+                            } else {
                                 query = ""
-                                error.text=""
+                                error.text = ""
                                 error.gone()
                             }
                         }
@@ -147,14 +147,14 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
 
         })
         searchView.setOnCloseListener {
-           Toast.makeText(activity,"Clodes",Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Clodes", Toast.LENGTH_SHORT).show()
             false
         }
 
 
         filter.setOnClickListener {
             filterContainer.apply {
-                if (visibility==View.VISIBLE){
+                if (visibility == View.VISIBLE) {
                     dataFilters.apply {
                         type = ""
                         genre_id = ""
@@ -164,12 +164,12 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
                     loadSearchResult(query, false)
                     gone()
                     filter.postDelayed(Runnable {
-                        globleFilter.text="Language"
-                        genresFilter.text="All Genres"
+                        globleFilter.text = "Language"
+                        genresFilter.text = "All Genres"
 
-                    },500)
+                    }, 500)
 
-                }else{
+                } else {
                     visible()
                 }
             }
@@ -177,7 +177,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         }
 
         genresFilter.setOnClickListener {
-            isGenresFilter=true
+            isGenresFilter = true
             if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                 sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
             } else {
@@ -186,7 +186,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         }
 
         globleFilter.setOnClickListener {
-            isGenresFilter=false
+            isGenresFilter = false
             if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                 sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
             } else {
@@ -250,16 +250,16 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
 
 
     private fun loadSearchResult(query: String?, showProgress: Boolean) {
-        if (query.isNullOrBlank()){
+        if (query.isNullOrBlank()) {
             return
         }
-        if (!Utils.isNetworkAvailable(appCompatActivity)){
+        if (!Utils.isNetworkAvailable(appCompatActivity)) {
             DialogUtils.showNetworkErrorToast()
             return
         }
         progressBar.visible()
         val presenter = SearchPresenterImpl(this)
-        presenter.search(pageCount, query, showProgress,dataFilters)
+        presenter.search(pageCount, query, showProgress, dataFilters)
     }
 
     override fun onVideoSelected(item: Video) {
@@ -270,7 +270,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         */
             /*startActivity(MediaDetailActivity.getDetailIntent(this, item))
             Utils.animateActivity(this, "next")*/
-            if("T".equals(item.type)){
+            if ("T".equals(item.type)) {
                 val intent = Intent(activity, SeriesActivity::class.java)
                 intent.putExtra(Key.CATEGORY, item)
                 startActivity(intent)
@@ -288,22 +288,22 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
     override fun onSearchResultSuccess(videos: List<Video>) {
         progressBar.gone()
         if (videos.size > 0) {
-            error.text=""
+            error.text = ""
             error.gone()
             if (pageCount == 0) {
                 adapter!!.clear()
             }
             adapter!!.clear()
             adapter!!.addAll(videos)
-        }else{
+        } else {
             adapter!!.clear()
             error.visible()
-            error.text="No result found for \"$query\""
+            error.text = "No result found for \"$query\""
         }
 
 
-       // footerProgress.setVisibility(View.GONE)
-       // adapter!!.notifyDataSetChanged()
+        // footerProgress.setVisibility(View.GONE)
+        // adapter!!.notifyDataSetChanged()
     }
 
     override fun onSearchResultError(errorMessage: String) {
@@ -314,7 +314,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         } else {
             adapter!!.clear()
             //error.visible()
-           // error.text=errorMessage
+            // error.text=errorMessage
             //DialogUtils.showMessage(activity, errorMessage, Toast.LENGTH_SHORT, false)
         }
     }
@@ -322,28 +322,28 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
     override fun onItemClick(data: Any) {
         when (data) {
 
-            is Language ->{
+            is Language -> {
                 dataFilters.apply {
 
                     filter = data.id
 
                 }
                 loadSearchResult(query, false)
-                globleFilter.text=data.language
+                globleFilter.text = data.language
                 if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
                 } else {
                     sheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
                 }
             }
-            is Category ->{
+            is Category -> {
                 dataFilters.apply {
                     genre_id = data.id
 
 
                 }
                 loadSearchResult(query, false)
-                genresFilter.text=data.name
+                genresFilter.text = data.name
                 if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
                 } else {
@@ -367,6 +367,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
         }
 
     }
+
     override fun showProgress(message: String) {
 
     }

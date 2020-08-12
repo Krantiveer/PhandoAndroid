@@ -40,10 +40,11 @@
                 android:paddingRight="@dimen/_10sdp">
 
 
-                <include layout="@layout/common_app_logo"
+                <include
+                    layout="@layout/common_app_logo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_10sdp"/>
+                    android:layout_marginBottom="@dimen/_10sdp" />
 
 
                 <!-- Name Label -->

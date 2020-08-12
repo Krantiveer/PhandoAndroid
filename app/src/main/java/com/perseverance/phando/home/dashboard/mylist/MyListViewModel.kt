@@ -17,21 +17,22 @@ import retrofit2.Response
 /**
  * Created by QAIT\TrilokiNath on 13/3/18.
  */
-class MyListViewModel(application : Application) : AndroidViewModel(application) {
+class MyListViewModel(application: Application) : AndroidViewModel(application) {
 
 
     private var myListRepository: MyListRepository = MyListRepository(application)
     private val reloadTrigger = MutableLiveData<String>()
 
-    var data : LiveData<DataLoadingStatus<List<Video>>> = Transformations.switchMap(reloadTrigger) {
+    var data: LiveData<DataLoadingStatus<List<Video>>> = Transformations.switchMap(reloadTrigger) {
         myListRepository.callForVideos(it)
     }
     var message = MutableLiveData<String>().apply {
         ""
     }
-    fun getMyList() : LiveData<DataLoadingStatus<List<Video>>> = data
 
-    fun refreshMyList(pageCountlimit:String) {
+    fun getMyList(): LiveData<DataLoadingStatus<List<Video>>> = data
+
+    fun refreshMyList(pageCountlimit: String) {
         reloadTrigger.value = pageCountlimit
     }
 
@@ -39,21 +40,21 @@ class MyListViewModel(application : Application) : AndroidViewModel(application)
     private val apiService by lazy { ApiClient.getLoginClient().create(ApiService::class.java) }
 
 
-    fun removeFromMyList( id:String,type:String){
-        val call = apiService.updateMyList(id,type,"0") as Call<UpdateMyListResponse>
+    fun removeFromMyList(id: String, type: String) {
+        val call = apiService.updateMyList(id, type, "0") as Call<UpdateMyListResponse>
         call.enqueue(object : Callback<UpdateMyListResponse> {
             override fun onResponse(call: Call<UpdateMyListResponse>?, response: Response<UpdateMyListResponse>?) {
                 if (response == null || response.errorBody() != null) {
                     onFailure(call, NullResponseError())
                 } else {
                     response.body()?.let {
-                        when(it.status)  {
-                            "success" ->{
+                        when (it.status) {
+                            "success" -> {
                                 refreshMyList("0,100")
                                 message.postValue("Removed from my list")
 
                             }
-                            "error" ->{
+                            "error" -> {
                                 message.postValue(it.message)
 
                             }
@@ -64,7 +65,7 @@ class MyListViewModel(application : Application) : AndroidViewModel(application)
             }
 
             override fun onFailure(call: Call<UpdateMyListResponse>?, t: Throwable?) {
-t?.printStackTrace()
+                t?.printStackTrace()
             }
 
         })

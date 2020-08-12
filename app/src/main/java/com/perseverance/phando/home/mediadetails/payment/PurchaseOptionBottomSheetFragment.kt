@@ -31,7 +31,7 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val purchaseOption = arguments?.getParcelable<PurchaseOption>("payment_option")!!
-        var price= number2digits(purchaseOption?.value)
+        var price = number2digits(purchaseOption?.value)
         if (purchaseOption.discount_percentage > 0) {
             val discount = (purchaseOption.value * purchaseOption.discount_percentage) / 100
             price = number2digits(purchaseOption?.value - discount)
@@ -39,12 +39,12 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
         rentPriceInfo.text = "INR ${price}"
         when (purchaseOption.key) {
             "rent_price" -> {
-                rentPriceType.text="Renting a video"
-                rentDescription.text =purchaseOption.note
+                rentPriceType.text = "Renting a video"
+                rentDescription.text = purchaseOption.note
             }
             "purchase_price" -> {
-                rentPriceType.text="Buying a video"
-                rentDescription.text =purchaseOption.note
+                rentPriceType.text = "Buying a video"
+                rentDescription.text = purchaseOption.note
 
             }
         }
@@ -55,6 +55,7 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
             dismiss()
         }
     }
+
     fun number2digits(number: Float): String {
         return String.format("%.2f", number)
     }

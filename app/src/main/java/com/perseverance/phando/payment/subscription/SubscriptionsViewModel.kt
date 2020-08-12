@@ -12,12 +12,12 @@ class SubscriptionsViewModel(application: Application) : BaseViewModel(applicati
     private var subscriptionRepository: SubscriptionRepository = SubscriptionRepository(application)
     var data: LiveData<DataLoadingStatus<Package>> = subscriptionRepository.fetchPackage()
 
-    fun  createOrder(map :Map<String,String>): LiveData<DataLoadingStatus<CreateOrderResponse>> {
+    fun createOrder(map: Map<String, String>): LiveData<DataLoadingStatus<CreateOrderResponse>> {
         return subscriptionRepository.createOrder(map)
 
     }
 
-    fun  updateOrderOnServer(map :Map<String,String>): LiveData<DataLoadingStatus<BaseResponse>> {
+    fun updateOrderOnServer(map: Map<String, String>): LiveData<DataLoadingStatus<BaseResponse>> {
         return subscriptionRepository.updateOrderOnServer(map)
 
     }

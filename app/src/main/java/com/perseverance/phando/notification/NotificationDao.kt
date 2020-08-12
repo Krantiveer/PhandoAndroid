@@ -14,14 +14,26 @@ import androidx.room.Query
 interface NotificationDao {
 
 
-    @Query("SELECT * FROM NotificationData")
+    @Query("SELECT * FROM NotificationData ORDER BY dbID DESC")
     fun getNotifications(): LiveData<List<NotificationData>>
 
-    @Query("SELECT * FROM NotificationData")
-    fun getAllNotifications(): List<NotificationData>
+    @Query("SELECT COUNT(*) FROM NotificationData WHERE isRead =0")
+    fun getUnreadNotifications(): Int
+
+    @Query("UPDATE NotificationData SET isRead = 1 WHERE  dbID = :id")
+    fun markNotificationRead(id: Long)
+
+    @Query("UPDATE NotificationData SET isRead = 1")
+    fun markAllNotificationRead()
+
+    @Query("SELECT COUNT(*) FROM NotificationData")
+    fun getAllNotifications(): Int
+
+    @Query("DELETE FROM NotificationData WHERE dbID = :id")
+    fun deleteNotifications(id: Long): Int
 
     @Query("DELETE FROM NotificationData")
-    fun deleteNotifications(id:String): Int
+    fun deleteAllNotifications()
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(list: NotificationData)

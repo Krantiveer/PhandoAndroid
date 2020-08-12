@@ -11,5 +11,5 @@ data class Trailer(
         val thumbnail_medium: String,
         val thumbnail_small: String,
         val type: String,
-        var isSelected: Boolean=false
+        var isSelected: Boolean = false
 )

@@ -22,7 +22,7 @@ class EpisodeListViewHolder(itemView: View, listener: AdapterClickListener) : Ba
         itemView.tag = item
         if (item.is_free == 0) { // if paid video then show premium icon
             itemView.free.visible()
-        }else{
+        } else {
             itemView.free.gone()
         }
         itemView.img_thumbnail.resizeView(ListItemThumbnail())

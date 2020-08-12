@@ -1,8 +1,11 @@
 package com.perseverance.phando.notification
 
+import android.content.Context
+import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.view.ContextThemeWrapper
+import androidx.appcompat.widget.PopupMenu
 import com.perseverance.patrikanews.utils.gone
-import com.perseverance.patrikanews.utils.invisible
 import com.perseverance.patrikanews.utils.resizeView
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
@@ -18,31 +21,51 @@ class NotificationListViewHolder(itemView: View, listener: AdapterClickListener)
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
 
     }
+
     override fun onBind(video: NotificationData) {
         itemView.tag = video
-        if(video.isFree == 0) { // if paid video then show premium icon
+        if (video.is_free == 0) { // if paid video then show premium icon
             itemView.free.visible()
-        }else{
+        } else {
             itemView.free.gone()
         }
-        itemView.option.gone()
         Utils.displayImage(itemView.context, video.thumbnail,
                 R.drawable.new_video_placeholder,
                 R.drawable.new_error_placeholder, itemView.img_thumbnail)
 
-        itemView.img_thumbnail.resizeView(ListItemThumbnail(),true)
+        itemView.img_thumbnail.resizeView(ListItemThumbnail(), true)
         itemView.title.text = video.title
 
         video.rating?.let {
-            itemView.rating.text = it
-        }?:itemView.rating.gone()
+            itemView.rating.text = it.toString()
+        } ?: itemView.rating.gone()
 
-
-        video.duration?.let {
-            itemView.duration.text = video.getFormatedDuration()
-        }?:itemView.duration.invisible()
+//
+//        video.duration?.let {
+//            itemView.duration.text = video.getFormatedDuration()
+//        }?:itemView.duration.invisible()
 
         itemView.details.text = video.description
+        itemView.option.setOnClickListener {
+            val wrapper: Context = ContextThemeWrapper(itemView.context, R.style.popup_option)
+            val popup = PopupMenu(wrapper, itemView.option)
+            popup.inflate(R.menu.menu_my_list_options)
+            popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+                override fun onMenuItemClick(item: MenuItem?): Boolean {
+
+                    return when (item?.itemId) {
+                        R.id.menu_delete -> {
+                            listener.onItemClick(video.dbID)
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+
+            })
+            popup.show()
+        }
 
     }
-    }
+}

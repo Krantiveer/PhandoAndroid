@@ -2,8 +2,8 @@ package com.perseverance.phando.notification
 
 import android.os.Parcelable
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.perseverance.phando.db.Video
 import kotlinx.android.parcel.Parcelize
 
 /**
@@ -11,32 +11,28 @@ import kotlinx.android.parcel.Parcelize
  */
 @Parcelize
 @Entity
-data class NotificationData (
-        var id: Int?=null,
-        var title: String?=null,
-        var type: String?=null,
-        val circular_thumbnail: String?=null,
-        var thumbnail: String?=null,
-        val description: String?=null,
-        val detail: String?=null,
-        val duration: Int?=null,
-        val poster: String?=null,
-        val genres: List<String>?=null,
-        var is_free: Int?=null,
-        val is_live: Int?=null,
-        val keyword: String?=null,
-        val last_watch_time: Int?=null,
-        val maturity_rating: String?=null,
-        val poster_vertical: String?=null,
-        val price: Int?=null,
-        val rating: Int?=null,
-        val thumbnail_vertical: String?=null
+data class NotificationData(
+        @PrimaryKey
+        var dbID: Long = -1,
+        var id: Int? = null,
+        var isRead: Int? = 0,
+        var title: String? = "",
+        var type: String? = "",
+        var thumbnail: String? = "",
+        var description: String? = "",
+        var detail: String? = "",
+        var duration: Int? = 0,
+        var poster: String? = "",
+        var is_free: Int? = 0,
+        var maturity_rating: String? = "",
+        var poster_vertical: String? = "",
+        var rating: Int? = 0
 ) : Parcelable {
-
+    // constructor():this(dbID=-1,isRead=0,is_free = 0)
     fun getFormatedDuration(): String? {
         val hours = duration!! / 3600
-        val minutes = duration % 3600 / 60
-        val seconds = duration % 60
+        val minutes = duration!! % 3600 / 60
+        val seconds = duration!! % 60
         return String.format("%02d:%02d:%02d", hours, minutes, seconds)
     }
 }

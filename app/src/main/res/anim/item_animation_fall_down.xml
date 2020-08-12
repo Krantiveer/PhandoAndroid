@@ -5,23 +5,21 @@
     <translate
         android:fromXDelta="10%"
         android:toXDelta="0"
-        android:interpolator="@android:anim/decelerate_interpolator"
-        />
+        android:interpolator="@android:anim/decelerate_interpolator" />
 
     <alpha
         android:fromAlpha="0.8"
         android:toAlpha="1"
-        android:interpolator="@android:anim/decelerate_interpolator"
-        />
+        android:interpolator="@android:anim/decelerate_interpolator" />
 
-<!--    <scale-->
-<!--        android:fromXScale="100%"-->
-<!--        android:fromYScale="100%"-->
-<!--        android:toXScale="100%"-->
-<!--        android:toYScale="100%"-->
-<!--        android:pivotX="50%"-->
-<!--        android:pivotY="50%"-->
-<!--        android:interpolator="@android:anim/decelerate_interpolator"-->
-<!--        />-->
+    <!--    <scale-->
+    <!--        android:fromXScale="100%"-->
+    <!--        android:fromYScale="100%"-->
+    <!--        android:toXScale="100%"-->
+    <!--        android:toYScale="100%"-->
+    <!--        android:pivotX="50%"-->
+    <!--        android:pivotY="50%"-->
+    <!--        android:interpolator="@android:anim/decelerate_interpolator"-->
+    <!--        />-->
 
 </set>

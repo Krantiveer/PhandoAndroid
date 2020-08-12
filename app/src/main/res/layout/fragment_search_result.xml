@@ -17,7 +17,7 @@
             android:layout_height="?attr/actionBarSize"
             android:gravity="left|center"
             android:orientation="horizontal"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -44,7 +44,8 @@
                 android:textColor="@color/white"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:visibility="visible"/>
+                android:visibility="visible" />
+
             <ProgressBar
                 android:id="@+id/progressBar"
                 android:layout_width="wrap_content"
@@ -54,22 +55,22 @@
                 android:layout_marginLeft="@dimen/_5sdp"
                 app:layout_constraintTop_toTopOf="@id/hint"
                 app:layout_constraintBottom_toBottomOf="@id/hint"
-                app:layout_constraintLeft_toRightOf="@id/hint"/>
+                app:layout_constraintLeft_toRightOf="@id/hint" />
 
-<!--            <androidx.appcompat.widget.AppCompatEditText-->
-<!--                android:id="@+id/queryInput"-->
-<!--                android:layout_width="0dp"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:imeOptions="actionSearch"-->
-<!--                android:textColor="@color/white"-->
-<!--                android:maxLines="1"-->
-<!--                android:background="@drawable/search_input_style"-->
-<!--                android:layout_marginRight="@dimen/_5sdp"-->
-<!--                app:layout_constraintLeft_toLeftOf="parent"-->
-<!--                app:layout_constraintRight_toLeftOf="@id/filter"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/hint"-->
+            <!--            <androidx.appcompat.widget.AppCompatEditText-->
+            <!--                android:id="@+id/queryInput"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:imeOptions="actionSearch"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:maxLines="1"-->
+            <!--                android:background="@drawable/search_input_style"-->
+            <!--                android:layout_marginRight="@dimen/_5sdp"-->
+            <!--                app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--                app:layout_constraintRight_toLeftOf="@id/filter"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/hint"-->
 
-<!--                />-->
+            <!--                />-->
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
                 android:layout_width="0dp"
@@ -85,8 +86,7 @@
                 android:layout_marginRight="@dimen/_5sdp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/filter"
-                app:layout_constraintTop_toBottomOf="@id/hint"
-                />
+                app:layout_constraintTop_toBottomOf="@id/hint" />
 
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -100,7 +100,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/searchView"
                 app:layout_constraintRight_toRightOf="parent"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/filter"
@@ -112,7 +112,8 @@
                 android:drawableTop="@drawable/ic_filter"
 
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/hint"/>
+                app:layout_constraintTop_toBottomOf="@id/hint" />
+
             <LinearLayout
                 android:id="@+id/filterContainer"
                 android:layout_width="wrap_content"
@@ -166,8 +167,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/searchContainer" />
-
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

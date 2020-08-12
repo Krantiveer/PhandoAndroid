@@ -22,18 +22,18 @@ import java.util.List;
 
 public class FBAdViewHolder extends RecyclerView.ViewHolder {
     //todo
-    private final NativeAdLayout nativeAdContainer=null;
+    private final NativeAdLayout nativeAdContainer = null;
     private Context context;
 
     public FBAdViewHolder(View itemView) {
         super(itemView);
-       // nativeAdContainer = itemView.findViewById(R.id.adContainer);
+        // nativeAdContainer = itemView.findViewById(R.id.adContainer);
     }
 
     public void setAdData(Context context, final NativeAd nativeAd) {
         this.context = context;
         if (nativeAd == null || !nativeAd.isAdLoaded()) {
-           // Utils.sendException(context,"FBAdViewHolder > setAdData() : nativeAd == null || !nativeAd.isAdLoaded()");
+            // Utils.sendException(context,"FBAdViewHolder > setAdData() : nativeAd == null || !nativeAd.isAdLoaded()");
             return;
         }
         try {
@@ -62,21 +62,21 @@ public class FBAdViewHolder extends RecyclerView.ViewHolder {
 
             // Set the Text.
             nativeAdTitle.setText(nativeAd.getAdvertiserName());
-            if (TextUtils.isEmpty(nativeAd.getAdBodyText())){
+            if (TextUtils.isEmpty(nativeAd.getAdBodyText())) {
                 nativeAdBody.setVisibility(View.GONE);
-            }else {
+            } else {
                 nativeAdBody.setText(nativeAd.getAdBodyText());
                 nativeAdBody.setVisibility(View.VISIBLE);
             }
-            if (TextUtils.isEmpty(nativeAd.getAdSocialContext())){
+            if (TextUtils.isEmpty(nativeAd.getAdSocialContext())) {
                 nativeAdSocialContext.setVisibility(View.GONE);
-            }else {
+            } else {
                 nativeAdSocialContext.setText(nativeAd.getAdSocialContext());
                 nativeAdSocialContext.setVisibility(View.VISIBLE);
             }
-            if (TextUtils.isEmpty(nativeAd.getSponsoredTranslation())){
+            if (TextUtils.isEmpty(nativeAd.getSponsoredTranslation())) {
                 sponsoredLabel.setText("Ad");
-            }else {
+            } else {
                 sponsoredLabel.setText(nativeAd.getSponsoredTranslation());
 
             }

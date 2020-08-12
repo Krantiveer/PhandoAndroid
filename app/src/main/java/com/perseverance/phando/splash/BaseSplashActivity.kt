@@ -19,7 +19,7 @@ open class BaseSplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (intent.getBooleanExtra("start_home",false)){
+        if (intent.getBooleanExtra("start_home", false)) {
 
         }
         setContentView(R.layout.activity_splash)
@@ -52,17 +52,17 @@ open class BaseSplashActivity : AppCompatActivity() {
 
 
     private fun launch() {
-            intent = Intent(this@BaseSplashActivity, HomeActivity::class.java)
-            try {
-                val extras = getIntent().extras
-                if (extras != null) {
-                    val isNotification = extras.getString("is_notification")
-                    if (!TextUtils.isEmpty(isNotification)) {
-                        intent.putExtra("is_notification", isNotification)
-                    }
+        intent = Intent(this@BaseSplashActivity, HomeActivity::class.java)
+        try {
+            val extras = getIntent().extras
+            if (extras != null) {
+                val isNotification = extras.getString("is_notification")
+                if (!TextUtils.isEmpty(isNotification)) {
+                    intent.putExtra("is_notification", isNotification)
                 }
-            } catch (e: Exception) {
             }
+        } catch (e: Exception) {
+        }
 
         startActivity(intent)
         finish()

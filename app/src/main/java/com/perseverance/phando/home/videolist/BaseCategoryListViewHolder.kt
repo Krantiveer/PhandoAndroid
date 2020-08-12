@@ -24,11 +24,12 @@ class BaseCategoryListViewHolder(itemView: View, listener: AdapterClickListener)
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
 
     }
+
     override fun onBind(item: Video) {
         itemView.tag = item
-        if(item.is_free == 1) { // if paid video then show premium icon
+        if (item.is_free == 1) { // if paid video then show premium icon
             itemView.free.gone()
-        }else{
+        } else {
             itemView.free.visible()
         }
 
@@ -40,7 +41,7 @@ class BaseCategoryListViewHolder(itemView: View, listener: AdapterClickListener)
 
         itemView.txtTitle.text = item.title
         itemView.duration.text = item.getFormatedDuration()
-        if(BuildConfig.APPLICATION_ID.equals("com.perseverance.jm31")){
+        if (BuildConfig.APPLICATION_ID.equals("com.perseverance.jm31")) {
             itemView.txtTitle.visible()
             itemView.duration.visible()
             //itemView.txtTitle.setTextColor(itemView.context.resources.getColor(R.color.black))
@@ -48,4 +49,4 @@ class BaseCategoryListViewHolder(itemView: View, listener: AdapterClickListener)
 
 
     }
-    }
+}

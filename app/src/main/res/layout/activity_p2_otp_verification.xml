@@ -80,8 +80,7 @@
                     app:otp_box_background_inactive="@color/login_background"
                     app:bar_inactive_color="@color/login_background"
                     app:bar_active_color="@color/login_blue"
-                    app:otp_text_size="@dimen/_10sdp"
-                    />
+                    app:otp_text_size="@dimen/_10sdp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/verifyOTP"

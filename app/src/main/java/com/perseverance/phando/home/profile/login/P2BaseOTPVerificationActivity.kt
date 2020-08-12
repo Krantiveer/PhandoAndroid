@@ -38,7 +38,7 @@ abstract class P2BaseOTPVerificationActivity : BaseUserLoginActivity() {
             map["mobile"] = mobileNo
             userProfileViewModel.getOTP(map)
         }
-        mobileNo =  arguments?.getString("MOBILE")!!
+        mobileNo = arguments?.getString("MOBILE")!!
         countryCode = arguments?.getString("COUNTRY_CODE")!!
         mobile.text = "+$countryCode$mobileNo"
         startSmsRetriever()

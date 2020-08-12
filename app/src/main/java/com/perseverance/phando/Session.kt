@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.multidex.MultiDex
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
+import com.google.firebase.messaging.FirebaseMessaging
+import com.perseverance.phando.utils.MyLog
 import com.videoplayer.VideoPlayerApplication
 
 //import com.google.android.gms.analytics.GoogleAnalytics
@@ -29,8 +31,16 @@ class Session : VideoPlayerApplication() {
 //            }
 
         }
+        FirebaseMessaging.getInstance().subscribeToTopic(BuildConfig.TOPIC).addOnCompleteListener {
+            if (it.isSuccessful) {
+                if (BuildConfig.DEBUG) MyLog.e("topic ${BuildConfig.TOPIC} subscribed")
 
-    }// To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            } else {
+                if (BuildConfig.DEBUG) MyLog.e("topic ${BuildConfig.TOPIC} subscribtion error")
+            }
+        }
+
+    }// To enable debug logging use: adb shell setprop MyLog.tag.GAv4 DEBUG
 
 
     /**
@@ -40,12 +50,12 @@ class Session : VideoPlayerApplication() {
     @get:Synchronized
     val defaultTracker: Tracker?
         get() {
-            // To enable debug logging use: adb shell setprop log.tag.GAv4 DEBUG
+            // To enable debug logging use: adb shell setprop MyLog.tag.GAv4 DEBUG
             if (sTracker == null) {
-                if(BuildConfig.DEBUG) {
+                if (BuildConfig.DEBUG) {
                     sTracker = sAnalytics?.newTracker(R.xml.test_global_tracker)
                     sTracker?.enableAutoActivityTracking(true);
-                }else{
+                } else {
                     sTracker = sAnalytics?.newTracker(R.xml.global_tracker)
                     sTracker?.enableAutoActivityTracking(true);
                 }
@@ -60,6 +70,6 @@ class Session : VideoPlayerApplication() {
 
         private var sAnalytics: GoogleAnalytics? = null
         private var sTracker: Tracker? = null
-        var launchHomeAfterLogin=true
+        var launchHomeAfterLogin = true
     }
 }

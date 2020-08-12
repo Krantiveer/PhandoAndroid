@@ -57,7 +57,7 @@ open class BaseBannerFragment : Fragment() {
 
             banner?.id?.let {
                 if (Utils.isNetworkAvailable(activity)) {
-                     if ("T".equals(banner!!.type)) {
+                    if ("T".equals(banner!!.type)) {
                         val intent = Intent(activity, SeriesActivity::class.java)
                         intent.putExtra(Key.CATEGORY, banner)
                         startActivity(intent)

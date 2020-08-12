@@ -41,6 +41,7 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
     val mediaDetailViewModel by lazy {
         getViewModel<MediaDetailViewModel>()
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_offline_media)
@@ -89,7 +90,7 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
                     override fun onPositiveButtonPressed() {
                         if (!Utils.isNetworkAvailable(this@OfflineMediaListActivity)) {
                             toast(BaseConstants.NETWORK_ERROR)
-                        }else{
+                        } else {
                             progressBar.visible()
                             mediaDetailViewModel.getMediaUrlAndStartDownload(data.document_id).observe(this@OfflineMediaListActivity, Observer {
                                 val result = it ?: return@Observer
@@ -105,7 +106,7 @@ class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
                                                 null,
                                                 null,
                                                 null)
-                                        VideoSdkUtil.startDownload(this@OfflineMediaListActivity,videoPlayerMetadata, data?.title)
+                                        VideoSdkUtil.startDownload(this@OfflineMediaListActivity, videoPlayerMetadata, data?.title)
                                         downloadMetadataDao?.insert(DownloadMetadata(data?.document_id,
                                                 data?.title,
                                                 data?.description,

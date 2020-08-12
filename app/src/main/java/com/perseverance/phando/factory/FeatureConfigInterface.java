@@ -6,6 +6,8 @@ package com.perseverance.phando.factory;
 
 public interface FeatureConfigInterface {
     String getGATrackerId();
+
     String getBaseUrl();
+
     String getBaseAPIUrl();
 }

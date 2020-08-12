@@ -41,6 +41,7 @@ public class AdConfig {
 
         return builder.build();
     }
+
     public static void setRequestConfiguration() {
 
         MobileAds.setRequestConfiguration(
@@ -48,6 +49,7 @@ public class AdConfig {
                         .setTestDeviceIds(GOOGLE_TEST_DEVICES)
                         .build());
     }
+
     public static void setFacebookAdSetting() {
         if (BuildConfig.DEBUG) {
             List<AdSettings.TestAdType> adTypes = new ArrayList<>();
@@ -65,7 +67,7 @@ public class AdConfig {
             adTypes.add(AdSettings.TestAdType.CAROUSEL_IMG_SQUARE_LINK);
 
             AdSettings.addTestDevices(FACEBOOK_TEST_DEVICES);
-            AdSettings.setTestAdType(adTypes.get((int) ((Math.random()*(((adTypes.size()-1)-0)+1))+0)));
+            AdSettings.setTestAdType(adTypes.get((int) ((Math.random() * (((adTypes.size() - 1) - 0) + 1)) + 0)));
         }
     }
 }

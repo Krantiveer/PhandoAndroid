@@ -7,13 +7,13 @@ import com.google.gson.annotations.SerializedName
  */
 data class VideoData(
         @SerializedName("title")
-        val title:String?,
+        val title: String?,
         @SerializedName("imageUrl")
-        val imageUrl:String,
+        val imageUrl: String,
         @SerializedName("videoUrl")
-        val videoUrl:String,
+        val videoUrl: String,
         @SerializedName("videoAdUrl")
-        val videoAdUrl:String,
+        val videoAdUrl: String,
         @SerializedName("seekTo")
-        var seekTo: Long =0
+        var seekTo: Long = 0
 )

@@ -10,7 +10,7 @@
     android:background="@color/bg_app"
     tools:showIn="@layout/activity_search_result">
 
-     <com.perseverance.phando.ui.WaitingWheel
+    <com.perseverance.phando.ui.WaitingWheel
         android:id="@+id/footerProgress"
         android:layout_width="36dp"
         android:layout_height="36dp"
@@ -22,13 +22,11 @@
         app:matProg_rimColor="@color/progress_rim_color" />
 
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/footerProgress"/>
-
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/footerProgress" />
 
 
 </RelativeLayout>

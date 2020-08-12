@@ -4,8 +4,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class  APIData(
+data class APIData(
         @PrimaryKey
-        val url :String,
-        val data : String
+        val url: String,
+        val data: String
 )

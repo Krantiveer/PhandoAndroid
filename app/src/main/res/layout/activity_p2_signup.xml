@@ -35,7 +35,7 @@
                 <TextView
                     style="@style/LoginHintTextStyleBlack"
                     android:text="Name*"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
                 <!-- Name Label -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/LoginTextInputLayoutStyle"
@@ -88,9 +88,9 @@
                 <!-- Name Label -->
                 <TextView
                     style="@style/LoginHintTextStyleBlack"
-                        android:inputType="textEmailAddress"
+                    android:inputType="textEmailAddress"
                     android:text="Email*"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
                 <!-- Name Label -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/LoginTextInputLayoutStyle"
@@ -109,7 +109,7 @@
                 <TextView
                     style="@style/LoginHintTextStyleBlack"
                     android:text="Mobile*"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
                 <!-- Name Label -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -127,7 +127,7 @@
                         app:ccp_defaultPhoneCode="91"
                         app:ccp_showFlag="false"
                         app:ccp_autoFormatNumber="false"
-                        app:ccp_textSize="@dimen/_12sdp"/>
+                        app:ccp_textSize="@dimen/_12sdp" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/LoginTextInputLayoutStyle"
@@ -145,7 +145,7 @@
                 <TextView
                     style="@style/LoginHintTextStyleBlack"
                     android:text="Password*"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
                 <!-- Name Label -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/LoginTextInputLayoutStyle"
@@ -166,7 +166,7 @@
                 <TextView
                     style="@style/LoginHintTextStyleBlack"
                     android:text="Confirm Password*"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
                 <!-- Name Label -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/LoginTextInputLayoutStyle"

@@ -20,8 +20,8 @@ import kotlinx.android.synthetic.main.activity_webview.*
 
 
 class WebviewActivity : AppCompatActivity() {
-//var razorpay : Razorpay?=null
-var uploadMessage: ValueCallback<Array<Uri?>?>? = null
+    //var razorpay : Razorpay?=null
+    var uploadMessage: ValueCallback<Array<Uri?>?>? = null
     private var mUploadMessage: ValueCallback<Uri?>? = null
     val REQUEST_SELECT_FILE = 100
     private val FILECHOOSER_RESULTCODE = 1
@@ -34,25 +34,25 @@ var uploadMessage: ValueCallback<Array<Uri?>?>? = null
 
         val settings = webview?.settings
         settings?.javaScriptEnabled = true
-        settings?.allowFileAccess=true
+        settings?.allowFileAccess = true
 
         settings?.domStorageEnabled = true;
         settings?.allowContentAccess = true;
 
-        webview.webViewClient=MyWebViewClient()
-        webview.webChromeClient=MyWebChromeClient()
+        webview.webViewClient = MyWebViewClient()
+        webview.webChromeClient = MyWebChromeClient()
         val url = intent.getStringExtra("url")
         webview.loadUrl(url)
-       // razorpay = Razorpay(getString(R.string.rpkey), webview, this@WebviewActivity)
-        webview.addJavascriptInterface( PaymentInterface(this@WebviewActivity,object :PaymentInterface.PaymentListener{
+        // razorpay = Razorpay(getString(R.string.rpkey), webview, this@WebviewActivity)
+        webview.addJavascriptInterface(PaymentInterface(this@WebviewActivity, object : PaymentInterface.PaymentListener {
             override fun sendData(paymentResponse: PaymentResponse?) {
                 Toast.makeText(this@WebviewActivity, paymentResponse?.message, Toast.LENGTH_SHORT).show()
-                when(paymentResponse?.status){
-                    1 ->{
+                when (paymentResponse?.status) {
+                    1 -> {
                         setResult(Activity.RESULT_OK)
                         finish()
                     }
-                    0->{
+                    0 -> {
 
                     }
 
@@ -60,7 +60,7 @@ var uploadMessage: ValueCallback<Array<Uri?>?>? = null
 
             }
 
-        }),"PaymentInterface")
+        }), "PaymentInterface")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -72,6 +72,7 @@ var uploadMessage: ValueCallback<Array<Uri?>?>? = null
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (event.action === KeyEvent.ACTION_DOWN) {
             when (keyCode) {
@@ -91,7 +92,6 @@ var uploadMessage: ValueCallback<Array<Uri?>?>? = null
     inner class MyWebViewClient : WebViewClient() {
 
 
-
         @SuppressWarnings("deprecation")
         override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
             webview.loadUrl(url)
@@ -103,7 +103,6 @@ var uploadMessage: ValueCallback<Array<Uri?>?>? = null
             webview.loadUrl(request?.url.toString())
             return true
         }
-
 
 
     }
@@ -155,8 +154,6 @@ var uploadMessage: ValueCallback<Array<Uri?>?>? = null
             i.type = "image/*"
             startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE)
         }
-
-
 
 
     }

@@ -21,7 +21,7 @@ import com.perseverance.phando.notification.NotificationData
         DownloadMetadata::class,
         AdModel::class,
         NotificationData::class
-), version = 4)
+), version = 5)
 @TypeConverters(RoomDataTypeConvertor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao

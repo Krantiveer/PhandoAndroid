@@ -25,10 +25,10 @@ import com.perseverance.phando.R
 import com.perseverance.phando.Session
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.AppDatabase
+import com.perseverance.phando.db.Video
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.utils.MyLog
-import com.perseverance.phando.utils.PreferencesUtils
 import java.util.*
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -39,11 +39,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     val vibrate = longArrayOf(500, 100)
     val vibrateOff = longArrayOf(0, 0)
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage) {
 
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
+        MyLog.e("RemoteMessage", remoteMessage.data.toString())
         try {
             val data = remoteMessage.data
             val id = data?.get("id")
+            val notificationTitle = data?.get("notification_title")
             val type = data?.get("type")
             val isFree = data?.get("is_free")
             val thumbnail = data?.get("thumbnail")
@@ -52,8 +54,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val maturity_rating = data?.get("maturity_rating")
             val rating = data?.get("rating")
             val detail = data?.get("detail")
-            val description = data?.get("description")
 
+            if (!("T".equals(type) || "M".equals(type))) {
+                return
+            }
 
             val settingsPreferences = PreferenceManager.getDefaultSharedPreferences(this@MyFirebaseMessagingService)
             val isNotificationOn = settingsPreferences.getBoolean("perf_notification", true)
@@ -66,28 +70,43 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 return
             }
 
-            val notificationModel = NotificationData()
-            AppDatabase.getInstance(this)?.notificationDao()?.insert(notificationModel)
-            val baseVideo = NotificationData()
-            baseVideo.id = id
+
+            val baseVideo = Video()
+            baseVideo.id = id?.toInt()
             baseVideo.thumbnail = thumbnail
-            baseVideo.title = title
+            baseVideo.title = notificationTitle
+            baseVideo.type = type
+            baseVideo.description = detail
+            baseVideo.rating = rating?.toInt()
             baseVideo.is_free = isFree!!.toInt()
 
+            val notificationModel = NotificationData()
+            val dbId = System.currentTimeMillis()
+            notificationModel.dbID = dbId
+            notificationModel.id = id?.toInt()
+            notificationModel.thumbnail = thumbnail
+            notificationModel.title = notificationTitle
+            notificationModel.type = type
+            notificationModel.description = detail
+            notificationModel.rating = rating?.toInt()
+            notificationModel.is_free = isFree!!.toInt()
+
+            AppDatabase.getInstance(this)?.notificationDao()?.insert(notificationModel)
+
             if (thumbnail.isNullOrBlank()) {
-                sendNotification(title = title, body = detail, baseVideo = baseVideo)
+                sendNotification(notificationTitle = notificationTitle, body = detail, baseVideo = baseVideo, dbId = dbId)
             } else {
                 Glide.with(Session.instance!!.applicationContext).asBitmap().load(thumbnail)
                         //.apply(RequestOptions().override(100, 100))
                         .listener(object : RequestListener<Bitmap> {
                             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
-                                sendNotification(title = title, body = detail, baseVideo = baseVideo)
+                                sendNotification(notificationTitle = notificationTitle, body = detail, baseVideo = baseVideo, dbId = dbId)
                                 if (BuildConfig.DEBUG) MyLog.e("Notification image onLoadFailed - ${e?.message}")
                                 return false
                             }
 
                             override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                                sendNotification(title = title, body = detail, resource = resource, baseVideo = baseVideo)
+                                sendNotification(notificationTitle = notificationTitle, body = detail, resource = resource, baseVideo = baseVideo, dbId = dbId)
                                 return true
                             }
 
@@ -100,7 +119,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     }
 
-    private fun sendNotification(title: String?, body: String?, resource: Bitmap? = null, baseVideo: BaseVideo) {
+    private fun sendNotification(notificationTitle: String?, body: String?, resource: Bitmap? = null, baseVideo: Video, dbId: Long) {
 
         try {
             val settingsPreferences = PreferenceManager.getDefaultSharedPreferences(this@MyFirebaseMessagingService)
@@ -108,13 +127,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val isNotificationVibrateIsOn = settingsPreferences.getBoolean("perf_notification_vibrate", true);
 
             var intent: Intent? = null
-            if ("T".equals(baseVideo.mediaType)) {
+            if ("T".equals(baseVideo.type)) {
                 intent = Intent(this, SeriesActivity::class.java)
                 intent.putExtra(Key.CATEGORY, baseVideo)
             } else {
                 intent = MediaDetailActivity.getDetailIntent(this, baseVideo)
 
             }
+            intent.putExtra(Key.NOTIFICATION_DB_ID, dbId)
             val pendingIntent = PendingIntent.getActivity(this, 101, intent,
                     PendingIntent.FLAG_UPDATE_CURRENT)
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -122,10 +142,10 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setLargeIcon(BitmapFactory.decodeResource(resources,
-                            R.drawable.ic_notification))
+                            R.drawable.ic_launcher))
                     .setSmallIcon(R.drawable.ic_notification)
                     .setAutoCancel(true)
-                    .setContentTitle(if (TextUtils.isEmpty(title)) resources.getString(R.string.app_name) else title)
+                    .setContentTitle(if (TextUtils.isEmpty(notificationTitle)) resources.getString(R.string.app_name) else notificationTitle)
                     .setContentText(body)
                     .setStyle(NotificationCompat.BigTextStyle()
                             .bigText(body))
@@ -168,8 +188,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
 
             mManager.notify(Random().nextInt(100) + 1, notificationBuilder.build())
-            val mCartItemCount = PreferencesUtils.getIntegerPreferences("NOTIFICATION_COUNT")
-            PreferencesUtils.saveIntegerPreferences("NOTIFICATION_COUNT", mCartItemCount + 1)
         } catch (e: Exception) {
             MyLog.e("sendNotification_failed")
         }

@@ -33,7 +33,7 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
     private lateinit var id: String
     private lateinit var title: String
     private lateinit var type: String
-    private var imageOrientation: Int=0
+    private var imageOrientation: Int = 0
     private var adapter: BaseCategoryListAdapter? = null
     private var endlessScrollListener: EndlessScrollListener? = null
     private var pCount: Int = 0
@@ -54,9 +54,9 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         id = intent.getStringExtra("id")
-        title=intent.getStringExtra("title")
-        type=intent.getStringExtra("type")
-        imageOrientation=intent.getIntExtra("imageOrientation",0)
+        title = intent.getStringExtra("title")
+        type = intent.getStringExtra("type")
+        imageOrientation = intent.getIntExtra("imageOrientation", 0)
         setTitle(title)
         homeViewModel = ViewModelProviders.of(this).get(MediaListViewModel::class.java)
 
@@ -67,7 +67,7 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
         recycler_view_base.setHasFixedSize(true)
         val decoration = BaseRecycleMarginDecoration(this@BaseVideoListActivity)
         recycler_view_base.addItemDecoration(decoration)
-        adapter = BaseCategoryListAdapter(this@BaseVideoListActivity, this,imageOrientation)
+        adapter = BaseCategoryListAdapter(this@BaseVideoListActivity, this, imageOrientation)
         val videos = ArrayList<Video>()
         adapter?.items = videos
         recycler_view_base.adapter = adapter
@@ -83,10 +83,8 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
         lbl_no_video_base.setOnClickListener({ loadVideos(0, true) })
 
         loadVideos(0, true)
-        TrackingUtils.sendScreenTracker( BaseConstants.CATEGORY_VIDEO)
+        TrackingUtils.sendScreenTracker(BaseConstants.CATEGORY_VIDEO)
     }
-
-
 
 
     private fun onGetSeriesError(errorMessage: String?, pageCount: Int) {
@@ -99,10 +97,10 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
         if (pageCount == 0) {
             showProgress("Loading, please wait...")
         }
-        if(title.equals("EPISODES")){
+        if (title.equals("EPISODES")) {
             homeViewModel.callForEpisodes(id, pageCount, BaseConstants.LIMIT_VIDEOS)
         } else {
-            homeViewModel.callForVideos(id, pageCount, BaseConstants.LIMIT_VIDEOS,type)
+            homeViewModel.callForVideos(id, pageCount, BaseConstants.LIMIT_VIDEOS, type)
         }
     }
 
@@ -191,14 +189,14 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
 
     override fun onItemClick(data: Any) {
         if (Utils.isNetworkAvailable(this@BaseVideoListActivity)) {
-         /*   val intent = Intent(this@BaseActivity, PlayerListActivity::class.java)
-            intent.putExtra(Key.VIDEO, data as Video)
-            startActivity(intent)*/
+            /*   val intent = Intent(this@BaseActivity, PlayerListActivity::class.java)
+               intent.putExtra(Key.VIDEO, data as Video)
+               startActivity(intent)*/
             /*startActivity(MediaDetailActivity.getDetailIntent(this@BaseActivity as Context, data as BaseVideo))
             Utils.animateActivity(this@BaseActivity, "next")*/
-            if(data is Video) {
+            if (data is Video) {
                 val video = data
-                if("T".equals(video.type)){
+                if ("T".equals(video.type)) {
                     val intent = Intent(this@BaseVideoListActivity, SeriesActivity::class.java)
                     intent.putExtra(Key.CATEGORY, video)
                     startActivity(intent)

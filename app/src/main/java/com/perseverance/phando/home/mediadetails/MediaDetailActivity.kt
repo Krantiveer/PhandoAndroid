@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.perseverance.patrikanews.utils.*
+import com.perseverance.phando.AdsUtil.BannerType
 import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
@@ -123,7 +124,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     var isVideoPlayed = false
     var isTrailerPlaying = false
     var isPlayerstartSent = false
-
+    private val notificationDao by lazy {
+        AppDatabase.getInstance(this@MediaDetailActivity)?.notificationDao()
+    }
     val mediaDetailViewModel by lazy {
         getViewModel<MediaDetailViewModel>()
     }
@@ -364,7 +367,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         mediaDetailViewModel.isLiked.observe(this, likeObserver)
         mediaDetailViewModel.isDisliked.observe(this, dislikeObserver)
         mediaDetailViewModel.downloadStatus.observe(this, downloadObserver)
-
+        intent?.getLongExtra(Key.NOTIFICATION_DB_ID, 0)?.let {
+            notificationDao?.markNotificationRead(it)
+        }
         val video: Video = intent?.getParcelableExtra(ARG_VIDEO)!!
         mediaDetailViewModel.refreshMediaMetadata(video)
         MyLog.d("Player Image", video.thumbnail)
@@ -551,7 +556,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             }
         }
-    ad.loadAds(BannerType.SCREEN_DETAIL)
+        //ad.loadAds(BannerType.SCREEN_DETAIL)
     }
 
     private fun startDownload() {
@@ -656,21 +661,34 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
     }
 
-    private fun playVideoTrailer(trailerUrl: String) {
-        play.gone()
-        isVideoPlayed = true
-        isTrailerPlaying = true
-        setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = trailerUrl)
+    private fun playVideoTrailer(trailerUrl: String? = null) {
+        var url = trailerUrl
+        if (url.isNullOrEmpty()) {
+            mediaMetadata?.trailers?.let {
+                if (it.isNotEmpty()) {
+                    url = it[0].media_url
+                }
+            }
+
+        }
+        url?.let {
+            play.gone()
+            isVideoPlayed = true
+            isTrailerPlaying = true
+            setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = it)
+        }
+
     }
 
     override fun onPurchaseOptionSelected(purchaseOption: PurchaseOption) {
         createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type)
     }
 
-    fun onGetVideoMetaDataSuccess(mediaplaybackData: MediaplaybackData) {
+    private fun onGetVideoMetaDataSuccess(mediaplaybackData: MediaplaybackData) {
         isPlayerstartSent = false
         detailContent.visible()
         this.mediaplaybackData = mediaplaybackData
+        this.mediaMetadata = mediaplaybackData.data
 
         if (!isVideoPlayed) {
             play.visible()
@@ -687,14 +705,22 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         when (mediaplaybackData.mediaCode) {
             "free", "rented", "buyed", "package_purchased" -> {
                 actionControlersBuy.gone()
+                mediaMetadata?.media_reference_type?.let {
+                    if (it == "media_trailor") {
+                        playVideoTrailer(mediaMetadata?.media_url)
+                    }
+                }
+
             }
             "package_media" -> {
+                playVideoTrailer()
                 rentMedia.gone()
                 buyMedia.gone()
                 packageMedia.visible()
                 actionControlersBuy.visible()
             }
             "rent_or_buy" -> {
+                playVideoTrailer()
                 rentMedia.visible()
                 buyMedia.visible()
                 packageMedia.gone()
@@ -738,6 +764,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 }
             }
             "only_rent" -> {
+                playVideoTrailer()
                 rentMedia.visible()
                 buyMedia.gone()
                 packageMedia.gone()
@@ -762,6 +789,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 }
             }
             "only_buy" -> {
+                playVideoTrailer()
                 rentMedia.gone()
                 buyMedia.visible()
                 packageMedia.gone()
@@ -832,7 +860,6 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             }
         }
         actionControlers.visible()
-        this.mediaMetadata = mediaplaybackData.data
         mediaMetadata?.is_live?.let {
             download.isEnabled = it == 0
             if (it == 1) {
@@ -863,7 +890,6 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             otherText.append(" | " + it.joinToString())
         }
         otherInfo.text = otherText.toString()
-
 
 
         mListener = object : SimpleOrientationEventListener(this@MediaDetailActivity) {
@@ -900,7 +926,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         setRelatedVideo()
 
 
-        if (play.visibility != View.VISIBLE) {
+        if (!isTrailerPlaying && play.visibility != View.VISIBLE) {
             playVideo()
         } else {
             if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
@@ -914,24 +940,6 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             })
         }
 
-//        when (mediaplaybackData.mediaCode) {
-//            "free", "rented", "buyed", "package_purchased" -> {
-//
-//            }
-//            else -> {
-//                when (mediaDetailViewModel.loginFor.value) {
-//                    LOGIN_FOR_BUY -> {
-//                        buyMedia.performClick()
-//                    }
-//                    LOGIN_FOR_RENT -> {
-//                        rentMedia.performClick()
-//                    }
-//                    LOGIN_FOR_PACKAGE -> {
-//                        packageMedia.performClick()
-//                    }
-//                }
-//            }
-//        }
     }
 
     private fun setRelatedVideo() {
@@ -970,11 +978,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         when (currentOrientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                // runHandler(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT)
             }
             Configuration.ORIENTATION_LANDSCAPE -> {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                // runHandler(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             }
         }
 
@@ -1118,7 +1124,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             LoginActivity.REQUEST_CODE_LOGIN -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value= 0
+                    mediaDetailViewModel.loginFor.value = 0
                 } else {
 
                 }
@@ -1127,7 +1133,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_RENT -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_RENT
+                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_RENT
                 } else {
 
                 }
@@ -1135,7 +1141,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_BUY -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_BUY
+                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_BUY
                 } else {
 
                 }
@@ -1143,7 +1149,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_PACKAGE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_PACKAGE
+                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_PACKAGE
                 } else {
 
                 }
@@ -1165,7 +1171,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 } else {
                     Utils.displayImage(this, data.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
                     mediaDetailViewModel.refreshMediaMetadata(data)
-                    mediaDetailViewModel.loginFor.value= 0
+                    mediaDetailViewModel.loginFor.value = 0
                 }
             }
 
@@ -1358,7 +1364,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     progressBar.gone()
                     if (it.data?.is_subscribed == 1) {
                         mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                        mediaDetailViewModel.loginFor.value= 0
+                        mediaDetailViewModel.loginFor.value = 0
                     } else {
                         startPayment(it.data)
                     }
@@ -1402,7 +1408,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     }
 
     override fun onPaymentError(p0: Int, p1: String?) {
-        // Log.e("razorpay", "$p0 : $p1")
+        // MyLog.e("razorpay", "$p0 : $p1")
     }
 
     override fun onPaymentSuccess(razorpayPaymentId: String?) {
@@ -1434,7 +1440,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     it.data?.message?.let { it1 -> toast(it1) }
                     if (it.data?.status.equals("success", true)) {
                         mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                        mediaDetailViewModel.loginFor.value= 0
+                        mediaDetailViewModel.loginFor.value = 0
                     }
                 }
 

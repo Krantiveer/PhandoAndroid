@@ -57,8 +57,6 @@ public interface ApiService {
     Call<BaseResponse> updateOrderStatus(@FieldMap Map<String, String> bodyMap);
 
 
-
-
     @GET("paymenttoken")
     Call<PaymentToken> getPaymentToken();
 
@@ -102,7 +100,7 @@ public interface ApiService {
 
     @GET("mediabygenresid")
     Call<List<Video>> getVideosByCategory(@Query("genres_id") String categoryId,
-                                          @Query("limit") String limit,@Query("content_type") String type);
+                                          @Query("limit") String limit, @Query("content_type") String type);
 
     @GET("showwishlist")
     Call<List<Video>> getMyVideoList(@Query("limit") String limit);
@@ -149,7 +147,6 @@ public interface ApiService {
                                        @Query("type") String type);
 
 
-
     @GET("tvseries")
     Call<TVSeriesResponseData> getSeriesDetail(@Query("id") String id);
 
@@ -175,12 +172,6 @@ public interface ApiService {
     );
 
 
-
-
-
-
-
-
     @GET("dashboard")
     Call<List<BrowseData>> getBrowseDataList(
             @Query("type") String type,
@@ -194,7 +185,7 @@ public interface ApiService {
     Call<List<CategoryTab>> getCategoryTabList();
 
     @GET("setContinueWatchingTime")
-    Call<UpdateMyListResponse> setContinueWatchingTime(@Query("document_id") String documentId,@Query("time") String time);
+    Call<UpdateMyListResponse> setContinueWatchingTime(@Query("document_id") String documentId, @Query("time") String time);
 
     @POST("forgotpassword/otp")
     @FormUrlEncoded

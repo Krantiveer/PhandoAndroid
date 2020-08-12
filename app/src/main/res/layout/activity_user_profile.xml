@@ -90,15 +90,15 @@
                         android:textColor="#00AEEF"
                         android:textStyle="bold" />
 
-<!--                    <com.google.android.material.button.MaterialButton-->
-<!--                        android:id="@+id/updateChage"-->
-<!--                        style="@style/Widget.MaterialComponents.Button.TextButton"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:text="Change Password"-->
-<!--                        android:textAllCaps="true"-->
-<!--                        android:textColor="#00AEEF"-->
-<!--                        android:textStyle="bold" />-->
+                    <!--                    <com.google.android.material.button.MaterialButton-->
+                    <!--                        android:id="@+id/updateChage"-->
+                    <!--                        style="@style/Widget.MaterialComponents.Button.TextButton"-->
+                    <!--                        android:layout_width="wrap_content"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:text="Change Password"-->
+                    <!--                        android:textAllCaps="true"-->
+                    <!--                        android:textColor="#00AEEF"-->
+                    <!--                        android:textStyle="bold" />-->
                 </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -112,41 +112,41 @@
                     android:visibility="gone"
                     android:text="Subscriptions" />
 
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/btnDownload"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="left|center_vertical"-->
-<!--                    android:foreground="?attr/selectableItemBackground"-->
-<!--                    android:clickable="true"-->
-<!--                    android:layout_margin="0dp"-->
-<!--                    android:background="#535353"-->
-<!--                    android:padding="@dimen/_11sdp"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="@dimen/_12sdp"-->
-<!--                    android:text="Downloads" />-->
-<!--                <View-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="1dp"-->
-<!--                    android:background="@color/gray_concrete_light"-->
-<!--                    />-->
-<!--                <com.google.android.material.textview.MaterialTextView-->
-<!--                    android:id="@+id/btnHistry"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:gravity="left|center_vertical"-->
-<!--                    android:foreground="?attr/selectableItemBackground"-->
-<!--                    android:layout_margin="0dp"-->
-<!--                    android:background="#535353"-->
-<!--                    android:padding="@dimen/_11sdp"-->
-<!--                    android:textColor="@color/white"-->
-<!--                    android:textSize="@dimen/_12sdp"-->
-<!--                    android:text="History" />-->
-<!--                <View-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="1dp"-->
-<!--                    android:background="@color/gray_concrete_light"-->
-<!--                    />-->
+                <!--                <com.google.android.material.textview.MaterialTextView-->
+                <!--                    android:id="@+id/btnDownload"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:gravity="left|center_vertical"-->
+                <!--                    android:foreground="?attr/selectableItemBackground"-->
+                <!--                    android:clickable="true"-->
+                <!--                    android:layout_margin="0dp"-->
+                <!--                    android:background="#535353"-->
+                <!--                    android:padding="@dimen/_11sdp"-->
+                <!--                    android:textColor="@color/white"-->
+                <!--                    android:textSize="@dimen/_12sdp"-->
+                <!--                    android:text="Downloads" />-->
+                <!--                <View-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="1dp"-->
+                <!--                    android:background="@color/gray_concrete_light"-->
+                <!--                    />-->
+                <!--                <com.google.android.material.textview.MaterialTextView-->
+                <!--                    android:id="@+id/btnHistry"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:gravity="left|center_vertical"-->
+                <!--                    android:foreground="?attr/selectableItemBackground"-->
+                <!--                    android:layout_margin="0dp"-->
+                <!--                    android:background="#535353"-->
+                <!--                    android:padding="@dimen/_11sdp"-->
+                <!--                    android:textColor="@color/white"-->
+                <!--                    android:textSize="@dimen/_12sdp"-->
+                <!--                    android:text="History" />-->
+                <!--                <View-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="1dp"-->
+                <!--                    android:background="@color/gray_concrete_light"-->
+                <!--                    />-->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/btnBilling"
                     android:layout_width="match_parent"
@@ -160,6 +160,7 @@
                     android:textSize="@dimen/_12sdp"
                     android:visibility="visible"
                     android:text="Billing" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/btnDownloads"
                     android:layout_width="match_parent"
@@ -173,6 +174,7 @@
                     android:textSize="@dimen/_12sdp"
                     android:visibility="visible"
                     android:text="Downloads" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/btnLogout"
                     android:layout_width="match_parent"
@@ -185,7 +187,6 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"
                     android:text="Logout" />
-
 
 
             </LinearLayout>

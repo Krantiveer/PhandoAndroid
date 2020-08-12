@@ -14,9 +14,9 @@ import kotlinx.android.synthetic.main.fragment_browse_new.*
  */
 class BrowseFragmentNew : BaseBrowseFragmentNew() {
     override fun setBannerSlider(browseDataList: List<BrowseData>, browseData: BrowseData) {
-        var width =0
+        var width = 0
         if (browseData.displayType == "TOP_BANNER") {
-            homeHeaderView?.setData(browseData.list,tabLayout,childFragmentManager)
+            homeHeaderView?.setData(browseData.list, tabLayout, childFragmentManager)
             (browseDataList as ArrayList).removeAt(0)
             homeHeaderView.visible()
             width = Util.getScreenHeightForHomeBanner(this.context!!)
@@ -34,6 +34,7 @@ class BrowseFragmentNew : BaseBrowseFragmentNew() {
         params.setMargins(0, width, 0, 0)
         topBannerMetaDataContainer.setLayoutParams(params)
     }
+
     override fun setTopBannserHeight() {
 
 

@@ -152,7 +152,7 @@ public class VideoPlayerApplication extends Application {
           /* deleteOnFailure= */ true,
           addNewDownloadsAsCompleted);
     } catch (IOException e) {
-      Log.e(TAG, "Failed to upgrade action file: " + fileName, e);
+     // Log.e(TAG, "Failed to upgrade action file: " + fileName, e);
     }
   }
 

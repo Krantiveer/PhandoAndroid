@@ -168,7 +168,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * Notifies that item has been inserted.
      *
      * @param item item which has to be added to the adapter.
-
      * @since 1.0.0
      */
     public void add(T item) {
@@ -184,7 +183,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * Notifies that item has been inserted.
      *
      * @param item item which has to be added to the adapter.
-
      * @since 1.0.0
      */
     public void addToBeginning(T item) {
@@ -200,7 +198,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * Notifies that item has been inserted.
      *
      * @param items items which has to be added to the adapter.
-
      * @since 1.0.0
      */
     public void addAll(List<T> items) {
@@ -214,7 +211,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
     /**
      * Clears all the items in the adapter.
      *
-
      * @since 1.0.0
      */
     public void clear() {
@@ -227,7 +223,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * Notifies that item has been removed.
      *
      * @param item to be removed
-
      * @since 1.0.0
      */
     public void remove(T item) {
@@ -242,7 +237,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * Returns whether adapter is empty or not.
      *
      * @return `true` if adapter is empty or `false` otherwise
-
      * @since 1.0.0
      */
     public boolean isEmpty() {
@@ -267,7 +261,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * Set click listener, which must extend {@link BaseRecyclerListener}
      *
      * @param listener click listener
-
      * @since 1.0.0
      */
     public void setListener(L listener) {
@@ -278,7 +271,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * Get listener {@link BaseRecyclerListener}
      *
      * @return click listener
-
      * @since 1.0.0
      */
     public L getListener() {
@@ -292,7 +284,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * @param parent       container where to inflate
      * @param attachToRoot whether to attach to root or not
      * @return inflated View
-
      * @since 1.0.0
      */
     @NonNull
@@ -306,7 +297,6 @@ public abstract class GenericRecyclerViewAdapter<T, L extends BaseRecyclerListen
      * @param layout layout to me inflater
      * @param parent container where to inflate
      * @return inflated View
-
      * @since 1.0.0
      */
     @NonNull

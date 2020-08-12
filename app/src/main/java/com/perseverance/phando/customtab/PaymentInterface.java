@@ -8,38 +8,38 @@ import com.google.gson.Gson;
 import com.perseverance.phando.payment.subscription.PaymentResponse;
 import com.perseverance.phando.utils.MyLog;
 
-class PaymentInterface{
+class PaymentInterface {
 
-  Context mContext;
-  PaymentListener paymentListener;
-
-
-  PaymentInterface(Context c,PaymentListener mPaymentListener) {
-    mContext = c;
-    paymentListener=mPaymentListener;
-  }
-
-  @JavascriptInterface
-  public void success(String data){
-    MyLog.e("PaymentInterface",data);
-    PaymentResponse paymentResponse = new Gson().fromJson(data,PaymentResponse.class);
-    paymentListener.sendData(paymentResponse);
-    Toast.makeText(mContext, paymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+    Context mContext;
+    PaymentListener paymentListener;
 
 
-  }
-  
-  @JavascriptInterface
-  public void error(String data){
-    MyLog.e("PaymentInterface",data);
-    PaymentResponse paymentResponse = new Gson().fromJson(data,PaymentResponse.class);
-    paymentListener.sendData(paymentResponse);
-    Toast.makeText(mContext, paymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+    PaymentInterface(Context c, PaymentListener mPaymentListener) {
+        mContext = c;
+        paymentListener = mPaymentListener;
+    }
 
-  }
+    @JavascriptInterface
+    public void success(String data) {
+        MyLog.e("PaymentInterface", data);
+        PaymentResponse paymentResponse = new Gson().fromJson(data, PaymentResponse.class);
+        paymentListener.sendData(paymentResponse);
+        Toast.makeText(mContext, paymentResponse.getMessage(), Toast.LENGTH_LONG).show();
 
-  public interface PaymentListener {
-    void sendData(PaymentResponse paymentResponse);
-  }
+
+    }
+
+    @JavascriptInterface
+    public void error(String data) {
+        MyLog.e("PaymentInterface", data);
+        PaymentResponse paymentResponse = new Gson().fromJson(data, PaymentResponse.class);
+        paymentListener.sendData(paymentResponse);
+        Toast.makeText(mContext, paymentResponse.getMessage(), Toast.LENGTH_LONG).show();
+
+    }
+
+    public interface PaymentListener {
+        void sendData(PaymentResponse paymentResponse);
+    }
 
 }

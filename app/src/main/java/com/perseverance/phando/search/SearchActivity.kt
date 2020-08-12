@@ -48,7 +48,7 @@ class SearchActivity : AppCompatActivity(), FetchSuggestionsListener {
         adapter = SuggestionAdapter(this, searchHistoryList)
         listView!!.adapter = adapter
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { arg0, arg1, position, arg3 -> onQueryCompleted(adapter!!.getItem(position)) }
-        TrackingUtils.sendScreenTracker( BaseConstants.SEARCH)
+        TrackingUtils.sendScreenTracker(BaseConstants.SEARCH)
         btnClearHistory.setOnClickListener {
             sadhnaDBHelper!!.deleteSearchHistory()
             searchHistoryList!!.clear()
@@ -58,7 +58,6 @@ class SearchActivity : AppCompatActivity(), FetchSuggestionsListener {
 
         }
     }
-
 
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

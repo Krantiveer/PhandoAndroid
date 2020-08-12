@@ -29,7 +29,6 @@ public class PreferencesUtils {
     }
 
     public static void setLoggedIn(String accessToken) {
-        Log.d("hh", accessToken);
         SharedPreferences.Editor editor = getPreferences().edit();
         editor.putString(LOGGED_IN_ACCESS_TOKEN, accessToken);
         editor.apply();
@@ -38,8 +37,9 @@ public class PreferencesUtils {
     public static String getLoggedStatus() {
         return getPreferences().getString(LOGGED_IN_ACCESS_TOKEN, "");
     }
+
     public static String getLoggedStatusWithBearer() {
-        return "Bearer "+getPreferences().getString(LOGGED_IN_ACCESS_TOKEN, "");
+        return "Bearer " + getPreferences().getString(LOGGED_IN_ACCESS_TOKEN, "");
     }
 
     public static void deleteAllPreferences() {

@@ -15,7 +15,7 @@ import retrofit2.Response
 /**
  * Created by QAIT\TrilokiNath on 13/3/18.
  */
-class MediaListViewModel(application : Application) : AndroidViewModel(application) {
+class MediaListViewModel(application: Application) : AndroidViewModel(application) {
 
     val videoListMutableLiveData by lazy { MutableLiveData<VideosModel>() }
 
@@ -23,10 +23,9 @@ class MediaListViewModel(application : Application) : AndroidViewModel(applicati
     private val apiServiceLogin by lazy { ApiClient.getLoginClient().create(ApiService::class.java) }
 
 
+    fun callForVideos(id: String, pageCount: Int, limit: Int, type: String = "") {
 
-    fun callForVideos(id: String, pageCount: Int, limit: Int,type:String="") {
-
-        val call: Call<List<Video>> = apiServiceLogin.getVideosByCategory(id, "$pageCount,$limit",type)
+        val call: Call<List<Video>> = apiServiceLogin.getVideosByCategory(id, "$pageCount,$limit", type)
         call.enqueue(object : Callback<List<Video>> {
 
             override fun onResponse(call: Call<List<Video>>?, response: Response<List<Video>>?) {
@@ -39,7 +38,7 @@ class MediaListViewModel(application : Application) : AndroidViewModel(applicati
 
             override fun onFailure(call: Call<List<Video>>?, t: Throwable?) {
 
-                    videoListMutableLiveData.postValue(VideosModel(arrayListOf(), null, pageCount, t))
+                videoListMutableLiveData.postValue(VideosModel(arrayListOf(), null, pageCount, t))
 
             }
         })

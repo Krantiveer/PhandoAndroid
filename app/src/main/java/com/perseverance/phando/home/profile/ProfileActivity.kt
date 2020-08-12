@@ -29,7 +29,7 @@ class ProfileActivity : AppCompatActivity() {
     private val userProfileViewModel by lazy {
         ViewModelProvider(this).get(UserProfileViewModel::class.java)
     }
-    val downloadMetadataDao by lazy{
+    val downloadMetadataDao by lazy {
         AppDatabase.getInstance(this@ProfileActivity)?.downloadMetadataDao()
     }
 
@@ -42,31 +42,31 @@ class ProfileActivity : AppCompatActivity() {
         title = "Profile"
 
         btnSubscribe.setOnClickListener {
-            if (!Utils.isNetworkAvailable(this@ProfileActivity)){
+            if (!Utils.isNetworkAvailable(this@ProfileActivity)) {
                 DialogUtils.showNetworkErrorToast()
                 return@setOnClickListener
             }
             if (btnSubscribe.text.equals("Subscribe")) {
                 val intent = Intent(this@ProfileActivity, SubscriptionPackageActivity::class.java)
                 startActivityForResult(intent, 101)
-            }else{
+            } else {
                 val token = PreferencesUtils.getLoggedStatus()
                 val url = FeatureConfigClass().baseUrl + "viewsubscription?token=" + token
                 Util.openWebview(this@ProfileActivity, url)
             }
         }
         btnBilling.setOnClickListener {
-            if (!Utils.isNetworkAvailable(this@ProfileActivity)){
+            if (!Utils.isNetworkAvailable(this@ProfileActivity)) {
                 DialogUtils.showNetworkErrorToast()
                 return@setOnClickListener
             }
-                val token = PreferencesUtils.getLoggedStatus()
-                val url = FeatureConfigClass().baseUrl + "billinghistory?token=" + token
-                Util.openWebview(this@ProfileActivity, url)
+            val token = PreferencesUtils.getLoggedStatus()
+            val url = FeatureConfigClass().baseUrl + "billinghistory?token=" + token
+            Util.openWebview(this@ProfileActivity, url)
         }
 
         updateProfile.setOnClickListener {
-            if (!Utils.isNetworkAvailable(this@ProfileActivity)){
+            if (!Utils.isNetworkAvailable(this@ProfileActivity)) {
                 DialogUtils.showNetworkErrorToast()
                 return@setOnClickListener
             }
@@ -98,7 +98,7 @@ class ProfileActivity : AppCompatActivity() {
 
         btnDownloads.setOnClickListener {
             val allData = downloadMetadataDao?.getAllDownloadData()
-            if (allData == null||allData.isEmpty()) {
+            if (allData == null || allData.isEmpty()) {
                 toast("Download is empty")
                 return@setOnClickListener
             }
@@ -106,24 +106,24 @@ class ProfileActivity : AppCompatActivity() {
             startActivity(intent)
         }
         val strProfile = PreferencesUtils.getStringPreferences("profile")
-        val userProfileData = Gson().fromJson(strProfile,UserProfileData::class.java)
+        val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
         userProfileData?.let {
             progressBar.gone()
             userName.visible()
             userName.text = it.user?.name
             userEmail.text = it.user?.email
             it.user?.mobile?.let {
-                userMobile.text =it
-            }?: userMobile.gone()
+                userMobile.text = it
+            } ?: userMobile.gone()
 
             Utils.displayCircularProfileImage(this@ProfileActivity, it.user?.image,
-                    R.drawable.ic_user_avatar,R.drawable.ic_user_avatar,avatar)
+                    R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, avatar)
 
             it.is_subscribed?.let {
-                if (it==0){
-                    btnSubscribe.text="Subscribe"
-                }else{
-                    btnSubscribe.text="View Subscriptions"
+                if (it == 0) {
+                    btnSubscribe.text = "Subscribe"
+                } else {
+                    btnSubscribe.text = "View Subscriptions"
                 }
             }
         }
@@ -149,18 +149,18 @@ class ProfileActivity : AppCompatActivity() {
                     userName.visible()
                     userName.text = it.data?.user?.name
                     userEmail.text = it.data?.user?.email
-                   it.data?.user?.mobile?.let {
-                       userMobile.text =it
-                   }?: userMobile.gone()
+                    it.data?.user?.mobile?.let {
+                        userMobile.text = it
+                    } ?: userMobile.gone()
 
                     Utils.displayCircularProfileImage(this@ProfileActivity, it.data?.user?.image,
-                            R.drawable.ic_user_avatar,R.drawable.ic_user_avatar,avatar)
+                            R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, avatar)
 
                     it.data?.is_subscribed?.let {
-                        if (it==0){
-                            btnSubscribe.text="Subscribe"
-                        }else{
-                            btnSubscribe.text="View Subscriptions"
+                        if (it == 0) {
+                            btnSubscribe.text = "Subscribe"
+                        } else {
+                            btnSubscribe.text = "View Subscriptions"
                         }
                     }
 
@@ -170,9 +170,9 @@ class ProfileActivity : AppCompatActivity() {
             }
 
 
-
         })
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             android.R.id.home -> {
@@ -187,10 +187,11 @@ class ProfileActivity : AppCompatActivity() {
         super.onResume()
         userProfileViewModel.refreshUserProfile()
     }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        when(resultCode){
-            Activity.RESULT_OK ->{
+        when (resultCode) {
+            Activity.RESULT_OK -> {
                 userProfileViewModel.refreshUserProfile()
             }
 

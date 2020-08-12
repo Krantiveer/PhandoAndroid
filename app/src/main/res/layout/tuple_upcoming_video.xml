@@ -24,6 +24,6 @@
         android:layout_alignRight="@+id/imgThumbnail"
         android:textSize="@dimen/_10sdp"
         android:textColor="@color/white"
-        android:background="@drawable/upcoming_red"/>
+        android:background="@drawable/upcoming_red" />
 
 </RelativeLayout>

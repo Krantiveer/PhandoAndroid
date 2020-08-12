@@ -24,7 +24,7 @@ interface LanguageDao {
     fun allLanguageList(language: Int): List<Language>
 
     @Query("SELECT * FROM Language WHERE id = :categoryId AND language =:language")
-    fun getLanguage(categoryId:String,language: Int): Language
+    fun getLanguage(categoryId: String, language: Int): Language
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(list: List<Language>)

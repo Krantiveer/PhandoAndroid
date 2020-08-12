@@ -17,6 +17,7 @@
             android:id="@+id/fragmentContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@color/black"
             android:orientation="vertical">
 
             <FrameLayout
@@ -55,6 +56,7 @@
                 android:layout_marginBottom="5dp"
                 android:gravity="center|right"
                 android:orientation="vertical">
+
                 <Button
                     android:id="@+id/skipIntro"
                     android:layout_width="wrap_content"
@@ -63,7 +65,8 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
                     android:visibility="gone"
-                    android:backgroundTint="@color/white"/>
+                    android:backgroundTint="@color/white" />
+
                 <Button
                     android:id="@+id/nextEpisode"
                     android:layout_width="wrap_content"
@@ -73,7 +76,7 @@
                     android:textSize="@dimen/_10sdp"
                     android:visibility="gone"
                     android:backgroundTint="@color/white"
-                    android:drawableLeft="@drawable/ic_play"/>
+                    android:drawableLeft="@drawable/ic_play" />
 
             </LinearLayout>
 
@@ -96,7 +99,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/fragmentContainer"
-            android:layout_above="@id/ad"/>
+            android:layout_above="@id/ad" />
 
         <com.perseverance.phando.AdsUtil.BannerAdLayout
             android:id="@+id/ad"
@@ -104,6 +107,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center" />
+
         <LinearLayout
             android:id="@+id/progressBar"
             android:layout_width="match_parent"
@@ -121,6 +125,7 @@
 
 
     </RelativeLayout>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         style="@style/ToolbarStyleVideo"
@@ -128,6 +133,5 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_collapseMode="pin"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title="">
-    </androidx.appcompat.widget.Toolbar>
+        app:title=""></androidx.appcompat.widget.Toolbar>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

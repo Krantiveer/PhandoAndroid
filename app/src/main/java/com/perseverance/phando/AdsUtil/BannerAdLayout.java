@@ -64,15 +64,15 @@ public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
     }
 
     private void loadBanner() {
-        Log.i("banner", adListIndex + "-loadBanner()- size-" + bannerList.size());
+        MyLog.i("banner", adListIndex + "-loadBanner()- size-" + bannerList.size());
         if (adListIndex < bannerList.size()) {
-            Log.i("banner", adListIndex + "-loadBanner(inside if)- size-" + bannerList.size());
+            MyLog.i("banner", adListIndex + "-loadBanner(inside if)- size-" + bannerList.size());
             AdModel banner = bannerList.get(adListIndex);
             if (banner.getPartnerName().equalsIgnoreCase("admob")) {
-                Log.i("banner", "Loading Admob");
+                MyLog.i("banner", "Loading Admob");
                 loadAdmob(banner);
             } else if (banner.getPartnerName().equalsIgnoreCase("facebook")) {
-                Log.i("banner", "Loading facebook");
+                MyLog.i("banner", "Loading facebook");
                 loadFacebook(banner);
             }
         }
@@ -89,13 +89,13 @@ public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
             public void onAdLoaded() {
                 BannerAdLayout.this.removeAllViews();
                 BannerAdLayout.this.addView(adView);
-                Log.i("banner", "Admob loaded  " + banner1.getPublisherId());
+                MyLog.i("banner", "Admob loaded  " + banner1.getPublisherId());
 
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                Log.i("banner", adListIndex + ">banner admob failed " + banner1.getPublisherId() + " " + errorCode);
+                MyLog.i("banner", adListIndex + ">banner admob failed " + banner1.getPublisherId() + " " + errorCode);
 
                 adListIndex++;
                 loadBanner();
@@ -119,14 +119,14 @@ public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
         facebookAdView.setAdListener(new com.facebook.ads.AdListener() {
             @Override
             public void onError(Ad ad, AdError adError) {
-                Log.i("banner", adListIndex + ">banner facebook failed " + banner1.getPublisherId() + " " + adError.getErrorCode());
+                MyLog.i("banner", adListIndex + ">banner facebook failed " + banner1.getPublisherId() + " " + adError.getErrorCode());
                 adListIndex++;
                 loadBanner();
             }
 
             @Override
             public void onAdLoaded(Ad ad) {
-                Log.i("banner", "banner Facebook loaded " + banner1.getPublisherId());
+                MyLog.i("banner", "banner Facebook loaded " + banner1.getPublisherId());
             }
 
             @Override

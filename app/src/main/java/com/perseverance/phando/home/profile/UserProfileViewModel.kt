@@ -20,7 +20,7 @@ class UserProfileViewModel(application: Application) : BaseViewModel(application
     private val reloadTrigger = MutableLiveData<Boolean>()
 
     //profile
-   private var data: LiveData<DataLoadingStatus<UserProfileData>> = Transformations.switchMap(reloadTrigger) {
+    private var data: LiveData<DataLoadingStatus<UserProfileData>> = Transformations.switchMap(reloadTrigger) {
         userProfileRepository.fetchProfileData()
 
     }
@@ -58,9 +58,8 @@ class UserProfileViewModel(application: Application) : BaseViewModel(application
     }
 
 
-
     //Registration
-    private val registerUserTrigger = MutableLiveData<Map<String,String>>()
+    private val registerUserTrigger = MutableLiveData<Map<String, String>>()
     var registerUserData: LiveData<DataLoadingStatus<LoginResponse>> = Transformations.switchMap(registerUserTrigger) {
         it?.let {
             userProfileRepository.doRegister(it)
@@ -68,24 +67,25 @@ class UserProfileViewModel(application: Application) : BaseViewModel(application
 
     }
 
-    fun registerUser(map:Map<String,String>) {
+    fun registerUser(map: Map<String, String>) {
         registerUserTrigger.value = map
     }
 
     //get OTP
-    private val getOTPTrigger = MutableLiveData<Map<String,String>>()
+    private val getOTPTrigger = MutableLiveData<Map<String, String>>()
     val getOTPTData: LiveData<DataLoadingStatus<BaseResponse>> = Transformations.switchMap(getOTPTrigger) {
         it?.let {
             userProfileRepository.getOTP(it)
         }
 
     }
-    fun getOTP(map: Map<String,String>) {
+
+    fun getOTP(map: Map<String, String>) {
         getOTPTrigger.postValue(map)
     }
 
     //verify OTP for login
-    private val verifyOTPTrigger = MutableLiveData<Map<String,String>>()
+    private val verifyOTPTrigger = MutableLiveData<Map<String, String>>()
 
     val verifyOTPTForLoginData: LiveData<DataLoadingStatus<LoginResponse>> = Transformations.switchMap(verifyOTPTrigger) {
         it?.let {
@@ -94,12 +94,12 @@ class UserProfileViewModel(application: Application) : BaseViewModel(application
 
     }
 
-    fun verifyOTP(map:Map<String,String>) {
+    fun verifyOTP(map: Map<String, String>) {
         verifyOTPTrigger.postValue(map)
     }
 
     //verify OTP for login
-    private val verifyOTPForForgotPasswordTrigger = MutableLiveData<Map<String,String>>()
+    private val verifyOTPForForgotPasswordTrigger = MutableLiveData<Map<String, String>>()
 
     val verifyOTPForForgotPasswordData: LiveData<DataLoadingStatus<BaseResponse>> = Transformations.switchMap(verifyOTPForForgotPasswordTrigger) {
         it?.let {
@@ -108,9 +108,10 @@ class UserProfileViewModel(application: Application) : BaseViewModel(application
 
     }
 
-    fun verifyOTPForForgotPassword(map :Map<String,String>) {
+    fun verifyOTPForForgotPassword(map: Map<String, String>) {
         verifyOTPForForgotPasswordTrigger.postValue(map)
     }
+
     fun removeUserDownload(param: ArrayList<String>) = liveData(Dispatchers.IO) {
 
         emit(userProfileRepository.removeUserDownload(param))

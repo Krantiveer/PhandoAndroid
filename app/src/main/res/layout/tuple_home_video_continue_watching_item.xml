@@ -56,8 +56,7 @@
                 android:progress="45"
                 android:layout_margin="0dp"
                 android:padding="0dp"
-                android:progressTint="@color/red_normal"
-                />
+                android:progressTint="@color/red_normal" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>

@@ -30,13 +30,13 @@ open class BaseHomeHeaderView @JvmOverloads constructor(context: Context, attrs:
 
     val runnable: Runnable = object : Runnable {
         override fun run() {
-            if(list.isNotEmpty()&&list.size>1) {
+            if (list.isNotEmpty() && list.size > 1) {
                 if (list.size === counter) {
                     counter = 0
                 } else {
                     counter++
                 }
-                bannerViewPager.setCurrentItem(counter, if(counter==0) true else true)
+                bannerViewPager.setCurrentItem(counter, if (counter == 0) true else true)
 
             }
             handler?.postDelayed(this, 3000)
@@ -78,10 +78,9 @@ open class BaseHomeHeaderView @JvmOverloads constructor(context: Context, attrs:
             private var mScrollState = 0
 
 
-
             override fun onPageSelected(position: Int) {
                 mCurrentPosition = position
-                counter=mCurrentPosition
+                counter = mCurrentPosition
             }
 
             override fun onPageScrollStateChanged(state: Int) {

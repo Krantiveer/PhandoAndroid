@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="@dimen/_1sdp">
+
         <ImageView
             android:id="@+id/img_thumbnail"
             android:layout_width="444dp"
@@ -20,8 +21,7 @@
             app:srcCompat="@drawable/ic_circular_play_placeholder"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
-            android:contentDescription="@string/app_name"
-            />
+            android:contentDescription="@string/app_name" />
 
         <!--<ImageView
             android:layout_width="@dimen/_20sdp"
@@ -35,16 +35,16 @@
             android:visibility="gone"
             android:id="@+id/free"/>-->
 
-<!--        <ImageView-->
-<!--            android:layout_width="@dimen/_20sdp"-->
-<!--            android:layout_height="@dimen/_20sdp"-->
-<!--            android:layout_alignTop="@+id/img_thumbnail"-->
-<!--            android:layout_alignRight="@+id/img_thumbnail"-->
-<!--            android:layout_marginTop="@dimen/_5sdp"-->
-<!--            android:layout_marginRight="@dimen/_5sdp"-->
-<!--            app:srcCompat="@drawable/star"-->
-<!--            android:visibility="gone"-->
-<!--            android:id="@+id/free"/>-->
+        <!--        <ImageView-->
+        <!--            android:layout_width="@dimen/_20sdp"-->
+        <!--            android:layout_height="@dimen/_20sdp"-->
+        <!--            android:layout_alignTop="@+id/img_thumbnail"-->
+        <!--            android:layout_alignRight="@+id/img_thumbnail"-->
+        <!--            android:layout_marginTop="@dimen/_5sdp"-->
+        <!--            android:layout_marginRight="@dimen/_5sdp"-->
+        <!--            app:srcCompat="@drawable/star"-->
+        <!--            android:visibility="gone"-->
+        <!--            android:id="@+id/free"/>-->
 
         <TextView
             android:layout_width="wrap_content"
@@ -59,7 +59,7 @@
             android:paddingRight="@dimen/_2sdp"
             android:layout_margin="@dimen/_5sdp"
             android:textSize="@dimen/_8sdp"
-            android:background="#F6B126"/>
+            android:background="#F6B126" />
 
         <TextView
             android:id="@+id/duration"
@@ -73,7 +73,7 @@
             android:background="@drawable/duration_textview_round_rect_border"
             android:layout_marginBottom="@dimen/_5sdp"
             android:layout_marginRight="@dimen/_5sdp"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </RelativeLayout>
 
     <TextView
@@ -89,6 +89,5 @@
         android:visibility="gone"
         android:textColor="@color/video_title_color"
         android:textSize="@dimen/_10sdp"
-        tools:ignore="MissingPrefix"
-        />
+        tools:ignore="MissingPrefix" />
 </LinearLayout>

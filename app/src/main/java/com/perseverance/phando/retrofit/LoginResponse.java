@@ -2,10 +2,10 @@ package com.perseverance.phando.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginResponse  {
+public class LoginResponse {
     @SerializedName("access_token")
     public String accessToken;
-//    @SerializedName("error")
+    //    @SerializedName("error")
 //    public String error;
     @SerializedName("message")
     public String message;

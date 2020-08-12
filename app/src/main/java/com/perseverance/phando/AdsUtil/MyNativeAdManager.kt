@@ -8,7 +8,7 @@ import com.perseverance.phando.Session
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.utils.MyLog
 
-class MyNativeAdManager private constructor(): NativeAdListener {
+class MyNativeAdManager private constructor() : NativeAdListener {
     companion object {
         private var myNativeAdManager: MyNativeAdManager? = null
         fun getInstance(): MyNativeAdManager? {
@@ -27,10 +27,10 @@ class MyNativeAdManager private constructor(): NativeAdListener {
 
 
     init {
-       // val requestCount = FirebaseRemoteConfigUtil.getDetailFor(FirebaseRemoteConfigConstant.NATIVE_AD_REQUEST_COUNT_KEY)
+        // val requestCount = FirebaseRemoteConfigUtil.getDetailFor(FirebaseRemoteConfigConstant.NATIVE_AD_REQUEST_COUNT_KEY)
         val requestCount = "3"
-        if (!requestCount.isEmpty()){
-            AD_REQUEST_COUNT=requestCount.toInt()
+        if (!requestCount.isEmpty()) {
+            AD_REQUEST_COUNT = requestCount.toInt()
         }
         adId = AdConfig.FB_AD_1
 

@@ -5,8 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
-<!--    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
+    <!--    <uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
+    <!--    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
 
     <application
         android:name=".Session"
@@ -34,8 +34,10 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
@@ -82,7 +84,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTop"
             android:theme="@style/AppThemeVideo" />
-      <activity
+        <activity
             android:name=".notification.NotificationListActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
@@ -108,12 +110,13 @@
         <activity
             android:name=".home.profile.login.LoginActivity"
             android:screenOrientation="portrait"></activity>
-<service
+
+        <service
             android:name=".AdsUtil.AdNetworkService"
             android:exported="false" />
         <meta-data
             android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true"/>
+            android:value="true" />
         <service android:name=".notification.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

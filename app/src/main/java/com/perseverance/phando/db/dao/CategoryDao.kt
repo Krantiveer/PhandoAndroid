@@ -24,7 +24,7 @@ interface CategoryDao {
     fun allCategoryList(language: Int): List<Category>
 
     @Query("SELECT * FROM Category WHERE id = :categoryId AND language =:language")
-    fun getCategory(categoryId:String,language: Int): Category
+    fun getCategory(categoryId: String, language: Int): Category
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(list: List<Category>)

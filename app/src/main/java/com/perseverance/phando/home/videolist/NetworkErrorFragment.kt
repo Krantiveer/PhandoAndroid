@@ -9,7 +9,7 @@ import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.home.dashboard.BaseNetworkErrorFragment
 import kotlinx.android.synthetic.main.fragment_base.*
 
-class NetworkErrorFragment : BaseNetworkErrorFragment(){
+class NetworkErrorFragment : BaseNetworkErrorFragment() {
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

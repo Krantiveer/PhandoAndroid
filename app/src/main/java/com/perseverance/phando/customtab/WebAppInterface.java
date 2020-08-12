@@ -7,7 +7,9 @@ import android.widget.Toast;
 public class WebAppInterface {
     Context mContext;
 
-    /** Instantiate the interface and set the context */
+    /**
+     * Instantiate the interface and set the context
+     */
     WebAppInterface(Context c) {
         mContext = c;
     }

@@ -22,12 +22,13 @@ class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener)
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
 
     }
+
     override fun onBind(downloadMetadata: DownloadMetadata) {
         itemView.tag = downloadMetadata
         Utils.displayImage(itemView.context, downloadMetadata.thumbnail,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder, itemView.img_thumbnail)
-        itemView.img_thumbnail.resizeView(ListItemThumbnail(),true)
+        itemView.img_thumbnail.resizeView(ListItemThumbnail(), true)
         itemView.title.text = downloadMetadata.title
         itemView.details.text = downloadMetadata.description
         itemView.rating.gone()
@@ -39,13 +40,13 @@ class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener)
                 override fun onMenuItemClick(item: MenuItem?): Boolean {
 
                     return when (item?.itemId) {
-                        R.id.menu_delete ->{
+                        R.id.menu_delete -> {
                             listener.onItemClick(downloadMetadata.document_id)
                             true
                         }
 
                         else -> false
-                   }
+                    }
                 }
 
             })
@@ -53,6 +54,5 @@ class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener)
         }
 
 
-
     }
-    }
+}

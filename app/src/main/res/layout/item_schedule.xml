@@ -14,53 +14,49 @@
     android:orientation="horizontal">
 
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/programName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:focusable="false"
-            android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:textSize="@dimen/_12sdp"
-            android:textColor="@color/white"
-            android:padding="@dimen/_5sdp"
-            app:hintEnabled="true"
-            app:hintAnimationEnabled="false"
-            />
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/programName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:focusable="false"
+        android:layout_weight="1"
+        android:focusableInTouchMode="false"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/white"
+        android:padding="@dimen/_5sdp"
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="false" />
 
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/programDate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/transparent"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:textSize="@dimen/_12sdp"
-            android:textColor="@color/white"
-            android:padding="@dimen/_5sdp"
-            app:hintEnabled="true"
-            app:hintAnimationEnabled="false"
-            />
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/programDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:background="@android:color/transparent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/white"
+        android:padding="@dimen/_5sdp"
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="false" />
 
 
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/programStartTime"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:focusable="false"
-            android:layout_weight="1"
-            android:focusableInTouchMode="false"
-            android:textSize="@dimen/_12sdp"
-            android:textColor="@color/white"
-            android:padding="@dimen/_5sdp"
-            app:hintEnabled="true"
-            app:hintAnimationEnabled="false"
-            />
+    <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/programStartTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:focusable="false"
+        android:layout_weight="1"
+        android:focusableInTouchMode="false"
+        android:textSize="@dimen/_12sdp"
+        android:textColor="@color/white"
+        android:padding="@dimen/_5sdp"
+        app:hintEnabled="true"
+        app:hintAnimationEnabled="false" />
 
 
 </LinearLayout>

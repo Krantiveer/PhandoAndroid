@@ -5,7 +5,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class PaymentInfo(
-    val media_id: Int,
-    val payment_type: String,
-    val type: String
+        val media_id: Int,
+        val payment_type: String,
+        val type: String
 ) : Parcelable

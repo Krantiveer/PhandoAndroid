@@ -24,11 +24,12 @@ class HomeFragmentCategoryListCircularViewHolder(itemView: View, listener: Adapt
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
 
     }
+
     override fun onBind(item: Video) {
         itemView.tag = item
-        if(item.is_free == 1) { // if paid video then show premium icon
+        if (item.is_free == 1) { // if paid video then show premium icon
             itemView.free.gone()
-        }else{
+        } else {
             itemView.free.visible()
         }
 
@@ -41,4 +42,4 @@ class HomeFragmentCategoryListCircularViewHolder(itemView: View, listener: Adapt
         itemView.duration.text = item.getFormatedDuration()
 
     }
-    }
+}

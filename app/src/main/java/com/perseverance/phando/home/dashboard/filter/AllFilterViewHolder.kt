@@ -8,14 +8,15 @@ import kotlinx.android.synthetic.main.item_filter.view.*
 
 class AllFilterViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<Filter, AdapterClickListener>(itemView, listener) {
 
-        init {
-            itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
+    init {
+        itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
 
-        }
-        override fun onBind(filter: Filter) {
-            itemView.tag = filter
-            itemView.txt_item.text = filter.title
-
-
-        }
     }
+
+    override fun onBind(filter: Filter) {
+        itemView.tag = filter
+        itemView.txt_item.text = filter.title
+
+
+    }
+}

@@ -8,7 +8,7 @@ import com.perseverance.phando.retrofit.ApiService
 /**
  * Created by QAIT\amarkhatri.
  */
-abstract class BaseViewModel(application: Application):AndroidViewModel(application) {
+abstract class BaseViewModel(application: Application) : AndroidViewModel(application) {
     val apiService: ApiService by lazy {
         ApiClient.getClientDetail().create(ApiService::class.java)
     }

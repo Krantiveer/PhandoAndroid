@@ -18,7 +18,7 @@ public class Category implements Serializable {
     @PrimaryKey
     @NotNull
     @SerializedName("id")
-    private String id ="";
+    private String id = "";
 
     @SerializedName("name")
     private String name;

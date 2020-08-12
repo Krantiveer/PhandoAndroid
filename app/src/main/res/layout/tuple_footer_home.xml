@@ -11,6 +11,6 @@
         android:text="App Version"
         android:padding="12dp"
         android:textColor="@color/gray_concrete_dark"
-        android:textAppearance="?android:attr/textAppearanceSmall"/>
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </FrameLayout>

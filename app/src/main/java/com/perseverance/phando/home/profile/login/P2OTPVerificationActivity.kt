@@ -62,7 +62,7 @@ class P2OTPVerificationActivity : P2BaseOTPVerificationActivity() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userProfileViewModel.verifyOTPTForLoginData.observe(viewLifecycleOwner, verifyOtpObserver)
-        val fromSignup = arguments?.getBoolean("FRON_SIGNUP",false)?:false
+        val fromSignup = arguments?.getBoolean("FRON_SIGNUP", false) ?: false
 
         if (!fromSignup) {
             val map: MutableMap<String, String> = HashMap()
@@ -74,7 +74,8 @@ class P2OTPVerificationActivity : P2BaseOTPVerificationActivity() {
         }
         linkMobile.gone()
     }
-//
+
+    //
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        userProfileViewModel.verifyOTPTForLoginData.observe(this, verifyOtpObserver)

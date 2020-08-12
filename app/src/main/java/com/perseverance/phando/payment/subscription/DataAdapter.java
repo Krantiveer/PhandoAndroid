@@ -24,7 +24,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 
     public DataAdapter(OnClickListener listener, List<PackageDetails> packageDetails) {
         this.packageDetails = packageDetails;
-        this.listener =  listener;
+        this.listener = listener;
     }
 
     @Override
@@ -43,11 +43,12 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 //            firstFourChars = packageDetails.get(i).getPackageName().substring(0, 4);
 //        }
         viewHolder.package_name_zulo.setText(packageDetails.get(i).getPackageName());
-       // viewHolder.package_name.setText(packageDetails.get(i).getPackagePrice());
+        // viewHolder.package_name.setText(packageDetails.get(i).getPackagePrice());
         viewHolder.package_price.setText(packageDetails.get(i).getPackagePrice());
-        viewHolder.package_interval.setText("/-for "+packageDetails.get(i).getInterval_count()+" " + packageDetails.get(i).getPackageInterval());
+        viewHolder.package_interval.setText("/-for " + packageDetails.get(i).getInterval_count() + " " + packageDetails.get(i).getPackageInterval());
         viewHolder.container.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 listener.onClick(packageDetails.get(i));
             }
         });
@@ -58,9 +59,10 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
         return packageDetails.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView package_price,package_interval,package_name_zulo;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        private TextView package_price, package_interval, package_name_zulo;
         private CardView container;
+
         public ViewHolder(View view) {
             super(view);
             container = view.findViewById(R.id.container);

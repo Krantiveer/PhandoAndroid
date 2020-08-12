@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 
-open class BaseNetworkErrorFragment : Fragment(){
+open class BaseNetworkErrorFragment : Fragment() {
 
     protected var activity: AppCompatActivity? = null
 

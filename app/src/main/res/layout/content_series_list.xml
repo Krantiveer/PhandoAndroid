@@ -13,7 +13,7 @@
         android:id="@+id/series_screen_bottom_banner_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true" />
 
     <com.perseverance.phando.ui.WaitingWheel
         android:id="@+id/footer_progress_series_list"

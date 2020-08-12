@@ -7,6 +7,7 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.util.Base64;
 import android.util.Log;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,6 +35,7 @@ public class AppSignatureHelper extends ContextWrapper {
 
     /**
      * Get all the app signatures for the current package
+     *
      * @return
      */
     public ArrayList<String> getAppSignatures() {
@@ -53,11 +55,11 @@ public class AppSignatureHelper extends ContextWrapper {
                     appCodes.add(String.format("%s", hash));
                 }
 
-                Log.v(TAG, "Hash " + hash);
+               // MyLog.v(TAG, "Hash " + hash);
 
             }
         } catch (PackageManager.NameNotFoundException e) {
-            Log.e(TAG, "Unable to find package to obtain hash.", e);
+            MyLog.e(TAG, "Unable to find package to obtain hash.");
         }
         return appCodes;
     }
@@ -77,10 +79,10 @@ public class AppSignatureHelper extends ContextWrapper {
             String base64Hash = Base64.encodeToString(hashSignature, Base64.NO_PADDING | Base64.NO_WRAP);
             base64Hash = base64Hash.substring(0, NUM_BASE64_CHAR);
 
-            Log.d(TAG, String.format("pkg: %s -- hash: %s", packageName, base64Hash));
+            MyLog.d(TAG, String.format("pkg: %s -- hash: %s", packageName, base64Hash));
             return base64Hash;
         } catch (NoSuchAlgorithmException e) {
-            Log.e(TAG, "hash:NoSuchAlgorithm", e);
+            MyLog.e(TAG, "hash:NoSuchAlgorithm");
         }
         return null;
     }

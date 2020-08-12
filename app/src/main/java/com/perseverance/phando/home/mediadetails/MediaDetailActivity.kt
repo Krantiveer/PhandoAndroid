@@ -30,6 +30,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.perseverance.patrikanews.utils.*
+import com.perseverance.phando.AdsUtil.BannerType
 import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
@@ -123,7 +124,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     var isVideoPlayed = false
     var isTrailerPlaying = false
     var isPlayerstartSent = false
-
+    private val notificationDao by lazy {
+        AppDatabase.getInstance(this@MediaDetailActivity)?.notificationDao()
+    }
     val mediaDetailViewModel by lazy {
         getViewModel<MediaDetailViewModel>()
     }
@@ -364,7 +367,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         mediaDetailViewModel.isLiked.observe(this, likeObserver)
         mediaDetailViewModel.isDisliked.observe(this, dislikeObserver)
         mediaDetailViewModel.downloadStatus.observe(this, downloadObserver)
-
+        intent?.getLongExtra(Key.NOTIFICATION_DB_ID, 0)?.let {
+            notificationDao?.markNotificationRead(it)
+        }
         val video: Video = intent?.getParcelableExtra(ARG_VIDEO)!!
         mediaDetailViewModel.refreshMediaMetadata(video)
         MyLog.d("Player Image", video.thumbnail)
@@ -551,7 +556,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             }
         }
-
+        //ad.loadAds(BannerType.SCREEN_DETAIL)
     }
 
     private fun startDownload() {
@@ -656,11 +661,11 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
     }
 
-    private fun playVideoTrailer( trailerUrl: String?=null) {
+    private fun playVideoTrailer(trailerUrl: String? = null) {
         var url = trailerUrl
-        if (url.isNullOrEmpty()){
+        if (url.isNullOrEmpty()) {
             mediaMetadata?.trailers?.let {
-                if (it.isNotEmpty()){
+                if (it.isNotEmpty()) {
                     url = it[0].media_url
                 }
             }
@@ -701,8 +706,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             "free", "rented", "buyed", "package_purchased" -> {
                 actionControlersBuy.gone()
                 mediaMetadata?.media_reference_type?.let {
-                    if (it=="media_trailor"){
-                      playVideoTrailer(mediaMetadata?.media_url)
+                    if (it == "media_trailor") {
+                        playVideoTrailer(mediaMetadata?.media_url)
                     }
                 }
 
@@ -887,7 +892,6 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         otherInfo.text = otherText.toString()
 
 
-
         mListener = object : SimpleOrientationEventListener(this@MediaDetailActivity) {
             @SuppressLint("SourceLockedOrientationActivity")
             override fun onChanged(lastOrientation: Int, orientation: Int) {
@@ -922,7 +926,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         setRelatedVideo()
 
 
-        if (play.visibility != View.VISIBLE) {
+        if (!isTrailerPlaying && play.visibility != View.VISIBLE) {
             playVideo()
         } else {
             if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
@@ -1120,7 +1124,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             LoginActivity.REQUEST_CODE_LOGIN -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value= 0
+                    mediaDetailViewModel.loginFor.value = 0
                 } else {
 
                 }
@@ -1129,7 +1133,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_RENT -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_RENT
+                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_RENT
                 } else {
 
                 }
@@ -1137,7 +1141,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_BUY -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_BUY
+                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_BUY
                 } else {
 
                 }
@@ -1145,7 +1149,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             REQUEST_CODE_PACKAGE -> {
                 if (resultCode == Activity.RESULT_OK) {
                     mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value= LOGIN_FOR_PACKAGE
+                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_PACKAGE
                 } else {
 
                 }
@@ -1167,7 +1171,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 } else {
                     Utils.displayImage(this, data.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
                     mediaDetailViewModel.refreshMediaMetadata(data)
-                    mediaDetailViewModel.loginFor.value= 0
+                    mediaDetailViewModel.loginFor.value = 0
                 }
             }
 
@@ -1360,7 +1364,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     progressBar.gone()
                     if (it.data?.is_subscribed == 1) {
                         mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                        mediaDetailViewModel.loginFor.value= 0
+                        mediaDetailViewModel.loginFor.value = 0
                     } else {
                         startPayment(it.data)
                     }
@@ -1404,7 +1408,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     }
 
     override fun onPaymentError(p0: Int, p1: String?) {
-        // Log.e("razorpay", "$p0 : $p1")
+        // MyLog.e("razorpay", "$p0 : $p1")
     }
 
     override fun onPaymentSuccess(razorpayPaymentId: String?) {
@@ -1436,7 +1440,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                     it.data?.message?.let { it1 -> toast(it1) }
                     if (it.data?.status.equals("success", true)) {
                         mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                        mediaDetailViewModel.loginFor.value= 0
+                        mediaDetailViewModel.loginFor.value = 0
                     }
                 }
 

@@ -52,7 +52,7 @@ class P2ForgotPasswordActivity : BaseActivity() {
 //                startActivity(intent)
                 // startActivity(intent)
             } else {
-                toast( "number " + ccp.fullNumber.toString() + " not valid!", Toast.LENGTH_LONG)
+                toast("number " + ccp.fullNumber.toString() + " not valid!", Toast.LENGTH_LONG)
             }
         }
 
@@ -68,10 +68,9 @@ class P2ForgotPasswordActivity : BaseActivity() {
 //    }
 
 
-
     fun CharSequence?.isValidEmail() = !isNullOrEmpty() && Patterns.EMAIL_ADDRESS.matcher(this).matches()
     fun CharSequence?.isValidPhoneNumber() = !isNullOrEmpty() && Patterns.PHONE.matcher(this).matches()
-    fun resetPassword(view:View){
+    fun resetPassword(view: View) {
         Utils.hideKeyboard(appCompatActivity)
         if (inputPhone.text.toString().isNullOrBlank()) {
             toast("Please enter mobile number")
@@ -90,7 +89,7 @@ class P2ForgotPasswordActivity : BaseActivity() {
             startActivity(intent)
             // startActivity(intent)
         } else {
-            toast( "number " + ccp.fullNumber.toString() + " not valid!", Toast.LENGTH_LONG)
+            toast("number " + ccp.fullNumber.toString() + " not valid!", Toast.LENGTH_LONG)
         }
 
 

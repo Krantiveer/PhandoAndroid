@@ -19,7 +19,7 @@ import com.perseverance.phando.home.series.SeriesActivity
 import kotlinx.android.synthetic.main.fragment_related_video.*
 
 
-class RelatedVideoFragment : Fragment() , AdapterClickListener {
+class RelatedVideoFragment : Fragment(), AdapterClickListener {
 
     private var adapter: BaseCategoryListAdapter? = null
     private lateinit var mActivityCompat: AppCompatActivity
@@ -91,7 +91,7 @@ class RelatedVideoFragment : Fragment() , AdapterClickListener {
             intent.putExtra(Key.CATEGORY, data)
             startActivity(intent)
         } else {
-          //  playerViewModel.getVideosMutableLiveData().value = data
+            //  playerViewModel.getVideosMutableLiveData().value = data
         }
 
 

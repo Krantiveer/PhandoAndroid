@@ -8,7 +8,7 @@ import java.security.cert.CertificateException
 import java.security.cert.X509Certificate
 import javax.net.ssl.*
 
- fun setSslClent(okHttpClient: OkHttpClient.Builder) {
+fun setSslClent(okHttpClient: OkHttpClient.Builder) {
     val x509TrustManager = object : X509TrustManager {
         @Throws(CertificateException::class)
         override fun checkClientTrusted(chain: Array<X509Certificate>, authType: String) {

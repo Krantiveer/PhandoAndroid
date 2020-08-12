@@ -14,6 +14,7 @@ import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
+import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
@@ -26,7 +27,6 @@ import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_series.*
 import kotlinx.android.synthetic.main.activity_series.otherInfo
 import kotlinx.android.synthetic.main.activity_series.viewMore
-import kotlinx.android.synthetic.main.content_detail.*
 
 class SeriesActivity : AppCompatActivity(), AdapterClickListener {
 
@@ -34,10 +34,12 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
     private var waitingDialog: WaitingDialog? = null
     private var adapter: SeriesListAdapter? = null
     private lateinit var baseVideo: Video
-    private  val homeViewModel by lazy {
+    private val homeViewModel by lazy {
         ViewModelProviders.of(this).get(SeriesViewModel::class.java)
     }
-
+    private val notificationDao by lazy {
+        AppDatabase.getInstance(this@SeriesActivity)?.notificationDao()
+    }
     val videoListViewModelObserver = Observer<DataLoadingStatus<TVSeriesResponseData>> {
         progressBar.gone()
 
@@ -68,9 +70,10 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
-
+        intent?.getLongExtra(Key.NOTIFICATION_DB_ID, 0)?.let {
+            notificationDao?.markNotificationRead(it)
+        }
         baseVideo = intent.getParcelableExtra(Key.CATEGORY)
-        supportActionBar!!.title = baseVideo.title
         homeViewModel.callForSeries(baseVideo.id.toString()).observe(this, videoListViewModelObserver)
 
         recycler_view_base.layoutManager = LinearLayoutManager(this@SeriesActivity)
@@ -88,7 +91,7 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
                 viewMore.setImageResource(R.drawable.ic_detail_arrow_up)
             }
         }
-        TrackingUtils.sendScreenTracker( BaseConstants.CATEGORY_VIDEO)
+        TrackingUtils.sendScreenTracker(BaseConstants.CATEGORY_VIDEO)
     }
 
 
@@ -97,13 +100,13 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
 
         banner_img.visibility = View.VISIBLE
         // banner_img.layoutParams.height = Utils.getSeriesBannerProportionalHeight(this@SeriesActivity);
-        seriesTitle.text=tvSeriesResponseData.title
+        seriesTitle.text = tvSeriesResponseData.title
         seriesDescription.text = tvSeriesResponseData.detail
 
         val otherText = StringBuilder()
 
         tvSeriesResponseData.rating.let {
-            otherInfo.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this@SeriesActivity,R.drawable.ic_rating), null, null, null)
+            otherInfo.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this@SeriesActivity, R.drawable.ic_rating), null, null, null)
             otherText.append(it)
         }
         tvSeriesResponseData.maturity_rating.let {
@@ -111,25 +114,25 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
         }
         tvSeriesResponseData.genres.let {
 
-            otherText.append(" | "+it.joinToString())
+            otherText.append(" | " + it.joinToString())
         }
 
-        otherInfo.text=otherText.toString()
+        otherInfo.text = otherText.toString()
 
         Utils.displayImage(this@SeriesActivity, tvSeriesResponseData.thumbnail,
                 R.drawable.video_placeholder, R.drawable.error_placeholder, banner_img)
 
 
-           adapter!!.addAll(tvSeriesResponseData.seasons)
+        adapter!!.addAll(tvSeriesResponseData.seasons)
 
-           play.setOnClickListener {
-            if (tvSeriesResponseData.seasons.isNullOrEmpty()){
+        play.setOnClickListener {
+            if (tvSeriesResponseData.seasons.isNullOrEmpty()) {
                 return@setOnClickListener
             }
-               val seasons = tvSeriesResponseData.seasons
-               if (seasons.isNotEmpty()){
-                   val lastSeason = seasons.get(seasons.size - 1)
-                   lastSeason.trailer?.let {
+            val seasons = tvSeriesResponseData.seasons
+            if (seasons.isNotEmpty()) {
+                val lastSeason = seasons.get(seasons.size - 1)
+                lastSeason.trailer?.let {
                     if (Utils.isNetworkAvailable(this@SeriesActivity)) {
 
                         val baseVideo = Video()
@@ -144,7 +147,7 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
                         DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
                     }
 
-                }?:return@setOnClickListener
+                } ?: return@setOnClickListener
 
             }
 //               tvSeriesResponseData.seasons.get(0).episodes.get(0).let {

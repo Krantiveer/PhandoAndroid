@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 
 class DownloadBroadcastReceiver : BroadcastReceiver() {
-    val downloadBroadcastReceiverListener:DownloadBroadcastReceiverListener?=null
+    val downloadBroadcastReceiverListener: DownloadBroadcastReceiverListener? = null
     override fun onReceive(context: Context, intent: Intent) {
 
         downloadBroadcastReceiverListener?.doWork(intent)

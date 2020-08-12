@@ -1,4 +1,3 @@
-
 package com.perseverance.phando.home.series
 
 import android.content.Context

@@ -892,7 +892,7 @@ public class PhandoPlayerView extends FrameLayout implements
 
         @Override
         public void onPlayerStateChanged(boolean playWhenReady, @Player.State int playbackState) {
-            Log.e("setting-", getVideoString());
+          //  Log.e("setting-", getVideoString());
             switch (playbackState) {
 
                 case Player.STATE_ENDED:

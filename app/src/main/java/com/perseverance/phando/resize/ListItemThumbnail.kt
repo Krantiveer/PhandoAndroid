@@ -9,7 +9,7 @@ class ListItemThumbnail(imageOrientation: Int? = 0) : ThumbnailResizer {
     init {
         imageOrientation?.let {
             if (it == 1) {
-                HEIGHT_SCALE_FACTOR=1.33
+                HEIGHT_SCALE_FACTOR = 1.33
             }
         }
     }

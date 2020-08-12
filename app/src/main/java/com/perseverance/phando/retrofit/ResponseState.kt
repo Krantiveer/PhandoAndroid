@@ -7,11 +7,11 @@ package com.perseverance.phando.retrofit
 
 data class ResponseState private constructor(
         val status: Status,
-        val msg:String?=null) {
+        val msg: String? = null) {
     companion object {
-        val LOADED=ResponseState(Status.SUCCESS)
-        val LOADING=ResponseState(Status.RUNNING)
-        fun error(msg:String?)=ResponseState(Status.FAILED,msg)
+        val LOADED = ResponseState(Status.SUCCESS)
+        val LOADING = ResponseState(Status.RUNNING)
+        fun error(msg: String?) = ResponseState(Status.FAILED, msg)
     }
 }
 

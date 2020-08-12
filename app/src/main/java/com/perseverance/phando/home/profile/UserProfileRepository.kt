@@ -22,25 +22,25 @@ class UserProfileRepository(private val application: Application) {
     private val apiService by lazy { ApiClient.getLoginClient().create(ApiService::class.java) }
 
     fun fetchProfileData(): MutableLiveData<DataLoadingStatus<UserProfileData>> {
-        var data:MutableLiveData<DataLoadingStatus<UserProfileData>> = MutableLiveData<DataLoadingStatus<UserProfileData>>()
+        var data: MutableLiveData<DataLoadingStatus<UserProfileData>> = MutableLiveData<DataLoadingStatus<UserProfileData>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
         val call = apiService.userProfile
         call.enqueue(object : Callback<UserProfileData> {
             override fun onResponse(call: Call<UserProfileData>, response: Response<UserProfileData>) {
-             if (response.isSuccessful){
-                 data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
-             }else{
-                 val errorModel  = Gson().fromJson(response.errorBody().string(),ErrorModel::class.java)
-                 data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
-             }
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
 
             }
 
             override fun onFailure(call: Call<UserProfileData>?, t: Throwable?) {
-                if (t is ApiClient.NoConnectivityException){
-                   // data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                if (t is ApiClient.NoConnectivityException) {
+                    // data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, null))
-                }else{
+                } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load profile data"))
                 }
 
@@ -49,9 +49,10 @@ class UserProfileRepository(private val application: Application) {
 
         return data
     }
-    fun dologin(cred:Cred): MutableLiveData<DataLoadingStatus<LoginResponse>>  {
 
-        var data:MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
+    fun dologin(cred: Cred): MutableLiveData<DataLoadingStatus<LoginResponse>> {
+
+        var data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.doLogin(cred)
@@ -59,28 +60,29 @@ class UserProfileRepository(private val application: Application) {
 
             override fun onResponse(call: Call<LoginResponse>?, response: Response<LoginResponse>) {
 
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
-                }else{
-                    val errorModel  = Gson().fromJson(response.errorBody().string(),ErrorModel::class.java)
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
             }
 
             override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
-                if (t is ApiClient.NoConnectivityException){
+                if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
-                }else{
+                } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to login"))
                 }
             }
         })
         return data
     }
-    fun doSociallogin(socialLoggedInUser: SocialLoggedInUser): MutableLiveData<DataLoadingStatus<LoginResponse>>  {
 
-        var data:MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
+    fun doSociallogin(socialLoggedInUser: SocialLoggedInUser): MutableLiveData<DataLoadingStatus<LoginResponse>> {
+
+        var data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.doSocialLogin(socialLoggedInUser)
@@ -88,19 +90,19 @@ class UserProfileRepository(private val application: Application) {
 
             override fun onResponse(call: Call<LoginResponse>?, response: Response<LoginResponse>) {
 
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
-                }else{
-                    val errorModel  = Gson().fromJson(response.errorBody().string(),ErrorModel::class.java)
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
             }
 
             override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
-                if (t is ApiClient.NoConnectivityException){
+                if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
-                }else{
+                } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to login"))
                 }
             }
@@ -109,9 +111,9 @@ class UserProfileRepository(private val application: Application) {
     }
 
 
-    fun doRegister(map:Map<String,String>): MutableLiveData<DataLoadingStatus<LoginResponse>>  {
+    fun doRegister(map: Map<String, String>): MutableLiveData<DataLoadingStatus<LoginResponse>> {
 
-        var data:MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
+        var data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.doRegister(map)
@@ -119,19 +121,19 @@ class UserProfileRepository(private val application: Application) {
 
             override fun onResponse(call: Call<LoginResponse>?, response: Response<LoginResponse>) {
 
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
-                }else{
-                    val errorModel  = Gson().fromJson(response.errorBody().string(),ErrorModel::class.java)
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
             }
 
             override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
-                if (t is ApiClient.NoConnectivityException){
+                if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
-                }else{
+                } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to register user"))
                 }
             }
@@ -139,9 +141,9 @@ class UserProfileRepository(private val application: Application) {
         return data
     }
 
-    fun getOTP(map:Map<String,String>): MutableLiveData<DataLoadingStatus<BaseResponse>>  {
+    fun getOTP(map: Map<String, String>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
 
-        var data:MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+        var data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.getOTP(map)
@@ -149,19 +151,19 @@ class UserProfileRepository(private val application: Application) {
 
             override fun onResponse(call: Call<BaseResponse>?, response: Response<BaseResponse>) {
 
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
-                }else{
-                    val errorModel  = Gson().fromJson(response.errorBody().string(),ErrorModel::class.java)
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
             }
 
             override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
-                if (t is ApiClient.NoConnectivityException){
+                if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
-                }else{
+                } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to get otp"))
                 }
             }
@@ -169,9 +171,9 @@ class UserProfileRepository(private val application: Application) {
         return data
     }
 
-    fun verifyOTP(map:Map<String,String>): MutableLiveData<DataLoadingStatus<LoginResponse>>  {
+    fun verifyOTP(map: Map<String, String>): MutableLiveData<DataLoadingStatus<LoginResponse>> {
 
-        var data:MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
+        var data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.verifyOTP(map)
@@ -179,19 +181,19 @@ class UserProfileRepository(private val application: Application) {
 
             override fun onResponse(call: Call<LoginResponse>?, response: Response<LoginResponse>) {
 
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
-                }else{
-                    val errorModel  = Gson().fromJson(response.errorBody().string(),ErrorModel::class.java)
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
             }
 
             override fun onFailure(call: Call<LoginResponse>?, t: Throwable?) {
-                if (t is ApiClient.NoConnectivityException){
+                if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
-                }else{
+                } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to verify otp"))
                 }
             }
@@ -199,26 +201,26 @@ class UserProfileRepository(private val application: Application) {
         return data
     }
 
-    fun verifyOTPForForgotPassword(map :Map<String,String>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
-        var data:MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+    fun verifyOTPForForgotPassword(map: Map<String, String>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
+        var data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Updating order status"))
         val call = apiService.verifyPasswordOTP(map)
 
         call.enqueue(object : Callback<BaseResponse> {
             override fun onResponse(call: Call<BaseResponse>, response: Response<BaseResponse>) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
-                }else{
-                    val errorModel  = Gson().fromJson(response.errorBody().string(),ErrorModel::class.java)
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
             }
 
             override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
-                if (t is ApiClient.NoConnectivityException){
+                if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
-                }else{
+                } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
                 }
             }
@@ -226,6 +228,7 @@ class UserProfileRepository(private val application: Application) {
 
         return data
     }
+
     suspend fun removeUserDownload(param: ArrayList<String>): DataLoadingStatus<BaseResponse> {
         try {
             val response = apiService.removeUserDownload(param).execute()

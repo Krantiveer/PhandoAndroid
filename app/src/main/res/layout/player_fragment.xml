@@ -15,12 +15,12 @@
         app:fastforward_increment="10000"
         app:rewind_increment="10000"
         app:controller_layout_id="@layout/player_controller" />
+
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@id/video_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        />
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/imgHeaderImage"

@@ -18,7 +18,7 @@ public class Language implements Serializable {
     @PrimaryKey
     @NotNull
     @SerializedName("id")
-    private String id ="";
+    private String id = "";
 
 
     @SerializedName("language")

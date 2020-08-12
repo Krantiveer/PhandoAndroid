@@ -19,7 +19,7 @@ class LoginActivity : AppCompatActivity() {
         TrackingUtils.sendScreenTracker(BaseConstants.LOGIN)
         val msg = intent.getStringExtra("msg")
         msg?.let {
-            DialogUtils.showDialog(this,"Error!",it,"Close",null,object : AppDialogListener {
+            DialogUtils.showDialog(this, "Error!", it, "Close", null, object : AppDialogListener {
                 override fun onNegativeButtonPressed() {
 
                 }

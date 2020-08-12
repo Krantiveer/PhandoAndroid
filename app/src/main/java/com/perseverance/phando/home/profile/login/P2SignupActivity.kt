@@ -13,7 +13,7 @@ import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_p2_signup.*
 
 class P2SignupActivity : BaseSignupActivity() {
-    var  countryCode =""
+    var countryCode = ""
 
     override fun onRegisterSuccess(loginResponse: LoginResponse) {
         val bundle = bundleOf(
@@ -31,6 +31,7 @@ class P2SignupActivity : BaseSignupActivity() {
 //        intent.putExtra("FRON_SIGNUP", true)
 //        startActivity(intent)
     }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_p2_signup, container, false)
     }
@@ -59,7 +60,7 @@ class P2SignupActivity : BaseSignupActivity() {
             } else if (!ccp.isValidFullNumber) {
                 Toast.makeText(appCompatActivity, "number " + ccp.fullNumber.toString() + " not valid!", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
-            }else if (checkPassword(input_password.text.toString(), input_confirm_password.text.toString())) {
+            } else if (checkPassword(input_password.text.toString(), input_confirm_password.text.toString())) {
                 countryCode = ccp.selectedCountryCode
                 val map: MutableMap<String, String> = HashMap()
                 map["email"] = input_email.text.toString()

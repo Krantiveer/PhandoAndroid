@@ -29,4 +29,6 @@ public class Key {
     public static final String KEY_SUNSIGNS = "key_sunsigns";
     public static final String KEY_TYPES = "key_types";
     public static final String KEY_LANGUAGE = "key_language";
+
+    public static final String NOTIFICATION_DB_ID = "key_notification_db_id";
 }

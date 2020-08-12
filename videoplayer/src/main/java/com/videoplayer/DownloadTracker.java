@@ -96,11 +96,11 @@ public class DownloadTracker {
 
     public boolean isDownloaded(Uri uri) {
         Download download = downloads.get(uri);
-        try {
-            Log.e("isDownloaded", download.getPercentDownloaded() + "%");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Log.e("isDownloaded", download.getPercentDownloaded() + "%");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return download != null && download.state == Download.STATE_COMPLETED;
     }
 
@@ -189,7 +189,7 @@ public class DownloadTracker {
 
         @Override
         public void onDownloadChanged(DownloadManager downloadManager, Download download) {
-            Log.e("DownloadManager", download.toString());
+          //  Log.e("DownloadManager", download.toString());
             downloads.put(download.request.uri, download);
             for (Listener listener : listeners) {
                 listener.onDownloadsChanged();
@@ -237,14 +237,14 @@ public class DownloadTracker {
         @Override
         public void onPrepared(DownloadHelper helper) {
             if (helper.getPeriodCount() == 0) {
-                Log.d(TAG, "No periods found. Downloading entire stream.");
+              //  Log.d(TAG, "No periods found. Downloading entire stream.");
                 startDownload();
                 downloadHelper.release();
                 return;
             }
             mappedTrackInfo = downloadHelper.getMappedTrackInfo(/* periodIndex= */ 0);
             if (!TrackSelectionDialog.willHaveContent(mappedTrackInfo)) {
-                Log.d(TAG, "No dialog content. Downloading entire stream.");
+               // Log.d(TAG, "No dialog content. Downloading entire stream.");
                 startDownload();
                 downloadHelper.release();
                 return;

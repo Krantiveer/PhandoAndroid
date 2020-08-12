@@ -70,7 +70,7 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
         val helper = SadhnaDBHelper(this)
         helper.addSearchHistory(query)
 
-        TrackingUtils.sendScreenTracker( "SearchView")
+        TrackingUtils.sendScreenTracker("SearchView")
     }
 
 
@@ -89,7 +89,7 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
 
     private fun loadSearchResult(query: String?, showProgress: Boolean) {
         val presenter = SearchPresenterImpl(this)
-        presenter.search(pageCount, query, showProgress,null)
+        presenter.search(pageCount, query, showProgress, null)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -114,7 +114,7 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
         */
             /*startActivity(MediaDetailActivity.getDetailIntent(this, item))
             Utils.animateActivity(this, "next")*/
-            if("T".equals(item.type)){
+            if ("T".equals(item.type)) {
                 val intent = Intent(this@SearchResultActivity, SeriesActivity::class.java)
                 intent.putExtra(Key.CATEGORY, item)
                 startActivity(intent)
@@ -176,7 +176,7 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
 
     override fun onSearchResultSuccess(videos: List<Video>) {
         if (pageCount == 0 && videos.size <= 0) {
-           // DialogUtils.showMessage(this, "No result found for \"$query\"", Toast.LENGTH_SHORT) { showSearchScreen() }
+            // DialogUtils.showMessage(this, "No result found for \"$query\"", Toast.LENGTH_SHORT) { showSearchScreen() }
             return
         }
 
@@ -185,7 +185,7 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
         }
         adapter!!.addAll(videos)
         footerProgress.visibility = View.GONE
-       // adapter!!.notifyDataSetChanged()
+        // adapter!!.notifyDataSetChanged()
     }
 
     override fun onSearchResultError(errorMessage: String) {
@@ -204,9 +204,9 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
             startActivity(intent);*/
             /*startActivity(MediaDetailActivity.getDetailIntent(this, data as Video))
             Utils.animateActivity(this, "next")*/
-            if(data is Video) {
+            if (data is Video) {
                 val video = data
-                if("T".equals(video.type)){
+                if ("T".equals(video.type)) {
                     val intent = Intent(this@SearchResultActivity, SeriesActivity::class.java)
                     intent.putExtra(Key.CATEGORY, video)
                     startActivity(intent)

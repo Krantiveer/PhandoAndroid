@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:text="Test ad will appear here!"
         android:gravity="center"
-        android:textColor="@color/red_light"/>
+        android:textColor="@color/red_light" />
 
 
 </LinearLayout>

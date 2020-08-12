@@ -18,6 +18,7 @@
         app:matProg_barColor="@color/progress_bar_color"
         app:matProg_progressIndeterminate="true"
         app:matProg_rimColor="@color/progress_rim_color" />
+
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -47,8 +48,7 @@
             android:text="Program Name"
             android:textStyle="bold"
             app:hintEnabled="true"
-            app:hintAnimationEnabled="false"
-            />
+            app:hintAnimationEnabled="false" />
 
 
         <com.google.android.material.textfield.TextInputEditText
@@ -65,9 +65,7 @@
             android:text="Date"
             android:textStyle="bold"
             app:hintEnabled="true"
-            app:hintAnimationEnabled="false"
-            />
-
+            app:hintAnimationEnabled="false" />
 
 
         <com.google.android.material.textfield.TextInputEditText
@@ -84,11 +82,11 @@
             android:text="Start Time"
             android:textStyle="bold"
             app:hintEnabled="true"
-            app:hintAnimationEnabled="false"
-            />
+            app:hintAnimationEnabled="false" />
 
 
     </LinearLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipetorefresh_base"
         android:layout_width="match_parent"

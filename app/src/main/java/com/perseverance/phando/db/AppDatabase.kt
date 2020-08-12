@@ -5,8 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.perseverance.phando.AdsUtil.AdModel
+import com.perseverance.phando.AdsUtil.AdModelDao
 import com.perseverance.phando.db.dao.*
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
+import com.perseverance.phando.notification.NotificationDao
+import com.perseverance.phando.notification.NotificationData
 
 
 @Database(entities = arrayOf(
@@ -14,8 +18,10 @@ import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
         Filter::class,
         Language::class,
         APIData::class,
-        DownloadMetadata::class
-), version = 4)
+        DownloadMetadata::class,
+        AdModel::class,
+        NotificationData::class
+), version = 5)
 @TypeConverters(RoomDataTypeConvertor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
@@ -23,6 +29,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun languageDao(): LanguageDao
     abstract fun apiDataDao(): APIDataDao
     abstract fun downloadMetadataDao(): DownloadMetadataDao
+    abstract fun adModelDao(): AdModelDao
+    abstract fun notificationDao(): NotificationDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

@@ -19,6 +19,7 @@ import com.perseverance.patrikanews.utils.log
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.phando.BaseActivity
 import com.perseverance.phando.R
+import com.perseverance.phando.utils.MyLog
 import org.json.JSONException
 import java.util.*
 
@@ -28,10 +29,10 @@ open abstract class BaseSocialLoginActivity : BaseActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var callbackManager: CallbackManager
     abstract fun onSocialUserLoginSuccess(loggedInUser: SocialLoggedInUser)
-    protected  fun showLoader(show: Boolean){
-        if (show){
+    protected fun showLoader(show: Boolean) {
+        if (show) {
             showProgress()
-        }else{
+        } else {
             dismissProgress()
         }
     }
@@ -99,7 +100,7 @@ open abstract class BaseSocialLoginActivity : BaseActivity() {
                 // toast("sign success")
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
+                MyLog.d(TAG, "Google sign in failed")
                 toast("Google sign in failed")
                 showLoader(false)
             }

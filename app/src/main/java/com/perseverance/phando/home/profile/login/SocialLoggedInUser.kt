@@ -6,6 +6,6 @@ package com.perseverance.phando.home.profile.login
 data class SocialLoggedInUser(
         val socialid: String?,
         val name: String?,
-        val email:String?,
-        val type:String?
+        val email: String?,
+        val type: String?
 )

@@ -19,27 +19,27 @@ class SearchRepository(private val application: Application) {
 
     private val apiService by lazy { ApiClient.getLoginClient().create(ApiService::class.java) }
 
-    fun searchData(dataFilters:DataFilters): MutableLiveData<DataLoadingStatus<List<SearchResult>>> {
+    fun searchData(dataFilters: DataFilters): MutableLiveData<DataLoadingStatus<List<SearchResult>>> {
 
-        var data:MutableLiveData<DataLoadingStatus<List<SearchResult>>> = MutableLiveData<DataLoadingStatus<List<SearchResult>>>()
+        var data: MutableLiveData<DataLoadingStatus<List<SearchResult>>> = MutableLiveData<DataLoadingStatus<List<SearchResult>>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
         //val call: Call<List<SearchResult>> = apiService.searchVideo(dataFilters.query, dataFilters.genre_id, dataFilters.filter, "0,100")
 
-        val call: Call<List<SearchResult>>? =null
-                call?.enqueue(object : Callback<List<SearchResult>> {
+        val call: Call<List<SearchResult>>? = null
+        call?.enqueue(object : Callback<List<SearchResult>> {
             override fun onResponse(call: Call<List<SearchResult>>, response: Response<List<SearchResult>>) {
-                if (response.isSuccessful){
+                if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
-                }else{
-                    val errorModel  = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
             }
 
             override fun onFailure(call: Call<List<SearchResult>>?, t: Throwable?) {
-                if (t is ApiClient.NoConnectivityException){
+                if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
-                }else{
+                } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
                 }
             }

@@ -4,14 +4,13 @@
     android:tint="@color/video_detail_icon_tint"
     android:viewportWidth="48"
     android:viewportHeight="48">
-  <group>
-    <clip-path
-        android:pathData="M0,0h48v48h-48z"/>
-    <path
-        android:pathData="M31.989,21.277L27.356,21.277L27.356,14.391h-6.71v6.886L16.012,21.277l7.988,8.008ZM16.012,31.527v2.242L31.989,33.769L31.989,31.527Z"
-        android:fillColor="#00a7db"/>
-    <path
-        android:pathData="M24,8A16.047,16.047 0,0 0,8 24,16.047 16.047,0 0,0 24,40 16.047,16.047 0,0 0,40 24,16.047 16.047,0 0,0 24,8ZM24,38.4A14.34,14.34 0,0 1,9.6 24,14.34 14.34,0 0,1 24,9.6 14.34,14.34 0,0 1,38.4 24,14.34 14.34,0 0,1 24,38.4Z"
-        android:fillColor="#00a7db"/>
-  </group>
+    <group>
+        <clip-path android:pathData="M0,0h48v48h-48z" />
+        <path
+            android:pathData="M31.989,21.277L27.356,21.277L27.356,14.391h-6.71v6.886L16.012,21.277l7.988,8.008ZM16.012,31.527v2.242L31.989,33.769L31.989,31.527Z"
+            android:fillColor="#00a7db" />
+        <path
+            android:pathData="M24,8A16.047,16.047 0,0 0,8 24,16.047 16.047,0 0,0 24,40 16.047,16.047 0,0 0,40 24,16.047 16.047,0 0,0 24,8ZM24,38.4A14.34,14.34 0,0 1,9.6 24,14.34 14.34,0 0,1 24,9.6 14.34,14.34 0,0 1,38.4 24,14.34 14.34,0 0,1 24,38.4Z"
+            android:fillColor="#00a7db" />
+    </group>
 </vector>

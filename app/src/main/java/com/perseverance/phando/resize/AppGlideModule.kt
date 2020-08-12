@@ -5,6 +5,6 @@ import com.bumptech.glide.module.AppGlideModule
 
 
 @GlideModule
-class PhandoGlideModule : AppGlideModule(){
+class PhandoGlideModule : AppGlideModule() {
 
 }

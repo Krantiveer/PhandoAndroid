@@ -161,7 +161,7 @@ object DialogUtils {
 
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, activity.resources.getString(R.string.close)
         ) { dialog, which ->
-           // finish()
+            // finish()
         }
         alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, activity.resources.getString(R.string.no)
         ) { dialog, which ->
@@ -197,6 +197,7 @@ object DialogUtils {
         }
 
     }
+
     fun showDialog(activity: AppCompatActivity, title: String, message: String, positiveButtonTitle: String?, negativeButtonTitle: String?, listener: AppDialogListener?, cancelable: Boolean) {
         val alertDialog = MaterialAlertDialogBuilder(activity, R.style.AlertDialogTheme).create()
         alertDialog.setIcon(R.mipmap.ic_launcher)
@@ -275,7 +276,7 @@ object DialogUtils {
     }
 
     fun showNetworkErrorToast() {
-        Toast.makeText(Session.instance,BaseConstants.NETWORK_ERROR,Toast.LENGTH_LONG).show()
+        Toast.makeText(Session.instance, BaseConstants.NETWORK_ERROR, Toast.LENGTH_LONG).show()
     }
 
 

@@ -16,10 +16,10 @@ public class BaseRecycleMarginDecoration extends RecyclerView.ItemDecoration {
 
     public BaseRecycleMarginDecoration(Context context) {
         /* Assign value from xml whatever you want to make as margin*/
-        margin = (int) (context.getResources().getDisplayMetrics().widthPixels*0.033);
-        MyLog.e("pixel",""+(int) (context.getResources().getDisplayMetrics().widthPixels) );
-        MyLog.e("pixel",""+margin );
-        MyLog.e("pixel",""+(int) (context.getResources().getDisplayMetrics().widthPixels*0.45) );
+        margin = (int) (context.getResources().getDisplayMetrics().widthPixels * 0.033);
+        MyLog.e("pixel", "" + (int) (context.getResources().getDisplayMetrics().widthPixels));
+        MyLog.e("pixel", "" + margin);
+        MyLog.e("pixel", "" + (int) (context.getResources().getDisplayMetrics().widthPixels * 0.45));
     }
 
     @Override
@@ -27,9 +27,9 @@ public class BaseRecycleMarginDecoration extends RecyclerView.ItemDecoration {
         super.getItemOffsets(outRect, view, parent, state);
 
         outRect.top = margin;
-      //  outRect.left = margin;
-       // outRect.right = margin;
-     //   outRect.bottom = margin;
+        //  outRect.left = margin;
+        // outRect.right = margin;
+        //   outRect.bottom = margin;
 
         /*int index = parent.getChildAdapterPosition(view);
 

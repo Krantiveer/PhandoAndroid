@@ -152,7 +152,7 @@ public class Utils {
         ThumbnailResizer thumbnailResizer = new ListItemThumbnail();
         double imageWidth = thumbnailResizer.getWidth() * 1.0;
         String imageUrl = "https://imstool.phando.com/?image_url=" + url + "&width=" + imageWidth + "&service=resize&aspect_ratio=true";
-       // MyLog.e("imageUrl", imageUrl);
+        // MyLog.e("imageUrl", imageUrl);
         if (activity != null) {
             Glide.with(activity)
                     .setDefaultRequestOptions(new RequestOptions().timeout(30000))
@@ -164,7 +164,6 @@ public class Utils {
                     .into(imageView);
         }
     }
-
 
 
     public static void displayCircularImage(final Context activity, final String url, final int placeHolder, final int errorPlaceholder, final ImageView imageView) {
@@ -221,8 +220,6 @@ public class Utils {
                     .into(imageView);
         }
     }
-
-
 
 
     public static String calculateAge(long timestamp) {
@@ -373,7 +370,7 @@ public class Utils {
 
         if (error == null) {
             return BaseConstants.APPLICATION_ERROR;
-        } else if (error instanceof UnknownHostException||error instanceof ApiClient.NoConnectivityException) {
+        } else if (error instanceof UnknownHostException || error instanceof ApiClient.NoConnectivityException) {
             return BaseConstants.NETWORK_ERROR;
         } else if (error instanceof ConnectException) {
             return BaseConstants.SERVER_CONNECTION_ERROR;

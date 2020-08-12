@@ -23,6 +23,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.perseverance.phando.resize.ThumbnailResizer
+import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.Utils
 
 fun View.visible() {
@@ -66,15 +67,15 @@ fun Fragment.toast(text: String, duration: Int = Toast.LENGTH_SHORT) {
 }
 
 fun AppCompatActivity.log(message: String, tag: String = "*AppLog*") {
-    Log.d(tag, message)
+    MyLog.d(tag, message)
 }
 
 fun Fragment.log(message: String, tag: String = "*AppLog*") {
-    Log.d(tag, message)
+    MyLog.d(tag, message)
 }
 
 fun log(message: String, tag: String = "*AppLog*") {
-    Log.d(tag, message)
+    MyLog.d(tag, message)
 }
 
 

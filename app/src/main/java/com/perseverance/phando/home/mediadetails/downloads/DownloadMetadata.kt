@@ -11,6 +11,6 @@ data class DownloadMetadata(
         var title: String?,
         var description: String?,
         var thumbnail: String?,
-        var media_url: String?=null,
-        var status:Int?=0
-):Serializable
+        var media_url: String? = null,
+        var status: Int? = 0
+) : Serializable

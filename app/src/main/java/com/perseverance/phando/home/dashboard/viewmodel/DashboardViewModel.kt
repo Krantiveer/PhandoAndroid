@@ -19,13 +19,12 @@ import retrofit2.Response
 
 class DashboardViewModel(application: Application) : AndroidViewModel(application) {
 
-    private var appInfoMutableLiveData: MutableLiveData<AppInfoModel>?= null
+    private var appInfoMutableLiveData: MutableLiveData<AppInfoModel>? = null
 
-    private  var apiService: ApiService = ApiClient.getLoginClient().create(ApiService::class.java)
+    private var apiService: ApiService = ApiClient.getLoginClient().create(ApiService::class.java)
 
 
     fun getAppInfoMutableLiveData(): MutableLiveData<AppInfoModel> {
-
 
 
         if (appInfoMutableLiveData == null) {
@@ -34,7 +33,6 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 
         return appInfoMutableLiveData as MutableLiveData<AppInfoModel>
     }
-
 
 
     fun callForAppInfo() {
@@ -66,7 +64,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
                 } else {
                     val data = response.body()
                     if (data.isNotEmpty()) {
-                       val categoryDao = AppDatabase.getInstance(getApplication())?.categoryDao()
+                        val categoryDao = AppDatabase.getInstance(getApplication())?.categoryDao()
                         categoryDao?.deleteAll()
                         categoryDao?.insertAll(data)
                     }
@@ -75,7 +73,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             }
 
             override fun onFailure(call: Call<List<Category>>?, t: Throwable?) {
-                MyLog.e("","Filter not found")
+                MyLog.e("", "Filter not found")
             }
         })
     }
@@ -99,10 +97,11 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             }
 
             override fun onFailure(call: Call<ArrayList<Filter>>?, t: Throwable?) {
-                MyLog.e("","Filter not found")
+                MyLog.e("", "Filter not found")
             }
         })
     }
+
     fun callLanguage() {
 
         val call: Call<ArrayList<Language>> = apiService.language
@@ -123,7 +122,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             }
 
             override fun onFailure(call: Call<ArrayList<Language>>?, t: Throwable?) {
-                MyLog.e("","Language not found")
+                MyLog.e("", "Language not found")
             }
         })
     }

@@ -15,7 +15,7 @@ import com.perseverance.phando.ui.WaitingDialog
 open class BaseActivity : Fragment() {
     protected var waitingDialog: WaitingDialog? = null
     lateinit var appCompatActivity: AppCompatActivity
-    protected lateinit var navigator :NavController
+    protected lateinit var navigator: NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         waitingDialog = WaitingDialog(appCompatActivity)
@@ -24,8 +24,8 @@ open class BaseActivity : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is AppCompatActivity){
-            appCompatActivity=context
+        if (context is AppCompatActivity) {
+            appCompatActivity = context
         }
     }
 
@@ -33,16 +33,17 @@ open class BaseActivity : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         navigator = view.findNavController()
     }
-    fun showProgress(message: String?=null) {
 
-            if (!appCompatActivity.isFinishing) {
-                waitingDialog?.let { waitingDialog ->
-                    message?.let {
-                        waitingDialog.setMessage(it)
-                    }
-                    waitingDialog.show()
+    fun showProgress(message: String? = null) {
+
+        if (!appCompatActivity.isFinishing) {
+            waitingDialog?.let { waitingDialog ->
+                message?.let {
+                    waitingDialog.setMessage(it)
                 }
+                waitingDialog.show()
             }
+        }
 
     }
 

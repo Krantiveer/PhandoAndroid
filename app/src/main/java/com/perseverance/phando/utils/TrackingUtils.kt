@@ -13,18 +13,18 @@ object TrackingUtils {
         Session.instance?.defaultTracker
     }
 
-    fun sendScreenTracker(screenName: String,title:String?=null) {
+    fun sendScreenTracker(screenName: String, title: String? = null) {
         gaTracker?.setScreenName(screenName)
         val screenViewBuilder = HitBuilders.ScreenViewBuilder()
         title?.let {
-            screenViewBuilder.set("&dt",it)
+            screenViewBuilder.set("&dt", it)
         }
         gaTracker?.send(screenViewBuilder.build())
         MyLog.e("GA tracker sent: $screenName")
     }
 
-    fun sendVideoEvent(label: String?,category:String?,action: String?) {
-        Log.e("VideoEvent",label+" "+action)
+    fun sendVideoEvent(label: String?, category: String?, action: String?) {
+        MyLog.e("VideoEvent", label + " " + action)
         gaTracker?.send(HitBuilders.EventBuilder()
                 .setCategory(if (category.isNullOrEmpty()) "Phando Video" else category)
                 .setLabel(label)

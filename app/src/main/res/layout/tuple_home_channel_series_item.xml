@@ -33,7 +33,7 @@
             android:layout_margin="8dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/white"
-            tools:ignore="MissingPrefix"/>
+            tools:ignore="MissingPrefix" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

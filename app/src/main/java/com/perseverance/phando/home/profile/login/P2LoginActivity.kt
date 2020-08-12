@@ -17,6 +17,4 @@ class P2LoginActivity : BaseUserLoginActivity() {
     }
 
 
-
-
 }

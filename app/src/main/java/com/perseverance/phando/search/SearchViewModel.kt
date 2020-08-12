@@ -11,17 +11,18 @@ import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 /**
  * Created by QAIT\amarkhatri.
  */
-class SearchViewModel(application: Application):BaseViewModel(application) {
+class SearchViewModel(application: Application) : BaseViewModel(application) {
 
     private var userProfileRepository: SearchRepository = SearchRepository(application)
     private val reloadTrigger = MutableLiveData<DataFilters>()
 
-    var data : LiveData<DataLoadingStatus<List<SearchResult>>>? = Transformations.switchMap(reloadTrigger) {
+    var data: LiveData<DataLoadingStatus<List<SearchResult>>>? = Transformations.switchMap(reloadTrigger) {
         userProfileRepository.searchData(it)
     }
-    fun getResultData() : LiveData<DataLoadingStatus<List<SearchResult>>>? = data
 
-    fun refreshSearch(dataFilters:DataFilters) {
+    fun getResultData(): LiveData<DataLoadingStatus<List<SearchResult>>>? = data
+
+    fun refreshSearch(dataFilters: DataFilters) {
         reloadTrigger.value = dataFilters
     }
 

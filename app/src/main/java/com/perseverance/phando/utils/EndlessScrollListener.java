@@ -56,7 +56,7 @@ public abstract class EndlessScrollListener extends RecyclerView.OnScrollListene
             // End has been reached
 
             // Do something
-            currentPage+= BaseConstants.LIMIT_VIDEOS;
+            currentPage += BaseConstants.LIMIT_VIDEOS;
             onLoadMore(currentPage);
             loading = true;
         }

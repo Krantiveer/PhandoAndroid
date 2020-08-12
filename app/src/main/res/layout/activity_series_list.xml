@@ -17,9 +17,9 @@
             app:titleTextColor="@color/textColorPrimary"
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:theme="@style/HomeToolbarTheme"
-            fontPath="fonts/Roboto-Bold.ttf"/>
+            fontPath="fonts/Roboto-Bold.ttf" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_series_list"/>
+    <include layout="@layout/content_series_list" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

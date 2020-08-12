@@ -17,11 +17,12 @@ class SearchResultListViewHolder(itemView: View, listener: AdapterClickListener)
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
 
     }
+
     override fun onBind(item: SearchResult) {
         itemView.tag = item
-        if(item.is_free == 0) { // if paid video then show premium icon
+        if (item.is_free == 0) { // if paid video then show premium icon
             itemView.free.visible()
-        }else{
+        } else {
             itemView.free.gone()
         }
 
@@ -34,4 +35,4 @@ class SearchResultListViewHolder(itemView: View, listener: AdapterClickListener)
 
 
     }
-    }
+}

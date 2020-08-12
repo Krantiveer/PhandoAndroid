@@ -47,15 +47,15 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
     companion object {
         const val ARG_VIDEO = "param_video"
         fun getDetailIntent(context: Context, downloadMetadata: DownloadMetadata): Intent {
-                val intent = Intent(context, OffLineMediaDetailActivity::class.java)
-                intent.apply {
-                    val arg = Bundle()
-                    arg.apply {
-                        putSerializable(ARG_VIDEO, downloadMetadata)
-                    }
-                    putExtras(arg)
+            val intent = Intent(context, OffLineMediaDetailActivity::class.java)
+            intent.apply {
+                val arg = Bundle()
+                arg.apply {
+                    putSerializable(ARG_VIDEO, downloadMetadata)
                 }
-                return intent
+                putExtras(arg)
+            }
+            return intent
 
         }
     }
@@ -75,6 +75,7 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
     val downloadMetadataDao by lazy {
         AppDatabase.getInstance(this)?.downloadMetadataDao()
     }
+
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
         playerThumbnailContainer.gone()
         phandoPlayerView.visible()
@@ -164,12 +165,12 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
 
                 override fun onPositiveButtonPressed() {
                     downloadMetadataDao?.insert(downloadMetadata!!.apply {
-                       status=1
+                        status = 1
                     })
                     VideoSdkUtil.deleteDownloadedInfo(application, this@OffLineMediaDetailActivity.downloadMetadata?.media_url)
-                   Handler().postDelayed({
-                       finish()
-                   },1000)
+                    Handler().postDelayed({
+                        finish()
+                    }, 1000)
 
                 }
 
@@ -232,6 +233,7 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
         }
 
     }
+
     fun landscope() {
         root.fitsSystemWindows = false;
         root.requestApplyInsets()
@@ -272,6 +274,7 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
             }
         }
     }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
@@ -311,7 +314,7 @@ class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, Ph
     override fun onItemClick(data: Any) {
         when (data) {
             is DownloadMetadata -> {
-                downloadMetadata=data
+                downloadMetadata = data
                 playVideo()
             }
         }

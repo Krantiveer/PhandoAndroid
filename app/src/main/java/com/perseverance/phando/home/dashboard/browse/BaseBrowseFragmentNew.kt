@@ -45,6 +45,8 @@ import com.perseverance.phando.home.profile.UserProfileData
 import com.perseverance.phando.home.profile.UserProfileViewModel
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.home.videolist.BaseVideoListActivity
+import com.perseverance.phando.notification.NotificationDao
+import com.perseverance.phando.notification.NotificationListActivity
 import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.PreferencesUtils
 import com.perseverance.phando.utils.Util
@@ -66,6 +68,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
         ViewModelProvider(this).get(UserProfileViewModel::class.java)
     }
 
+    private var notificationDao: NotificationDao? = null
     private var adapter: HomeFragmentParentListAdapter? = null
     private var browseFragmentCategoryTabListAdapter: BrowseFragmentCategoryTabListAdapter? = null
     private var categoryTabListList: ArrayList<CategoryTab> = ArrayList<CategoryTab>()
@@ -207,6 +210,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        notificationDao = AppDatabase.getInstance(activity!!)?.notificationDao()
         nestedScrollView = view.findViewById(R.id.nestedScrollView)
         recyclerViewUpcomingVideos.layoutManager = LinearLayoutManager(activity)
         val filterRecyclerViewLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -288,15 +292,11 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
         }
         Util.hideKeyBoard(requireActivity())
 
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == LoginActivity.REQUEST_CODE_LOGIN && resultCode == Activity.RESULT_OK) {
-//            val intent = Intent(context, ProfileActivity::class.java)
-//            startActivity(intent)
-
+        notificationContainer.setOnClickListener {
+            startActivity(Intent(activity, NotificationListActivity::class.java))
         }
+
+        PreferencesUtils.saveIntegerPreferences("NOTIFICATION_COUNT", 10)
     }
 
     abstract fun setTopBannserHeight()
@@ -457,8 +457,28 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
         userProfileData?.let {
             Utils.displayCircularProfileImage(context, it.user?.image,
                     R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
-        }?:Utils.displayCircularProfileImage(context, "",
+        } ?: Utils.displayCircularProfileImage(context, "",
                 R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
         observeUserProfile()
+        val allNotifications = notificationDao?.getAllNotifications()
+        val unreadNotifications = notificationDao?.getUnreadNotifications()
+        notificationContainer.visibility = if (allNotifications == null || allNotifications == 0) View.GONE else View.VISIBLE
+        if (allNotifications != null && allNotifications > 0) {
+            try {
+                cart_badge?.let {
+                    if (unreadNotifications == 0) {
+                        if (it.visibility != View.GONE) {
+                            it.visibility = View.GONE;
+                        }
+                    } else {
+                        it.setText(unreadNotifications.toString())
+                        if (it.visibility != View.VISIBLE) {
+                            it.visibility = View.VISIBLE;
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
     }
 }

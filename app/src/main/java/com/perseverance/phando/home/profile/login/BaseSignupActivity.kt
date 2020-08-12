@@ -11,7 +11,7 @@ import com.perseverance.phando.retrofit.LoginResponse
 
 
 open abstract class BaseSignupActivity : BaseUserLoginActivity() {
-    abstract fun onRegisterSuccess(loginResponse:LoginResponse)
+    abstract fun onRegisterSuccess(loginResponse: LoginResponse)
 
     val registerUserObserver = Observer<DataLoadingStatus<LoginResponse>> {
 
@@ -49,7 +49,7 @@ open abstract class BaseSignupActivity : BaseUserLoginActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        userProfileViewModel.registerUserData.observe(this,registerUserObserver)
+        userProfileViewModel.registerUserData.observe(this, registerUserObserver)
 
     }
 
@@ -67,7 +67,7 @@ open abstract class BaseSignupActivity : BaseUserLoginActivity() {
     }
 
 
-    fun doRegister(map:Map<String, String>) {
+    fun doRegister(map: Map<String, String>) {
         userProfileViewModel.registerUser(map)
 
     }

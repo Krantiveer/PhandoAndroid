@@ -23,22 +23,19 @@ class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseVie
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
 
     }
+
     override fun onBind(video: Video) {
         itemView.tag = video
         Utils.displayImage(itemView.context, video.thumbnail,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder, itemView.img_thumbnail)
-        itemView.img_thumbnail.resizeView(ListItemThumbnail(),true)
+        itemView.img_thumbnail.resizeView(ListItemThumbnail(), true)
         itemView.title.text = video.title
 
         video.rating?.let {
             itemView.rating.text = it.toString()
-        }?:itemView.rating.gone()
+        } ?: itemView.rating.gone()
 
-
-        video.duration?.let {
-            itemView.duration.text = video.getFormatedDuration()
-        }?:itemView.duration.invisible()
 
         itemView.details.text = video.description
         itemView.option.setOnClickListener {
@@ -49,17 +46,17 @@ class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseVie
                 override fun onMenuItemClick(item: MenuItem?): Boolean {
 
                     return when (item?.itemId) {
-                        R.id.menu_delete ->{
+                        R.id.menu_delete -> {
                             listener.onItemClick("${video.id},${video.type}")
                             true
                         }
 
                         else -> false
-                   }
+                    }
                 }
 
             })
             popup.show()
         }
     }
-    }
+}

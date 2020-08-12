@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.activity_saved_video_list.*
 abstract class SavedVideoActivity : AppCompatActivity(), AdapterClickListener {
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_saved_video_list)

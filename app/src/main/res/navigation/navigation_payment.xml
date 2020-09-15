@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/login"
+    app:startDestination="@id/paymentOptionFragment">
+
+    <fragment
+        android:id="@+id/paymentOptionFragment"
+        android:name="com.perseverance.phando.payment.paymentoptions.PaymentOptionFragment"
+        android:label="Payment option"
+        tools:layout="@layout/fragment_payment_option" >
+        <action
+            android:id="@+id/action_paymentOptionFragment_to_walletDetailFragment"
+            app:destination="@id/walletDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/walletTCFragment"
+        android:name="com.perseverance.phando.payment.paymentoptions.WalletTCFragment"
+        android:label="Terms and conditions"
+        tools:layout="@layout/activity_wallet_t_c" />
+    <fragment
+        android:id="@+id/walletDetailFragment"
+        android:name="com.perseverance.phando.payment.paymentoptions.WalletDetailFragment"
+        android:label="Wallet"
+        tools:layout="@layout/fragment_wallet_detail" >
+        <action
+            android:id="@+id/action_walletDetailFragment_to_walletTCFragment"
+            app:destination="@id/walletTCFragment" />
+        <action
+            android:id="@+id/action_walletDetailFragment_to_walletRechargeFragment"
+            app:destination="@id/walletRechargeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/walletRechargeFragment"
+        android:name="com.perseverance.phando.payment.paymentoptions.WalletRechargeFragment"
+        android:label="Wallet Recharge"
+        tools:layout="@layout/fragment_wallet_recharge">
+        <argument
+            android:name="amount"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_walletRechargeFragment_to_paymentOptionFragment"
+            app:destination="@id/paymentOptionFragment" />
+    </fragment>
+</navigation>

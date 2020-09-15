@@ -50,8 +50,8 @@ class SubscriptionRepository(private val application: Application) {
     fun createOrder(map: Map<String, String>): MutableLiveData<DataLoadingStatus<CreateOrderResponse>> {
         var data: MutableLiveData<DataLoadingStatus<CreateOrderResponse>> = MutableLiveData<DataLoadingStatus<CreateOrderResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Creating order"))
-        val call = apiService.createOrder(map)
 
+        val call = apiService.createOrder(map)
         call.enqueue(object : Callback<CreateOrderResponse> {
             override fun onResponse(call: Call<CreateOrderResponse>, response: Response<CreateOrderResponse>) {
                 if (response.isSuccessful) {

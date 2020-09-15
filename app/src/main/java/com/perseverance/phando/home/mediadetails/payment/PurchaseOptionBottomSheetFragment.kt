@@ -2,17 +2,13 @@ package com.perseverance.phando.home.mediadetails.payment
 
 import android.content.Context
 import android.os.Bundle
-import android.text.Spannable
-import android.text.Spanned
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
-import kotlinx.android.synthetic.main.content_detail.*
-import kotlinx.android.synthetic.main.payment_option_bottom_sheet.*
+import kotlinx.android.synthetic.main.purchase_option_bottom_sheet.*
 
 class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
     lateinit var purchaseOptionSelection: PurchaseOptionSelection
@@ -25,7 +21,7 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.payment_option_bottom_sheet, container, false)
+        return inflater.inflate(R.layout.purchase_option_bottom_sheet, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

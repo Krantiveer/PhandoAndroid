@@ -40,6 +40,7 @@ public class BaseConstants {
     public static final String LOGIN_WITH_OTP = "LoginWithOTPScreen";
     public static final String SIGNUP = "SignupScreen";
     public static final String FORGOT_PASSWORD = "ForgotPasswordScreen";
+    public static final String PURCHASE_OPTION = "purchase_option";
 
 
     public enum Video {

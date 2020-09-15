@@ -123,7 +123,7 @@ class SubscriptionPackageActivity : AppCompatActivity(), DataAdapter.OnClickList
                 val options = JSONObject()
                 options.put("name", createOrderResponse.app_name)
                 options.put("description", createOrderResponse.description)
-                options.put("amount", (createOrderResponse.order_details.amount * 100).toString())
+                options.put("amount", (createOrderResponse.order_details!!.amount * 100).toString())
                 options.put("order_id", createOrderResponse.gateway_order_id)
 
                 val prefill = JSONObject()

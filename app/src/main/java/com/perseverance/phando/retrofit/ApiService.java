@@ -17,6 +17,9 @@ import com.perseverance.phando.home.profile.UserProfileData;
 import com.perseverance.phando.home.profile.login.SocialLoggedInUser;
 import com.perseverance.phando.home.profile.model.CountryCode;
 import com.perseverance.phando.home.series.TVSeriesResponseData;
+import com.perseverance.phando.payment.paymentoptions.TCResponseData;
+import com.perseverance.phando.payment.paymentoptions.WalletDetailResponseData;
+import com.perseverance.phando.payment.paymentoptions.WalletHistoryResponseData;
 import com.perseverance.phando.payment.subscription.CreateOrderResponse;
 import com.perseverance.phando.payment.subscription.Package;
 import com.perseverance.phando.splash.AppInfo;
@@ -208,4 +211,17 @@ public interface ApiService {
 
     @GET("mediaUrl")
     Call<MediaUrlResponse> getMediaUrl(@Query("document_id") String documentId);
+
+    @GET("walletdetails")
+    Call<WalletDetailResponseData> getWalletDetails();
+
+    @GET("wallethistory?limit=0,20")
+    Call<WalletHistoryResponseData> getWalletHistory();
+
+    @POST("walletactivate")
+    @FormUrlEncoded
+    Call<BaseResponse> activateWallet(@FieldMap Map<String, String> bodyMap);
+
+    @GET("wallettnc")
+    Call<TCResponseData> getTC();
 }

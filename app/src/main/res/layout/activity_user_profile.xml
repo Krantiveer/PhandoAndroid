@@ -148,13 +148,26 @@
                 <!--                    android:background="@color/gray_concrete_light"-->
                 <!--                    />-->
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/btnBilling"
+                    android:id="@+id/btnWallet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
                     android:foreground="?attr/selectableItemBackground"
                     android:layout_margin="0dp"
                     android:background="#535353"
+                    android:padding="@dimen/_11sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible"
+                    android:text="Wallet" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/btnBilling"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="#535353"
+                    android:layout_marginTop="1dp"
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"

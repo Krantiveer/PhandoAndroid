@@ -16,9 +16,13 @@ import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
+import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
+import com.perseverance.phando.payment.paymentoptions.PaymentActivity
+import com.perseverance.phando.payment.paymentoptions.WalletDetailActivity
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
 import com.perseverance.phando.utils.*
 import com.videoplayer.VideoSdkUtil
@@ -63,6 +67,9 @@ class ProfileActivity : AppCompatActivity() {
             val token = PreferencesUtils.getLoggedStatus()
             val url = FeatureConfigClass().baseUrl + "billinghistory?token=" + token
             Util.openWebview(this@ProfileActivity, url)
+        }
+        btnWallet.setOnClickListener {
+            startActivity(Intent(this@ProfileActivity, PaymentActivity::class.java))
         }
 
         updateProfile.setOnClickListener {

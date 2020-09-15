@@ -1,6 +1,6 @@
 package com.perseverance.phando.data
 
 data class BaseResponse(
-        val message: String,
+        var message: String,
         val status: String
 )

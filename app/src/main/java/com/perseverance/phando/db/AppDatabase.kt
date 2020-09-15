@@ -11,6 +11,7 @@ import com.perseverance.phando.db.dao.*
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.notification.NotificationDao
 import com.perseverance.phando.notification.NotificationData
+import com.perseverance.phando.payment.paymentoptions.WalletDetail
 
 
 @Database(entities = arrayOf(
@@ -20,8 +21,9 @@ import com.perseverance.phando.notification.NotificationData
         APIData::class,
         DownloadMetadata::class,
         AdModel::class,
+        WalletDetail::class,
         NotificationData::class
-), version = 5)
+), version = 6)
 @TypeConverters(RoomDataTypeConvertor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao
@@ -31,11 +33,12 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun downloadMetadataDao(): DownloadMetadataDao
     abstract fun adModelDao(): AdModelDao
     abstract fun notificationDao(): NotificationDao
+    abstract fun walletDetailDao(): WalletDetailDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null
         private const val DATABASE_NAME = "Database"
-        fun getInstance(context: Context): AppDatabase? {
+        fun getInstance(context: Context): AppDatabase {
             if (INSTANCE == null) {
                 synchronized(AppDatabase::class) {
                     INSTANCE = Room.databaseBuilder(context.applicationContext,
@@ -45,7 +48,7 @@ abstract class AppDatabase : RoomDatabase() {
                             .build()
                 }
             }
-            return INSTANCE
+            return INSTANCE!!
         }
 
     }

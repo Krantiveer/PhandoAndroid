@@ -164,7 +164,6 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                     // Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
                 }
             }
-
             LoadingStatus.SUCCESS -> {
                 PreferencesUtils.saveObject("profile", it.data)
                 Utils.displayCircularProfileImage(activity, it.data?.user?.image,
@@ -452,6 +451,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
     override fun onResume() {
         super.onResume()
         userProfileViewModel.refreshUserProfile()
+        userProfileViewModel.refreshWallet()
         val strProfile = PreferencesUtils.getStringPreferences("profile")
         val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
         userProfileData?.let {

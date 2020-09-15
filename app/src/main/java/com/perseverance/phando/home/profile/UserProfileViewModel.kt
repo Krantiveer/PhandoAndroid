@@ -1,23 +1,41 @@
 package com.perseverance.phando.home.profile
 
 import android.app.Application
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.liveData
+import androidx.lifecycle.*
 import com.perseverance.phando.base.BaseViewModel
 import com.perseverance.phando.data.BaseResponse
+import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.profile.login.SocialLoggedInUser
+import com.perseverance.phando.payment.paymentoptions.WalletDetailRepository
 import com.perseverance.phando.retrofit.Cred
 import com.perseverance.phando.retrofit.LoginResponse
+import com.perseverance.phando.utils.PreferencesUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
-class UserProfileViewModel(application: Application) : BaseViewModel(application) {
+class UserProfileViewModel( application: Application) : BaseViewModel(application) {
 
     private var userProfileRepository: UserProfileRepository = UserProfileRepository(application)
     private val reloadTrigger = MutableLiveData<Boolean>()
+    private val walletDetailDao by lazy {
+        AppDatabase.getInstance(application).walletDetailDao()
+    }
+    val walletDetailRepository by lazy {
+        WalletDetailRepository()
+    }
+    fun refreshWallet() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val walletDetailResponseData= walletDetailRepository.refreshWallet()
+            walletDetailResponseData?.let {
+                if (it.status=="success"){
+                    it.data?.let {  walletDetailDao.insert(it) }
+                }
+            }
+        }
+
+    }
 
     //profile
     private var data: LiveData<DataLoadingStatus<UserProfileData>> = Transformations.switchMap(reloadTrigger) {

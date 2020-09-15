@@ -29,8 +29,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.perseverance.patrikanews.utils.*
-import com.perseverance.phando.AdsUtil.BannerType
+import com.perseverance.patrikanews.utils.getViewModel
+import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.toast
+import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
@@ -42,30 +44,27 @@ import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
-import com.perseverance.phando.home.mediadetails.payment.MediaplaybackData
-import com.perseverance.phando.home.mediadetails.payment.PurchaseOption
-import com.perseverance.phando.home.mediadetails.payment.PurchaseOptionBottomSheetFragment
-import com.perseverance.phando.home.mediadetails.payment.PurchaseOptionSelection
+import com.perseverance.phando.home.mediadetails.payment.*
+import com.perseverance.phando.home.profile.login.LoginActivity
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.home.videolist.BaseCategoryListAdapter
+import com.perseverance.phando.payment.paymentoptions.PaymentActivity
+import com.perseverance.phando.payment.paymentoptions.WalletDetailActivity
+import com.perseverance.phando.payment.paymentoptions.WalletDetailViewModel
 import com.perseverance.phando.payment.subscription.CreateOrderResponse
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
 import com.perseverance.phando.payment.subscription.SubscriptionsViewModel
 import com.perseverance.phando.utils.*
-import com.perseverance.phando.home.profile.login.LoginActivity
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
 import kotlinx.android.synthetic.main.activity_video_details.*
-import kotlinx.android.synthetic.main.activity_video_details.progressBar
 import kotlinx.android.synthetic.main.content_detail.*
-import kotlinx.android.synthetic.main.content_detail.recyclerView
 import org.json.JSONObject
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
-class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPlayerCallback, PaymentResultListener, PurchaseOptionSelection {
+class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPlayerCallback, PurchaseOptionSelection {
+    private lateinit var purchaseOption: PurchaseOption
     private var razorpayOrdertId: String? = null
     val STRIKE_THROUGH_SPAN = StrikethroughSpan()
     val downloadMetadataDao by lazy {
@@ -100,6 +99,8 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         const val REQUEST_CODE_RENT = 111
         const val REQUEST_CODE_BUY = 112
         const val REQUEST_CODE_PACKAGE = 113
+      //  const val REQUEST_CODE_BUY_USING_WALLET = 114
+        const val REQUEST_CODE_PAYMENT = 114
         const val ARG_VIDEO = "param_video"
         fun getDetailIntent(context: Context, video: Video): Intent {
             if (video.is_free == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
@@ -124,15 +125,20 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     var isVideoPlayed = false
     var isTrailerPlaying = false
     var isPlayerstartSent = false
+
+    var nextMediaMetadata: MediaplaybackData? = null
+
     private val notificationDao by lazy {
         AppDatabase.getInstance(this@MediaDetailActivity)?.notificationDao()
     }
     val mediaDetailViewModel by lazy {
         getViewModel<MediaDetailViewModel>()
     }
-    var nextMediaMetadata: MediaplaybackData? = null
     private val subscriptionsViewModel by lazy {
         ViewModelProvider(this).get(SubscriptionsViewModel::class.java)
+    }
+    private val walletDetailViewModel by lazy {
+        ViewModelProvider(this).get(WalletDetailViewModel::class.java)
     }
     val videoMetadataModelObserver = Observer<DataLoadingStatus<MediaplaybackData>> {
 
@@ -681,8 +687,43 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
     }
 
     override fun onPurchaseOptionSelected(purchaseOption: PurchaseOption) {
-        createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type)
+        this.purchaseOption = purchaseOption.apply {
+            mediaTitle= mediaMetadata?.title
+        }
+        startActivityForResult(Intent(this@MediaDetailActivity,PaymentActivity::class.java).apply {
+            putExtra(BaseConstants.PURCHASE_OPTION,purchaseOption)
+        },REQUEST_CODE_PAYMENT)
+        //createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type)
+       // val paymentOptionBottomSheetFragment = PaymentOptionBottomSheetFragment()
+       // paymentOptionBottomSheetFragment.show(supportFragmentManager, paymentOptionBottomSheetFragment.getTag())
+
     }
+
+//    override fun onPaymentOptionSelected(isWalletSelected: Boolean) {
+//        if (isWalletSelected) {
+//
+//            walletDetailViewModel.getWallet()?.let {
+//                when (it.is_active) {
+//                    0, 2 -> startActivityForResult(Intent(this@MediaDetailActivity, WalletDetailActivity::class.java).apply {
+//                        putExtra("isBuy", true)
+//                    }, REQUEST_CODE_BUY_USING_WALLET)
+//                    else -> {
+//                        if (it.balance > purchaseOption.final_price) {
+//                            createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type, true)
+//                        } else {
+//                            startActivityForResult(Intent(this@MediaDetailActivity, WalletDetailActivity::class.java).apply {
+//                                putExtra("isBuy", true)
+//                            }, REQUEST_CODE_BUY_USING_WALLET)
+//                        }
+//
+//                    }
+//                }
+//            }
+//
+//        } else {
+//            createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type, false)
+//        }
+//    }
 
     private fun onGetVideoMetaDataSuccess(mediaplaybackData: MediaplaybackData) {
         isPlayerstartSent = false
@@ -1154,6 +1195,10 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
 
                 }
             }
+
+            REQUEST_CODE_PAYMENT ->{
+                mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+            }
         }
 
 
@@ -1339,117 +1384,126 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
 
-    //Payment
-    private fun createOrder(paymentType: String, mediaId: String, type: String) {
-        val map: MutableMap<String, String> = HashMap()
-        map["payment_type"] = paymentType
-        map["media_id"] = mediaId
-        map["type"] = type
-
-        subscriptionsViewModel.createOrder(map).observe(this, androidx.lifecycle.Observer {
-
-            progressBar.gone()
-
-            when (it?.status) {
-                LoadingStatus.LOADING -> {
-                    progressBar.visible()
-                }
-                LoadingStatus.ERROR -> {
-                    progressBar.gone()
-                    it.message?.let {
-                        Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
-                    }
-                }
-                LoadingStatus.SUCCESS -> {
-                    progressBar.gone()
-                    if (it.data?.is_subscribed == 1) {
-                        mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                        mediaDetailViewModel.loginFor.value = 0
-                    } else {
-                        startPayment(it.data)
-                    }
-
-                }
-
-            }
-
-        })
-    }
-
-    private fun startPayment(orderResponse: CreateOrderResponse?) {
-
-        orderResponse?.let { createOrderResponse ->
-            val activity: Activity = this
-            val co = Checkout()
-            co.setKeyID(createOrderResponse.key)
-            try {
-                razorpayOrdertId = createOrderResponse.gateway_order_id
-                val options = JSONObject()
-                options.put("name", createOrderResponse.app_name)
-                options.put("description", createOrderResponse.description)
-                options.put("amount", (createOrderResponse.order_details.amount * 100).toString())
-                options.put("order_id", createOrderResponse.gateway_order_id)
-
-                val prefill = JSONObject()
-                prefill.put("email", createOrderResponse.user_email)
-                prefill.put("contact", createOrderResponse.user_mobile)
-
-                options.put("prefill", prefill)
-
-                co.open(activity, options)
-
-            } catch (e: Exception) {
-                razorpayOrdertId = null
-                toast("Error in payment: " + e.message)
-                e.printStackTrace()
-            }
-        } ?: toast("Error in payment. Unable to get order ")
-
-    }
-
-    override fun onPaymentError(p0: Int, p1: String?) {
-        // MyLog.e("razorpay", "$p0 : $p1")
-    }
-
-    override fun onPaymentSuccess(razorpayPaymentId: String?) {
-        if (razorpayPaymentId == null) {
-            toast("Payment failed")
-            return
-        }
-        //Log.e("razorpay", "$razorpayPaymentId")
-        val map: MutableMap<String, String> = HashMap()
-        map["razorpay_order_id"] = razorpayOrdertId!!
-        map["razorpay_payment_id"] = razorpayPaymentId
-
-        subscriptionsViewModel.updateOrderOnServer(map).observe(this@MediaDetailActivity, androidx.lifecycle.Observer {
-
-            progressBar.gone()
-
-            when (it?.status) {
-                LoadingStatus.LOADING -> {
-                    progressBar.visible()
-                }
-                LoadingStatus.ERROR -> {
-                    progressBar.gone()
-                    it.message?.let {
-                        toast(it)
-                    }
-                }
-                LoadingStatus.SUCCESS -> {
-                    progressBar.gone()
-                    it.data?.message?.let { it1 -> toast(it1) }
-                    if (it.data?.status.equals("success", true)) {
-                        mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                        mediaDetailViewModel.loginFor.value = 0
-                    }
-                }
-
-            }
-
-        })
-    }
+//    //Payment
+//    private fun createOrder(paymentType: String, mediaId: String, type: String, isWallet: Boolean = false) {
+//        val map: MutableMap<String, String> = HashMap()
+//        map["payment_type"] = paymentType
+//        map["media_id"] = mediaId
+//        map["type"] = type
+//        map["payment_mode"] = if (isWallet) "wallet" else "razorpay"
+//
+//        subscriptionsViewModel.createOrder(map).observe(this, androidx.lifecycle.Observer {
+//
+//            progressBar.gone()
+//
+//            when (it?.status) {
+//                LoadingStatus.LOADING -> {
+//                    progressBar.visible()
+//                }
+//                LoadingStatus.ERROR -> {
+//                    progressBar.gone()
+//                    it.message?.let {
+//                        Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
+//                    }
+//                }
+//                LoadingStatus.SUCCESS -> {
+//                    progressBar.gone()
+//                    if (it.data?.status == "error") {
+//                        it.data.message?.let { it1 -> toast(it1) }
+//                    } else {
+//                        if (it.data?.is_subscribed == 1) {
+//                            mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+//                            mediaDetailViewModel.loginFor.value = 0
+//                            walletDetailViewModel.refreshWallet()
+//                        } else {
+//                            startPayment(it.data)
+//                        }
+//                    }
+//
+//                }
+//
+//            }
+//
+//        })
+//    }
+//
+//    private fun startPayment(orderResponse: CreateOrderResponse?) {
+//
+//        orderResponse?.let { createOrderResponse ->
+//            val activity: Activity = this
+//            val co = Checkout()
+//            co.setKeyID(createOrderResponse.key)
+//            try {
+//                razorpayOrdertId = createOrderResponse.gateway_order_id
+//                val options = JSONObject()
+//                options.put("name", createOrderResponse.app_name)
+//                options.put("description", createOrderResponse.description)
+//                options.put("amount", (createOrderResponse.order_details!!.amount * 100).toString())
+//                options.put("order_id", createOrderResponse.gateway_order_id)
+//
+//                val prefill = JSONObject()
+//                prefill.put("email", createOrderResponse.user_email)
+//                prefill.put("contact", createOrderResponse.user_mobile)
+//
+//                options.put("prefill", prefill)
+//
+//                co.open(activity, options)
+//
+//            } catch (e: Exception) {
+//                razorpayOrdertId = null
+//                toast("Error in payment: " + e.message)
+//                e.printStackTrace()
+//            }
+//        } ?: toast("Error in payment. Unable to get order ")
+//
+//    }
+//
+//    override fun onPaymentError(p0: Int, p1: String?) {
+//        // MyLog.e("razorpay", "$p0 : $p1")
+//    }
+//
+//    override fun onPaymentSuccess(razorpayPaymentId: String?) {
+//        if (razorpayPaymentId == null) {
+//            toast("Payment failed")
+//            return
+//        }
+//        //Log.e("razorpay", "$razorpayPaymentId")
+//        val map: MutableMap<String, String> = HashMap()
+//        map["razorpay_order_id"] = razorpayOrdertId!!
+//        map["razorpay_payment_id"] = razorpayPaymentId
+//
+//        subscriptionsViewModel.updateOrderOnServer(map).observe(this@MediaDetailActivity, androidx.lifecycle.Observer {
+//
+//            progressBar.gone()
+//
+//            when (it?.status) {
+//                LoadingStatus.LOADING -> {
+//                    progressBar.visible()
+//                }
+//                LoadingStatus.ERROR -> {
+//                    progressBar.gone()
+//                    it.message?.let {
+//                        toast(it)
+//                    }
+//                }
+//                LoadingStatus.SUCCESS -> {
+//                    progressBar.gone()
+//                    it.data?.message?.let { it1 -> toast(it1) }
+//                    if (it.data?.status.equals("success", true)) {
+//                        mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+//                        mediaDetailViewModel.loginFor.value = 0
+//                        walletDetailViewModel.refreshWallet()
+//                    }
+//                }
+//
+//            }
+//
+//        })
+//    }
 
     fun number2digits(number: Float): String {
         return String.format("%.2f", number)
     }
+
+
 }

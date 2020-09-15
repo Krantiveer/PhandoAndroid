@@ -127,29 +127,4 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
         })
     }
 
-    fun callCountryCode() {
-
-//        val call: Call<List<CountryCode>> = apiService.countrycodes
-//        call.enqueue(object : Callback<List<CountryCode>> {
-//            override fun onResponse(call: Call<List<CountryCode>>?, response: Response<List<CountryCode>>?) {
-//                if (response == null || response.body() == null) {
-//                    onFailure(call, NullResponseError())
-//                } else {
-//
-//                    val data = response.body()
-//                    if (data.isNotEmpty()) {
-//                        val countryCodeDao = AppDatabase.getInstance(getApplication())?.countryCodeDao()
-//                        countryCodeDao?.deleteAll()
-//                        countryCodeDao?.insertAll(data)
-//                    }
-//
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<List<CountryCode>>?, t: Throwable?) {
-//                MyLog.e("","Language not found")
-//            }
-//        })
-    }
-
 }

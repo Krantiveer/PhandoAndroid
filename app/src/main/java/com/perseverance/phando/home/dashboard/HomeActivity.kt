@@ -71,7 +71,6 @@ class HomeActivity : AppCompatActivity(),
         homeActivityViewModel.callForFilters()
         homeActivityViewModel.callLanguage()
         homeActivityViewModel.callForAppInfo()
-        homeActivityViewModel.callCountryCode()
         TrackingUtils.sendScreenTracker(BaseConstants.HOME)
         val msg = intent.getStringExtra("msg")
         msg?.let {

@@ -13,5 +13,8 @@ data class WalletDetail(
         @TypeConverters(RoomDataTypeConvertor::class)
         var getWalletRechargePoints: List<String> = arrayListOf(),
         val is_active: Int = 0,
-        val max_recharge_point: Int
+        val max_recharge_point: Int,
+        var deactivate_wallet_msg: String = "",
+        var hint1: String = "",
+        var hint2: String = ""
 )

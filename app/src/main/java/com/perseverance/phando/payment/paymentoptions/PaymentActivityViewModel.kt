@@ -63,7 +63,11 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
                 loaderLiveData.postValue(false)
                 if (it.status=="success"){
                     it.data?.let {
-                        walletDetailDao.insert(it)
+                        walletDetailDao.insert(it.apply {
+                            deactivate_wallet_msg=walletDetailResponseData.deactivate_wallet_msg
+                            hint1=walletDetailResponseData.hint1
+                            hint2=walletDetailResponseData.hint2
+                        })
                         walletDetailLiveData.postValue(walletDetailDao.getWalletDetail())
                     }
                 }
@@ -95,7 +99,11 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
                     loaderLiveData.postValue(false)
                     if (it.status=="success"){
                         it.data?.let {
-                            walletDetailDao.insert(it)
+                            walletDetailDao.insert(it.apply {
+                                deactivate_wallet_msg=walletDetailResponseData.deactivate_wallet_msg
+                                hint1=walletDetailResponseData.hint1
+                                hint2=walletDetailResponseData.hint2
+                            })
                             walletDetailLiveData.postValue(walletDetailDao.getWalletDetail())
                         }
                     }

@@ -34,7 +34,11 @@ class WalletDetailViewModel(application: Application) : AndroidViewModel(applica
             walletDetailResponseData.let {
                 if (it.status=="success"){
                     it.data?.let {
-                        walletDetailDao.insert(it)
+                        walletDetailDao.insert(it.apply {
+                            deactivate_wallet_msg=walletDetailResponseData.deactivate_wallet_msg
+                            hint1=walletDetailResponseData.hint1
+                            hint2=walletDetailResponseData.hint2
+                        })
                         walletDetailLiveData.postValue(walletDetailDao.getWalletDetail())
                     }
                 }

@@ -6,5 +6,6 @@ data class WalletRechargeHistory(
         val transaction_id: String?="",
         val payment_summary: String?="",
         val status: String?="",
+        val transaction_type: String?="",
         val type: String=""
 )

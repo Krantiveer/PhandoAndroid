@@ -25,10 +25,17 @@ import com.perseverance.phando.payment.subscription.CreateOrderResponse
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
 import kotlinx.android.synthetic.main.activity_payment_options.*
+import kotlinx.android.synthetic.main.activity_payment_options.addPoints
+import kotlinx.android.synthetic.main.activity_payment_options.amount
+import kotlinx.android.synthetic.main.activity_payment_options.chipGroup
+import kotlinx.android.synthetic.main.activity_payment_options.deactivate
+import kotlinx.android.synthetic.main.activity_payment_options.hint
+import kotlinx.android.synthetic.main.activity_payment_options.history
 import kotlinx.android.synthetic.main.activity_payment_options.progressBar
 import kotlinx.android.synthetic.main.activity_payment_options.wallet
 import kotlinx.android.synthetic.main.activity_wallet_t_c.*
 import kotlinx.android.synthetic.main.fragment_payment_option.*
+import kotlinx.android.synthetic.main.fragment_wallet_detail.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -65,7 +72,10 @@ class WalletDetailFragment : BaseFragment() {
         })
         paymentActivityViewModel.walletDetailLiveData.observe(this, Observer {
             it ?: return@Observer
+            amount.setText("")
             wallet.text = "Balance Points : ${it.balance}"
+            hint1.text=it.hint1
+            hint2.text=it.hint2
             MAX_RECHARGE= it.max_recharge_point
             when (it.is_active) {
                 0 -> {
@@ -92,6 +102,7 @@ class WalletDetailFragment : BaseFragment() {
                 chip.setText(amount)
                 // chip.isCheckable = true
                 chip.setOnClickListener {
+                    this.amount.setText("")
                    val action = WalletDetailFragmentDirections.actionWalletDetailFragmentToWalletRechargeFragment(chip.text.toString())
                     findNavController().navigate(action)
                 }
@@ -132,7 +143,7 @@ class WalletDetailFragment : BaseFragment() {
                     else ->{
                         val alertDialog = MaterialAlertDialogBuilder(appCompatActivity, R.style.AlertDialogTheme).create()
                         alertDialog.setTitle("Deactivate your Wallet?")
-                        alertDialog.setMessage("You will not be able to use your remaining points if you choose to deactivate your wallet. Are you sure you wish to continue?")
+                        alertDialog.setMessage(it.deactivate_wallet_msg)
                         alertDialog.setCancelable(false)
 
                         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, resources.getString(R.string.confirm)

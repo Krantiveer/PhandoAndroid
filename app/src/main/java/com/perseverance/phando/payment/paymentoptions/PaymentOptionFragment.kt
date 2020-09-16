@@ -48,7 +48,7 @@ class PaymentOptionFragment : BaseFragment() {
         }
 
         wallet.setOnClickListener {
-            if (paymentActivityViewModel.getWallet()?.balance!! > paymentActivityViewModel.purchaseOption?.final_price!!) {
+            if (paymentActivityViewModel.getWallet()?.balance!! >= paymentActivityViewModel.purchaseOption?.final_price!!) {
                 val map: MutableMap<String, String?> = HashMap()
                 map["payment_type"] = paymentActivityViewModel.purchaseOption?.payment_info?.payment_type
                 map["media_id"] =  paymentActivityViewModel.purchaseOption?.payment_info?.media_id.toString()
@@ -97,7 +97,7 @@ class PaymentOptionFragment : BaseFragment() {
                     walletPay.text = "Activate"
                 }
                 1 -> {
-                    if (it.balance > paymentActivityViewModel.purchaseOption?.final_price!!) {
+                    if (it.balance >= paymentActivityViewModel.purchaseOption?.final_price!!) {
                         walletPay.text = "Pay"
                         walletHint.text = " (Balance:${it.balance} points)"
                     } else {

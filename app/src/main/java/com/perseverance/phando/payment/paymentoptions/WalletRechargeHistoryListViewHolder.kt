@@ -1,5 +1,6 @@
 package com.perseverance.phando.payment.paymentoptions
 
+import android.graphics.Color
 import android.view.View
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.genericAdopter.BaseViewHolder
@@ -15,6 +16,11 @@ class WalletRechargeHistoryListViewHolder(itemView: View) : BaseViewHolder<Walle
         itemView.summery.text=walletRechargeHistory.payment_summary
         itemView.transactionID.text=walletRechargeHistory.transaction_id
         itemView.status.text=walletRechargeHistory.status
+        if (walletRechargeHistory.transaction_type=="Cr"){
+            itemView.walletPoint.setTextColor(Color.GREEN)
+        }else{
+            itemView.walletPoint.setTextColor(Color.RED)
+        }
 
     }
 }

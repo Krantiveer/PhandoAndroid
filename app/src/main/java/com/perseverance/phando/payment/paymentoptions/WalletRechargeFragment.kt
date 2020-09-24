@@ -38,12 +38,12 @@ class WalletRechargeFragment : BaseFragment() {
             createOrder(amount)
 
         }
-        paymentActivityViewModel.loaderLiveData.observe(this, Observer {
+        paymentActivityViewModel.loaderLiveData.observe(viewLifecycleOwner, Observer {
             if (it) progressBar.visible() else progressBar.gone()
 
         })
 
-        paymentActivityViewModel.updateOrderOnServerLiveData.observe(this, Observer {
+        paymentActivityViewModel.updateOrderOnServerLiveData.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             paymentActivityViewModel.refreshWallet()
             paymentActivityViewModel.updateOrderOnServerLiveData.value = null
@@ -60,7 +60,7 @@ class WalletRechargeFragment : BaseFragment() {
 
         })
 
-        paymentActivityViewModel.walletDetailLiveData.observe(this, Observer {
+        paymentActivityViewModel.walletDetailLiveData.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             points.text = "Balance Points : ${it.balance}"
 

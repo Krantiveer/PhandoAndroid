@@ -5,6 +5,8 @@ import android.util.Log;
 import com.perseverance.phando.BuildConfig;
 import com.perseverance.phando.Session;
 
+import org.jetbrains.annotations.NotNull;
+
 public class MyLog {
 
     private MyLog() {
@@ -34,4 +36,7 @@ public class MyLog {
     }
 
 
+    public static void infoAnalytic(@NotNull String message) {
+       Log.i("FirebaseAnalytics", message);
+    }
 }

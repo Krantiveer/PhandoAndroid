@@ -70,8 +70,8 @@ android {
     productFlavors {
         phunflix {
             applicationId "com.perseverance.phunflix"
-            versionCode 2
-            versionName "1.2"
+            versionCode 4
+            versionName "1.4"
             signingConfig signingConfigs.configPhunFlix
         }
 
@@ -165,4 +165,6 @@ dependencies {
     //Facebook
     implementation 'com.android.support:support-annotations:28.0.0'
     implementation 'com.facebook.android:audience-network-sdk:5.9.0'
+
+    implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
 }

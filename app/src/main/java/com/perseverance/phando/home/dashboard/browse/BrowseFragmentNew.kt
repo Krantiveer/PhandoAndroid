@@ -19,7 +19,7 @@ class BrowseFragmentNew : BaseBrowseFragmentNew() {
             homeHeaderView?.setData(browseData.list, tabLayout, childFragmentManager)
             (browseDataList as ArrayList).removeAt(0)
             homeHeaderView.visible()
-            width = Util.getScreenHeightForHomeBanner(this.context!!)
+            width = Util.getScreenHeightForHomeBanner(this.requireContext())
             width = (width * .75).toInt()
             tabLayout.visible()
 

@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 
 open class BaseNetworkErrorFragment : Fragment() {
 
-    protected var activity: AppCompatActivity? = null
+    protected lateinit var activity: AppCompatActivity
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

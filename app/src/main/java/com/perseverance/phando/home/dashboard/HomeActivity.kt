@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
@@ -40,7 +41,7 @@ class HomeActivity : AppCompatActivity(),
     private var doubleBackToExitPressedOnce = false
 
     private val homeActivityViewModel by lazy {
-        ViewModelProviders.of(this@HomeActivity).get(DashboardViewModel::class.java)
+        ViewModelProvider(this@HomeActivity).get(DashboardViewModel::class.java)
     }
 
 

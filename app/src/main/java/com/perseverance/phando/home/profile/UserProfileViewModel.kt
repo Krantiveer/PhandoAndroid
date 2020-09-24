@@ -2,6 +2,7 @@ package com.perseverance.phando.home.profile
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.google.gson.Gson
 import com.perseverance.phando.base.BaseViewModel
 import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.db.AppDatabase
@@ -25,6 +26,12 @@ class UserProfileViewModel( application: Application) : BaseViewModel(applicatio
     val walletDetailRepository by lazy {
         WalletDetailRepository()
     }
+    val languageList by lazy {
+        AppDatabase.getInstance(application).languageDao().allLanguage()
+
+    }
+
+
     fun refreshWallet() {
         viewModelScope.launch(Dispatchers.IO) {
             val walletDetailResponseData= walletDetailRepository.refreshWallet()
@@ -139,6 +146,15 @@ class UserProfileViewModel( application: Application) : BaseViewModel(applicatio
     fun removeUserDownload(param: ArrayList<String>) = liveData(Dispatchers.IO) {
 
         emit(userProfileRepository.removeUserDownload(param))
+    }
+
+    fun getSavesUserProfile(): UserProfileData? {
+        val strProfile = PreferencesUtils.getStringPreferences("profile")
+        return Gson().fromJson(strProfile, UserProfileData::class.java)
+    }
+
+    suspend fun updateLanguagePreference(map: Map<String, String>): BaseResponse {
+       return userProfileRepository.updateLanguagePreference(map)
     }
 
 }

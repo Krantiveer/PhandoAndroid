@@ -224,4 +224,9 @@ public interface ApiService {
 
     @GET("wallettnc")
     Call<TCResponseData> getTC();
+
+    @POST("setUserLngPreferances")
+    @FormUrlEncoded
+    Call<BaseResponse> updateLanguagePreference(@FieldMap Map<String, String> bodyMap);
+
 }

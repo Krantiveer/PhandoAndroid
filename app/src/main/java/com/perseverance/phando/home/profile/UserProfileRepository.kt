@@ -11,7 +11,9 @@ import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.profile.login.SocialLoggedInUser
+import com.perseverance.phando.payment.subscription.CreateOrderResponse
 import com.perseverance.phando.retrofit.*
+import com.perseverance.phando.utils.PreferencesUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,6 +31,7 @@ class UserProfileRepository(private val application: Application) {
             override fun onResponse(call: Call<UserProfileData>, response: Response<UserProfileData>) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                    PreferencesUtils.saveObject("profile", response.body())
                 } else {
                     val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
@@ -243,6 +246,25 @@ class UserProfileRepository(private val application: Application) {
                 return DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR)
             } else {
                 return DataLoadingStatus(LoadingStatus.ERROR, "Unable to remove download")
+            }
+        }
+    }
+
+    suspend fun updateLanguagePreference(map: Map<String, String?>): BaseResponse {
+
+        try {
+            val response = apiService.updateLanguagePreference(map).execute()
+            if (response.isSuccessful) {
+                return  response.body()
+            } else {
+                return BaseResponse(status = "error",message =  "Unable to save language preference")
+            }
+
+        } catch (e: Exception) {
+            if (e is ApiClient.NoConnectivityException) {
+                return BaseResponse(status = "error",message =  BaseConstants.NETWORK_ERROR)
+            } else {
+                return BaseResponse(status = "error", message = "Unable to language preference")
             }
         }
     }

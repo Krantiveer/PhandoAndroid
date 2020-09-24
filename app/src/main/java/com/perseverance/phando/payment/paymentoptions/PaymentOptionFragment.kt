@@ -11,17 +11,17 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.isSuccess
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
-import com.perseverance.phando.utils.PreferencesUtils
-import com.videoplayer.VideoSdkUtil
+import com.perseverance.phando.Session
 import kotlinx.android.synthetic.main.fragment_payment_option.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -84,11 +84,11 @@ class PaymentOptionFragment : BaseFragment() {
             createOrder(map)
 
         }
-        paymentActivityViewModel.loaderLiveData.observe(this, Observer {
+        paymentActivityViewModel.loaderLiveData.observe(viewLifecycleOwner, Observer {
             if (it) progressBar.visible() else progressBar.gone()
 
         })
-        paymentActivityViewModel.walletDetailLiveData.observe(this, Observer {
+        paymentActivityViewModel.walletDetailLiveData.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             progressBar.gone()
             points.text = "Balance Points : ${it.balance}"
@@ -110,10 +110,24 @@ class PaymentOptionFragment : BaseFragment() {
 
         })
 
-        paymentActivityViewModel.updateOrderOnServerLiveData.observe(this, Observer {
+        paymentActivityViewModel.updateOrderOnServerLiveData.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             paymentActivityViewModel.refreshWallet()
             paymentActivityViewModel.updateOrderOnServerLiveData.value = null
+            paymentActivityViewModel.purchaseOption?.let {
+                val item1 = Bundle()
+                item1.putString(FirebaseAnalytics.Param.ITEM_ID, it.payment_info.media_id.toString())
+                item1.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, it.payment_info.type)
+                item1.putString(FirebaseAnalytics.Param.PAYMENT_TYPE, it.payment_info.payment_type)
+                item1.putString(FirebaseAnalytics.Param.ITEM_NAME, it.mediaTitle)
+
+                Session.instance.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE) {
+                    param(FirebaseAnalytics.Param.PRICE, it.final_price.toLong())
+                    param(FirebaseAnalytics.Param.TRANSACTION_ID, "razorpay")
+                    param(FirebaseAnalytics.Param.ITEMS, arrayOf(item1))
+
+                }
+            }
             appCompatActivity.setResult(Activity.RESULT_OK)
             appCompatActivity.finish()
         })
@@ -128,6 +142,19 @@ class PaymentOptionFragment : BaseFragment() {
             if (createOrderResponse.status.isSuccess()) {
                 if (createOrderResponse?.is_subscribed == 1) {
                     paymentActivityViewModel.refreshWallet()
+                    paymentActivityViewModel.purchaseOption?.let {
+                        Session.instance.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE){
+                            param(FirebaseAnalytics.Param.PRICE, it.final_price.toLong())
+                            param(FirebaseAnalytics.Param.TRANSACTION_ID, "wallet")
+                            val item1 = Bundle()
+                            item1.putString(FirebaseAnalytics.Param.ITEM_ID, it.payment_info.media_id.toString())
+                            item1.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, it.payment_info.type)
+                            item1.putString(FirebaseAnalytics.Param.PAYMENT_TYPE, it.payment_info.payment_type)
+                            item1.putString(FirebaseAnalytics.Param.ITEM_NAME, it.mediaTitle)
+                            param(FirebaseAnalytics.Param.ITEMS, item1)
+
+                        }
+                    }
                     appCompatActivity.setResult(Activity.RESULT_OK)
                     appCompatActivity.finish()
                 } else {

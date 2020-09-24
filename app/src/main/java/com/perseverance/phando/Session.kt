@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.multidex.MultiDex
 import com.google.android.gms.analytics.GoogleAnalytics
 import com.google.android.gms.analytics.Tracker
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.perseverance.phando.utils.MyLog
 import com.videoplayer.VideoPlayerApplication
@@ -16,7 +19,7 @@ import com.videoplayer.VideoPlayerApplication
  */
 class Session : VideoPlayerApplication() {
 
-
+    lateinit var firebaseAnalytics: FirebaseAnalytics
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
         MultiDex.install(this)
@@ -25,6 +28,7 @@ class Session : VideoPlayerApplication() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        firebaseAnalytics = Firebase.analytics
         sAnalytics = GoogleAnalytics.getInstance(this).apply {
 //            if(BuildConfig.DEBUG) {
 //                setDryRun(true)

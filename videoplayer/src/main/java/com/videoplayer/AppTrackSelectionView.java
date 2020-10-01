@@ -345,7 +345,11 @@ public class AppTrackSelectionView extends LinearLayout {
         for (int i = 0; i < trackViews.length; i++) {
             SelectionOverride override = overrides.get(i);
             for (int j = 0; j < trackViews[i].length; j++) {
-                trackViews[i][j].setChecked(override != null && override.containsTrack(j));
+                try {
+                    trackViews[i][j].setChecked(override != null && override.containsTrack(j));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

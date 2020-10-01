@@ -83,7 +83,8 @@ public class VideoPlayerApplication extends Application {
 
   /** Returns whether extension renderers should be used. */
   public boolean useExtensionRenderers() {
-    return "withExtensions".equals(BuildConfig.FLAVOR);
+   // return "withExtensions".equals(BuildConfig.FLAVOR);
+    return true;
   }
 
   public RenderersFactory buildRenderersFactory(boolean preferExtensionRenderer) {

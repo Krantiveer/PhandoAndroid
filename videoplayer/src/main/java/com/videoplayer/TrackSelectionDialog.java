@@ -96,7 +96,7 @@ public final class TrackSelectionDialog extends DialogFragment {
         mappedTrackInfo,
         /* initialParameters = */ parameters,
         /* allowAdaptiveSelections =*/ true,
-        /* allowMultipleOverrides= */ false,
+        /* allowMultipleOverrides= */ true,
         /* onClickListener= */ (dialog, which) -> {
           DefaultTrackSelector.ParametersBuilder builder = parameters.buildUpon();
           for (int i = 0; i < mappedTrackInfo.getRendererCount(); i++) {

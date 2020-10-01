@@ -1,6 +1,7 @@
 package com.perseverance.phando.home.profile
 
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -9,24 +10,26 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.gson.Gson
 import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.isSuccess
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
-import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
-import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
 import com.perseverance.phando.payment.paymentoptions.PaymentActivity
-import com.perseverance.phando.payment.paymentoptions.WalletDetailActivity
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
 import com.perseverance.phando.utils.*
 import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+
 
 class ProfileActivity : AppCompatActivity() {
 
@@ -37,6 +40,7 @@ class ProfileActivity : AppCompatActivity() {
         AppDatabase.getInstance(this@ProfileActivity)?.downloadMetadataDao()
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
@@ -44,7 +48,6 @@ class ProfileActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         title = "Profile"
-
         btnSubscribe.setOnClickListener {
             if (!Utils.isNetworkAvailable(this@ProfileActivity)) {
                 DialogUtils.showNetworkErrorToast()
@@ -112,9 +115,7 @@ class ProfileActivity : AppCompatActivity() {
             val intent = Intent(this@ProfileActivity, OfflineMediaListActivity::class.java)
             startActivity(intent)
         }
-        val strProfile = PreferencesUtils.getStringPreferences("profile")
-        val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
-        userProfileData?.let {
+        userProfileViewModel.getSavesUserProfile()?.let {
             progressBar.gone()
             userName.visible()
             userName.text = it.user?.name
@@ -133,6 +134,11 @@ class ProfileActivity : AppCompatActivity() {
                     btnSubscribe.text = "View Subscriptions"
                 }
             }
+        }
+        btnChangeLanguage.setOnClickListener {
+
+            openLanguagePreferenceDialog()
+
         }
         observeUserProfile()
     }
@@ -203,6 +209,73 @@ class ProfileActivity : AppCompatActivity() {
             }
 
         }
+    }
+
+    private fun openLanguagePreferenceDialog() {
+        val languageId= StringBuilder()
+
+      val  boolLanguageArray = BooleanArray(userProfileViewModel.languageList.size)
+        val array: Array<String> = Array(userProfileViewModel.languageList.size) {
+            userProfileViewModel.languageList[it].language
+        }
+        val preferredLanguage = userProfileViewModel.getSavesUserProfile()?.preferred_language
+        for (index in userProfileViewModel.languageList.indices) {
+            val tempLanguage = userProfileViewModel.languageList.get(index)
+            if (preferredLanguage?.contains(tempLanguage)!!) {
+                boolLanguageArray[index] = true
+            }
+        }
+
+        MaterialAlertDialogBuilder(this@ProfileActivity, R.style.AlertDialogTheme)
+                .apply {
+                    setTitle("Select Language")
+                    setMultiChoiceItems(
+                            array,
+                            boolLanguageArray,
+                            object : DialogInterface.OnMultiChoiceClickListener {
+
+                                override fun onClick(dialog: DialogInterface?, which: Int, isChecked: Boolean) {
+                                    boolLanguageArray[which] = isChecked;
+                                }
+
+                            })
+                    setCancelable(false)
+                    setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> // Do something when click positive button
+                        languageId.clear()
+                        boolLanguageArray.forEachIndexed { index, isSelected ->
+                            if (isSelected) {
+                                val audienceCategory = userProfileViewModel.languageList.get(index)
+                                val id = audienceCategory.id
+                                if (languageId.isEmpty()) {
+                                    languageId.append(id)
+                                } else {
+                                    languageId.append(",$id")
+                                }
+                            }
+                        }
+
+                        val map = HashMap<String, String>()
+                        map["languages_ids"] = languageId.toString()
+                        progressBar.visible()
+                        lifecycleScope.launch {
+                            val updateLanguagePreferenceResponse = withContext(Dispatchers.IO) {
+                                userProfileViewModel.updateLanguagePreference(map)
+                            }
+                            progressBar.gone()
+                            toast(updateLanguagePreferenceResponse.message)
+                            if (updateLanguagePreferenceResponse.status.isSuccess()){
+                                userProfileViewModel.refreshUserProfile()
+                            }
+                        }
+
+                    })
+                    setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
+
+                    })
+                    create()
+                    show()
+
+                }
     }
 
 }

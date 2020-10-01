@@ -180,6 +180,7 @@ public interface ApiService {
             @Query("type") String type,
             @Query("genre_id") String genre_id,
             @Query("filter") String filter,
+            @Query("filter_type") String filter_type,
             @Query("limit") int limit,
             @Query("offset") int offset
     );
@@ -224,4 +225,9 @@ public interface ApiService {
 
     @GET("wallettnc")
     Call<TCResponseData> getTC();
+
+    @POST("setUserLngPreferances")
+    @FormUrlEncoded
+    Call<BaseResponse> updateLanguagePreference(@FieldMap Map<String, String> bodyMap);
+
 }

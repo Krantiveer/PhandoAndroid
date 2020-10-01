@@ -11,11 +11,15 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.analytics.ktx.logEvent
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.isSuccess
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.phando.R
+import com.perseverance.phando.Session
 import com.perseverance.phando.constants.BaseConstants
+import com.perseverance.phando.utils.FirebaseEventUtil
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
 import kotlinx.android.synthetic.main.activity_payment.*
@@ -106,6 +110,7 @@ class PaymentActivity : AppCompatActivity(),PaymentResultListener {
             paymentActivityViewModel.loaderLiveData.value=false
             if (updateOrderOnServer.status.isSuccess()){
                 paymentActivityViewModel.updateOrderOnServerLiveData.value=updateOrderOnServer
+
             }else{
                 toast("Payment failed")
             }

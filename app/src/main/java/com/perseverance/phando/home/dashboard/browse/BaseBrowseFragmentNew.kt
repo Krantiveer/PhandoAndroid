@@ -1,8 +1,8 @@
 package com.perseverance.phando.home.dashboard.browse
 
 
-import android.app.Activity
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
@@ -14,13 +14,15 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.isSuccess
+import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
@@ -35,6 +37,7 @@ import com.perseverance.phando.home.dashboard.filter.FilterAdapter
 import com.perseverance.phando.home.dashboard.models.BrowseData
 import com.perseverance.phando.home.dashboard.models.CategoryTab
 import com.perseverance.phando.home.dashboard.models.DataFilters
+import com.perseverance.phando.home.dashboard.models.FilterForAdopter
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.list.HomeFragmentParentListAdapter
@@ -57,12 +60,13 @@ import kotlinx.android.synthetic.main.fragment_browse_new.*
 import kotlinx.android.synthetic.main.fragment_browse_new.progressBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickListener {
 
     private val browseFragmentViewModel by lazy {
-        ViewModelProviders.of(this).get(BrowseFragmentViewModel::class.java)
+        ViewModelProvider(this).get(BrowseFragmentViewModel::class.java)
     }
     private val userProfileViewModel by lazy {
         ViewModelProvider(this).get(UserProfileViewModel::class.java)
@@ -165,12 +169,14 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                 }
             }
             LoadingStatus.SUCCESS -> {
-                PreferencesUtils.saveObject("profile", it.data)
                 Utils.displayCircularProfileImage(activity, it.data?.user?.image,
                         R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
                 lifecycleScope.launch(Dispatchers.IO) {
                     syncDownload(it.data?.user_downloads)
                 }
+               if (it.data?.preferred_language?.isEmpty()!!){
+                   openLanguagePreferenceDialog()
+               }
 
             }
 
@@ -209,7 +215,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        notificationDao = AppDatabase.getInstance(activity!!)?.notificationDao()
+        notificationDao = AppDatabase.getInstance(requireActivity()).notificationDao()
         nestedScrollView = view.findViewById(R.id.nestedScrollView)
         recyclerViewUpcomingVideos.layoutManager = LinearLayoutManager(activity)
         val filterRecyclerViewLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -223,6 +229,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                 type = ""
                 genre_id = ""
                 filter = ""
+                filter_type = ""
 
             }
             browseFragmentViewModel.refreshData(dataFilters)
@@ -334,6 +341,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                         putExtra("id", data.id.toString())
                         putExtra("title", data.title)
                         putExtra("type", dataFilters.type)
+                        putExtra("filter_type", dataFilters.filter_type)
                         putExtra("imageOrientation", data.image_orientation)
                     }
                     startActivity(intent)
@@ -406,21 +414,23 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                         type = categoryTab!!.type
                         genre_id = ""
                         filter = ""
+                        filter_type = ""
 
                     }
                     browseFragmentViewModel.refreshData(dataFilters)
                     setFilterGravity(Gravity.LEFT)
                 }
             }
-            is com.perseverance.phando.home.dashboard.models.Filter -> {
+            is FilterForAdopter -> {
                 dataFilters.apply {
                     genre_id = if (type != "GENRES") data.id else ""
                     filter = if (type == "GENRES") data.id else ""
+                    filter_type = data.filter_type
 
                 }
                 categoryTabListList.map {
                     it.filters.map {
-                        if (it.id == data.id) {
+                        if (it.name == data.name) {
                             it.isSelected = true
                         } else {
                             it.isSelected = false
@@ -480,5 +490,72 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
             } catch (e: Exception) {
             }
         }
+    }
+    private fun openLanguagePreferenceDialog() {
+        val languageId= StringBuilder()
+
+        val  boolLanguageArray = BooleanArray(userProfileViewModel.languageList.size)
+        val array: Array<String> = Array(userProfileViewModel.languageList.size) {
+            userProfileViewModel.languageList[it].language
+        }
+        val preferredLanguage = userProfileViewModel.getSavesUserProfile()?.preferred_language
+        for (index in userProfileViewModel.languageList.indices) {
+            val tempLanguage = userProfileViewModel.languageList.get(index)
+            if (preferredLanguage?.contains(tempLanguage)!!) {
+                boolLanguageArray[index] = true
+            }
+        }
+
+        MaterialAlertDialogBuilder(activity, R.style.AlertDialogTheme)
+                .apply {
+                    setTitle("Select Language")
+                    setMultiChoiceItems(
+                            array,
+                            boolLanguageArray,
+                            object : DialogInterface.OnMultiChoiceClickListener {
+
+                                override fun onClick(dialog: DialogInterface?, which: Int, isChecked: Boolean) {
+                                    boolLanguageArray[which] = isChecked;
+                                }
+
+                            })
+                    setCancelable(false)
+                    setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> // Do something when click positive button
+                        languageId.clear()
+                        boolLanguageArray.forEachIndexed { index, isSelected ->
+                            if (isSelected) {
+                                val audienceCategory = userProfileViewModel.languageList.get(index)
+                                val id = audienceCategory.id
+                                if (languageId.isEmpty()) {
+                                    languageId.append(id)
+                                } else {
+                                    languageId.append(",$id")
+                                }
+                            }
+                        }
+
+                        val map = HashMap<String, String>()
+                        map["languages_ids"] = languageId.toString()
+                        progressBar.visible()
+                        lifecycleScope.launch {
+                            val updateLanguagePreferenceResponse = withContext(Dispatchers.IO) {
+                                userProfileViewModel.updateLanguagePreference(map)
+                            }
+                            progressBar.gone()
+                            toast(updateLanguagePreferenceResponse.message)
+                            if (updateLanguagePreferenceResponse.status.isSuccess()){
+                                browseFragmentViewModel.refreshData(dataFilters)
+                                userProfileViewModel.refreshUserProfile()
+                            }
+                        }
+
+                    })
+                    setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
+
+                    })
+                    create()
+                    show()
+
+                }
     }
 }

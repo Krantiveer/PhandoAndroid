@@ -28,7 +28,9 @@ class BrowseListRepository(private val application: Application) {
         var data: MutableLiveData<DataLoadingStatus<List<BrowseData>>> = MutableLiveData<DataLoadingStatus<List<BrowseData>>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
-        val call = apiService.getBrowseDataList(dataFilters.type, dataFilters.genre_id, dataFilters.filter, dataFilters.limit, dataFilters.offset)
+        val call = apiService.getBrowseDataList(dataFilters.type,
+                dataFilters.genre_id, dataFilters.filter,dataFilters.filter_type, dataFilters.limit, dataFilters.offset)
+
         val url = call.request().url().toString()
         val apiDataDao = AppDatabase.getInstance(application)?.apiDataDao()
 

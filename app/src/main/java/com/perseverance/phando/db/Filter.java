@@ -23,6 +23,10 @@ public class Filter implements Serializable {
     @SerializedName("title")
     private String title;
 
+    @SerializedName("filter_type")
+    private String filter_type;
+
+
     @NotNull
     public String getKey() {
         return key;
@@ -38,5 +42,13 @@ public class Filter implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getFilter_type() {
+        return filter_type;
+    }
+
+    public void setFilter_type(String filter_type) {
+        this.filter_type = filter_type;
     }
 }

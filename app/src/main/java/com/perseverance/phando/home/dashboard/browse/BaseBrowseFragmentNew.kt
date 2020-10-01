@@ -1,7 +1,6 @@
 package com.perseverance.phando.home.dashboard.browse
 
 
-import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -15,7 +14,6 @@ import android.widget.Toast
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -39,6 +37,7 @@ import com.perseverance.phando.home.dashboard.filter.FilterAdapter
 import com.perseverance.phando.home.dashboard.models.BrowseData
 import com.perseverance.phando.home.dashboard.models.CategoryTab
 import com.perseverance.phando.home.dashboard.models.DataFilters
+import com.perseverance.phando.home.dashboard.models.FilterForAdopter
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.list.HomeFragmentParentListAdapter
@@ -56,7 +55,6 @@ import com.perseverance.phando.utils.PreferencesUtils
 import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
 import com.perseverance.phando.home.profile.login.LoginActivity
-import kotlinx.android.synthetic.main.activity_user_profile.*
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_browse_new.*
 import kotlinx.android.synthetic.main.fragment_browse_new.progressBar
@@ -138,18 +136,10 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
 
                 it.data?.let { browseDataList ->
                     if (browseDataList.isNotEmpty()) {
-
                         categoryTabListList = browseDataList as ArrayList<CategoryTab>
                         categoryTabListList.map {
                             it.show = true
                             it.showFilter = false
-                            it.filters.apply {
-                                val languageList = arrayListOf<com.perseverance.phando.home.dashboard.models.Filter>()
-                                userProfileViewModel.languageList.forEach {
-                                    languageList.add(com.perseverance.phando.home.dashboard.models.Filter(id=it.id,name = it.language))
-                                }
-                                addAll(1,languageList)
-                            }
 
                         }
                         browseFragmentCategoryTabListAdapter = BrowseFragmentCategoryTabListAdapter(activity as Context, this)
@@ -239,6 +229,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                 type = ""
                 genre_id = ""
                 filter = ""
+                filter_type = ""
 
             }
             browseFragmentViewModel.refreshData(dataFilters)
@@ -283,12 +274,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                         filters.layoutManager = LinearLayoutManager(activity)
                         val allFilterAdapter = FilterAdapter(activity as Context, this@BaseBrowseFragmentNew)
                         filters.adapter = allFilterAdapter
-                        val filterList = categoryTab?.filters?.let { ArrayList(it) }
-//                        val languageList = arrayListOf<com.perseverance.phando.home.dashboard.models.Filter>()
-//                        userProfileViewModel.languageList.forEach {
-//                            languageList.add(com.perseverance.phando.home.dashboard.models.Filter(id=it.id,name = it.language))
-//                        }
-//                        filterList?.addAll(1,languageList)
+                        val filterList = categoryTab?.filters as ArrayList
                         allFilterAdapter.addAll(filterList)
 
                     }
@@ -355,6 +341,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                         putExtra("id", data.id.toString())
                         putExtra("title", data.title)
                         putExtra("type", dataFilters.type)
+                        putExtra("filter_type", dataFilters.filter_type)
                         putExtra("imageOrientation", data.image_orientation)
                     }
                     startActivity(intent)
@@ -427,16 +414,18 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                         type = categoryTab!!.type
                         genre_id = ""
                         filter = ""
+                        filter_type = ""
 
                     }
                     browseFragmentViewModel.refreshData(dataFilters)
                     setFilterGravity(Gravity.LEFT)
                 }
             }
-            is com.perseverance.phando.home.dashboard.models.Filter -> {
+            is FilterForAdopter -> {
                 dataFilters.apply {
                     genre_id = if (type != "GENRES") data.id else ""
                     filter = if (type == "GENRES") data.id else ""
+                    filter_type = data.filter_type
 
                 }
                 categoryTabListList.map {

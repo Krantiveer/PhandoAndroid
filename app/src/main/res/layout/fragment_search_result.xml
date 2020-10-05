@@ -110,7 +110,7 @@
                 android:textColor="@drawable/white_text_selector"
                 android:textSize="@dimen/_10sdp"
                 android:drawableTop="@drawable/ic_filter"
-
+                android:visibility="gone"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/hint" />
 

@@ -198,7 +198,7 @@
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:text="Language" />
 
 

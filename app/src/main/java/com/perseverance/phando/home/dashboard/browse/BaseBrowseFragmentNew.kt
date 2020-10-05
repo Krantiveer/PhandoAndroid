@@ -174,9 +174,9 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
                 lifecycleScope.launch(Dispatchers.IO) {
                     syncDownload(it.data?.user_downloads)
                 }
-               if (it.data?.preferred_language?.isEmpty()!!){
-                   openLanguagePreferenceDialog()
-               }
+//               if (it.data?.preferred_language?.isEmpty()!!){
+//                   openLanguagePreferenceDialog()
+//               }
 
             }
 

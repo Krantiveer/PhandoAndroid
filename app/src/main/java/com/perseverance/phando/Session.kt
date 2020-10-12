@@ -58,10 +58,10 @@ class Session : VideoPlayerApplication() {
             if (sTracker == null) {
                 if (BuildConfig.DEBUG) {
                     sTracker = sAnalytics?.newTracker(R.xml.test_global_tracker)
-                    sTracker?.enableAutoActivityTracking(true);
+                    sTracker?.enableAutoActivityTracking(false);
                 } else {
                     sTracker = sAnalytics?.newTracker(R.xml.global_tracker)
-                    sTracker?.enableAutoActivityTracking(true);
+                    sTracker?.enableAutoActivityTracking(false);
                 }
 
             }

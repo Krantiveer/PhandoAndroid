@@ -8,23 +8,23 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuItemCompat
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.SadhnaDBHelper
-import com.perseverance.phando.utils.TrackingUtils
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_search.*
 import java.util.*
 
 
-class SearchActivity : AppCompatActivity(), FetchSuggestionsListener {
+class SearchActivity : BaseScreenTrackingActivity(), FetchSuggestionsListener {
 
 
+    override var screenName = BaseConstants.SEARCH_SCREEN
     private var adapter: SuggestionAdapter? = null
     private var searchView: SearchView? = null
     private val searchInputFilter: InputFilter? = null
@@ -48,7 +48,6 @@ class SearchActivity : AppCompatActivity(), FetchSuggestionsListener {
         adapter = SuggestionAdapter(this, searchHistoryList)
         listView!!.adapter = adapter
         listView!!.onItemClickListener = AdapterView.OnItemClickListener { arg0, arg1, position, arg3 -> onQueryCompleted(adapter!!.getItem(position)) }
-        TrackingUtils.sendScreenTracker(BaseConstants.SEARCH)
         btnClearHistory.setOnClickListener {
             sadhnaDBHelper!!.deleteSearchHistory()
             searchHistoryList!!.clear()

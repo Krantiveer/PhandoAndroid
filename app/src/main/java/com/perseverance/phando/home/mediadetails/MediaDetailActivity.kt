@@ -21,18 +21,20 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.facebook.appevents.AppEventsConstants
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.perseverance.patrikanews.utils.getViewModel
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
@@ -44,33 +46,34 @@ import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
-import com.perseverance.phando.home.mediadetails.payment.*
+import com.perseverance.phando.home.mediadetails.payment.MediaplaybackData
+import com.perseverance.phando.home.mediadetails.payment.PurchaseOption
+import com.perseverance.phando.home.mediadetails.payment.PurchaseOptionBottomSheetFragment
+import com.perseverance.phando.home.mediadetails.payment.PurchaseOptionSelection
 import com.perseverance.phando.home.profile.login.LoginActivity
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.home.videolist.BaseCategoryListAdapter
 import com.perseverance.phando.payment.paymentoptions.PaymentActivity
-import com.perseverance.phando.payment.paymentoptions.WalletDetailActivity
 import com.perseverance.phando.payment.paymentoptions.WalletDetailViewModel
-import com.perseverance.phando.payment.subscription.CreateOrderResponse
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
 import com.perseverance.phando.payment.subscription.SubscriptionsViewModel
 import com.perseverance.phando.utils.*
-import com.razorpay.Checkout
-import com.razorpay.PaymentResultListener
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
 import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.content_detail.*
-import org.json.JSONObject
 
-class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPlayerCallback, PurchaseOptionSelection {
+class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, PhandoPlayerCallback, PurchaseOptionSelection {
+    override var screenName=""
     private lateinit var purchaseOption: PurchaseOption
     private var razorpayOrdertId: String? = null
     val STRIKE_THROUGH_SPAN = StrikethroughSpan()
     val downloadMetadataDao by lazy {
         AppDatabase.getInstance(this)?.downloadMetadataDao()
     }
-
+    val logger by lazy {
+        AppEventsLogger.newLogger(this@MediaDetailActivity)
+    }
     companion object {
         const val LOGIN_FOR_RENT = 1
         const val LOGIN_FOR_BUY = 2
@@ -690,9 +693,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         this.purchaseOption = purchaseOption.apply {
             mediaTitle= mediaMetadata?.title
         }
-        startActivityForResult(Intent(this@MediaDetailActivity,PaymentActivity::class.java).apply {
-            putExtra(BaseConstants.PURCHASE_OPTION,purchaseOption)
-        },REQUEST_CODE_PAYMENT)
+        startActivityForResult(Intent(this@MediaDetailActivity, PaymentActivity::class.java).apply {
+            putExtra(BaseConstants.PURCHASE_OPTION, purchaseOption)
+        }, REQUEST_CODE_PAYMENT)
         //createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type)
        // val paymentOptionBottomSheetFragment = PaymentOptionBottomSheetFragment()
        // paymentOptionBottomSheetFragment.show(supportFragmentManager, paymentOptionBottomSheetFragment.getTag())
@@ -980,6 +983,9 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 id = it.id
             })
         }
+        mediaMetadata?.let {
+            logViewContentEvent(it.media_id,it.type,it.title)
+        }
 
     }
 
@@ -1196,7 +1202,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
                 }
             }
 
-            REQUEST_CODE_PAYMENT ->{
+            REQUEST_CODE_PAYMENT -> {
                 mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
             }
         }
@@ -1266,7 +1272,7 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
             if (it.action == "playerstart") {
                 if (!isPlayerstartSent) {
                     TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
-                    TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS, eventData.toString())
+                    TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS_SCREEN, eventData.toString())
                     isPlayerstartSent = true
                 } else {
                 }
@@ -1505,5 +1511,15 @@ class MediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPla
         return String.format("%.2f", number)
     }
 
-
+    /**
+     * This function assumes logger is an instance of AppEventsLogger and has been
+     * created using AppEventsLogger.newLogger() call.
+     */
+    fun logViewContentEvent( contentId: String?,contentType: String?, contentData: String?) {
+        val params = Bundle()
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, contentId)
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, contentType)
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, contentData)
+        logger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, params)
+    }
 }

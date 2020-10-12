@@ -1,6 +1,8 @@
 package com.perseverance.phando.constants;
 
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Created by TrilokiNath on 02-08-2016.
  */
@@ -28,25 +30,44 @@ public class BaseConstants {
     public static final String SERVER_TIMEOUT_ERROR = "Server is taking too much time to load.";
     public static final String APPLICATION_ERROR = "Application Error. Please try again";
 
-    public static final String HOME = "HomeScreen";
-    public static final String SEARCH = "SearchScreen";
-    public static final String CATEGORY_VIDEO = "CategoryVideoScreen";
-    public static final String MY_LIST = "MyListScreen";
-    public static final String SETTINGS = "SettingsScreen";
-    public static final String MEDIA_DETAILS = "MediaDetailsScreen";
 
-    public static final String LOGIN = "LoginScreen";
-    public static final String LOGIN_WITH_EMAIL = "LoginWithEmailScreen";
-    public static final String LOGIN_WITH_OTP = "LoginWithOTPScreen";
-    public static final String SIGNUP = "SignupScreen";
-    public static final String FORGOT_PASSWORD = "ForgotPasswordScreen";
+    //Screens for tracking
+    public static final String SPLASH_SCREEN = "Splash";
+    public static final String HOME_BROWSE_SCREEN = "Browse";
+    public static final String HOME_SCREEN = "Home";
+    public static final String SEARCH_SCREEN = "Search";
+    public static final String SEARCH_RESULT = "Search";
+    public static final String VIDEO_CATEGORY_SCREEN = "VideoCategory";
+    public static final String SERIES_SCREEN = "Series";
+    public static final String MY_LIST_SCREEN = "MyList";
+    public static final String SETTINGS_SCREEN = "Settings";
+    public static final String MEDIA_DETAILS_SCREEN = "MediaDetails";
+    public static final String NOTIFICATION_LIST_SCREEN = "NotificationList";
+
+    public static final String PROFILE_SCREEN = "Profile";
+    public static final String LOGIN_SCREEN = "LoginScreen";
+    public static final String SIGNUP_SCREEN = "SignupScreen";
+    public static final String LOGIN_WITH_EMAIL_SCREEN = "LoginWithEmail";
+    public static final String LOGIN_WITH_MOBILE_SCREEN = "LoginWithMobile";
+    public static final String FORGOT_PASSWORD_SCREEN = "ForgotPassword";
+    public static final String SET_PASSWORD_SCREEN = "SetPassword";
+    public static final String CHANGE_PASSWORD_SCREEN = "ChangePassword";
+    public static final String OTP_VERIFICATION_SCREEN = "OTPVerification";
+
+    public static final String PAYMENT_OPTIONS_SCREEN = "PaymentOptions";
+    public static final String WALLWET_DETAILS_SCREEN = "WalletDetails";
+    public static final String WALLWET_HISTORY_SCREEN = "WalletHistory";
+    public static final String WALLWET_RECHARGE_SCREEN = "WalletRecharge";
+    public static final String WALLWET_TC_SCREEN = "WalletT&C";
+
+
     public static final String PURCHASE_OPTION = "purchase_option";
-
 
     public enum Video {
 
         FEATURED(1), LATEST(2), POPULAR(3), MOSTVIEWED(4),
         CATEGORY(5), SERIESVIDEOS(6), RELATEDVIDEOS(7), CHANNELVIDEOS(8);
+
         private int type;
 
         Video(int sType) {

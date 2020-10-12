@@ -20,10 +20,10 @@ class EpisodeListViewHolder(itemView: View, listener: AdapterClickListener) : Ba
 
     override fun onBind(item: Episode) {
         itemView.tag = item
-        if (item.is_free == 0) { // if paid video then show premium icon
-            itemView.free.visible()
-        } else {
+        if (item.is_free == 1) { // if paid video then show premium icon
             itemView.free.gone()
+        } else {
+            itemView.free.visible()
         }
         itemView.img_thumbnail.resizeView(ListItemThumbnail())
         Utils.displayImage(itemView.context, item.thumbnail,

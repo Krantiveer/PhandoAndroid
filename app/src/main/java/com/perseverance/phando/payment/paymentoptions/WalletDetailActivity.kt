@@ -11,7 +11,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.CompoundButton
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
@@ -31,7 +31,9 @@ import kotlinx.android.synthetic.main.activity_payment_options.toolbar
 import org.json.JSONObject
 
 
-class WalletDetailActivity : AppCompatActivity(), PaymentResultListener {
+class WalletDetailActivity : BaseScreenTrackingActivity(), PaymentResultListener {
+
+    override var screenName="WalletDetail"
 
     private var razorpayOrdertId: String? = null
     private val subscriptionsViewModel by lazy {

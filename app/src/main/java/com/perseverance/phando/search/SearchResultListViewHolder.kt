@@ -20,10 +20,10 @@ class SearchResultListViewHolder(itemView: View, listener: AdapterClickListener)
 
     override fun onBind(item: SearchResult) {
         itemView.tag = item
-        if (item.is_free == 0) { // if paid video then show premium icon
-            itemView.free.visible()
-        } else {
+        if (item.is_free == 1) { // if paid video then show premium icon
             itemView.free.gone()
+        } else {
+            itemView.free.visible()
         }
 
         Utils.displayImage(itemView.context, item.thumbnail,

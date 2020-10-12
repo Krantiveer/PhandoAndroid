@@ -7,10 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.fragment.app.Fragment
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
+import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
@@ -22,10 +23,9 @@ import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.fragment_banner_list.*
 import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 
-open class BaseBannerFragment : Fragment() {
+abstract class BaseBannerFragment : BaseFragment() {
 
     private var banner: Video? = null
-    private var activity: AppCompatActivity? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,11 +76,6 @@ open class BaseBannerFragment : Fragment() {
         }
 
 
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        activity = context as AppCompatActivity
     }
 
     companion object {

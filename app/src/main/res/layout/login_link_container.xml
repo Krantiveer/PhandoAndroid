@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/login_background"
     android:orientation="vertical"
-    tools:context="com.perseverance.phando.home.profile.login.BaseUserLoginActivity">
+    tools:context="com.perseverance.phando.home.profile.login.BaseUserLoginFragment">
 
     <LinearLayout
         android:id="@+id/loginWith"

@@ -3,7 +3,7 @@ package com.perseverance.phando.payment.paymentoptions
 import android.app.Activity
 import android.app.Application
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

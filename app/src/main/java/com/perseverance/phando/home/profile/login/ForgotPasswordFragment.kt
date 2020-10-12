@@ -10,13 +10,15 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.navigation.NavOptions
 import com.perseverance.patrikanews.utils.toast
-import com.perseverance.phando.BaseActivity
+import com.perseverance.phando.BaseLoginFragment
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_p2_forgot_paasword.*
 
-class P2ForgotPasswordActivity : BaseActivity() {
+class ForgotPasswordFragment : BaseLoginFragment() {
 
+    override var screenName= BaseConstants.FORGOT_PASSWORD_SCREEN
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_p2_forgot_paasword, container, false)
     }
@@ -83,7 +85,7 @@ class P2ForgotPasswordActivity : BaseActivity() {
 
         if (ccp.isValidFullNumber) {
             val countryCode = ccp.selectedCountryCode
-            val intent = Intent(appCompatActivity, P2SetPasswordActivity::class.java)
+            val intent = Intent(appCompatActivity, SetPasswordFragment::class.java)
             intent.putExtra("MOBILE", inputPhone.text.toString())
             intent.putExtra("COUNTRY_CODE", countryCode)
             startActivity(intent)

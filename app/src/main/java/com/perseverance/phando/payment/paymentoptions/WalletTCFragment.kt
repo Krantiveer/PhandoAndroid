@@ -13,10 +13,11 @@ import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import kotlinx.android.synthetic.main.activity_wallet_t_c.*
 
 class WalletTCFragment : BaseFragment() {
-
+    override var screenName= BaseConstants.WALLWET_TC_SCREEN
     private val paymentActivityViewModel: PaymentActivityViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,7 +41,7 @@ class WalletTCFragment : BaseFragment() {
         tcWebview.settings.javaScriptEnabled = true
         // tcWebview.setBackgroundColor(R.color.bg_app)
         //tcWebview.loadUrl("javascript:document.body.style.color=\"white\";")
-        paymentActivityViewModel.tcResponseDataLiveData.observe(this, Observer {
+        paymentActivityViewModel.tcResponseDataLiveData.observe(viewLifecycleOwner, Observer {
             progressBar.gone()
             tcWebview.loadData(it.data, "text/html", "UTF-8")
         })
@@ -54,7 +55,7 @@ class WalletTCFragment : BaseFragment() {
             paymentActivityViewModel.activateWallet()
         }
 
-        paymentActivityViewModel.activateWalletLiveData.observe(this, Observer {
+        paymentActivityViewModel.activateWalletLiveData.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             progressBar.gone()
             if (it.status == "success") {

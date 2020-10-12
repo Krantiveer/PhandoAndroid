@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_p2_otp_verification.*
 import java.util.concurrent.TimeUnit
 
 
-abstract class P2BaseOTPVerificationActivity : BaseUserLoginActivity() {
+abstract class BaseOTPVerificationFragment : BaseUserLoginFragment() {
     var countDownTimer: CountDownTimer? = null
     protected lateinit var mobileNo: String
     protected lateinit var countryCode: String

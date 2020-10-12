@@ -14,11 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
+import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
-import com.perseverance.phando.home.dashboard.BaseHomeFragment
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
@@ -27,8 +27,8 @@ import com.perseverance.phando.home.profile.login.LoginActivity
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.fragment_mylist.*
 
-class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener, AdapterClickListener {
-
+class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, AdapterClickListener {
+    override var screenName = BaseConstants.MY_LIST_SCREEN
 
     private var adapter: MyListAdapter? = null
 
@@ -108,8 +108,6 @@ class MyListFragment : BaseHomeFragment(), SwipeRefreshLayout.OnRefreshListener,
             loadVideos(0, true)
         }
 
-
-        TrackingUtils.sendScreenTracker(BaseConstants.MY_LIST)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

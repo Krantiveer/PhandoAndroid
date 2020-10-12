@@ -1,7 +1,7 @@
 package com.perseverance.phando.payment.paymentoptions
 
 import android.content.DialogInterface
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.MenuItem
@@ -18,10 +18,13 @@ import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import kotlinx.android.synthetic.main.activity_wallet_t_c.*
 import kotlinx.android.synthetic.main.activity_wallet_t_c.progressBar
 
 class WalletTCActivity : BaseFragment() {
+    override var screenName= BaseConstants.WALLWET_TC_SCREEN
+
     private val walletDetailViewModel : WalletDetailViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
@@ -26,8 +26,9 @@ import com.perseverance.phando.videoplayer.VideosModel
 import kotlinx.android.synthetic.main.activity_base_list.*
 import kotlinx.android.synthetic.main.fragment_base.*
 
-class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshListener, AdapterClickListener {
+class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.OnRefreshListener, AdapterClickListener {
 
+    override var screenName=BaseConstants.VIDEO_CATEGORY_SCREEN
 
     private var waitingDialog: WaitingDialog? = null
     private lateinit var id: String
@@ -83,7 +84,6 @@ class BaseVideoListActivity : AppCompatActivity(), SwipeRefreshLayout.OnRefreshL
         lbl_no_video_base.setOnClickListener({ loadVideos(0, true) })
 
         loadVideos(0, true)
-        TrackingUtils.sendScreenTracker(BaseConstants.CATEGORY_VIDEO)
     }
 
 

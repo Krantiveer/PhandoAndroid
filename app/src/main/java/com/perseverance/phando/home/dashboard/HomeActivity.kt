@@ -10,7 +10,7 @@ import android.os.Handler
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
@@ -19,7 +19,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.newgendroid.news.utils.AppDialogListener
-import com.perseverance.phando.AdsUtil.BannerType
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
@@ -33,9 +32,10 @@ import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.TrackingUtils
 import com.perseverance.phando.utils.Utils
 
-class HomeActivity : AppCompatActivity(),
+class HomeActivity : BaseScreenTrackingActivity(),
         BottomNavigationView.OnNavigationItemSelectedListener {
 
+    override var screenName=BaseConstants.HOME_SCREEN
     // private var mCustomTabActivityHelper: CustomTabActivityHelper? = null
     private var selectedTab = 0
     private var doubleBackToExitPressedOnce = false
@@ -72,7 +72,6 @@ class HomeActivity : AppCompatActivity(),
         homeActivityViewModel.callForFilters()
         homeActivityViewModel.callLanguage()
         homeActivityViewModel.callForAppInfo()
-        TrackingUtils.sendScreenTracker(BaseConstants.HOME)
         val msg = intent.getStringExtra("msg")
         msg?.let {
             DialogUtils.showDialog(this, "Error!", it, "Close", null, object : AppDialogListener {

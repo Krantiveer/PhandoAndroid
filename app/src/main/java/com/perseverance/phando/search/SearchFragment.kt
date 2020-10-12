@@ -9,18 +9,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
+import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.*
 import com.perseverance.phando.genericAdopter.AdapterClickListener
-import com.perseverance.phando.home.dashboard.BaseHomeFragment
 import com.perseverance.phando.home.dashboard.filter.GenresFilterAdapter
 import com.perseverance.phando.home.dashboard.filter.LanguageFilterAdapter
 import com.perseverance.phando.home.dashboard.models.DataFilters
@@ -35,8 +34,8 @@ import kotlinx.android.synthetic.main.fragment_search_result.*
 import java.util.*
 
 
-class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, AdapterClickListener {
-
+class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, AdapterClickListener {
+    override var screenName= BaseConstants.SEARCH_SCREEN
     private var endlessScrollListener: EndlessScrollListener? = null
     private var pageCount: Int = 0
     private var adapter: BaseCategoryListAdapter? = null
@@ -44,16 +43,6 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
     private var isGenresFilter = false
     private var sheetBehavior: BottomSheetBehavior<*>? = null
     val dataFilters = DataFilters()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val callback = object : OnBackPressedCallback(true /* enabled by default */) {
-
-            override fun handleOnBackPressed() {
-                Toast.makeText(activity, "Search", Toast.LENGTH_LONG).show()
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(this, callback)
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -62,9 +51,9 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val manager = GridLayoutManager(activity, 2)
+        val manager = GridLayoutManager(appCompatActivity, 2)
         recyclerView.layoutManager = manager
-        val decoration = BaseRecycleMarginDecoration(activity)
+        val decoration = BaseRecycleMarginDecoration(appCompatActivity)
         recyclerView.addItemDecoration(decoration)
         toolbarTitle.text = "Search"
         pageCount = 0
@@ -87,7 +76,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
 //                if (hasFocus){
 //                    view?.let {
 //                         view.postDelayed(Runnable {
-//                         val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+//                         val imm = appCompatActivity?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
 //                        imm.showSoftInput(view.findFocus(), 0)
 //                         },1000)
 //                    }
@@ -147,7 +136,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
 
         })
         searchView.setOnCloseListener {
-            Toast.makeText(activity, "Clodes", Toast.LENGTH_SHORT).show()
+            Toast.makeText(appCompatActivity, "Clodes", Toast.LENGTH_SHORT).show()
             false
         }
 
@@ -224,16 +213,16 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
 
                         filters.adapter = null
                         if (!isGenresFilter) {
-                            filters.layoutManager = LinearLayoutManager(activity)
-                            val allFilterAdapter = LanguageFilterAdapter(activity as Context, this@SearchFragment)
+                            filters.layoutManager = LinearLayoutManager(appCompatActivity)
+                            val allFilterAdapter = LanguageFilterAdapter(appCompatActivity as Context, this@SearchFragment)
                             filters.adapter = allFilterAdapter
-                            val filterList = AppDatabase.getInstance(activity!!.applicationContext)?.languageDao()?.allLanguage()
+                            val filterList = AppDatabase.getInstance(appCompatActivity!!.applicationContext)?.languageDao()?.allLanguage()
                             allFilterAdapter.addAll(filterList)
                         } else {
-                            filters.layoutManager = LinearLayoutManager(activity)
-                            val filterAdapter = GenresFilterAdapter(activity as Context, this@SearchFragment)
+                            filters.layoutManager = LinearLayoutManager(appCompatActivity)
+                            val filterAdapter = GenresFilterAdapter(appCompatActivity as Context, this@SearchFragment)
                             filters.adapter = filterAdapter
-                            val filterList = AppDatabase.getInstance(activity!!.applicationContext)?.categoryDao()?.allGenres()
+                            val filterList = AppDatabase.getInstance(appCompatActivity!!.applicationContext)?.categoryDao()?.allGenres()
                             filterAdapter.addAll(filterList)
                         }
 
@@ -244,8 +233,6 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
             override fun onSlide(view: View, v: Float) {}
         })
 
-
-        TrackingUtils.sendScreenTracker("SearchView")
     }
 
 
@@ -263,7 +250,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
     }
 
     override fun onVideoSelected(item: Video) {
-        if (Utils.isNetworkAvailable(activity)) {
+        if (Utils.isNetworkAvailable(appCompatActivity)) {
             /*Intent intent = new Intent(this, PlayerListActivity.class);
             intent.putExtra(Key.VIDEO, item);
             startActivityForResult(intent, BaseConstants.REQUEST_CODE_PLAYER);
@@ -271,16 +258,16 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
             /*startActivity(MediaDetailActivity.getDetailIntent(this, item))
             Utils.animateActivity(this, "next")*/
             if ("T".equals(item.type)) {
-                val intent = Intent(activity, SeriesActivity::class.java)
+                val intent = Intent(appCompatActivity, SeriesActivity::class.java)
                 intent.putExtra(Key.CATEGORY, item)
                 startActivity(intent)
             } else {
                 startActivity(MediaDetailActivity.getDetailIntent(this@SearchFragment as Context, item))
-                Utils.animateActivity(activity, "next")
+                Utils.animateActivity(appCompatActivity, "next")
             }
 
         } else {
-            DialogUtils.showMessage(activity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+            DialogUtils.showMessage(appCompatActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
         }
     }
 
@@ -315,7 +302,7 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
             adapter!!.clear()
             //error.visible()
             // error.text=errorMessage
-            //DialogUtils.showMessage(activity, errorMessage, Toast.LENGTH_SHORT, false)
+            //DialogUtils.showMessage(appCompatActivity, errorMessage, Toast.LENGTH_SHORT, false)
         }
     }
 
@@ -352,15 +339,15 @@ class SearchFragment : BaseHomeFragment(), VideoSelectedListener, SearchView, Ad
             }
 
             is Video -> {
-                if (Utils.isNetworkAvailable(activity)) {
+                if (Utils.isNetworkAvailable(appCompatActivity)) {
                     val video = data
                     if ("T".equals(video.type)) {
-                        val intent = Intent(activity, SeriesActivity::class.java)
+                        val intent = Intent(appCompatActivity, SeriesActivity::class.java)
                         intent.putExtra(Key.CATEGORY, video)
                         startActivity(intent)
                     } else {
-                        startActivity(MediaDetailActivity.getDetailIntent(activity!!, video))
-                        Utils.animateActivity(activity, "next")
+                        startActivity(MediaDetailActivity.getDetailIntent(appCompatActivity, video))
+                        Utils.animateActivity(appCompatActivity, "next")
                     }
                 }
             }

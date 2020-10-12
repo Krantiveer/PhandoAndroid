@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
@@ -28,8 +29,9 @@ import kotlinx.android.synthetic.main.activity_series.*
 import kotlinx.android.synthetic.main.activity_series.otherInfo
 import kotlinx.android.synthetic.main.activity_series.viewMore
 
-class SeriesActivity : AppCompatActivity(), AdapterClickListener {
+class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
+    override var screenName=BaseConstants.SERIES_SCREEN
 
     private var waitingDialog: WaitingDialog? = null
     private var adapter: SeriesListAdapter? = null
@@ -91,7 +93,6 @@ class SeriesActivity : AppCompatActivity(), AdapterClickListener {
                 viewMore.setImageResource(R.drawable.ic_detail_arrow_up)
             }
         }
-        TrackingUtils.sendScreenTracker(BaseConstants.CATEGORY_VIDEO)
     }
 
 

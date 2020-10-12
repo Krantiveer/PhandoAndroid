@@ -3,7 +3,7 @@ package com.perseverance.phando.payment.paymentoptions
 import android.app.Activity
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -29,7 +29,9 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 
-class PaymentActivity : AppCompatActivity(),PaymentResultListener {
+class PaymentActivity : BaseScreenTrackingActivity(),PaymentResultListener {
+
+    override var screenName=""
     private var razorpayOrdertId :String?=null
 
     private val paymentActivityViewModel by lazy {

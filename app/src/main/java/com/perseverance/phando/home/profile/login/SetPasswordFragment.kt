@@ -7,14 +7,15 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.NavOptions
 import com.perseverance.patrikanews.utils.toast
-import com.perseverance.phando.BaseActivity
+import com.perseverance.phando.BaseLoginFragment
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_p2_set_paasword.*
 
-class P2SetPasswordActivity : BaseActivity() {
+class SetPasswordFragment : BaseLoginFragment() {
 
-
+    override var screenName= BaseConstants.SET_PASSWORD_SCREEN
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_p2_set_paasword, container, false)
     }

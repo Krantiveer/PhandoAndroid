@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.NavOptions
-import com.perseverance.phando.BaseActivity
+import com.perseverance.phando.BaseLoginFragment
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import kotlinx.android.synthetic.main.activity_p2_password_changed.*
 
-class P2PasswordChangedActivity : BaseActivity() {
-
+class PasswordChangedFragment : BaseLoginFragment() {
+    override var screenName= BaseConstants.CHANGE_PASSWORD_SCREEN
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_p2_password_changed, container, false)
     }

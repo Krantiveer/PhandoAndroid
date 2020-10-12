@@ -15,6 +15,7 @@ import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import kotlinx.android.synthetic.main.fragment_wallet_recharge.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import kotlinx.coroutines.withContext
 
 
 class WalletRechargeFragment : BaseFragment() {
+    override var screenName= BaseConstants.WALLWET_RECHARGE_SCREEN
     private val paymentActivityViewModel: PaymentActivityViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,

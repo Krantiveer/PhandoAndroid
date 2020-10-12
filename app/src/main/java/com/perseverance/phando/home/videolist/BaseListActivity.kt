@@ -2,7 +2,7 @@ package com.perseverance.phando.home.videolist
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +12,7 @@ import com.perseverance.phando.utils.BaseRecycleMarginDecoration
 import kotlinx.android.synthetic.main.activity_base_list.*
 import kotlinx.android.synthetic.main.fragment_base.*
 
-abstract class BaseListActivity : AppCompatActivity(), AdapterClickListener {
+abstract class BaseListActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
     var manager: LinearLayoutManager = GridLayoutManager(this@BaseListActivity, 2)
 

@@ -1,9 +1,9 @@
 package com.perseverance.phando.customtab
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 
-open class ChromeTabHelperActivity : AppCompatActivity() {
+abstract class ChromeTabHelperActivity : BaseScreenTrackingActivity() {
 
 
     private var mCustomTabActivityHelper: CustomTabActivityHelper? = null

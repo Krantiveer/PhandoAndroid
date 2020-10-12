@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/login_background"
     android:orientation="vertical"
-    tools:context="com.perseverance.phando.home.profile.login.P2LoginActivity">
+    tools:context="com.perseverance.phando.home.profile.login.LoginFragment">
 
     <include
         android:id="@+id/logo"

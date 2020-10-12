@@ -24,6 +24,7 @@ import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.isSuccess
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
+import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
@@ -32,7 +33,6 @@ import com.perseverance.phando.db.Category
 import com.perseverance.phando.db.Filter
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
-import com.perseverance.phando.home.dashboard.BaseNetworkErrorFragment
 import com.perseverance.phando.home.dashboard.filter.FilterAdapter
 import com.perseverance.phando.home.dashboard.models.BrowseData
 import com.perseverance.phando.home.dashboard.models.CategoryTab
@@ -63,7 +63,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickListener {
+abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
     private val browseFragmentViewModel by lazy {
         ViewModelProvider(this).get(BrowseFragmentViewModel::class.java)
@@ -506,7 +506,7 @@ abstract class BaseBrowseFragmentNew : BaseNetworkErrorFragment(), AdapterClickL
             }
         }
 
-        MaterialAlertDialogBuilder(activity, R.style.AlertDialogTheme)
+        MaterialAlertDialogBuilder(appCompatActivity, R.style.AlertDialogTheme)
                 .apply {
                     setTitle("Select Language")
                     setMultiChoiceItems(

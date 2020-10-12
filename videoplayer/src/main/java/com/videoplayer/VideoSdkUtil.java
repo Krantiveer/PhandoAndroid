@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.exoplayer2.RenderersFactory;
@@ -84,7 +85,7 @@ public class VideoSdkUtil {
         downloadTracker.resumeDownload();
     }
 
-    public static void startDownload(AppCompatActivity appCompatActivity,VideoPlayerMetadata intentAsSample, String playerTitle) {
+    public static void startDownload(AppCompatActivity appCompatActivity, VideoPlayerMetadata intentAsSample, String playerTitle) {
         VideoPlayerApplication videoPlayerApplication = (VideoPlayerApplication) appCompatActivity.getApplication();
         DownloadTracker downloadTracker = videoPlayerApplication.getDownloadTracker();
 

@@ -8,7 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.GridLayoutManager
 import com.perseverance.phando.R
@@ -25,8 +25,8 @@ import com.perseverance.phando.videoplayer.VideoSelectedListener
 import kotlinx.android.synthetic.main.content_search_result.*
 import java.util.*
 
-class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchView, AdapterClickListener {
-
+class SearchResultActivity : BaseScreenTrackingActivity(), VideoSelectedListener, SearchView, AdapterClickListener {
+    override var screenName = BaseConstants.SEARCH_RESULT
     private var endlessScrollListener: EndlessScrollListener? = null
     private var pageCount: Int = 0
     private var adapter: BaseCategoryListAdapter? = null
@@ -70,7 +70,6 @@ class SearchResultActivity : AppCompatActivity(), VideoSelectedListener, SearchV
         val helper = SadhnaDBHelper(this)
         helper.addSearchHistory(query)
 
-        TrackingUtils.sendScreenTracker("SearchView")
     }
 
 

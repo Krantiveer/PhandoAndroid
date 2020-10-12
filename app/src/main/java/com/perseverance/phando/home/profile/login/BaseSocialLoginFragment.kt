@@ -6,7 +6,6 @@ package com.perseverance.phando.home.profile.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.facebook.*
 import com.facebook.AccessToken
 import com.facebook.login.LoginManager
@@ -17,14 +16,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.perseverance.patrikanews.utils.log
 import com.perseverance.patrikanews.utils.toast
-import com.perseverance.phando.BaseActivity
+import com.perseverance.phando.BaseLoginFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.utils.MyLog
 import org.json.JSONException
 import java.util.*
 
 
-open abstract class BaseSocialLoginActivity : BaseActivity() {
+open abstract class BaseSocialLoginFragment : BaseLoginFragment() {
 
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var callbackManager: CallbackManager

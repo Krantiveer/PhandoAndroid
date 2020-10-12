@@ -2,14 +2,14 @@ package com.perseverance.phando.home.videolist
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.perseverance.phando.R
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.utils.BaseRecycleMarginDecoration
 import kotlinx.android.synthetic.main.activity_saved_video_list.*
 
-abstract class SavedVideoActivity : AppCompatActivity(), AdapterClickListener {
+abstract class SavedVideoActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

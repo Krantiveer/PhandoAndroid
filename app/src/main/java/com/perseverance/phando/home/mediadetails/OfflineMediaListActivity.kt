@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,8 +31,8 @@ import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_offline_media.*
 import kotlinx.android.synthetic.main.activity_offline_media.toolbar
 
-class OfflineMediaListActivity : AppCompatActivity(), AdapterClickListener {
-
+class OfflineMediaListActivity : BaseScreenTrackingActivity(), AdapterClickListener {
+    override var screenName="OfflineMediaList"
     var adapter: OfflineMediaListAdapter? = null
     var downloadBroadcastReceiver: BroadcastReceiver = DownloadBroadcastReceiver()
     val downloadMetadataDao by lazy {

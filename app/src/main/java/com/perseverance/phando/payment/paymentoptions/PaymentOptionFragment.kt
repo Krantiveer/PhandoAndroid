@@ -10,6 +10,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.facebook.appevents.AppEventsConstants
+import com.facebook.appevents.AppEventsLogger
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.logEvent
@@ -20,14 +22,29 @@ import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.Session
+import com.perseverance.phando.constants.BaseConstants
 import kotlinx.android.synthetic.main.fragment_payment_option.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.math.BigDecimal
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class PaymentOptionFragment : BaseFragment() {
+    override var screenName= BaseConstants.PAYMENT_OPTIONS_SCREEN
     private val paymentActivityViewModel: PaymentActivityViewModel by activityViewModels()
+    val logger by lazy {
+        AppEventsLogger.newLogger(appCompatActivity)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        paymentActivityViewModel.purchaseOption?.let {
+            logAddToCartEvent(it.payment_info.media_id.toString(),it.payment_info.type, it.final_price.toDouble(),"INR")
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -127,6 +144,8 @@ class PaymentOptionFragment : BaseFragment() {
                     param(FirebaseAnalytics.Param.ITEMS, arrayOf(item1))
 
                 }
+                //Facebook tracking
+                logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,"INR")
             }
             appCompatActivity.setResult(Activity.RESULT_OK)
             appCompatActivity.finish()
@@ -155,6 +174,10 @@ class PaymentOptionFragment : BaseFragment() {
                             param(FirebaseAnalytics.Param.ITEMS, item1)
 
                         }
+
+                        //Facebook tracking
+                        logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,"INR")
+
                     }
                     appCompatActivity.setResult(Activity.RESULT_OK)
                     appCompatActivity.finish()
@@ -170,4 +193,29 @@ class PaymentOptionFragment : BaseFragment() {
 
     }
 
+    /**
+     * This function assumes logger is an instance of AppEventsLogger and has been
+     * created using AppEventsLogger.newLogger() call.
+     */
+    fun logAddToCartEvent(contentId: String?, contentType: String?, price: Double, currency: String?) {
+        val params = Bundle()
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, contentId)
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, contentType)
+        params.putString(AppEventsConstants.EVENT_PARAM_VALUE_TO_SUM, currency)
+        logger.logEvent(AppEventsConstants.EVENT_NAME_ADDED_TO_CART, price, params)
+    }
+
+    /**
+     * This function assumes logger is an instance of AppEventsLogger and has been
+     * created using AppEventsLogger.newLogger() call.
+     */
+    private fun logAddPurchaseEvent(mediaId: String, type: String, finalPrice: Int, currency: String) {
+        val params = Bundle()
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, mediaId)
+        params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, type)
+        logger.logPurchase(
+                BigDecimal(finalPrice),
+                Currency.getInstance(currency),
+                params)
+    }
 }

@@ -13,17 +13,19 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.Constants
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.fragment_setting.*
 
 
-class SettingsFragment : BaseHomeFragment() {
+class SettingsFragment : BaseFragment() {
 
-
+    override var screenName = BaseConstants.SETTINGS_SCREEN
     private var bitmap: Bitmap? = null
     val menuOnClickListener = View.OnClickListener {
         when (it.id) {

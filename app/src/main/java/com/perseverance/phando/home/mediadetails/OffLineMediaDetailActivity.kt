@@ -13,7 +13,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -42,8 +42,8 @@ import kotlinx.android.synthetic.main.activity_video_details_offline.root
 import kotlinx.android.synthetic.main.activity_video_details_offline.toolbar
 import kotlinx.android.synthetic.main.content_detail_offline.*
 
-class OffLineMediaDetailActivity : AppCompatActivity(), AdapterClickListener, PhandoPlayerCallback {
-
+class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, PhandoPlayerCallback {
+    override var screenName="OffLineMediaDetail"
     companion object {
         const val ARG_VIDEO = "param_video"
         fun getDetailIntent(context: Context, downloadMetadata: DownloadMetadata): Intent {

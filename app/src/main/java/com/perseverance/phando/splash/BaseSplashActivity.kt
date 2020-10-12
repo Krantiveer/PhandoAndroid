@@ -8,15 +8,16 @@ import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.utils.AppSignatureHelper
 import kotlinx.android.synthetic.main.activity_splash.*
 
 
-open class BaseSplashActivity : AppCompatActivity() {
-
+open class BaseSplashActivity : BaseScreenTrackingActivity() {
+    override var screenName = BaseConstants.SPLASH_SCREEN
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (intent.getBooleanExtra("start_home", false)) {

@@ -13,14 +13,14 @@ import android.view.KeyEvent
 import android.view.MenuItem
 import android.webkit.*
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.payment.subscription.PaymentResponse
 import kotlinx.android.synthetic.main.activity_webview.*
 
 
-class WebviewActivity : AppCompatActivity() {
-    //var razorpay : Razorpay?=null
+class WebviewActivity : BaseScreenTrackingActivity() {
+    override var screenName= "Webview"
     var uploadMessage: ValueCallback<Array<Uri?>?>? = null
     private var mUploadMessage: ValueCallback<Uri?>? = null
     val REQUEST_SELECT_FILE = 100

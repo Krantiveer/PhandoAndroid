@@ -7,13 +7,15 @@ import android.view.ViewGroup
 import android.widget.Toast
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.retrofit.Cred
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_p2_login_with_email.*
 import kotlinx.android.synthetic.main.login_link_container.*
 
-class P2LoginWithEmailActivity : BaseUserLoginActivity() {
+class LoginWithEmailFragment : BaseUserLoginFragment() {
+    override var screenName= BaseConstants.LOGIN_WITH_EMAIL_SCREEN
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.activity_p2_login_with_email, container, false)

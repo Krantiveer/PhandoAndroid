@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,7 +23,9 @@ import kotlinx.android.synthetic.main.activity_package_new.*
 import org.json.JSONObject
 import java.util.*
 
-class SubscriptionPackageActivity : AppCompatActivity(), DataAdapter.OnClickListener, PaymentResultListener {
+class SubscriptionPackageActivity : BaseScreenTrackingActivity(), DataAdapter.OnClickListener, PaymentResultListener {
+
+    override var screenName: String="Package Subscription"
     private var apiServiceLogin: ApiService? = null
     private var recyclerView: RecyclerView? = null
     private var data: ArrayList<PackageDetails>? = null

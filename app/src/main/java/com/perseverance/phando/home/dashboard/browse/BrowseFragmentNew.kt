@@ -5,6 +5,7 @@ import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.home.dashboard.models.BrowseData
 import com.perseverance.phando.utils.Util
 import kotlinx.android.synthetic.main.fragment_browse_new.*
@@ -13,6 +14,8 @@ import kotlinx.android.synthetic.main.fragment_browse_new.*
  * A simple [Fragment] subclass.
  */
 class BrowseFragmentNew : BaseBrowseFragmentNew() {
+
+    override var screenName = BaseConstants.HOME_BROWSE_SCREEN
     override fun setBannerSlider(browseDataList: List<BrowseData>, browseData: BrowseData) {
         var width = 0
         if (browseData.displayType == "TOP_BANNER") {

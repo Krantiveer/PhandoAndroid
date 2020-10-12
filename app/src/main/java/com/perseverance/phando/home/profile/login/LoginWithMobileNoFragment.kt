@@ -10,12 +10,15 @@ import androidx.navigation.NavOptions
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.data.BaseResponse
 import kotlinx.android.synthetic.main.activity_p2_login_with_mobileno.*
 import kotlinx.android.synthetic.main.login_link_container.*
 
 
-class P2LoginWithMobileNoActivity : BaseUserLoginActivity() {
+class LoginWithMobileNoFragment : BaseUserLoginFragment() {
+    override var screenName= BaseConstants.LOGIN_WITH_MOBILE_SCREEN
+
     lateinit var mobileNo: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

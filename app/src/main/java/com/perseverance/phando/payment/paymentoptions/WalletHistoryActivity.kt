@@ -2,7 +2,7 @@ package com.perseverance.phando.payment.paymentoptions
 
 import android.os.Bundle
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -10,10 +10,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import kotlinx.android.synthetic.main.activity_wallet_history.*
 
-class WalletHistoryActivity : AppCompatActivity() {
-
+class WalletHistoryActivity : BaseScreenTrackingActivity() {
+    override var screenName= BaseConstants.WALLWET_HISTORY_SCREEN
     private val walletDetailViewModel by lazy {
         ViewModelProvider(this).get(WalletDetailViewModel::class.java)
     }

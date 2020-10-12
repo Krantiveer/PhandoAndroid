@@ -7,6 +7,7 @@ import androidx.lifecycle.Observer
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
@@ -14,8 +15,8 @@ import kotlinx.android.synthetic.main.activity_p2_otp_verification.*
 import kotlinx.android.synthetic.main.login_link_container.*
 
 
-class P2ChangePasswordOTPVerificationActivity : P2BaseOTPVerificationActivity() {
-
+class ChangePasswordOTPVerificationFragment : BaseOTPVerificationFragment() {
+    override var screenName= BaseConstants.OTP_VERIFICATION_SCREEN
     private lateinit var password: String
 
     val verifyOtpForforgotPsswordObserver = Observer<DataLoadingStatus<BaseResponse>> {

@@ -10,7 +10,7 @@ import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.retrofit.LoginResponse
 
 
-open abstract class BaseSignupActivity : BaseUserLoginActivity() {
+open abstract class BaseSignupFragment : BaseUserLoginFragment() {
     abstract fun onRegisterSuccess(loginResponse: LoginResponse)
 
     val registerUserObserver = Observer<DataLoadingStatus<LoginResponse>> {

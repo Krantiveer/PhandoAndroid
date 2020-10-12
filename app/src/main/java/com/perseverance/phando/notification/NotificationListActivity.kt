@@ -22,6 +22,7 @@ import kotlinx.android.synthetic.main.fragment_base.*
 
 class NotificationListActivity : BaseListActivity() {
 
+    override var screenName =BaseConstants.NOTIFICATION_LIST_SCREEN
     private val notificationDao by lazy {
         AppDatabase.getInstance(this@NotificationListActivity)?.notificationDao()
     }

@@ -24,6 +24,7 @@
 
     <string name="Rs">\u20B9</string>
 
+    <string name="default_notification_channel_id">com.perseverance.phunflix</string>
 
 
 

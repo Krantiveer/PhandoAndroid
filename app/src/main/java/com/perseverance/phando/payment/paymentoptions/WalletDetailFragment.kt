@@ -21,6 +21,7 @@ import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
+import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.payment.subscription.CreateOrderResponse
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
@@ -52,7 +53,7 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class WalletDetailFragment : BaseFragment() {
-
+    override var screenName= BaseConstants.WALLWET_DETAILS_SCREEN
     var MAX_RECHARGE= 1000
     private val paymentActivityViewModel : PaymentActivityViewModel by activityViewModels()
 

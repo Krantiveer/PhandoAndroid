@@ -25,6 +25,7 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.annotation.NonNull
 import androidx.appcompat.app.AppCompatActivity
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat

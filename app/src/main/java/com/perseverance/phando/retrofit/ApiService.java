@@ -185,7 +185,7 @@ public interface ApiService {
             @Query("offset") int offset
     );
 
-    @GET("category")
+    @GET("category_v1")
     Call<List<CategoryTab>> getCategoryTabList();
 
     @GET("setContinueWatchingTime")

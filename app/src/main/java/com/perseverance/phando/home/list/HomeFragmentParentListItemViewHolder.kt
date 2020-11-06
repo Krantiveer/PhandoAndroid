@@ -29,12 +29,14 @@ open class HomeFragmentParentListItemViewHolder(itemView: View, listener: Adapte
         val recyclerAdapter = HomeFragmentChildListAdapter(itemView.context, listener, item.displayType, item.image_orientation)
         recyclerAdapter.items = videos as MutableList<Video>
         itemView.recyclerview_home_items.adapter = recyclerAdapter
+        item.id?.let{
+            if (item.list.size > 3 && item.id != 0) {
+                itemView.txt_see_all.visible()
+            } else {
+                itemView.txt_see_all.gone()
+            }
+        }?: itemView.txt_see_all.gone()
 
-        if (item.list.size > 3 && item.id != 0) {
-            itemView.txt_see_all.visible()
-        } else {
-            itemView.txt_see_all.gone()
-        }
 
 
     }

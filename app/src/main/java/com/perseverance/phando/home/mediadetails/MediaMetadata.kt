@@ -42,8 +42,10 @@ data class MediaMetadata(
         val next_media: NextMedia? = null,
         val intro: IntroInfo? = null,
         val series: Series? = null,
+        val share_url: String,
         val cc_files: List<CcFile>? = arrayListOf(),
-        val analytics_category_id: String?
+        val analytics_category_id: String?,
+        val trailer_id: Int?
 ) {
     fun getOtherText(): String {
         val otherText = StringBuilder()

@@ -43,6 +43,7 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
     private var isGenresFilter = false
     private var sheetBehavior: BottomSheetBehavior<*>? = null
     val dataFilters = DataFilters()
+    var timer: CountDownTimer? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -87,7 +88,7 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
 
 
         searchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener, androidx.appcompat.widget.SearchView.OnQueryTextListener {
-            var timer: CountDownTimer? = null
+
 
             override fun onQueryTextSubmit(newText: String?): Boolean {
 
@@ -104,7 +105,7 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
             override fun onQueryTextChange(newText: String?): Boolean {
 
                 timer?.cancel()
-                timer = object : CountDownTimer(1000, 1500) {
+                timer = object : CountDownTimer(1000, 2000) {
                     override fun onTick(millisUntilFinished: Long) {}
                     override fun onFinish() {
                         newText?.let {
@@ -273,7 +274,10 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
 
 
     override fun onSearchResultSuccess(videos: List<Video>) {
-        progressBar.gone()
+        try {
+            progressBar.gone()
+        } catch (e: Exception) {
+        }
         if (videos.size > 0) {
             error.text = ""
             error.gone()
@@ -294,7 +298,10 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
     }
 
     override fun onSearchResultError(errorMessage: String) {
-        progressBar.gone()
+        try {
+            progressBar.gone()
+        } catch (e: Exception) {
+        }
         if (pageCount > 0) {
             pageCount -= BaseConstants.LIMIT_VIDEOS
             endlessScrollListener!!.rollback(pageCount)
@@ -361,5 +368,10 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
 
     override fun dismissProgress() {
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        timer?.cancel()
     }
 }

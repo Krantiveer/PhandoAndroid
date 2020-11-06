@@ -1,6 +1,7 @@
 package com.perseverance.phando.home.mediadetails
 
 data class Trailer(
+        val title: String,
         val media_url: String,
         val id: Int,
         val phando_media_id: String,
@@ -10,6 +11,7 @@ data class Trailer(
         val thumbnail_large: String,
         val thumbnail_medium: String,
         val thumbnail_small: String,
+        val share_url: String,
         val type: String,
         var isSelected: Boolean = false
 )

@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
+import android.net.UrlQuerySanitizer
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -15,6 +16,7 @@ import android.text.Html
 import android.text.Spannable
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -30,19 +32,21 @@ import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.dynamiclinks.ktx.*
+import com.google.firebase.ktx.Firebase
 import com.perseverance.patrikanews.utils.getViewModel
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.BuildConfig
-import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
+import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
@@ -64,7 +68,7 @@ import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.content_detail.*
 
 class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, PhandoPlayerCallback, PurchaseOptionSelection {
-    override var screenName=""
+    override var screenName = ""
     private lateinit var purchaseOption: PurchaseOption
     private var razorpayOrdertId: String? = null
     val STRIKE_THROUGH_SPAN = StrikethroughSpan()
@@ -74,6 +78,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     val logger by lazy {
         AppEventsLogger.newLogger(this@MediaDetailActivity)
     }
+    var gaTitle:String?=""
     companion object {
         const val LOGIN_FOR_RENT = 1
         const val LOGIN_FOR_BUY = 2
@@ -102,10 +107,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         const val REQUEST_CODE_RENT = 111
         const val REQUEST_CODE_BUY = 112
         const val REQUEST_CODE_PACKAGE = 113
-      //  const val REQUEST_CODE_BUY_USING_WALLET = 114
+
+        //  const val REQUEST_CODE_BUY_USING_WALLET = 114
         const val REQUEST_CODE_PAYMENT = 114
         const val ARG_VIDEO = "param_video"
-        fun getDetailIntent(context: Context, video: Video): Intent {
+        const val TRAILER_ID = "trailer_id"
+        fun getDetailIntent(context: Context, video: Video, trailerId: String? = ""): Intent {
+
             if (video.is_free == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
                 val intent = Intent(context, LoginActivity::class.java)
                 return intent
@@ -116,6 +124,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     val arg = Bundle()
                     arg.apply {
                         putParcelable(ARG_VIDEO, video)
+                        if (trailerId != null) {
+                            if (trailerId.isNotBlank()&&trailerId!="0") {
+                                putExtra(TRAILER_ID, trailerId)
+                            }
+                        }
                     }
                     putExtras(arg)
                 }
@@ -303,6 +316,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         nextEpisode.gone()
         playerThumbnailContainer.gone()
         phandoPlayerView.visible()
+        play.gone()
         val intent = Intent()
         val uri = Uri.parse(mediaUrl)
         // val uri = Uri.parse("https://seventv.livebox.co.in/sevenwonderstvhls/live.m3u8")
@@ -358,6 +372,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         setContentView(R.layout.activity_video_details)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             landscope()
@@ -376,13 +391,17 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         mediaDetailViewModel.isLiked.observe(this, likeObserver)
         mediaDetailViewModel.isDisliked.observe(this, dislikeObserver)
         mediaDetailViewModel.downloadStatus.observe(this, downloadObserver)
-        intent?.getLongExtra(Key.NOTIFICATION_DB_ID, 0)?.let {
-            notificationDao?.markNotificationRead(it)
+        try {
+            intent?.getLongExtra(Key.NOTIFICATION_DB_ID, 0)?.let {
+                notificationDao?.markNotificationRead(it)
+            }
+        } catch (e: Exception) {
         }
-        val video: Video = intent?.getParcelableExtra(ARG_VIDEO)!!
-        mediaDetailViewModel.refreshMediaMetadata(video)
-        MyLog.d("Player Image", video.thumbnail)
-        Utils.displayImage(this, video.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
+        val video: Video? = intent?.getParcelableExtra(ARG_VIDEO)
+        video?.let {
+            mediaDetailViewModel.refreshMediaMetadata(video)
+            Utils.displayImage(this, video.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
+        }
         favorite.setOnClickListener {
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
@@ -568,6 +587,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         //ad.loadAds(BannerType.SCREEN_DETAIL)
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+    }
+
     private fun startDownload() {
         mediaMetadata?.media_url?.let {
             if (it.isNullOrEmpty()) {
@@ -636,12 +659,23 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     }
 
     private fun playVideo() {
+
+
         when (mediaplaybackData.mediaCode) {
-            "free", "rented", "buyed", "package_purchased" -> {
+            "free" ->{
+                mediaMetadata?.media_reference_type?.let {
+                    if (it == "media_trailor") {
+                        playVideoTrailer()
+                    }
+                }
+            }
+            "rented", "buyed", "package_purchased" -> {
                 isVideoPlayed = true
                 isTrailerPlaying = false
                 mediaMetadata?.media_url?.let {
                     play.gone()
+                    videoTitle.text = mediaMetadata?.title
+                    gaTitle=mediaMetadata?.title?:"media_title_not_found"
                     setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
                 }
             }
@@ -662,78 +696,69 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 isTrailerPlaying = false
                 mediaMetadata?.media_url?.let {
                     play.gone()
+                    gaTitle=mediaMetadata?.title?:"media_title_not_found"
+                    videoTitle.text = mediaMetadata?.title
                     setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
                 }
             }
         }
+        prepareShareMedia(mediaplaybackData.data.share_url)
+
+    }
+
+    private fun playVideoTrailer(tId: Int? = null) {
+        var trailerId: Int? = tId ?: mediaplaybackData.data.trailer_id
+        if (!isVideoPlayed && !isTrailerPlaying) {
+            intent.getStringExtra(TRAILER_ID)?.let {
+                trailerId = it.toInt()
+            }
+
+        }
+        trailerId?.let { trailerId ->
+            val trailer = mediaMetadata?.trailers?.firstOrNull { it.id == trailerId }
+            trailer?.let {
+                gaTitle=it.title
+                videoTitle.text = it.title
+                setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = it.media_url)
+                prepareShareMedia(it.share_url)
+                updateTrailerList(it.id)
+
+            }
+        }
 
 
     }
 
-    private fun playVideoTrailer(trailerUrl: String? = null) {
-        var url = trailerUrl
-        if (url.isNullOrEmpty()) {
-            mediaMetadata?.trailers?.let {
-                if (it.isNotEmpty()) {
-                    url = it[0].media_url
-                }
-            }
 
+    private fun updateTrailerList(trailerId: Int) {
+        mediaMetadata?.trailers?.forEach {
+            it.isSelected = it.id == trailerId
         }
-        url?.let {
-            play.gone()
-            isVideoPlayed = true
-            isTrailerPlaying = true
-            setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = it)
-        }
-
+        trailerListAdapter?.clear()
+        trailerListAdapter?.addAll(mediaMetadata?.trailers)
     }
 
     override fun onPurchaseOptionSelected(purchaseOption: PurchaseOption) {
         this.purchaseOption = purchaseOption.apply {
-            mediaTitle= mediaMetadata?.title
+            mediaTitle = mediaMetadata?.title
         }
         startActivityForResult(Intent(this@MediaDetailActivity, PaymentActivity::class.java).apply {
             putExtra(BaseConstants.PURCHASE_OPTION, purchaseOption)
         }, REQUEST_CODE_PAYMENT)
         //createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type)
-       // val paymentOptionBottomSheetFragment = PaymentOptionBottomSheetFragment()
-       // paymentOptionBottomSheetFragment.show(supportFragmentManager, paymentOptionBottomSheetFragment.getTag())
+        // val paymentOptionBottomSheetFragment = PaymentOptionBottomSheetFragment()
+        // paymentOptionBottomSheetFragment.show(supportFragmentManager, paymentOptionBottomSheetFragment.getTag())
 
     }
 
-//    override fun onPaymentOptionSelected(isWalletSelected: Boolean) {
-//        if (isWalletSelected) {
-//
-//            walletDetailViewModel.getWallet()?.let {
-//                when (it.is_active) {
-//                    0, 2 -> startActivityForResult(Intent(this@MediaDetailActivity, WalletDetailActivity::class.java).apply {
-//                        putExtra("isBuy", true)
-//                    }, REQUEST_CODE_BUY_USING_WALLET)
-//                    else -> {
-//                        if (it.balance > purchaseOption.final_price) {
-//                            createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type, true)
-//                        } else {
-//                            startActivityForResult(Intent(this@MediaDetailActivity, WalletDetailActivity::class.java).apply {
-//                                putExtra("isBuy", true)
-//                            }, REQUEST_CODE_BUY_USING_WALLET)
-//                        }
-//
-//                    }
-//                }
-//            }
-//
-//        } else {
-//            createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type, false)
-//        }
-//    }
 
     private fun onGetVideoMetaDataSuccess(mediaplaybackData: MediaplaybackData) {
+        prepareShareMedia(mediaplaybackData.data.share_url)
         isPlayerstartSent = false
         detailContent.visible()
         this.mediaplaybackData = mediaplaybackData
         this.mediaMetadata = mediaplaybackData.data
-
+        videoTitle.text = mediaMetadata?.title
         if (!isVideoPlayed) {
             play.visible()
         }
@@ -751,7 +776,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 actionControlersBuy.gone()
                 mediaMetadata?.media_reference_type?.let {
                     if (it == "media_trailor") {
-                        playVideoTrailer(mediaMetadata?.media_url)
+                        playVideoTrailer()
+                    }else{
+                        if (!isVideoPlayed && !isTrailerPlaying) {
+                           // Log.e("intent",intent.toString())
+                            intent.getStringExtra(TRAILER_ID)?.let {
+                               playVideoTrailer()
+                            }
+
+                        }
                     }
                 }
 
@@ -911,7 +944,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         }
         mediaDetailViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
-        videoTitle.text = mediaMetadata?.title
+
         videoDescription.text = mediaMetadata?.detail
         //Utils.makeTextViewResizable(videoDescription, 3, "View More", true)
         ratingLogo.gone()
@@ -984,9 +1017,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             })
         }
         mediaMetadata?.let {
-            logViewContentEvent(it.media_id,it.type,it.title)
+            logViewContentEvent(it.media_id, it.type, it.title)
         }
-
+        prepareShareMedia(mediaplaybackData.data.share_url)
     }
 
     private fun setRelatedVideo() {
@@ -1084,36 +1117,22 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             android.R.id.home -> {
                 onBackPressed()
             }
-//            R.id.action_share -> {
-//                shareVideoUrl()
-//            }
 
         }
-        return true
+        return super.onOptionsItemSelected(item)
     }
 
-    private fun shareVideoUrl() {
-        mediaDetailViewModel.reloadTrigger.value?.let {
-            val title = videoTitle.text.toString()
-            val mediaType = it.type
-            it.id?.let {
-                var url = FeatureConfigClass().baseUrl + "watch/"
-                if (mediaType.equals("E")) {
-                    url += "tvshow/episode/"
-                } else {
-                    url += "movie/"
-                }
-                val shareText = "${title}\n${url}${it}"
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    //val shareTextHtml = fromHtml("<p>${shareText}</p>")
-                    putExtra(Intent.EXTRA_TEXT, shareText)
-                    type = "text/plain"
-                }
-                startActivity(Intent.createChooser(sendIntent, "Share"))
-            }
 
+    private fun shareVideoUrl() {
+        dynamicLink?.let {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, it)
+                type = "text/plain"
+            }
+            startActivity(Intent.createChooser(sendIntent, "Share"))
         }
+
     }
 
     fun fromHtml(html: String): Spanned {
@@ -1128,7 +1147,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     override fun onBackPressed() {
         when (resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
-                super.onBackPressed()
+                startActivity(Intent(this@MediaDetailActivity, HomeActivity::class.java))
+                finish()
+                // super.onBackPressed()
             }
             Configuration.ORIENTATION_LANDSCAPE -> {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
@@ -1227,12 +1248,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
 
             is Trailer -> {
-                playVideoTrailer(data.media_url)
-//                mediaMetadata?.trailers?.forEach {
-//                    it.isSelected = it.id==data.id
-//                }
-                trailerListAdapter?.clear()
-                trailerListAdapter?.addAll(mediaMetadata?.trailers)
+                playVideoTrailer(data.id)
             }
         }
 
@@ -1267,7 +1283,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 eventData.append(it.tvseries_title)
                 eventData.append(",Season " + it.season_no + ",")
             }
-            eventData.append(mediaMetadata?.title)
+            eventData.append(gaTitle)
 
             if (it.action == "playerstart") {
                 if (!isPlayerstartSent) {
@@ -1390,122 +1406,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
     }
 
-//    //Payment
-//    private fun createOrder(paymentType: String, mediaId: String, type: String, isWallet: Boolean = false) {
-//        val map: MutableMap<String, String> = HashMap()
-//        map["payment_type"] = paymentType
-//        map["media_id"] = mediaId
-//        map["type"] = type
-//        map["payment_mode"] = if (isWallet) "wallet" else "razorpay"
-//
-//        subscriptionsViewModel.createOrder(map).observe(this, androidx.lifecycle.Observer {
-//
-//            progressBar.gone()
-//
-//            when (it?.status) {
-//                LoadingStatus.LOADING -> {
-//                    progressBar.visible()
-//                }
-//                LoadingStatus.ERROR -> {
-//                    progressBar.gone()
-//                    it.message?.let {
-//                        Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//                LoadingStatus.SUCCESS -> {
-//                    progressBar.gone()
-//                    if (it.data?.status == "error") {
-//                        it.data.message?.let { it1 -> toast(it1) }
-//                    } else {
-//                        if (it.data?.is_subscribed == 1) {
-//                            mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-//                            mediaDetailViewModel.loginFor.value = 0
-//                            walletDetailViewModel.refreshWallet()
-//                        } else {
-//                            startPayment(it.data)
-//                        }
-//                    }
-//
-//                }
-//
-//            }
-//
-//        })
-//    }
-//
-//    private fun startPayment(orderResponse: CreateOrderResponse?) {
-//
-//        orderResponse?.let { createOrderResponse ->
-//            val activity: Activity = this
-//            val co = Checkout()
-//            co.setKeyID(createOrderResponse.key)
-//            try {
-//                razorpayOrdertId = createOrderResponse.gateway_order_id
-//                val options = JSONObject()
-//                options.put("name", createOrderResponse.app_name)
-//                options.put("description", createOrderResponse.description)
-//                options.put("amount", (createOrderResponse.order_details!!.amount * 100).toString())
-//                options.put("order_id", createOrderResponse.gateway_order_id)
-//
-//                val prefill = JSONObject()
-//                prefill.put("email", createOrderResponse.user_email)
-//                prefill.put("contact", createOrderResponse.user_mobile)
-//
-//                options.put("prefill", prefill)
-//
-//                co.open(activity, options)
-//
-//            } catch (e: Exception) {
-//                razorpayOrdertId = null
-//                toast("Error in payment: " + e.message)
-//                e.printStackTrace()
-//            }
-//        } ?: toast("Error in payment. Unable to get order ")
-//
-//    }
-//
-//    override fun onPaymentError(p0: Int, p1: String?) {
-//        // MyLog.e("razorpay", "$p0 : $p1")
-//    }
-//
-//    override fun onPaymentSuccess(razorpayPaymentId: String?) {
-//        if (razorpayPaymentId == null) {
-//            toast("Payment failed")
-//            return
-//        }
-//        //Log.e("razorpay", "$razorpayPaymentId")
-//        val map: MutableMap<String, String> = HashMap()
-//        map["razorpay_order_id"] = razorpayOrdertId!!
-//        map["razorpay_payment_id"] = razorpayPaymentId
-//
-//        subscriptionsViewModel.updateOrderOnServer(map).observe(this@MediaDetailActivity, androidx.lifecycle.Observer {
-//
-//            progressBar.gone()
-//
-//            when (it?.status) {
-//                LoadingStatus.LOADING -> {
-//                    progressBar.visible()
-//                }
-//                LoadingStatus.ERROR -> {
-//                    progressBar.gone()
-//                    it.message?.let {
-//                        toast(it)
-//                    }
-//                }
-//                LoadingStatus.SUCCESS -> {
-//                    progressBar.gone()
-//                    it.data?.message?.let { it1 -> toast(it1) }
-//                    if (it.data?.status.equals("success", true)) {
-//                        mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-//                        mediaDetailViewModel.loginFor.value = 0
-//                        walletDetailViewModel.refreshWallet()
-//                    }
-//                }
-//
-//            }
-//
-//        })
-//    }
 
     fun number2digits(number: Float): String {
         return String.format("%.2f", number)
@@ -1515,11 +1415,75 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
      * This function assumes logger is an instance of AppEventsLogger and has been
      * created using AppEventsLogger.newLogger() call.
      */
-    fun logViewContentEvent( contentId: String?,contentType: String?, contentData: String?) {
+    fun logViewContentEvent(contentId: String?, contentType: String?, contentData: String?) {
         val params = Bundle()
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, contentId)
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, contentType)
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT, contentData)
         logger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, params)
     }
+
+    private var dynamicLink: String? = null
+    fun prepareShareMedia(linkUrl: String) {
+        val sanitizer = UrlQuerySanitizer()
+        sanitizer.allowUnregisteredParamaters = true
+        sanitizer.parseUrl(linkUrl)
+        val shareTitle = sanitizer.getValue("title")
+        val shareThumbnail = sanitizer.getValue("thumbnail")
+
+        Firebase.dynamicLinks.shortLinkAsync { // or Firebase.dynamicLinks.shortLinkAsync
+            link = Uri.parse(linkUrl)
+            domainUriPrefix = BuildConfig.DOMAIN_URI
+            androidParameters(packageName) {
+                minimumVersion = 6
+            }
+            iosParameters(packageName) {
+                appStoreId = "1524436726"
+                minimumVersion = "2.3"
+            }
+            googleAnalyticsParameters {
+                source = "android"
+                medium = "app"
+            }
+
+            socialMetaTagParameters {
+                title = shareTitle
+                imageUrl = Uri.parse(shareThumbnail)
+            }
+        }.addOnSuccessListener { result ->
+            result?.previewLink.let {
+               // Log.i("previewLink", it.toString())
+            }
+            dynamicLink = result?.shortLink.toString()
+           // Log.i("dynamicLink", dynamicLink)
+           // Log.i("linkUrl", linkUrl)
+
+        }
+
+//        val dynamicLink = Firebase.dynamicLinks.dynamicLink { // or Firebase.dynamicLinks.shortLinkAsync
+//            link = Uri.parse(linkUrl)
+//            domainUriPrefix = BuildConfig.DOMAIN_URI
+//            androidParameters(packageName) {
+//                minimumVersion = 6
+//            }
+//            iosParameters(packageName) {
+//                appStoreId = "1524436726"
+//                minimumVersion = "2.3"
+//            }
+//            googleAnalyticsParameters {
+//                source = "android"
+//                medium = "app"
+//            }
+//
+//            socialMetaTagParameters {
+//                title = shareTitle
+//                imageUrl = Uri.parse(shareThumbnail)
+//                //  description = "This link works whether the app is installed or not!"
+//            }
+//        }
+//        Log.e("dynamicLink : ",dynamicLink.uri.toString())
+
+    }
+
+
 }

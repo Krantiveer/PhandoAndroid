@@ -38,6 +38,14 @@
             {
               "client_id": "459140423662-34puioltvo1drfa6dni8vqnblgk7n55q.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "459140423662-vhmd4iqu6f2h27opi48m5g7vuomgmc89.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.perseverance.phunflix",
+                "app_store_id": "1524436726"
+              }
             }
           ]
         }

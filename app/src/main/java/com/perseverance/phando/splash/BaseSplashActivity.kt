@@ -1,6 +1,7 @@
 package com.perseverance.phando.splash
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
@@ -8,6 +9,8 @@ import android.util.Log
 import android.view.View
 import android.view.animation.AlphaAnimation
 import android.view.animation.Animation
+import com.google.firebase.dynamiclinks.ktx.*
+import com.google.firebase.ktx.Firebase
 import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants

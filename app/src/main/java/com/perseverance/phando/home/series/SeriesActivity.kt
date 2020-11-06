@@ -1,40 +1,56 @@
 package com.perseverance.phando.home.series
 
+import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+import android.net.Uri
+import android.net.UrlQuerySanitizer
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.app.NavUtils
+import androidx.core.app.TaskStackBuilder
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.dynamiclinks.ktx.*
+import com.google.firebase.ktx.Firebase
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseScreenTrackingActivity
+import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
+import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.ui.WaitingDialog
 import com.perseverance.phando.utils.DialogUtils
-import com.perseverance.phando.utils.TrackingUtils
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_series.*
 import kotlinx.android.synthetic.main.activity_series.otherInfo
+import kotlinx.android.synthetic.main.activity_series.share
 import kotlinx.android.synthetic.main.activity_series.viewMore
+import kotlinx.android.synthetic.main.content_detail.*
+
 
 class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
     override var screenName=BaseConstants.SERIES_SCREEN
 
     private var waitingDialog: WaitingDialog? = null
-    private var adapter: SeriesListAdapter? = null
+    private var adapter: EpisodeListAdapter? = null
     private lateinit var baseVideo: Video
     private val homeViewModel by lazy {
         ViewModelProviders.of(this).get(SeriesViewModel::class.java)
@@ -80,8 +96,8 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
         recycler_view_base.layoutManager = LinearLayoutManager(this@SeriesActivity)
         //recycler_view_base.setHasFixedSize(true)
-        adapter = SeriesListAdapter(this@SeriesActivity, this)
-        val videos = ArrayList<SeriesData>()
+        adapter = EpisodeListAdapter(this@SeriesActivity, this)
+        val videos = ArrayList<Episode>()
         adapter?.items = videos
         recycler_view_base.adapter = adapter
         viewMore.setOnClickListener {
@@ -93,14 +109,17 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                 viewMore.setImageResource(R.drawable.ic_detail_arrow_up)
             }
         }
+        share.setOnClickListener {
+            shareSeriesUrl()
+        }
+
     }
 
 
     fun onGetVideosSuccess(tvSeriesResponseData: TVSeriesResponseData) {
 
-
+        prepareShareMedia(tvSeriesResponseData.share_url)
         banner_img.visibility = View.VISIBLE
-        // banner_img.layoutParams.height = Utils.getSeriesBannerProportionalHeight(this@SeriesActivity);
         seriesTitle.text = tvSeriesResponseData.title
         seriesDescription.text = tvSeriesResponseData.detail
 
@@ -123,8 +142,20 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
         Utils.displayImage(this@SeriesActivity, tvSeriesResponseData.thumbnail,
                 R.drawable.video_placeholder, R.drawable.error_placeholder, banner_img)
 
+        //seasonSelector.adapter=AlgorithmAdapter(this@SeriesActivity, tvSeriesResponseData.seasons)
+        seasonSelector.adapter= ArrayAdapter(this,R.layout.spinner_item ,tvSeriesResponseData.seasons)
+        seasonSelector.setOnItemSelectedListener(
+                object : OnItemSelectedListener {
+                    override fun onItemSelected(parent: AdapterView<*>,
+                                                view: View, position: Int, id: Long) {
+                        val seriesData = parent.getItemAtPosition(position) as SeriesData
+                        adapter!!.setItems(seriesData.episodes)
+                    }
 
-        adapter!!.addAll(tvSeriesResponseData.seasons)
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                })
+        seasonSelector.setSelection(tvSeriesResponseData.seasons.size-1)
+        adapter!!.addAll(tvSeriesResponseData.seasons.get(tvSeriesResponseData.seasons.size - 1).episodes)
 
         play.setOnClickListener {
             if (tvSeriesResponseData.seasons.isNullOrEmpty()) {
@@ -198,6 +229,11 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
         }
     }
 
+    override fun onPrepareSupportNavigateUpTaskStack(builder: TaskStackBuilder) {
+        super.onPrepareSupportNavigateUpTaskStack(builder)
+        builder.editIntentAt(builder.intentCount - 1)?.putExtras(Intent(this@SeriesActivity,HomeActivity::class.java))
+    }
+
     override fun onItemClick(data: Any) {
         var episode = data as Episode
         if (Utils.isNetworkAvailable(this@SeriesActivity)) {
@@ -212,5 +248,81 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
         } else {
             DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
         }
+    }
+    override fun onBackPressed() {
+        startActivity(Intent(this@SeriesActivity, HomeActivity::class.java))
+        finish()
+    }
+
+    private fun shareSeriesUrl() {
+        dynamicLink?.let {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, it)
+                type = "text/plain"
+            }
+            startActivity(Intent.createChooser(sendIntent, "Share"))
+
+        }
+ }
+
+    var dynamicLink: String?=null
+    fun prepareShareMedia(linkUrl: String) {
+        val sanitizer = UrlQuerySanitizer()
+        sanitizer.allowUnregisteredParamaters = true
+        sanitizer.parseUrl(linkUrl)
+        val shareTitle = sanitizer.getValue("title")
+        val shareThumbnail = sanitizer.getValue("thumbnail")
+
+        Firebase.dynamicLinks.shortLinkAsync { // or Firebase.dynamicLinks.shortLinkAsync
+            link = Uri.parse(linkUrl)
+            domainUriPrefix = BuildConfig.DOMAIN_URI
+            androidParameters(packageName) {
+                minimumVersion = 6
+            }
+            iosParameters(packageName) {
+                appStoreId = "1524436726"
+                minimumVersion = "2.3"
+            }
+            googleAnalyticsParameters {
+                source = "android"
+                medium = "app"
+            }
+
+            socialMetaTagParameters {
+                title = shareTitle
+                imageUrl = Uri.parse(shareThumbnail)
+            }
+        }.addOnSuccessListener { result ->
+            result?.previewLink.let {
+               // Log.i("previewLink", it.toString())
+            }
+            dynamicLink = result?.shortLink.toString()
+
+        }
+
+//        val dynamicLink = Firebase.dynamicLinks.dynamicLink { // or Firebase.dynamicLinks.shortLinkAsync
+//            link = Uri.parse(linkUrl)
+//            domainUriPrefix = BuildConfig.DOMAIN_URI
+//            androidParameters(packageName) {
+//                minimumVersion = 6
+//            }
+//            iosParameters(packageName) {
+//                appStoreId = "1524436726"
+//                minimumVersion = "2.3"
+//            }
+//            googleAnalyticsParameters {
+//                source = "android"
+//                medium = "app"
+//            }
+//
+//            socialMetaTagParameters {
+//                title = shareTitle
+//                imageUrl = Uri.parse(shareThumbnail)
+//                //  description = "This link works whether the app is installed or not!"
+//            }
+//        }
+//        Log.e("dynamicLink : ",dynamicLink.uri.toString())
+
     }
 }

@@ -55,6 +55,8 @@ android {
             debuggable false
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
             buildConfigField("String","TOPIC","\"com.perseverance.phunflix\"")
+            buildConfigField("String","DOMAIN_URI","\"https://dlinks.phunflix.com\"")
+            //http://qa.phunflix.com
         }
         STAGE {
             multiDexEnabled true
@@ -64,14 +66,15 @@ android {
             debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://stage.admaster.in/api-v1/\"")
             buildConfigField("String","TOPIC","\"com.perseverance.phunflix_stage\"")
+            buildConfigField("String","DOMAIN_URI","\"https://dlinks.phunflix.com\"")
         }
     }
     flavorDimensions "default"
     productFlavors {
         phunflix {
             applicationId "com.perseverance.phunflix"
-            versionCode 5
-            versionName "1.5"
+            versionCode 6
+            versionName "1.6"
             signingConfig signingConfigs.configPhunFlix
         }
 
@@ -167,4 +170,5 @@ dependencies {
     implementation 'com.facebook.android:audience-network-sdk:5.9.0'
 
     implementation 'com.google.firebase:firebase-analytics-ktx:17.5.0'
+    implementation 'com.google.firebase:firebase-dynamic-links-ktx:19.1.0'
 }

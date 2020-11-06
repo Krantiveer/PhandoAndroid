@@ -12,7 +12,7 @@ class EpisodeListAdapter(context: Context, listener: AdapterClickListener) : Gen
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<Episode, AdapterClickListener> {
-        return EpisodeListViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener)
+        return EpisodeListViewHolder(inflate(R.layout.item_my_list, parent), listener)
     }
 
 

@@ -5,37 +5,41 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.net.UrlQuerySanitizer
 import android.os.Bundle
 import android.os.Handler
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.dynamiclinks.ktx.dynamicLinks
+import com.google.firebase.ktx.Firebase
 import com.newgendroid.news.utils.AppDialogListener
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
+import com.perseverance.phando.db.Video
 import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
+import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.search.SearchActivity
 import com.perseverance.phando.search.SearchResultActivity
 import com.perseverance.phando.splash.AppInfo
 import com.perseverance.phando.splash.AppInfoModel
 import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.MyLog
-import com.perseverance.phando.utils.TrackingUtils
 import com.perseverance.phando.utils.Utils
 
 class HomeActivity : BaseScreenTrackingActivity(),
         BottomNavigationView.OnNavigationItemSelectedListener {
 
-    override var screenName=BaseConstants.HOME_SCREEN
+    override var screenName = BaseConstants.HOME_SCREEN
+
     // private var mCustomTabActivityHelper: CustomTabActivityHelper? = null
     private var selectedTab = 0
     private var doubleBackToExitPressedOnce = false
@@ -85,6 +89,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
             })
         }
+      // checkForDynamicLink()
         //ad.loadAds(BannerType.SCREEN_HOME)
     }
 
@@ -180,5 +185,36 @@ class HomeActivity : BaseScreenTrackingActivity(),
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         Toast.makeText(this, item.toString(), Toast.LENGTH_LONG).show()
         return true
+    }
+
+    fun checkForDynamicLink() {
+        Firebase.dynamicLinks
+                .getDynamicLink(intent)
+                .addOnSuccessListener(this) {
+                    it?.let {
+                        it.link?.let {
+                            if (Utils.isNetworkAvailable(this@HomeActivity)) {
+                                val sanitizer = UrlQuerySanitizer()
+                                sanitizer.allowUnregisteredParamaters = true
+                                sanitizer.parseUrl(it.toString())
+                                val id = sanitizer.getValue("id")
+                                val type = sanitizer.getValue("type")
+                                val image = sanitizer.getValue("image")
+                                id?.let {
+                                    val video = Video()
+                                    video.id = it.toInt()
+                                    video.type = type
+                                    video.thumbnail = image
+                                    startActivity(MediaDetailActivity.getDetailIntent(this@HomeActivity, video))
+
+                                }
+
+                            }
+                        }
+
+                    }
+                }
+
+
     }
 }

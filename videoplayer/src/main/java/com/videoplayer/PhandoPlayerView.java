@@ -1082,14 +1082,16 @@ public class PhandoPlayerView extends FrameLayout implements
         currentPositionTracker = new Runnable() {
             @Override
             public void run() {
-                long currentPosition = player.getCurrentPosition();
-                phandoPlayerCallback.onPlayerProgress(currentPosition / 1000);
-                long totalDuration = player.getDuration();
-                long percent = (currentPosition * 100) / totalDuration;
-                if (lastKnownPlaybackPercent != percent) {
-                    lastKnownPlaybackPercent = percent;
-                    sendProgressEvent(percent);
+                if (player!=null) {
+                    long currentPosition = player.getCurrentPosition();
+                    phandoPlayerCallback.onPlayerProgress(currentPosition / 1000);
+                    long totalDuration = player.getDuration();
+                    long percent = (currentPosition * 100) / totalDuration;
+                    if (lastKnownPlaybackPercent != percent) {
+                        lastKnownPlaybackPercent = percent;
+                        sendProgressEvent(percent);
 
+                    }
                 }
                 handler.postDelayed(currentPositionTracker, checkingRange);
             }

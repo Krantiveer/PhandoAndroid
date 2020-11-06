@@ -17,7 +17,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:name">
-        <activity android:name=".payment.paymentoptions.PaymentActivity"></activity>
+        <activity android:name=".dynamiclink.DynamicLinkActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="dlinks.phunflix.com"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".payment.paymentoptions.PaymentActivity" />
         <activity
             android:name=".payment.paymentoptions.WalletHistoryActivity"
             android:screenOrientation="sensorPortrait" />
@@ -28,8 +42,9 @@
         <meta-data
             android:name="com.facebook.sdk.AutoLogAppEventsEnabled"
             android:value="true" />
-        <meta-data android:name="com.facebook.sdk.AutoInitEnabled"
-            android:value="true"/>
+        <meta-data
+            android:name="com.facebook.sdk.AutoInitEnabled"
+            android:value="true" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"
@@ -54,7 +69,8 @@
         <activity
             android:name=".home.series.SeriesActivity"
             android:label="Series"
-            android:screenOrientation="sensorPortrait" />
+            android:screenOrientation="sensorPortrait"
+            android:parentActivityName=".home.dashboard.HomeActivity"/>
         <activity
             android:name=".payment.subscription.SubscriptionPackageActivity"
             android:label="Subscription"
@@ -65,7 +81,8 @@
         <activity
             android:name=".home.dashboard.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="sensorPortrait" />
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorPortrait"></activity>
         <activity
             android:name=".splash.SplashActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -93,7 +110,10 @@
             android:name=".home.mediadetails.MediaDetailActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTop"
-            android:theme="@style/AppThemeVideo" />
+            android:parentActivityName=".home.dashboard.HomeActivity"
+            android:theme="@style/AppThemeVideo">
+
+        </activity>
         <activity
             android:name=".notification.NotificationListActivity"
             android:screenOrientation="sensorPortrait" />
@@ -132,6 +152,7 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
+
         <service android:name=".notification.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

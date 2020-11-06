@@ -39,11 +39,11 @@ class SeriesListViewHolder(itemView: View, listener: AdapterClickListener) : Bas
             }
         }
 
-        val linearLayoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
-        itemView.recyclerview_home_items.layoutManager = linearLayoutManager
-        val recyclerAdapter = EpisodeListAdapter(itemView.context, listener)
-        recyclerAdapter.items = item.episodes
-        itemView.recyclerview_home_items.adapter = recyclerAdapter
+//        val linearLayoutManager = LinearLayoutManager(itemView.context, LinearLayoutManager.HORIZONTAL, false)
+//        itemView.recyclerview_home_items.layoutManager = linearLayoutManager
+//        val recyclerAdapter = EpisodeListAdapter(itemView.context, listener)
+//        recyclerAdapter.items = item.episodes
+//        itemView.recyclerview_home_items.adapter = recyclerAdapter
 
 
     }

@@ -20,4 +20,8 @@ data class SeriesData(
         val thumbnail_vertical: String,
         val tv_series_id: Int,
         val type: String
-)
+){
+    override fun toString(): String {
+        return title
+    }
+}

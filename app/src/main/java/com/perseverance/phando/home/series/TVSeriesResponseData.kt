@@ -19,5 +19,6 @@ data class TVSeriesResponseData(
         val thumbnail: String,
         val thumbnail_vertical: String,
         val title: String,
+        val share_url: String,
         val type: String
 )

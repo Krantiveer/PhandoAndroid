@@ -7,8 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.perseverance.phando.BaseScreenTrackingActivity
-import androidx.fragment.app.Fragment
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
@@ -21,7 +19,6 @@ import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.fragment_banner_list.*
-import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 
 abstract class BaseBannerFragment : BaseFragment() {
 

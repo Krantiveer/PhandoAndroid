@@ -1,11 +1,10 @@
 package com.perseverance.phando.home.mediadetails
 
-import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.db.Video
-import kotlinx.android.synthetic.main.content_detail.*
 
 data class MediaMetadata(
         val actors: List<String>,
+        val directors: List<String>,
         val related: List<Video>,
         val trailers: List<Trailer>,
         val ad_url_desktop: String,
@@ -35,6 +34,7 @@ data class MediaMetadata(
         val type: String,
         val is_like: Int,
         val is_dislike: Int,
+        val is_free: Int?,
         val is_live: Int? = 0,
         val vast_url: String,
         val document_media_id: Int,
@@ -45,25 +45,11 @@ data class MediaMetadata(
         val share_url: String,
         val cc_files: List<CcFile>? = arrayListOf(),
         val analytics_category_id: String?,
+        val other_credits: String?,
         val trailer_id: Int?
 ) {
-    fun getOtherText(): String {
-        val otherText = StringBuilder()
+    fun getDirectors(): String? {
+       return if (directors.isNotEmpty()) "Directed By: "+directors.joinToString() else null
 
-        rating.let {
-            otherText.append(it)
-        }
-        maturity_rating.let {
-            otherText.append(" | $it")
-        }
-        genres?.let {
-
-            otherText.append(" | " + it.joinToString())
-        }
-        actors?.let {
-
-            otherText.append(" | " + it.joinToString())
-        }
-        return otherText.toString()
     }
 }

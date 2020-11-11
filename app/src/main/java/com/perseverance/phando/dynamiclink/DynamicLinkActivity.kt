@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.UrlQuerySanitizer
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.facebook.FacebookSdk
+import com.facebook.applinks.AppLinkData
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
 import com.perseverance.phando.R
@@ -14,14 +16,21 @@ import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.utils.Utils
 
+
 class DynamicLinkActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dynamic_link)
+        FacebookSdk.setAutoInitEnabled(true)
+        FacebookSdk.fullyInitialize()
+        AppLinkData.fetchDeferredAppLinkData(this) {
+
+        }
         checkForDynamicLink()
     }
 
     fun checkForDynamicLink() {
+
         Firebase.dynamicLinks
                 .getDynamicLink(intent)
                 .addOnSuccessListener(this) {
@@ -44,13 +53,13 @@ class DynamicLinkActivity : AppCompatActivity() {
                                     video.thumbnail = image
                                     when(screen){
 
-                                        "tvseries"->{
+                                        "tvseries" -> {
                                             val intent = Intent(this@DynamicLinkActivity, SeriesActivity::class.java)
                                             intent.putExtra(Key.CATEGORY, video)
                                             startActivity(intent)
                                         }
-                                        "player" ->{
-                                            startActivity(MediaDetailActivity.getDetailIntent(this@DynamicLinkActivity, video,trailerId))
+                                        "player" -> {
+                                            startActivity(MediaDetailActivity.getDetailIntent(this@DynamicLinkActivity, video, trailerId))
                                         }
                                     }
 

@@ -614,9 +614,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                                 null,
                                 null)
                         VideoSdkUtil.startDownload(this@MediaDetailActivity, videoPlayerMetadata, mediaMetadata?.title)
-                        downloadMetadataDao?.insert(DownloadMetadata(mediaMetadata?.document_media_id!!.toString(),
+                        downloadMetadataDao.insert(DownloadMetadata(mediaMetadata?.document_media_id!!.toString(),
                                 mediaMetadata?.title,
-                                mediaMetadata?.detail,
+                                mediaMetadata?.getDirectors()+"\n"+ mediaMetadata?.detail+"\n"+mediaMetadata?.other_credits,
                                 mediaMetadata?.thumbnail,
                                 mediaMetadata?.media_url
 
@@ -666,13 +666,33 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 mediaMetadata?.media_reference_type?.let {
                     if (it == "media_trailor") {
                         playVideoTrailer()
+                    }else{
+
+                        mediaMetadata?.media_url?.let {
+                            isVideoPlayed = true
+                            isTrailerPlaying = false
+                            play.gone()
+                            videoTitle.text = mediaMetadata?.title
+                            gaTitle=mediaMetadata?.title?:"media_title_not_found"
+                            setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
+                        }
+                    }
+                }?: kotlin.run {
+                    mediaMetadata?.media_url?.let {
+                        isVideoPlayed = true
+                        isTrailerPlaying = false
+                        play.gone()
+                        videoTitle.text = mediaMetadata?.title
+                        gaTitle=mediaMetadata?.title?:"media_title_not_found"
+                        setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
                     }
                 }
             }
             "rented", "buyed", "package_purchased" -> {
-                isVideoPlayed = true
-                isTrailerPlaying = false
+
                 mediaMetadata?.media_url?.let {
+                    isVideoPlayed = true
+                    isTrailerPlaying = false
                     play.gone()
                     videoTitle.text = mediaMetadata?.title
                     gaTitle=mediaMetadata?.title?:"media_title_not_found"
@@ -944,29 +964,34 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         }
         mediaDetailViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
+        var description = mediaMetadata?.detail
+        mediaMetadata?.other_credits?.let {
+            if(it.isNotBlank()) description +=("\n\nOther Credits: "+mediaMetadata?.other_credits)
+        }
+        videoDescription.text = description
 
-        videoDescription.text = mediaMetadata?.detail
         //Utils.makeTextViewResizable(videoDescription, 3, "View More", true)
         ratingLogo.gone()
+        val otherText = arrayListOf<String>()
+        mediaMetadata?.getDirectors()?.let {
+            directors.text=it
+            directors.visible()
+        }
 
-        val otherText = StringBuilder()
-
-        mediaMetadata?.rating.let {
-            otherText.append(it)
+        mediaMetadata?.rating?.let {
+            otherText.add(it.toString())
             ratingLogo.visible()
         }
-        mediaMetadata?.maturity_rating.let {
-            otherText.append(" | $it")
+        mediaMetadata?.maturity_rating?.let {
+            otherText.add(it)
         }
         mediaMetadata?.genres?.let {
-
-            otherText.append(" | " + it.joinToString())
+            otherText.addAll(it)
         }
         mediaMetadata?.actors?.let {
-
-            otherText.append(" | " + it.joinToString())
+            otherText.addAll(it)
         }
-        otherInfo.text = otherText.toString()
+        otherInfo.text = otherText.joinToString(" | ")
 
 
         mListener = object : SimpleOrientationEventListener(this@MediaDetailActivity) {

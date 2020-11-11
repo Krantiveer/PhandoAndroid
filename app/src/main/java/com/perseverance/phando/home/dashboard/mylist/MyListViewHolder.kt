@@ -8,6 +8,7 @@ import androidx.appcompat.widget.PopupMenu
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.invisible
 import com.perseverance.patrikanews.utils.resizeView
+import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
@@ -15,6 +16,9 @@ import com.perseverance.phando.genericAdopter.BaseViewHolder
 import com.perseverance.phando.resize.ListItemThumbnail
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.item_my_list.view.*
+import kotlinx.android.synthetic.main.item_my_list.view.free
+import kotlinx.android.synthetic.main.item_my_list.view.img_thumbnail
+import kotlinx.android.synthetic.main.tuple_grid_video_item.view.*
 
 
 class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<Video, AdapterClickListener>(itemView, listener) {
@@ -26,6 +30,11 @@ class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseVie
 
     override fun onBind(video: Video) {
         itemView.tag = video
+        if (video.is_free == 1) { // if paid video then show premium icon
+            itemView.free.gone()
+        } else {
+            itemView.free.visible()
+        }
         Utils.displayImage(itemView.context, video.thumbnail,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder, itemView.img_thumbnail)

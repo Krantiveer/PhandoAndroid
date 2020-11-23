@@ -16,7 +16,6 @@ import android.text.Html
 import android.text.Spannable
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -78,6 +77,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     val logger by lazy {
         AppEventsLogger.newLogger(this@MediaDetailActivity)
     }
+    var baseVideo:Video?=null
     var gaTitle:String?=""
     companion object {
         const val LOGIN_FOR_RENT = 1
@@ -397,12 +397,18 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         } catch (e: Exception) {
         }
-        val video: Video? = intent?.getParcelableExtra(ARG_VIDEO)
-        video?.let {
-            mediaDetailViewModel.refreshMediaMetadata(video)
-            Utils.displayImage(this, video.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
+        baseVideo = intent?.getParcelableExtra(ARG_VIDEO)
+        baseVideo?.let {
+            mediaDetailViewModel.refreshMediaMetadata(it)
+            Utils.displayImage(this, it.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
         }
         favorite.setOnClickListener {
+            mediaMetadata?.can_share?.let {
+                if (it!=1){
+                    toast("Add to My List is restricted for this media.")
+                    return@setOnClickListener
+                }
+            }
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
@@ -416,6 +422,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
         }
         like.setOnClickListener {
+            mediaMetadata?.can_share?.let {
+                if (it!=1){
+                    toast("Like is restricted for this media.")
+                    return@setOnClickListener
+                }
+            }
+
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
@@ -436,10 +449,22 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             share.gone()
         }
         share.setOnClickListener {
+            mediaMetadata?.can_share?.let {
+                if (it!=1){
+                    toast("Sharing is restricted for this media.")
+                    return@setOnClickListener
+                }
+            }
             shareVideoUrl()
         }
 
         download.setOnClickListener {
+//            mediaMetadata?.can_share?.let {
+//                if (it!=1){
+//                    toast("Download is restricted for this media.")
+//                    return@setOnClickListener
+//                }
+//            }
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
@@ -585,10 +610,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         }
         //ad.loadAds(BannerType.SCREEN_DETAIL)
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
     }
 
     private fun startDownload() {
@@ -1028,13 +1049,19 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         setRelatedVideo()
 
 
-        if (!isTrailerPlaying && play.visibility != View.VISIBLE) {
+//        if (!isTrailerPlaying && play.visibility != View.VISIBLE) {
+//            playVideo()
+//        } else {
+//            if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
+//                playVideo()
+//            }
+//        }
+
+        // play video if live media or last_watch_time > 0
+        if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
             playVideo()
-        } else {
-            if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
-                playVideo()
-            }
         }
+
         mediaMetadata?.next_media?.let {
             mediaDetailViewModel.getNextEpisodeMediaMetadata(Video().apply {
                 type = it.type
@@ -1214,42 +1241,54 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            LoginActivity.REQUEST_CODE_LOGIN -> {
+//            LoginActivity.REQUEST_CODE_LOGIN -> {
+//                if (resultCode == Activity.RESULT_OK) {
+//                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+//                    mediaDetailViewModel.loginFor.value = 0
+//                } else {
+//
+//                }
+//            }
+//
+//            REQUEST_CODE_RENT -> {
+//                if (resultCode == Activity.RESULT_OK) {
+//                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+//                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_RENT
+//                } else {
+//
+//                }
+//            }
+//            REQUEST_CODE_BUY -> {
+//                if (resultCode == Activity.RESULT_OK) {
+//                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+//                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_BUY
+//                } else {
+//
+//                }
+//            }
+//            REQUEST_CODE_PACKAGE -> {
+//                if (resultCode == Activity.RESULT_OK) {
+//                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+//                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_PACKAGE
+//                } else {
+//
+//                }
+//            }
+//
+//            REQUEST_CODE_PAYMENT -> {
+//               // mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
+//                if (resultCode == Activity.RESULT_OK) {
+//                    finish()
+//                    startActivity(getDetailIntent(this@MediaDetailActivity as Context, baseVideo!!))
+//
+//                }
+//            }
+            LoginActivity.REQUEST_CODE_LOGIN,  REQUEST_CODE_RENT,REQUEST_CODE_BUY,REQUEST_CODE_PACKAGE,REQUEST_CODE_PAYMENT ->{
                 if (resultCode == Activity.RESULT_OK) {
-                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value = 0
-                } else {
+                    finish()
+                    startActivity(getDetailIntent(this@MediaDetailActivity as Context, baseVideo!!))
 
                 }
-            }
-
-            REQUEST_CODE_RENT -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_RENT
-                } else {
-
-                }
-            }
-            REQUEST_CODE_BUY -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_BUY
-                } else {
-
-                }
-            }
-            REQUEST_CODE_PACKAGE -> {
-                if (resultCode == Activity.RESULT_OK) {
-                    mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
-                    mediaDetailViewModel.loginFor.value = LOGIN_FOR_PACKAGE
-                } else {
-
-                }
-            }
-
-            REQUEST_CODE_PAYMENT -> {
-                mediaDetailViewModel.refreshMediaMetadata(mediaDetailViewModel.reloadTrigger.value)
             }
         }
 
@@ -1269,6 +1308,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     Utils.displayImage(this, data.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
                     mediaDetailViewModel.refreshMediaMetadata(data)
                     mediaDetailViewModel.loginFor.value = 0
+                    baseVideo=data
                 }
             }
 
@@ -1314,9 +1354,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 if (!isPlayerstartSent) {
                     TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
                     TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS_SCREEN, eventData.toString())
+                    mediaDetailViewModel.updateMediaPlayStartTime(mediaMetadata?.document_media_id!!.toString()).observe(this, Observer {
+                        val result = it?:return@Observer
+                        MyLog.i("updateMediaPlayStartTime",it.toString())
+
+                    })
                     isPlayerstartSent = true
-                } else {
-                }
+                }else{}
             } else {
                 TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
                 when (it.action) {

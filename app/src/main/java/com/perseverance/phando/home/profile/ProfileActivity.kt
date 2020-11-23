@@ -20,6 +20,7 @@ import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.AppDatabase
+import com.perseverance.phando.home.dashboard.mylist.UserListActivity
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
 import com.perseverance.phando.payment.paymentoptions.PaymentActivity
@@ -75,7 +76,9 @@ class ProfileActivity : BaseScreenTrackingActivity() {
         btnWallet.setOnClickListener {
             startActivity(Intent(this@ProfileActivity, PaymentActivity::class.java))
         }
-
+        btnMyList.setOnClickListener {
+            startActivity(Intent(this@ProfileActivity, UserListActivity::class.java))
+        }
         updateProfile.setOnClickListener {
             if (!Utils.isNetworkAvailable(this@ProfileActivity)) {
                 DialogUtils.showNetworkErrorToast()

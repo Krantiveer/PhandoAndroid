@@ -8,6 +8,7 @@ import com.perseverance.phando.db.Language;
 import com.perseverance.phando.db.Video;
 import com.perseverance.phando.home.dashboard.models.BrowseData;
 import com.perseverance.phando.home.dashboard.models.CategoryTab;
+import com.perseverance.phando.home.dashboard.mylist.MyPurchaseListResponse;
 import com.perseverance.phando.home.dashboard.mylist.UpdateMyListResponse;
 import com.perseverance.phando.home.mediadetails.MediaMetadata;
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadataResponse;
@@ -107,6 +108,9 @@ public interface ApiService {
 
     @GET("showwishlist")
     Call<List<Video>> getMyVideoList(@Query("limit") String limit);
+
+    @GET("subscribedmedia")
+    Call<MyPurchaseListResponse> getMyPurchasedVideoList(@Query("limit") String limit);
 
     @POST("addwishlist")
     Call<UpdateMyListResponse> updateMyList(@Query("id") String id, @Query("type") String type, @Query("value") String value);
@@ -229,5 +233,11 @@ public interface ApiService {
     @POST("setUserLngPreferances")
     @FormUrlEncoded
     Call<BaseResponse> updateLanguagePreference(@FieldMap Map<String, String> bodyMap);
+
+    @POST("mediaplaystarttime")
+    @FormUrlEncoded
+    Call<BaseResponse> mediaplaystarttime(@FieldMap Map<String, String> bodyMap);
+
+
 
 }

@@ -36,6 +36,7 @@ data class MediaMetadata(
         val is_dislike: Int,
         val is_free: Int?,
         val is_live: Int? = 0,
+        val can_share: Int? = 1,
         val vast_url: String,
         val document_media_id: Int,
         val last_watch_time: Long = 0,

@@ -47,4 +47,32 @@ class MyListRepository(private val application: Application) {
         return data
     }
 
+    fun callForPurchasedVideos(pageCountlimit: String): MutableLiveData<DataLoadingStatus<MyPurchaseListResponse>> {
+        var data: MutableLiveData<DataLoadingStatus<MyPurchaseListResponse>> = MutableLiveData<DataLoadingStatus<MyPurchaseListResponse>>()
+        data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
+        // val call = apiService.getMyVideoList("$pageCount,$limit")
+        val call = apiService.getMyPurchasedVideoList(pageCountlimit)
+
+        call.enqueue(object : Callback<MyPurchaseListResponse> {
+            override fun onResponse(call: Call<MyPurchaseListResponse>, response: Response<MyPurchaseListResponse>) {
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
+            }
+
+            override fun onFailure(call: Call<MyPurchaseListResponse>?, t: Throwable?) {
+                if (t is ApiClient.NoConnectivityException) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                } else {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
+                }
+            }
+        })
+
+        return data
+    }
+
 }

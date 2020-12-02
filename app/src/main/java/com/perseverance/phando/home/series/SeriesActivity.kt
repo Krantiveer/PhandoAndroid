@@ -1,12 +1,9 @@
 package com.perseverance.phando.home.series
 
 import android.content.Intent
-import android.content.pm.ActivityInfo
-import android.content.res.Configuration
 import android.net.Uri
 import android.net.UrlQuerySanitizer
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -14,7 +11,6 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.core.app.NavUtils
 import androidx.core.app.TaskStackBuilder
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -42,7 +38,6 @@ import kotlinx.android.synthetic.main.activity_series.*
 import kotlinx.android.synthetic.main.activity_series.otherInfo
 import kotlinx.android.synthetic.main.activity_series.share
 import kotlinx.android.synthetic.main.activity_series.viewMore
-import kotlinx.android.synthetic.main.content_detail.*
 
 
 class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
@@ -50,7 +45,8 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     override var screenName=BaseConstants.SERIES_SCREEN
 
     private var waitingDialog: WaitingDialog? = null
-    private var adapter: EpisodeListAdapter? = null
+    private var episodeAdapter: EpisodeListAdapter? = null
+    private lateinit var trailerAdapter: TrailerListAdapter
     private lateinit var baseVideo: Video
     private val homeViewModel by lazy {
         ViewModelProviders.of(this).get(SeriesViewModel::class.java)
@@ -58,7 +54,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     private val notificationDao by lazy {
         AppDatabase.getInstance(this@SeriesActivity)?.notificationDao()
     }
-    val videoListViewModelObserver = Observer<DataLoadingStatus<TVSeriesResponseData>> {
+    private val videoListViewModelObserver = Observer<DataLoadingStatus<TVSeriesResponseDataNew>> {
         progressBar.gone()
 
         when (it?.status) {
@@ -74,8 +70,6 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                 it.data?.let {
                     onGetVideosSuccess(it)
                 }
-
-
             }
 
         }
@@ -94,12 +88,14 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
         baseVideo = intent.getParcelableExtra(Key.CATEGORY)
         homeViewModel.callForSeries(baseVideo.id.toString()).observe(this, videoListViewModelObserver)
 
-        recycler_view_base.layoutManager = LinearLayoutManager(this@SeriesActivity)
+        rv_season_episodes.layoutManager = LinearLayoutManager(this@SeriesActivity)
         //recycler_view_base.setHasFixedSize(true)
-        adapter = EpisodeListAdapter(this@SeriesActivity, this)
+        episodeAdapter = EpisodeListAdapter(this@SeriesActivity, this)
+        trailerAdapter = TrailerListAdapter(this@SeriesActivity, this)
         val videos = ArrayList<Episode>()
-        adapter?.items = videos
-        recycler_view_base.adapter = adapter
+        episodeAdapter?.items = videos
+        rv_season_episodes.adapter = episodeAdapter
+        rv_season_trailer.adapter = trailerAdapter
         viewMore.setOnClickListener {
             if (seriesDescription.visibility == View.VISIBLE) {
                 seriesDescription.gone()
@@ -116,8 +112,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     }
 
 
-    fun onGetVideosSuccess(tvSeriesResponseData: TVSeriesResponseData) {
-
+    private fun onGetVideosSuccess(tvSeriesResponseData: TVSeriesResponseDataNew) {
         prepareShareMedia(tvSeriesResponseData.share_url)
         banner_img.visibility = View.VISIBLE
         seriesTitle.text = tvSeriesResponseData.title
@@ -129,7 +124,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
             otherInfo.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this@SeriesActivity, R.drawable.ic_rating), null, null, null)
             otherText.append(it)
         }
-        tvSeriesResponseData.maturity_rating.let {
+        tvSeriesResponseData.maturityRating.let {
             otherText.append(" | $it")
         }
         tvSeriesResponseData.genres.let {
@@ -144,18 +139,19 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
         //seasonSelector.adapter=AlgorithmAdapter(this@SeriesActivity, tvSeriesResponseData.seasons)
         seasonSelector.adapter= ArrayAdapter(this,R.layout.spinner_item ,tvSeriesResponseData.seasons)
-        seasonSelector.setOnItemSelectedListener(
-                object : OnItemSelectedListener {
-                    override fun onItemSelected(parent: AdapterView<*>,
-                                                view: View, position: Int, id: Long) {
-                        val seriesData = parent.getItemAtPosition(position) as SeriesData
-                        adapter!!.setItems(seriesData.episodes)
-                    }
+        seasonSelector.onItemSelectedListener = object : OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>,
+                                        view: View, position: Int, id: Long) {
+                val selectedSeason = parent.getItemAtPosition(position) as Season
+                episodeAdapter!!.items = selectedSeason.episodes
+                trailerAdapter.items = selectedSeason.trailers
+            }
 
-                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-                })
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
         seasonSelector.setSelection(tvSeriesResponseData.seasons.size-1)
-        adapter!!.addAll(tvSeriesResponseData.seasons.get(tvSeriesResponseData.seasons.size - 1).episodes)
+        episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes )
+        trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
 
         play.setOnClickListener {
             if (tvSeriesResponseData.seasons.isNullOrEmpty()) {
@@ -235,19 +231,37 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     }
 
     override fun onItemClick(data: Any) {
-        var episode = data as Episode
-        if (Utils.isNetworkAvailable(this@SeriesActivity)) {
-            val baseVideo = Video()
-            baseVideo.id = episode.id
-            baseVideo.thumbnail = episode.thumbnail
-            baseVideo.title = episode.id.toString()
-            baseVideo.is_free = episode.is_free
-            baseVideo.type = episode.type
-            startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
-            Utils.animateActivity(this@SeriesActivity, "next")
-        } else {
-            DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+        when(data){
+           is Episode->{
+               if (Utils.isNetworkAvailable(this@SeriesActivity)) {
+                   val baseVideo = Video()
+                   baseVideo.id = data.id
+                   baseVideo.thumbnail = data.thumbnail
+                   baseVideo.title = data.id.toString()
+                   baseVideo.is_free = data.is_free
+                   baseVideo.type = data.type
+                   startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
+                   Utils.animateActivity(this@SeriesActivity, "next")
+               } else {
+                   DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+               }
+           }
+            is TrailerX->{
+                if (Utils.isNetworkAvailable(this@SeriesActivity)) {
+                    val baseVideo = Video()
+                    baseVideo.id = data.id
+                    baseVideo.thumbnail = data.thumbnail
+                    baseVideo.title = data.id.toString()
+                    baseVideo.is_free = 1
+                    baseVideo.type = data.type
+                    startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
+                    Utils.animateActivity(this@SeriesActivity, "next")
+                } else {
+                    DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+                }
+            }
         }
+
     }
     override fun onBackPressed() {
         startActivity(Intent(this@SeriesActivity, HomeActivity::class.java))

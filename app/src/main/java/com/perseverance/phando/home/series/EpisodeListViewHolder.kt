@@ -1,10 +1,6 @@
 package com.perseverance.phando.home.series
 
-import android.content.Context
-import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.view.ContextThemeWrapper
-import androidx.appcompat.widget.PopupMenu
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.resizeView
 import com.perseverance.patrikanews.utils.visible
@@ -19,7 +15,6 @@ class EpisodeListViewHolder(itemView: View, listener: AdapterClickListener) : Ba
 
     init {
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
-
     }
 
     override fun onBind(item: Episode) {
@@ -34,11 +29,9 @@ class EpisodeListViewHolder(itemView: View, listener: AdapterClickListener) : Ba
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder, itemView.img_thumbnail)
 
-
         itemView.title.text = item.title
         itemView.title.visible()
         itemView.rating.gone()
-
         itemView.details.text = item.detail
         itemView.option.gone()
     }

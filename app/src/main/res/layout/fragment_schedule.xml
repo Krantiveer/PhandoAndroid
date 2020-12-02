@@ -95,7 +95,7 @@
         android:layout_above="@id/footer_progress_base">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_base"
+            android:id="@+id/rv_season_episodes"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

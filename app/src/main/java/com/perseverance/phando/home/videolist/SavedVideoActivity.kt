@@ -20,10 +20,10 @@ abstract class SavedVideoActivity : BaseScreenTrackingActivity(), AdapterClickLi
         supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         val manager = GridLayoutManager(this@SavedVideoActivity, 2)
-        recycler_view_base.layoutManager = manager
-        recycler_view_base.setHasFixedSize(true)
+        rv_season_episodes.layoutManager = manager
+        rv_season_episodes.setHasFixedSize(true)
         val decoration = BaseRecycleMarginDecoration(this@SavedVideoActivity)
-        recycler_view_base.addItemDecoration(decoration)
+        rv_season_episodes.addItemDecoration(decoration)
 
 
     }

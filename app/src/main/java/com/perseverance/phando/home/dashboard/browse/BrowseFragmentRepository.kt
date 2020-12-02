@@ -81,13 +81,13 @@ class BrowseListRepository(private val application: Application) {
     }
 
     fun categoryTabListData(): MutableLiveData<DataLoadingStatus<List<CategoryTab>>> {
-        var data: MutableLiveData<DataLoadingStatus<List<CategoryTab>>> = MutableLiveData<DataLoadingStatus<List<CategoryTab>>>()
+        val data: MutableLiveData<DataLoadingStatus<List<CategoryTab>>> = MutableLiveData<DataLoadingStatus<List<CategoryTab>>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
         val call = apiService.getCategoryTabList()
 
         call.enqueue(object : Callback<List<CategoryTab>> {
             override fun onResponse(call: Call<List<CategoryTab>>, response: Response<List<CategoryTab>>) {
-                if (response == null || response.body() == null) {
+                if (response?.body() == null) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
                 } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))

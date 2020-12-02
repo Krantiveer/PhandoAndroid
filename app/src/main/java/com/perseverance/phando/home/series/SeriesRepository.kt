@@ -18,24 +18,23 @@ class SeriesRepository(private val application: Application) {
 
     private val apiService by lazy { ApiClient.getLoginClient().create(ApiService::class.java) }
 
-    fun callForSeries(tvSeriesId: String): MutableLiveData<DataLoadingStatus<TVSeriesResponseData>> {
+    fun callForSeries(tvSeriesId: String): MutableLiveData<DataLoadingStatus<TVSeriesResponseDataNew>> {
 
-        var data: MutableLiveData<DataLoadingStatus<TVSeriesResponseData>> = MutableLiveData<DataLoadingStatus<TVSeriesResponseData>>()
+        val data: MutableLiveData<DataLoadingStatus<TVSeriesResponseDataNew>> = MutableLiveData()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
         val call = apiService.getSeriesDetail(tvSeriesId)
 
-        call.enqueue(object : Callback<TVSeriesResponseData> {
-            override fun onResponse(call: Call<TVSeriesResponseData>, response: Response<TVSeriesResponseData>) {
+        call.enqueue(object : Callback<TVSeriesResponseDataNew> {
+            override fun onResponse(call: Call<TVSeriesResponseDataNew>, response: Response<TVSeriesResponseDataNew>) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
                     val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
-
             }
 
-            override fun onFailure(call: Call<TVSeriesResponseData>?, t: Throwable?) {
+            override fun onFailure(call: Call<TVSeriesResponseDataNew>?, t: Throwable?) {
                 if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
                 } else {

@@ -196,7 +196,7 @@
                     app:layout_constraintTop_toBottomOf="@id/seriesDescription" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view_base"
+                    android:id="@+id/rv_season_episodes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingBottom="@dimen/_10sdp"
@@ -204,6 +204,39 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/seasonSelector" />
+
+                <View
+                    android:id="@+id/vw_trailer_separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_2sdp"
+                    android:backgroundTint="@color/white"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rv_season_episodes"
+                    />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_trailer_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    android:textSize="16sp"
+                    android:paddingLeft="@dimen/_10sdp"
+                    android:text="@string/trailers_separator_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vw_trailer_separator"
+                    />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_season_trailer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:paddingBottom="@dimen/_10sdp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/vw_trailer_separator"
+                    />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,5 +23,6 @@
     <string name="network_error">Please check your internet connection and try again.</string>
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
+    <string name="trailers_separator_label">Trailers</string>
 
 </resources>

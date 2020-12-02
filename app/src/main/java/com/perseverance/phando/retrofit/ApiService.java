@@ -17,6 +17,7 @@ import com.perseverance.phando.home.profile.UserProfileData;
 import com.perseverance.phando.home.profile.login.SocialLoggedInUser;
 import com.perseverance.phando.home.profile.model.CountryCode;
 import com.perseverance.phando.home.series.TVSeriesResponseData;
+import com.perseverance.phando.home.series.TVSeriesResponseDataNew;
 import com.perseverance.phando.payment.paymentoptions.TCResponseData;
 import com.perseverance.phando.payment.paymentoptions.WalletDetailResponseData;
 import com.perseverance.phando.payment.paymentoptions.WalletHistoryResponseData;
@@ -151,7 +152,7 @@ public interface ApiService {
 
 
     @GET("tvseries")
-    Call<TVSeriesResponseData> getSeriesDetail(@Query("id") String id);
+    Call<TVSeriesResponseDataNew> getSeriesDetail(@Query("id") String id);
 
     @GET("episodes/{id}")
     Call<List<Video>> getEpisodesBySeason(@Path("id") String id);

@@ -5,7 +5,6 @@ import android.view.MenuItem
 import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.perseverance.phando.R
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.utils.BaseRecycleMarginDecoration
@@ -23,7 +22,7 @@ abstract class BaseListActivity : BaseScreenTrackingActivity(), AdapterClickList
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         val decoration = BaseRecycleMarginDecoration(this@BaseListActivity)
-        recycler_view_base.addItemDecoration(decoration)
+        rv_season_episodes.addItemDecoration(decoration)
 
 
     }

@@ -31,9 +31,9 @@ class NotificationListActivity : BaseListActivity() {
             if (it.isNotEmpty()) {
                 val adapter = NotificationListAdapter(this@NotificationListActivity, this)
                 adapter.items = it
-                recycler_view_base.adapter = adapter
+                rv_season_episodes.adapter = adapter
             } else {
-                recycler_view_base.gone()
+                rv_season_episodes.gone()
                 lbl_no_video_base.text = "Notifications not found"
                 lbl_no_video_base.visible()
 
@@ -48,7 +48,7 @@ class NotificationListActivity : BaseListActivity() {
         title = "Notifications"
         swipetorefresh_base.isEnabled = false
         manager = LinearLayoutManager(this@NotificationListActivity)
-        recycler_view_base.layoutManager = manager
+        rv_season_episodes.layoutManager = manager
         notificationDao?.getNotifications()?.observe(this@NotificationListActivity, videoListViewModelObserver)
         notificationDao?.markAllNotificationRead()
     }

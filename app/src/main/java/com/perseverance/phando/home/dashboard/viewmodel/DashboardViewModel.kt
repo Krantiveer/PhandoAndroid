@@ -41,7 +41,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
         call.enqueue(object : Callback<AppInfo> {
 
             override fun onResponse(call: Call<AppInfo>?, response: Response<AppInfo>?) {
-                if (response == null || response.body() == null) {
+                if (response?.body() == null) {
                     onFailure(call, NullResponseError())
                 } else {
                     appInfoMutableLiveData!!.postValue(AppInfoModel(response.body(), null))

@@ -12,7 +12,7 @@ class SeriesViewModel(application: Application) : AndroidViewModel(application) 
 
     private var seriesRepository: SeriesRepository = SeriesRepository(application)
 
-    fun callForSeries(tvSeriesId: String): MutableLiveData<DataLoadingStatus<TVSeriesResponseData>> {
+    fun callForSeries(tvSeriesId: String): MutableLiveData<DataLoadingStatus<TVSeriesResponseDataNew>> {
 
         return seriesRepository.callForSeries(tvSeriesId)
     }

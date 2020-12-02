@@ -64,14 +64,14 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         homeViewModel.videoListMutableLiveData.observe(this, videoListViewModelObserver)
 
         val manager = GridLayoutManager(this@BaseVideoListActivity, 2)
-        recycler_view_base.layoutManager = manager
-        recycler_view_base.setHasFixedSize(true)
+        rv_season_episodes.layoutManager = manager
+        rv_season_episodes.setHasFixedSize(true)
         val decoration = BaseRecycleMarginDecoration(this@BaseVideoListActivity)
-        recycler_view_base.addItemDecoration(decoration)
+        rv_season_episodes.addItemDecoration(decoration)
         adapter = BaseCategoryListAdapter(this@BaseVideoListActivity, this, imageOrientation)
         val videos = ArrayList<Video>()
         adapter?.items = videos
-        recycler_view_base.adapter = adapter
+        rv_season_episodes.adapter = adapter
         endlessScrollListener = object : EndlessScrollListener(manager) {
             override fun onLoadMore(currentPage: Int) {
                 pCount = currentPage
@@ -113,7 +113,7 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         dismissProgress()
         footer_progress_base.visibility = View.GONE
         lbl_no_video_base.visibility = View.GONE
-        recycler_view_base.visibility = View.VISIBLE
+        rv_season_episodes.visibility = View.VISIBLE
 
         if (swipetorefresh_base.isRefreshing) {
             swipetorefresh_base.isRefreshing = false
@@ -122,15 +122,15 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         if (pCount == 0 && tempVideos.size == 0) {
             lbl_no_video_base.text = String.format(BaseConstants.RETRY_LABEL, BaseConstants.VIDEOS_NOT_FOUND_ERROR)
             lbl_no_video_base.visibility = View.VISIBLE
-            recycler_view_base.visibility = View.GONE
+            rv_season_episodes.visibility = View.GONE
             return
         }
 
         if (pCount == 0) {
             adapter!!.items.clear()
             if (tempVideos.size >= BaseConstants.LIMIT_VIDEOS) {
-                recycler_view_base.removeOnScrollListener(endlessScrollListener!!)
-                recycler_view_base.addOnScrollListener(endlessScrollListener!!)
+                rv_season_episodes.removeOnScrollListener(endlessScrollListener!!)
+                rv_season_episodes.addOnScrollListener(endlessScrollListener!!)
             }
             adapter!!.items = tempVideos
             return
@@ -149,7 +149,7 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         } else {
             lbl_no_video_base.text = String.format(BaseConstants.RETRY_LABEL, errorMessage)
             lbl_no_video_base.visibility = View.VISIBLE
-            recycler_view_base.visibility = View.GONE
+            rv_season_episodes.visibility = View.GONE
         }
     }
 

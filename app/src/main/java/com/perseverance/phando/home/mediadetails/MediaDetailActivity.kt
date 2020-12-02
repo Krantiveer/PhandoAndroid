@@ -310,6 +310,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     private var mediaMetadata: MediaMetadata? = null
     private lateinit var mediaplaybackData: MediaplaybackData
     private var trailerListAdapter: TrailerListAdapter? = null
+    private var relatedEpisodeListAdapter: RelatedEpisodeListAdapter? = null
 
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
@@ -1060,6 +1061,17 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 trailerContainer.gone()
             }
 
+            if (it.episodes.isNotEmpty()) {
+                episodeContainer.visible()
+                val manager = LinearLayoutManager(this@MediaDetailActivity, LinearLayoutManager.HORIZONTAL, false)
+                episodeRecyclerView.layoutManager = manager
+                relatedEpisodeListAdapter = RelatedEpisodeListAdapter(this@MediaDetailActivity, this)
+                relatedEpisodeListAdapter?.items = it.episodes
+                episodeRecyclerView.adapter = relatedEpisodeListAdapter
+            } else {
+                episodeContainer.gone()
+            }
+
             if (it.related.isNotEmpty()) {
                 relatedContainer.visible()
                 val manager = GridLayoutManager(this@MediaDetailActivity, 2)
@@ -1271,6 +1283,22 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     mediaDetailViewModel.loginFor.value = 0
                 }
             }
+            is RelatedEpisode -> {
+                if (Utils.isNetworkAvailable(this@MediaDetailActivity)) {
+                    val baseVideo = Video()
+                    baseVideo.id = data.id
+                    baseVideo.thumbnail = data.thumbnail
+                    baseVideo.title = data.id.toString()
+                    baseVideo.is_free = data.is_free
+                    baseVideo.type = data.type
+                    mediaDetailViewModel.refreshMediaMetadata(baseVideo)
+//                    startActivity(getDetailIntent(this@MediaDetailActivity, baseVideo))
+//                    finish()
+                } else {
+                    DialogUtils.showMessage(this@MediaDetailActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+                }
+            }
+
 
             is Trailer -> {
                 playVideoTrailer(data.id)

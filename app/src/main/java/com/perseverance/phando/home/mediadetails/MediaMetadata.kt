@@ -6,6 +6,7 @@ data class MediaMetadata(
         val actors: List<String>,
         val directors: List<String>,
         val related: List<Video>,
+        val episodes: List<RelatedEpisode>,
         val trailers: List<Trailer>,
         val ad_url_desktop: String,
         val ad_url_mobile: String,

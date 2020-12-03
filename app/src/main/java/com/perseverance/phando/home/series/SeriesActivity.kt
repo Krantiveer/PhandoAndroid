@@ -249,7 +249,11 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
             is TrailerX->{
                 if (Utils.isNetworkAvailable(this@SeriesActivity)) {
                     val baseVideo = Video()
-                    baseVideo.id = data.id
+                    baseVideo.id = when(data.type){
+                        "S"->{data.seasonId}
+                        "E"->{data.episodeId}
+                        else -> {data.id}
+                    }
                     baseVideo.thumbnail = data.thumbnail
                     baseVideo.title = data.id.toString()
                     baseVideo.is_free = 1
@@ -261,8 +265,8 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                 }
             }
         }
-
     }
+
     override fun onBackPressed() {
         startActivity(Intent(this@SeriesActivity, HomeActivity::class.java))
         finish()

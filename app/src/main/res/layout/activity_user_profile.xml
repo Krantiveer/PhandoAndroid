@@ -148,12 +148,24 @@
                 <!--                    android:background="@color/gray_concrete_light"-->
                 <!--                    />-->
                 <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/btnMyList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="left|center_vertical"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="#535353"
+                    android:padding="@dimen/_11sdp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible"
+                    android:text="My List" />
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/btnWallet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
                     android:foreground="?attr/selectableItemBackground"
-                    android:layout_margin="0dp"
+                    android:layout_marginTop="1dp"
                     android:background="#535353"
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"

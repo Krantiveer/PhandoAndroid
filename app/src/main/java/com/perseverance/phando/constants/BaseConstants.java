@@ -40,6 +40,8 @@ public class BaseConstants {
     public static final String VIDEO_CATEGORY_SCREEN = "VideoCategory";
     public static final String SERIES_SCREEN = "Series";
     public static final String MY_LIST_SCREEN = "MyList";
+    public static final String USER_LIST_SCREEN = "UserList";
+    public static final String USER_LIST_PURCHASED_SCREEN = "UserPurchasedList";
     public static final String SETTINGS_SCREEN = "Settings";
     public static final String MEDIA_DETAILS_SCREEN = "MediaDetails";
     public static final String NOTIFICATION_LIST_SCREEN = "NotificationList";

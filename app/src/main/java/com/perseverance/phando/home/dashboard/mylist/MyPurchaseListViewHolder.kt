@@ -15,13 +15,10 @@ import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.genericAdopter.BaseViewHolder
 import com.perseverance.phando.resize.ListItemThumbnail
 import com.perseverance.phando.utils.Utils
-import kotlinx.android.synthetic.main.item_my_list.view.*
-import kotlinx.android.synthetic.main.item_my_list.view.free
-import kotlinx.android.synthetic.main.item_my_list.view.img_thumbnail
-import kotlinx.android.synthetic.main.tuple_grid_video_item.view.*
+import kotlinx.android.synthetic.main.item_my_purchase_list.view.*
 
 
-class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<Video, AdapterClickListener>(itemView, listener) {
+class MyPurchaseListViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<Video, AdapterClickListener>(itemView, listener) {
 
     init {
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
@@ -47,25 +44,25 @@ class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseVie
 
 
         itemView.details.text = video.detail
-        itemView.option.setOnClickListener {
-            val wrapper: Context = ContextThemeWrapper(itemView.context, R.style.popup_option)
-            val popup = PopupMenu(wrapper, itemView.option)
-            popup.inflate(R.menu.menu_my_list_options)
-            popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
-                override fun onMenuItemClick(item: MenuItem?): Boolean {
-
-                    return when (item?.itemId) {
-                        R.id.menu_delete -> {
-                            listener.onItemClick("${video.id},${video.type}")
-                            true
-                        }
-
-                        else -> false
-                    }
-                }
-
-            })
-            popup.show()
-        }
+//        itemView.option.setOnClickListener {
+//            val wrapper: Context = ContextThemeWrapper(itemView.context, R.style.popup_option)
+//            val popup = PopupMenu(wrapper, itemView.option)
+//            popup.inflate(R.menu.menu_my_list_options)
+//            popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
+//                override fun onMenuItemClick(item: MenuItem?): Boolean {
+//
+//                    return when (item?.itemId) {
+//                        R.id.menu_delete -> {
+//                            listener.onItemClick("${video.id},${video.type}")
+//                            true
+//                        }
+//
+//                        else -> false
+//                    }
+//                }
+//
+//            })
+//            popup.show()
+//        }
     }
 }

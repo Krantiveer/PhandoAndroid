@@ -160,4 +160,26 @@ class MediaDetailRepository(private val application: Application) {
             }
         }
     }
+
+    suspend fun updateMediaPlayStartTime(documentId: String): DataLoadingStatus<BaseResponse> {
+
+        try {
+            val param = HashMap<String, String>()
+            param["document_id"] = documentId
+            val response = apiService.mediaplaystarttime(param).execute()
+            if (response.isSuccessful) {
+                return DataLoadingStatus(LoadingStatus.SUCCESS, "",response.body())
+            } else {
+                return DataLoadingStatus(LoadingStatus.ERROR, "Unable to update media play start time")
+            }
+
+
+        } catch (e: Exception) {
+            if (e is ApiClient.NoConnectivityException) {
+                return DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR)
+            } else {
+                return DataLoadingStatus(LoadingStatus.ERROR, "Unable to update media play start time")
+            }
+        }
+    }
 }

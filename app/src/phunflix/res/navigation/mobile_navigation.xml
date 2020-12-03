@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/navigation_my_list"
-        android:name="com.perseverance.phando.home.dashboard.mylist.MyListFragment"
+        android:name="com.perseverance.phando.home.dashboard.mylist.UserListFragment"
         tools:layout="@layout/fragment_base" >
 
         <action

@@ -198,28 +198,8 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
     fun getMediaUrlAndStartDownload(documentId: String) = liveData(Dispatchers.IO) {
         emit(mediaDetailRepository.getMediaUrlAndStartDownload(documentId))
     }
-
-    interface Callback {
-        fun showData(data: String)
-    }
-
-    fun loadUser() {
-        fetchUser { data ->
-            run {
-                print(data)
-            }
-        }
-    }
-
-    fun loadUser1() {
-        fetchUser { data ->
-            print(data)
-        }
-    }
-
-    fun fetchUser(f: (data: String) -> Unit) {
-        val data = "User Info"
-        f(data)
+    fun updateMediaPlayStartTime(documentId: String) = liveData(Dispatchers.IO) {
+        emit(mediaDetailRepository.updateMediaPlayStartTime(documentId))
     }
 
 }

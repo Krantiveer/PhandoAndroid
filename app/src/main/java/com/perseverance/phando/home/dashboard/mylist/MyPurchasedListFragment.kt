@@ -27,16 +27,16 @@ import com.perseverance.phando.home.profile.login.LoginActivity
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.fragment_mylist.*
 
-class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, AdapterClickListener {
+class MyPurchasedListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, AdapterClickListener {
     override var screenName = BaseConstants.MY_LIST_SCREEN
 
-    private var adapter: MyListAdapter? = null
+    private var adapter: MyPurchaseListAdapter? = null
 
     private val myListViewModel by lazy {
-        ViewModelProviders.of(this).get(MyListViewModel::class.java)
+        ViewModelProviders.of(this).get(MyPurchasedListViewModel::class.java)
     }
 
-    private val videoListViewModelObserver = Observer<DataLoadingStatus<List<Video>>> {
+    private val videoListViewModelObserver = Observer<DataLoadingStatus<MyPurchaseListResponse>> {
         message.gone()
         when (it.status) {
 
@@ -60,13 +60,21 @@ class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, Ada
                 if (swipetorefresh_base.isRefreshing) {
                     swipetorefresh_base.isRefreshing = false
                 }
-                adapter?.clear()
-                adapter?.addAll(it.data)
-                if (it.data!!.isEmpty()) {
-                    message.text = "Add videos to your list to save \nand watch them later"
-                    message.visible()
-                }
+                it.data?.let {
+                    if (it.status=="success"){
+                        if (it.data.isEmpty()){
+                            message.text = "No data found"
+                            message.visible()
+                        }else{
+                            adapter?.clear()
+                            adapter?.addAll(it.data)
+                        }
 
+                    }else{
+                        message.text = it.message
+                        message.visible()
+                    }
+                }
 
             }
         }
@@ -90,7 +98,7 @@ class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, Ada
         recyclerView.setHasFixedSize(true)
         val decoration = BaseRecycleMarginDecoration(activity)
         recyclerView.addItemDecoration(decoration)
-        adapter = MyListAdapter(appCompatActivity, this)
+        adapter = MyPurchaseListAdapter(appCompatActivity, this)
         val videos = ArrayList<Video>()
         adapter?.items = videos
         recyclerView.adapter = adapter
@@ -138,8 +146,8 @@ class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, Ada
                 }
             }
             is String -> {
-                val tempData = data.split(",")
-                myListViewModel.removeFromMyList(tempData[0], tempData[1])
+//                val tempData = data.split(",")
+//                myListViewModel.removeFromMyList(tempData[0], tempData[1])
             }
         }
 

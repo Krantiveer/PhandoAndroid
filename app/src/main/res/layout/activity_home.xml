@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/bg_app"
     android:layout_width="match_parent"
@@ -9,9 +9,13 @@
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/mobile_navigation" />
+        app:navGraph="@navigation/mobile_navigation"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"/>
 
     <com.perseverance.phando.AdsUtil.BannerAdLayout
         android:id="@+id/ad"
@@ -20,7 +24,10 @@
         android:gravity="center"
         app:layout_anchor="@id/bottomNavigation"
         app:layout_anchorGravity="top"
-        android:layout_gravity="top" />
+        android:layout_gravity="top"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
@@ -33,10 +40,13 @@
         app:itemIconTint="@drawable/bottom_tab_selector"
         app:itemTextColor="@drawable/bottom_tab_selector"
         app:labelVisibilityMode="auto"
-        app:menu="@menu/my_navigation_items" />
+        app:menu="@menu/my_navigation_items"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
     <!--    app:layout_scrollFlags="scroll|enterAlways|snap"-->
     <!--    app:layout_behavior="@string/hide_bottom_view_on_scroll_behavior"-->

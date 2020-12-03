@@ -751,12 +751,14 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     private fun playVideoTrailer(tId: Int? = null) {
         var trailerId: Int? = tId ?: mediaplaybackData.data.trailer_id
         if (!isVideoPlayed && !isTrailerPlaying) {
+            // for dynamic link
             intent.getStringExtra(TRAILER_ID)?.let {
                 trailerId = it.toInt()
             }
 
         }
         trailerId?.let { trailerId ->
+            // getting trailer from trailer list
             val trailer = mediaMetadata?.trailers?.firstOrNull { it.id == trailerId }
             trailer?.let {
                 gaTitle=it.title
@@ -817,9 +819,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             "free", "rented", "buyed", "package_purchased" -> {
                 actionControlersBuy.gone()
                 mediaMetadata?.media_reference_type?.let {
+                    // if only trailer is available or trailer selected from series screen
                     if (it == "media_trailor") {
                         playVideoTrailer()
                     }else{
+                        // for playing trailer when landing from dynamic link and trailer was shared
                         if (!isVideoPlayed && !isTrailerPlaying) {
                            // Log.e("intent",intent.toString())
                             intent.getStringExtra(TRAILER_ID)?.let {

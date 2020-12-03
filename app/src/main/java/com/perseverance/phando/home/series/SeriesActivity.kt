@@ -149,9 +149,12 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        seasonSelector.setSelection(tvSeriesResponseData.seasons.size-1)
-        episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes )
-        trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
+        try {
+            seasonSelector.setSelection(tvSeriesResponseData.seasons.size-1)
+            episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes )
+            trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
+        } catch (e: Exception) {
+        }
 
         play.setOnClickListener {
             if (tvSeriesResponseData.seasons.isNullOrEmpty()) {

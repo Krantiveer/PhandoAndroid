@@ -16,6 +16,7 @@ import android.text.Html
 import android.text.Spannable
 import android.text.Spanned
 import android.text.style.StrikethroughSpan
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -1017,6 +1018,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         mediaMetadata?.actors?.let {
             otherText.addAll(it)
         }
+        mediaMetadata?.duration_str?.let {
+            otherText.add(it)
+        }
         otherInfo.text = otherText.joinToString(" | ")
 
 
@@ -1081,7 +1085,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     private fun setRelatedVideo() {
         mediaMetadata?.let {
-            if (it.trailers.isNotEmpty()) {
+            if (it.trailers !=null &&  it.trailers.isNotEmpty()) {
                 trailerContainer.visible()
                 val manager = LinearLayoutManager(this@MediaDetailActivity, LinearLayoutManager.HORIZONTAL, false)
                 trailerRecyclerView.layoutManager = manager
@@ -1092,7 +1096,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 trailerContainer.gone()
             }
 
-            if (it.episodes.isNotEmpty()) {
+            if (it.episodes !=null && it.episodes.isNotEmpty()) {
                 episodeContainer.visible()
                 val manager = LinearLayoutManager(this@MediaDetailActivity, LinearLayoutManager.HORIZONTAL, false)
                 episodeRecyclerView.layoutManager = manager
@@ -1103,7 +1107,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 episodeContainer.gone()
             }
 
-            if (it.related.isNotEmpty()) {
+            if (it.related !=null && it.related.isNotEmpty()) {
                 relatedContainer.visible()
                 val manager = GridLayoutManager(this@MediaDetailActivity, 2)
                 recyclerView.layoutManager = manager
@@ -1193,6 +1197,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     private fun shareVideoUrl() {
         dynamicLink?.let {
+            Log.e("share",it)
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT, it)
@@ -1556,34 +1561,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                // Log.i("previewLink", it.toString())
             }
             dynamicLink = result?.shortLink.toString()
-           // Log.i("dynamicLink", dynamicLink)
-           // Log.i("linkUrl", linkUrl)
+            Log.e("dynamicLink**", dynamicLink)
 
+
+        }.addOnFailureListener {
+            it.printStackTrace()
         }
-
-//        val dynamicLink = Firebase.dynamicLinks.dynamicLink { // or Firebase.dynamicLinks.shortLinkAsync
-//            link = Uri.parse(linkUrl)
-//            domainUriPrefix = BuildConfig.DOMAIN_URI
-//            androidParameters(packageName) {
-//                minimumVersion = 6
-//            }
-//            iosParameters(packageName) {
-//                appStoreId = "1524436726"
-//                minimumVersion = "2.3"
-//            }
-//            googleAnalyticsParameters {
-//                source = "android"
-//                medium = "app"
-//            }
-//
-//            socialMetaTagParameters {
-//                title = shareTitle
-//                imageUrl = Uri.parse(shareThumbnail)
-//                //  description = "This link works whether the app is installed or not!"
-//            }
-//        }
-//        Log.e("dynamicLink : ",dynamicLink.uri.toString())
-
     }
 
 

@@ -12,7 +12,7 @@ import com.perseverance.phando.genericAdopter.BaseViewHolder
 import com.perseverance.phando.genericAdopter.GenericRecyclerViewAdapter
 import com.perseverance.phando.resize.ListItemThumbnail
 import com.perseverance.phando.utils.Utils
-import kotlinx.android.synthetic.main.item_my_list.view.*
+import kotlinx.android.synthetic.main.item_episode.view.*
 
 /*
 created by @alokipandey for QAIT on 02/12/2020
@@ -23,7 +23,7 @@ class TrailerListAdapter(context: Context, listener: AdapterClickListener) :
                 BaseViewHolder<TrailerX, AdapterClickListener>>(context, listener) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<TrailerX, AdapterClickListener> {
-        return TrailerListViewHolder(inflate(R.layout.item_my_list, parent), listener)
+        return TrailerListViewHolder(inflate(R.layout.item_episode, parent), listener)
     }
 }
 
@@ -49,7 +49,8 @@ class TrailerListViewHolder(itemView: View, listener: AdapterClickListener) :
         itemView.title.text = item.title
         itemView.title.visible()
         itemView.rating.gone()
-//        itemView.details.text = item.detail
-        itemView.option.gone()
+        item.duration_str?.let {
+            itemView.duration.text="($it)"
+        }?: itemView.duration.gone()
     }
 }

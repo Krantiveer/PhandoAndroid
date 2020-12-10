@@ -159,7 +159,7 @@
                     android:id="@+id/walletHint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="--"
+                    android:text="Activate Phunflix Wallet to pay for your favourite movies and series."
                     android:padding="@dimen/_5sdp"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"

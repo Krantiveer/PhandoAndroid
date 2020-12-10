@@ -15,5 +15,6 @@ data class Episode(
         val title: String,
         val thumbnail_vertical: String,
         val tv_series_id: Int,
-        val type: String
+        val type: String,
+        val duration_str: String?
 )

@@ -15,5 +15,6 @@ data class TrailerX(
     val thumbnail_medium: String,
     val thumbnail_small: String,
     val title: String,
-    val type: String
+    val type: String,
+    val duration_str: String?
 )

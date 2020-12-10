@@ -17,9 +17,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:replace="android:name">
-        <activity android:name=".dynamiclink.DynamicLinkActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
+        <activity
+            android:name=".splash.BaseSplashActivity"
+            android:screenOrientation="sensorPortrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
 
@@ -69,8 +73,8 @@
         <activity
             android:name=".home.series.SeriesActivity"
             android:label="Series"
-            android:screenOrientation="sensorPortrait"
-            android:parentActivityName=".home.dashboard.HomeActivity"/>
+            android:parentActivityName=".home.dashboard.HomeActivity"
+            android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".payment.subscription.SubscriptionPackageActivity"
             android:label="Subscription"
@@ -83,16 +87,7 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait"></activity>
-        <activity
-            android:name=".splash.SplashActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:screenOrientation="sensorPortrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".search.SearchResultActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -143,6 +138,7 @@
         <activity
             android:name=".home.dashboard.mylist.UserListActivity"
             android:screenOrientation="portrait" />
+
         <service
             android:name=".AdsUtil.AdNetworkService"
             android:exported="false" />

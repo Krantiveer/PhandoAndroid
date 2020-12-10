@@ -48,6 +48,7 @@ data class MediaMetadata(
         val cc_files: List<CcFile>? = arrayListOf(),
         val analytics_category_id: String?,
         val other_credits: String?,
+        val duration_str: String?,
         val trailer_id: Int?
 ) {
     fun getDirectors(): String? {

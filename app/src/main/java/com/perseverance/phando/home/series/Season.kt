@@ -23,7 +23,7 @@ data class Season(
     val thumbnail_vertical: String,
     val title: String,
     val trailer: SeriesTrailer,
-    val trailers: List<TrailerX>,
+    val trailers: List<TrailerX>?,
     val tv_series_id: Int,
     val type: String
 ){

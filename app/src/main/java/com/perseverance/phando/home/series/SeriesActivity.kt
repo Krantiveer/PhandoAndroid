@@ -144,16 +144,29 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                                         view: View, position: Int, id: Long) {
                 val selectedSeason = parent.getItemAtPosition(position) as Season
                 episodeAdapter!!.items = selectedSeason.episodes
-                trailerAdapter.items = selectedSeason.trailers
+                selectedSeason.trailers?.let {
+                    trailerAdapter.items = it
+                }
+
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
+
         try {
             seasonSelector.setSelection(tvSeriesResponseData.seasons.size-1)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        try {
             episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes )
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        try {
             trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
         } catch (e: Exception) {
+            e.printStackTrace()
         }
 
         play.setOnClickListener {

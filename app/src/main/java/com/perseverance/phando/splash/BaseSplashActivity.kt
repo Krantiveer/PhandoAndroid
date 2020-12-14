@@ -67,7 +67,6 @@ open class BaseSplashActivity : BaseScreenTrackingActivity() {
         FacebookSdk.setAutoInitEnabled(true)
         FacebookSdk.fullyInitialize()
         AppLinkData.fetchDeferredAppLinkData(this) {
-
         }
         Firebase.dynamicLinks
                 .getDynamicLink(intent)
@@ -97,24 +96,19 @@ open class BaseSplashActivity : BaseScreenTrackingActivity() {
                                             finish()
                                         }
                                         "player" -> {
-                                            startActivity(MediaDetailActivity.getDetailIntent(this@BaseSplashActivity, video, trailerId))
+                                            startActivity(MediaDetailActivity.getDetailIntent(this@BaseSplashActivity, video, trailerId,true))
                                             finish()
                                         }
                                     }
-
                                 } ?: openHome()
-
-
                             } else {
                                 openHome()
                             }
                         } ?: openHome()
-
                     } ?: openHome()
                 }
                 .addOnFailureListener {
                     openHome()
                 }
-
     }
 }

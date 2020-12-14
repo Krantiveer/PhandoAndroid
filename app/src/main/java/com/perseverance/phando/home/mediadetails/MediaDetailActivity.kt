@@ -71,6 +71,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     override var screenName = ""
     private lateinit var purchaseOption: PurchaseOption
     private var razorpayOrdertId: String? = null
+    private var fromDyLink = false
     val STRIKE_THROUGH_SPAN = StrikethroughSpan()
     val downloadMetadataDao by lazy {
         AppDatabase.getInstance(this)?.downloadMetadataDao()
@@ -78,8 +79,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     val logger by lazy {
         AppEventsLogger.newLogger(this@MediaDetailActivity)
     }
-    var baseVideo:Video?=null
-    var gaTitle:String?=""
+    var baseVideo: Video? = null
+    var gaTitle: String? = ""
+
     companion object {
         const val LOGIN_FOR_RENT = 1
         const val LOGIN_FOR_BUY = 2
@@ -113,27 +115,25 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         const val REQUEST_CODE_PAYMENT = 114
         const val ARG_VIDEO = "param_video"
         const val TRAILER_ID = "trailer_id"
-        fun getDetailIntent(context: Context, video: Video, trailerId: String? = ""): Intent {
-
+        fun getDetailIntent(context: Context, video: Video, trailerId: String? = "", fromDyLink: Boolean = false): Intent {
             if (video.is_free == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
                 val intent = Intent(context, LoginActivity::class.java)
                 return intent
             } else {
                 val intent = Intent(context, MediaDetailActivity::class.java)
-
                 intent.apply {
+                    putExtra("fromDyLink", fromDyLink)
                     val arg = Bundle()
                     arg.apply {
                         putParcelable(ARG_VIDEO, video)
                         if (trailerId != null) {
-                            if (trailerId.isNotBlank()&&trailerId!="0") {
+                            if (trailerId.isNotBlank() && trailerId != "0") {
                                 putExtra(TRAILER_ID, trailerId)
                             }
                         }
                     }
                     putExtras(arg)
                 }
-
                 return intent
             }
         }
@@ -301,7 +301,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     }
 
-
     val messageObserver = Observer<String> {
         Toast.makeText(this, it, Toast.LENGTH_LONG).show()
     }
@@ -312,7 +311,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     private lateinit var mediaplaybackData: MediaplaybackData
     private var trailerListAdapter: TrailerListAdapter? = null
     private var relatedEpisodeListAdapter: RelatedEpisodeListAdapter? = null
-
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
         nextEpisode.gone()
@@ -329,7 +327,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 it.forEach { ccInfo ->
                     subtitleUri.add("${ccInfo.url},${ccInfo.mime_type},${ccInfo.language_code}")
                 }
-
             }
         }
         var isLive = false
@@ -370,7 +367,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                     WindowManager.LayoutParams.FLAG_SECURE)
         }
-
         setContentView(R.layout.activity_video_details)
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -381,7 +377,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         } else {
             portrate()
         }
-
         val decoration = BaseRecycleMarginDecoration(this@MediaDetailActivity)
         recyclerView.addItemDecoration(decoration)
 
@@ -397,8 +392,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             intent?.getLongExtra(Key.NOTIFICATION_DB_ID, 0)?.let {
                 notificationDao?.markNotificationRead(it)
             }
-        } catch (e: Exception) {
-        }
+            fromDyLink = intent.getBooleanExtra("fromDyLink", false)
+        } catch (e: Exception) { }
         baseVideo = intent?.getParcelableExtra(ARG_VIDEO)
         baseVideo?.let {
             mediaDetailViewModel.refreshMediaMetadata(it)
@@ -406,7 +401,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         }
         favorite.setOnClickListener {
             mediaMetadata?.can_share?.let {
-                if (it!=1){
+                if (it != 1) {
                     toast("Add to My List is restricted for this media.")
                     return@setOnClickListener
                 }
@@ -417,15 +412,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 startActivity(intent)
             } else {
                 mediaDetailViewModel.reloadTrigger.value?.let {
-
                     mediaDetailViewModel.addToMyList(it.id.toString(), it.type!!)
                 }
             }
-
         }
         like.setOnClickListener {
             mediaMetadata?.can_share?.let {
-                if (it!=1){
+                if (it != 1) {
                     toast("Like is restricted for this media.")
                     return@setOnClickListener
                 }
@@ -440,7 +433,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     mediaDetailViewModel.addToLike(it.id.toString(), it.type!!)
                 }
             }
-
         }
 //        dislike.setOnClickListener {
 //            playerViewModel.reloadTrigger.value?.let {
@@ -452,7 +444,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         }
         share.setOnClickListener {
             mediaMetadata?.can_share?.let {
-                if (it!=1){
+                if (it != 1) {
                     toast("Sharing is restricted for this media.")
                     return@setOnClickListener
                 }
@@ -501,7 +493,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 }
 
                 when (it.status) {
-
                     STATE_COMPLETED -> {
                         downloadResume.gone()
                         downloadStop.gone()
@@ -639,7 +630,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                         VideoSdkUtil.startDownload(this@MediaDetailActivity, videoPlayerMetadata, mediaMetadata?.title)
                         downloadMetadataDao.insert(DownloadMetadata(mediaMetadata?.document_media_id!!.toString(),
                                 mediaMetadata?.title,
-                                mediaMetadata?.getDirectors()+"\n"+ mediaMetadata?.detail+"\n"+mediaMetadata?.other_credits,
+                                mediaMetadata?.getDirectors() + "\n" + mediaMetadata?.detail + "\n" + mediaMetadata?.other_credits,
                                 mediaMetadata?.thumbnail,
                                 mediaMetadata?.media_url
 
@@ -685,28 +676,28 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
 
         when (mediaplaybackData.mediaCode) {
-            "free" ->{
+            "free" -> {
                 mediaMetadata?.media_reference_type?.let {
                     if (it == "media_trailor") {
                         playVideoTrailer()
-                    }else{
+                    } else {
 
                         mediaMetadata?.media_url?.let {
                             isVideoPlayed = true
                             isTrailerPlaying = false
                             play.gone()
                             videoTitle.text = mediaMetadata?.title
-                            gaTitle=mediaMetadata?.title?:"media_title_not_found"
+                            gaTitle = mediaMetadata?.title ?: "media_title_not_found"
                             setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
                         }
                     }
-                }?: kotlin.run {
+                } ?: kotlin.run {
                     mediaMetadata?.media_url?.let {
                         isVideoPlayed = true
                         isTrailerPlaying = false
                         play.gone()
                         videoTitle.text = mediaMetadata?.title
-                        gaTitle=mediaMetadata?.title?:"media_title_not_found"
+                        gaTitle = mediaMetadata?.title ?: "media_title_not_found"
                         setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
                     }
                 }
@@ -718,7 +709,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     isTrailerPlaying = false
                     play.gone()
                     videoTitle.text = mediaMetadata?.title
-                    gaTitle=mediaMetadata?.title?:"media_title_not_found"
+                    gaTitle = mediaMetadata?.title ?: "media_title_not_found"
                     setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
                 }
             }
@@ -739,7 +730,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 isTrailerPlaying = false
                 mediaMetadata?.media_url?.let {
                     play.gone()
-                    gaTitle=mediaMetadata?.title?:"media_title_not_found"
+                    gaTitle = mediaMetadata?.title ?: "media_title_not_found"
                     videoTitle.text = mediaMetadata?.title
                     setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
                 }
@@ -762,7 +753,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             // getting trailer from trailer list
             val trailer = mediaMetadata?.trailers?.firstOrNull { it.id == trailerId }
             trailer?.let {
-                gaTitle=it.title
+                gaTitle = it.title
                 videoTitle.text = it.title
                 setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = it.media_url)
                 prepareShareMedia(it.share_url)
@@ -823,12 +814,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     // if only trailer is available or trailer selected from series screen
                     if (it == "media_trailor") {
                         playVideoTrailer()
-                    }else{
+                    } else {
                         // for playing trailer when landing from dynamic link and trailer was shared
                         if (!isVideoPlayed && !isTrailerPlaying) {
-                           // Log.e("intent",intent.toString())
+                            // Log.e("intent",intent.toString())
                             intent.getStringExtra(TRAILER_ID)?.let {
-                               playVideoTrailer()
+                                playVideoTrailer()
                             }
 
                         }
@@ -993,7 +984,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         mediaDetailViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
         var description = mediaMetadata?.detail
         mediaMetadata?.other_credits?.let {
-            if(it.isNotBlank()) description +=("\n\nOther Credits: "+mediaMetadata?.other_credits)
+            if (it.isNotBlank()) description += ("\n\nOther Credits: " + mediaMetadata?.other_credits)
         }
         videoDescription.text = description
 
@@ -1001,7 +992,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         ratingLogo.gone()
         val otherText = arrayListOf<String>()
         mediaMetadata?.getDirectors()?.let {
-            directors.text=it
+            directors.text = it
             directors.visible()
         }
 
@@ -1085,7 +1076,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     private fun setRelatedVideo() {
         mediaMetadata?.let {
-            if (it.trailers !=null &&  it.trailers.isNotEmpty()) {
+            if (it.trailers != null && it.trailers.isNotEmpty()) {
                 trailerContainer.visible()
                 val manager = LinearLayoutManager(this@MediaDetailActivity, LinearLayoutManager.HORIZONTAL, false)
                 trailerRecyclerView.layoutManager = manager
@@ -1096,7 +1087,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 trailerContainer.gone()
             }
 
-            if (it.episodes !=null && it.episodes.isNotEmpty()) {
+            if (it.episodes != null && it.episodes.isNotEmpty()) {
                 episodeContainer.visible()
                 val manager = LinearLayoutManager(this@MediaDetailActivity, LinearLayoutManager.HORIZONTAL, false)
                 episodeRecyclerView.layoutManager = manager
@@ -1107,7 +1098,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 episodeContainer.gone()
             }
 
-            if (it.related !=null && it.related.isNotEmpty()) {
+            if (it.related != null && it.related.isNotEmpty()) {
                 relatedContainer.visible()
                 val manager = GridLayoutManager(this@MediaDetailActivity, 2)
                 recyclerView.layoutManager = manager
@@ -1189,15 +1180,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             android.R.id.home -> {
                 onBackPressed()
             }
-
         }
         return super.onOptionsItemSelected(item)
     }
 
-
     private fun shareVideoUrl() {
         dynamicLink?.let {
-            Log.e("share",it)
+            Log.e("share", it)
             val sendIntent: Intent = Intent().apply {
                 action = Intent.ACTION_SEND
                 putExtra(Intent.EXTRA_TEXT, it)
@@ -1220,16 +1209,16 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     override fun onBackPressed() {
         when (resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
-                startActivity(Intent(this@MediaDetailActivity, HomeActivity::class.java))
-                finish()
+                if (fromDyLink) {
+                    startActivity(Intent(this@MediaDetailActivity, HomeActivity::class.java))
+                    finish()
+                } else super.onBackPressed()
                 // super.onBackPressed()
             }
             Configuration.ORIENTATION_LANDSCAPE -> {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }
         }
-
-
     }
 
     override fun onResume() {
@@ -1304,7 +1293,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 //
 //                }
 //            }
-            LoginActivity.REQUEST_CODE_LOGIN,  REQUEST_CODE_RENT,REQUEST_CODE_BUY,REQUEST_CODE_PACKAGE,REQUEST_CODE_PAYMENT ->{
+            LoginActivity.REQUEST_CODE_LOGIN, REQUEST_CODE_RENT, REQUEST_CODE_BUY, REQUEST_CODE_PACKAGE, REQUEST_CODE_PAYMENT -> {
                 if (resultCode == Activity.RESULT_OK) {
                     finish()
                     startActivity(getDetailIntent(this@MediaDetailActivity as Context, baseVideo!!))
@@ -1329,7 +1318,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     Utils.displayImage(this, data.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
                     mediaDetailViewModel.refreshMediaMetadata(data)
                     mediaDetailViewModel.loginFor.value = 0
-                    baseVideo=data
+                    baseVideo = data
                 }
             }
             is RelatedEpisode -> {
@@ -1392,12 +1381,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
                     TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS_SCREEN, eventData.toString())
                     mediaDetailViewModel.updateMediaPlayStartTime(mediaMetadata?.document_media_id!!.toString()).observe(this, Observer {
-                        val result = it?:return@Observer
-                        MyLog.i("updateMediaPlayStartTime",it.toString())
+                        val result = it ?: return@Observer
+                        MyLog.i("updateMediaPlayStartTime", it.toString())
 
                     })
                     isPlayerstartSent = true
-                }else{}
+                } else {
+                }
             } else {
                 TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
                 when (it.action) {
@@ -1558,7 +1548,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         }.addOnSuccessListener { result ->
             result?.previewLink.let {
-               // Log.i("previewLink", it.toString())
+                // Log.i("previewLink", it.toString())
             }
             dynamicLink = result?.shortLink.toString()
             Log.e("dynamicLink**", dynamicLink)

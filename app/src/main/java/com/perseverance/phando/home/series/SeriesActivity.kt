@@ -38,11 +38,12 @@ import kotlinx.android.synthetic.main.activity_series.*
 import kotlinx.android.synthetic.main.activity_series.otherInfo
 import kotlinx.android.synthetic.main.activity_series.share
 import kotlinx.android.synthetic.main.activity_series.viewMore
+import java.lang.Exception
 
 
 class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
-    override var screenName=BaseConstants.SERIES_SCREEN
+    override var screenName = BaseConstants.SERIES_SCREEN
 
     private var waitingDialog: WaitingDialog? = null
     private var episodeAdapter: EpisodeListAdapter? = null
@@ -138,7 +139,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                 R.drawable.video_placeholder, R.drawable.error_placeholder, banner_img)
 
         //seasonSelector.adapter=AlgorithmAdapter(this@SeriesActivity, tvSeriesResponseData.seasons)
-        seasonSelector.adapter= ArrayAdapter(this,R.layout.spinner_item ,tvSeriesResponseData.seasons)
+        seasonSelector.adapter = ArrayAdapter(this, R.layout.spinner_item, tvSeriesResponseData.seasons)
         seasonSelector.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>,
                                         view: View, position: Int, id: Long) {
@@ -153,20 +154,30 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        try {
-            seasonSelector.setSelection(tvSeriesResponseData.seasons.size-1)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        try {
-            episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes )
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        try {
+//<<<<<<< Updated upstream
+//        try {
+//            seasonSelector.setSelection(tvSeriesResponseData.seasons.size-1)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//        try {
+//            episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes )
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//        try {
+//            trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//=======
+        seasonSelector.setSelection(tvSeriesResponseData.seasons.size - 1)
+        episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes)
+        try{
             trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
-        } catch (e: Exception) {
-            e.printStackTrace()
+        }catch (e:Exception){
+            vw_trailer_separator.gone()
+            rv_season_trailer.gone()
+//>>>>>>> Stashed changes
         }
 
         play.setOnClickListener {
@@ -178,7 +189,6 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                 val lastSeason = seasons.get(seasons.size - 1)
                 lastSeason.trailer?.let {
                     if (Utils.isNetworkAvailable(this@SeriesActivity)) {
-
                         val baseVideo = Video()
                         baseVideo.id = it.id
                         baseVideo.thumbnail = lastSeason.thumbnail
@@ -192,7 +202,6 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                     }
 
                 } ?: return@setOnClickListener
-
             }
 //               tvSeriesResponseData.seasons.get(0).episodes.get(0).let {
 //                   if (Utils.isNetworkAvailable(this@SeriesActivity)) {
@@ -243,32 +252,38 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
     override fun onPrepareSupportNavigateUpTaskStack(builder: TaskStackBuilder) {
         super.onPrepareSupportNavigateUpTaskStack(builder)
-        builder.editIntentAt(builder.intentCount - 1)?.putExtras(Intent(this@SeriesActivity,HomeActivity::class.java))
+        builder.editIntentAt(builder.intentCount - 1)?.putExtras(Intent(this@SeriesActivity, HomeActivity::class.java))
     }
 
     override fun onItemClick(data: Any) {
-        when(data){
-           is Episode->{
-               if (Utils.isNetworkAvailable(this@SeriesActivity)) {
-                   val baseVideo = Video()
-                   baseVideo.id = data.id
-                   baseVideo.thumbnail = data.thumbnail
-                   baseVideo.title = data.id.toString()
-                   baseVideo.is_free = data.is_free
-                   baseVideo.type = data.type
-                   startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
-                   Utils.animateActivity(this@SeriesActivity, "next")
-               } else {
-                   DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
-               }
-           }
-            is TrailerX->{
+        when (data) {
+            is Episode -> {
                 if (Utils.isNetworkAvailable(this@SeriesActivity)) {
                     val baseVideo = Video()
-                    baseVideo.id = when(data.type){
-                        "S"->{data.seasonId}
-                        "E"->{data.episodeId}
-                        else -> {data.id}
+                    baseVideo.id = data.id
+                    baseVideo.thumbnail = data.thumbnail
+                    baseVideo.title = data.id.toString()
+                    baseVideo.is_free = data.is_free
+                    baseVideo.type = data.type
+                    startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
+                    Utils.animateActivity(this@SeriesActivity, "next")
+                } else {
+                    DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+                }
+            }
+            is TrailerX -> {
+                if (Utils.isNetworkAvailable(this@SeriesActivity)) {
+                    val baseVideo = Video()
+                    baseVideo.id = when (data.type) {
+                        "S" -> {
+                            data.seasonId
+                        }
+                        "E" -> {
+                            data.episodeId
+                        }
+                        else -> {
+                            data.id
+                        }
                     }
                     baseVideo.thumbnail = data.thumbnail
                     baseVideo.title = data.id.toString()
@@ -296,11 +311,10 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                 type = "text/plain"
             }
             startActivity(Intent.createChooser(sendIntent, "Share"))
-
         }
- }
+    }
 
-    var dynamicLink: String?=null
+    var dynamicLink: String? = null
     fun prepareShareMedia(linkUrl: String) {
         val sanitizer = UrlQuerySanitizer()
         sanitizer.allowUnregisteredParamaters = true
@@ -329,7 +343,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
             }
         }.addOnSuccessListener { result ->
             result?.previewLink.let {
-               // Log.i("previewLink", it.toString())
+                // Log.i("previewLink", it.toString())
             }
             dynamicLink = result?.shortLink.toString()
 

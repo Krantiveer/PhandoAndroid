@@ -36,6 +36,7 @@ class TrailerListViewHolder(itemView: View, listener: AdapterClickListener) :
     override fun onBind(item: TrailerX) {
         itemView.tag = item
         itemView.free.gone()
+        itemView.play.gone()
 //        if (item.is_free == 1) { // if paid video then show premium icon
 //            itemView.free.gone()
 //        } else {

@@ -318,7 +318,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         filterContainer.gravity = viewGravity
     }
 
-
     override fun onItemClick(data: Any) {
         when (data) {
             is Video -> {
@@ -350,9 +349,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             }
             is Filter -> {
                 dataFilters.apply {
-
                     filter = data.key
-
                 }
                 //globleFilter.text = data.title
                 browseFragmentViewModel.refreshData(dataFilters)
@@ -363,11 +360,8 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                 }
             }
             is Category -> {
-
                 dataFilters.apply {
                     genre_id = data.id
-
-
                 }
                 // genresFilter.text = data.name
                 browseFragmentViewModel.refreshData(dataFilters)
@@ -379,7 +373,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             }
 
             is CategoryTab -> {
-
                 if (data.isFilter) {
                     if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                         sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
@@ -407,7 +400,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                             it.show = false
                             it.showFilter = false
                         }
-
                     }
                     browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
                     dataFilters.apply {
@@ -415,7 +407,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                         genre_id = ""
                         filter = ""
                         filter_type = ""
-
                     }
                     browseFragmentViewModel.refreshData(dataFilters)
                     setFilterGravity(Gravity.LEFT)
@@ -440,8 +431,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                 }
                 browseFragmentCategoryTabListAdapter?.notifyDataSetChanged()
                 browseFragmentViewModel.refreshData(dataFilters)
-
-
                 if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                     sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
                 } else {

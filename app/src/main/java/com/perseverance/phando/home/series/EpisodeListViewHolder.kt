@@ -30,6 +30,7 @@ class EpisodeListViewHolder(itemView: View, listener: AdapterClickListener) : Ba
                 R.drawable.video_placeholder, itemView.img_thumbnail)
 
         itemView.title.text = item.title
+        itemView.play.gone()
         itemView.title.visible()
         itemView.rating.gone()
         itemView.details.text = item.detail

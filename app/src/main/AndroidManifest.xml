@@ -86,7 +86,7 @@
             android:name=".home.dashboard.HomeActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
-            android:screenOrientation="sensorPortrait"></activity>
+            android:screenOrientation="sensorPortrait" />
 
         <activity
             android:name=".search.SearchResultActivity"

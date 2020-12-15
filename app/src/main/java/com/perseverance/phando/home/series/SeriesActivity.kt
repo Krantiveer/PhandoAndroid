@@ -72,9 +72,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                     onGetVideosSuccess(it)
                 }
             }
-
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

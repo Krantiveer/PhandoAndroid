@@ -44,11 +44,11 @@ import java.lang.Exception
 class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
     override var screenName = BaseConstants.SERIES_SCREEN
-
     private var waitingDialog: WaitingDialog? = null
     private var episodeAdapter: EpisodeListAdapter? = null
     private lateinit var trailerAdapter: TrailerListAdapter
     private lateinit var baseVideo: Video
+    private var fromDyLink: Boolean = false
     private val homeViewModel by lazy {
         ViewModelProviders.of(this).get(SeriesViewModel::class.java)
     }
@@ -86,6 +86,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
         intent?.getLongExtra(Key.NOTIFICATION_DB_ID, 0)?.let {
             notificationDao?.markNotificationRead(it)
         }
+        fromDyLink = intent.getBooleanExtra("fromDyLink", false)
         baseVideo = intent.getParcelableExtra(Key.CATEGORY)
         homeViewModel.callForSeries(baseVideo.id.toString()).observe(this, videoListViewModelObserver)
 
@@ -172,9 +173,9 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 //=======
         seasonSelector.setSelection(tvSeriesResponseData.seasons.size - 1)
         episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes)
-        try{
+        try {
             trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
-        }catch (e:Exception){
+        } catch (e: Exception) {
             vw_trailer_separator.gone()
             rv_season_trailer.gone()
 //>>>>>>> Stashed changes
@@ -299,8 +300,10 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     }
 
     override fun onBackPressed() {
-        startActivity(Intent(this@SeriesActivity, HomeActivity::class.java))
-        finish()
+        if (fromDyLink) {
+            startActivity(Intent(this@SeriesActivity, HomeActivity::class.java))
+            finish()
+        } else super.onBackPressed()
     }
 
     private fun shareSeriesUrl() {

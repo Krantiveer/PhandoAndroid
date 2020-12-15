@@ -92,6 +92,7 @@ open class BaseSplashActivity : BaseScreenTrackingActivity() {
                                         "tvseries" -> {
                                             val intent = Intent(this@BaseSplashActivity, SeriesActivity::class.java)
                                             intent.putExtra(Key.CATEGORY, video)
+                                            intent.putExtra("fromDyLink",true)
                                             startActivity(intent)
                                             finish()
                                         }

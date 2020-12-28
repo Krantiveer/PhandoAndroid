@@ -48,12 +48,14 @@
                     android:visibility="visible"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/series_banner_image_desc" />
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/play"
                     android:layout_width="@dimen/_50sdp"
                     android:layout_height="@dimen/_50sdp"
+                    android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/banner_img"
                     app:layout_constraintLeft_toLeftOf="@id/banner_img"
                     app:layout_constraintRight_toRightOf="@id/banner_img"
@@ -73,15 +75,83 @@
                     app:layout_constraintTop_toTopOf="@id/banner_img" />
 
                 <LinearLayout
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:id="@+id/vw_play_share_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#000000"
+                    android:padding="@dimen/_10sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/banner_img">
+
+                    <LinearLayout
+                        android:id="@+id/vw_play_series"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        app:layout_constraintEnd_toStartOf="@+id/vw_share_series"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/ib_play"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@null"
+                            android:clickable="false"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:src="@drawable/ic_play_white" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Play"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_14sdp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/vw_share_series"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:layout_constraintStart_toEndOf="@+id/vw_play_series"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/ib_share"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/ic_share_white"
+                            android:background="@null"
+                            android:clickable="false"
+                            android:layout_marginEnd="@dimen/_10sdp"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Share"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_14sdp"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/textInfoContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:animateLayoutChanges="true"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/banner_img">
+                    app:layout_constraintTop_toBottomOf="@id/vw_play_share_container">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -121,53 +191,56 @@
                                 android:layout_height="wrap_content"
                                 android:ellipsize="end"
                                 android:paddingTop="@dimen/_10sdp"
-                                android:paddingRight="@dimen/_10sdp"
+                                android:paddingEnd="@dimen/_10sdp"
                                 android:text=""
                                 android:textColor="@color/white"
                                 android:textSize="@dimen/_11sdp" />
                         </LinearLayout>
                     </LinearLayout>
-                   <LinearLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:gravity="center"
-                       android:orientation="vertical">
-                       <LinearLayout
-                           android:id="@+id/share"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:clickable="true"
-                           android:gravity="center"
-                           android:padding="@dimen/_5sdp"
-                           android:orientation="vertical"
-                           app:layout_constraintEnd_toStartOf="@+id/download"
-                           app:layout_constraintStart_toEndOf="@+id/like"
-                           app:layout_constraintTop_toTopOf="@+id/like">
 
-                           <androidx.appcompat.widget.AppCompatImageView
-                               android:id="@+id/imgShare"
-                               android:layout_width="@dimen/_20sdp"
-                               android:layout_height="@dimen/_20sdp"
-                               app:srcCompat="@drawable/ic_detail_share" />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
-                           <androidx.appcompat.widget.AppCompatTextView
-                               android:id="@+id/txtShare"
-                               android:layout_width="wrap_content"
-                               android:layout_height="wrap_content"
-                               android:gravity="center"
-                               android:text="Share"
-                               android:textColor="@drawable/white_text_selector"
-                               android:textSize="@dimen/_10sdp" />ut>
+                        <LinearLayout
+                            android:id="@+id/share"
+                            android:visibility="gone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:padding="@dimen/_5sdp"
+                            app:layout_constraintEnd_toStartOf="@+id/download"
+                            app:layout_constraintStart_toEndOf="@+id/like"
+                            app:layout_constraintTop_toTopOf="@+id/like">
 
-                       </LinearLayout>
+                            <androidx.appcompat.widget.AppCompatImageView
+                                android:id="@+id/imgShare"
+                                android:layout_width="@dimen/_20sdp"
+                                android:layout_height="@dimen/_20sdp"
+                                app:srcCompat="@drawable/ic_detail_share" />
 
-                       <androidx.appcompat.widget.AppCompatImageButton
-                           android:id="@+id/viewMore"
-                           android:layout_width="wrap_content"
-                           android:layout_height="wrap_content"
-                           android:backgroundTint="@android:color/transparent"
-                           android:src="@drawable/ic_detail_arrow_down" />
-                   </LinearLayout>
+                            <androidx.appcompat.widget.AppCompatTextView
+                                android:id="@+id/txtShare"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Share"
+                                android:textColor="@drawable/white_text_selector"
+                                android:textSize="@dimen/_10sdp" />ut>
+
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.AppCompatImageButton
+                            android:id="@+id/viewMore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:backgroundTint="@android:color/transparent"
+                            android:src="@drawable/ic_detail_arrow_down" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
@@ -181,64 +254,76 @@
                     android:paddingRight="@dimen/_10sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_11sdp"
+                    android:visibility="gone"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/textInfoContainer"
-                    android:visibility="gone" />
+                    app:layout_constraintTop_toBottomOf="@id/textInfoContainer" />
+
                 <androidx.appcompat.widget.AppCompatSpinner
                     android:id="@+id/seasonSelector"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/_10sdp"
                     android:layout_gravity="center_horizontal"
+                    android:paddingBottom="@dimen/_10sdp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/seriesDescription" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_season_episodes"
+                <LinearLayout
+                    android:id="@+id/vw_episodes_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="@dimen/_10sdp"
-                    android:layout_gravity="center_horizontal"
+                    android:orientation="vertical"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/seasonSelector" />
+                    app:layout_constraintTop_toBottomOf="@id/seasonSelector"
+                    android:paddingHorizontal="@dimen/_10sdp"
+                    >
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Episodes"
+                        android:textSize="@dimen/_12sdp"
+                        android:textColor="@color/white"/>
 
-                <View
-                    android:id="@+id/vw_trailer_separator"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_season_episodes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/_10sdp"
+                        android:paddingBottom="@dimen/_10sdp"
+                        android:layout_gravity="center_horizontal"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/vw_trailer_container"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_1sdp"
-                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/_10sdp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/rv_season_episodes"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/vw_episodes_container">
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_trailer_label"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:visibility="gone"
-                    android:textSize="16sp"
-                    android:paddingStart="@dimen/_10sdp"
-                    android:text="@string/trailers_separator_label"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/vw_trailer_separator"
-                    />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:text="@string/bonus_label"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_12sdp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rv_season_trailer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingTop="@dimen/_10sdp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:paddingBottom="@dimen/_10sdp"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/vw_trailer_separator"
-                    />
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_season_trailer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="@dimen/_10sdp"
+                        android:paddingBottom="@dimen/_10sdp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        />
+
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

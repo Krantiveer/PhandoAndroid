@@ -48,11 +48,11 @@ class TrailerListViewHolder(itemView: View, listener: AdapterClickListener) :
                 R.drawable.video_placeholder, itemView.img_thumbnail)
 
         itemView.title.text = item.title
-        itemView.title.setLines(2)
         itemView.title.visible()
         itemView.rating.gone()
         item.duration_str?.let {
             itemView.duration.text="($it)"
         }?: itemView.duration.gone()
+        itemView.details.text = item.description
     }
 }

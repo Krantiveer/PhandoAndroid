@@ -160,7 +160,6 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
         baseVideo?.let {
             reloadTrigger.value = it
         }
-
     }
 
     fun getNextEpisodeVideoDetailMutableLiveData(): LiveData<DataLoadingStatus<MediaplaybackData>> = nextEpisodeMediaMetadata

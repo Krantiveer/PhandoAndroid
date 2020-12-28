@@ -157,32 +157,27 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     private val walletDetailViewModel by lazy {
         ViewModelProvider(this).get(WalletDetailViewModel::class.java)
     }
-    val videoMetadataModelObserver = Observer<DataLoadingStatus<MediaplaybackData>> {
-
+    private val videoMetadataModelObserver = Observer<DataLoadingStatus<MediaplaybackData>> {
         when (it.status) {
-
             LoadingStatus.LOADING -> {
                 progressBar.visible()
-
             }
             LoadingStatus.ERROR -> {
                 progressBar.gone()
                 it.message?.let {
                     Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
                 }
-
             }
             LoadingStatus.SUCCESS -> {
                 progressBar.gone()
                 it.data?.let {
                     onGetVideoMetaDataSuccess(it)
                 }
-
             }
+            else -> {}
         }
-
     }
-    val nextVideoMetadataModelObserver = Observer<DataLoadingStatus<MediaplaybackData>> {
+    private val nextVideoMetadataModelObserver = Observer<DataLoadingStatus<MediaplaybackData>> {
 
         when (it.status) {
 
@@ -373,9 +368,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            landscope()
+            landscape()
         } else {
-            portrate()
+            potrate()
         }
         val decoration = BaseRecycleMarginDecoration(this@MediaDetailActivity)
         recyclerView.addItemDecoration(decoration)
@@ -524,16 +519,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         }
         play.setOnClickListener {
-
             playVideo()
-
         }
         watchNow.setOnClickListener {
             playVideo()
-
-
         }
-
 
         viewMore.setOnClickListener {
             if (videoDescription.visibility == View.VISIBLE) {
@@ -673,15 +663,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     }
 
     private fun playVideo() {
-
-
         when (mediaplaybackData.mediaCode) {
             "free" -> {
                 mediaMetadata?.media_reference_type?.let {
                     if (it == "media_trailor") {
                         playVideoTrailer()
                     } else {
-
                         mediaMetadata?.media_url?.let {
                             isVideoPlayed = true
                             isTrailerPlaying = false
@@ -747,7 +734,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             intent.getStringExtra(TRAILER_ID)?.let {
                 trailerId = it.toInt()
             }
-
         }
         trailerId?.let { trailerId ->
             // getting trailer from trailer list
@@ -761,8 +747,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
             }
         }
-
-
     }
 
 
@@ -1110,14 +1094,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 relatedContainer.gone()
             }
         }
-
-
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
     private fun changeOrientation() {
         val currentOrientation = resources.configuration.orientation
-
         when (currentOrientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -1126,10 +1107,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }
         }
-
     }
 
-    fun landscope() {
+    private fun landscape() {
         root.fitsSystemWindows = false;
         root.requestApplyInsets()
         hideSystemUI()
@@ -1142,7 +1122,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         }
     }
 
-    fun portrate() {
+    private fun potrate() {
         root.fitsSystemWindows = true;
         root.requestApplyInsets()
         showSystemUI()
@@ -1161,11 +1141,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         handler.removeCallbacksAndMessages(null)
         when (newConfig.orientation) {
             Configuration.ORIENTATION_LANDSCAPE -> {
-                landscope()
+                landscape()
             }
             Configuration.ORIENTATION_PORTRAIT -> {
-                portrate()
-
+                potrate()
             }
         }
     }
@@ -1194,7 +1173,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
             startActivity(Intent.createChooser(sendIntent, "Share"))
         }
-
     }
 
     fun fromHtml(html: String): Spanned {
@@ -1224,14 +1202,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     override fun onResume() {
         super.onResume()
         mListener?.enable()
-
     }
 
     override fun onPause() {
         super.onPause()
         mListener?.disable()
         updateCurrentPositionOnServer()
-
     }
 
     private fun updateCurrentPositionOnServer() {
@@ -1244,7 +1220,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     mediaDetailViewModel.setContinueWatchingTime(mediaMetaData?.document_media_id.toString(), it.toString())
                 }
             }
-
         }
     }
 
@@ -1297,19 +1272,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 if (resultCode == Activity.RESULT_OK) {
                     finish()
                     startActivity(getDetailIntent(this@MediaDetailActivity as Context, baseVideo!!))
-
                 }
             }
         }
-
-
     }
 
     override fun onItemClick(data: Any) {
         updateCurrentPositionOnServer()
         when (data) {
             is Video -> {
-
                 if ("T".equals(data.type)) {
                     val intent = Intent(this@MediaDetailActivity, SeriesActivity::class.java)
                     intent.putExtra(Key.CATEGORY, data)
@@ -1336,13 +1307,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     DialogUtils.showMessage(this@MediaDetailActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
                 }
             }
-
-
             is Trailer -> {
                 playVideoTrailer(data.id)
             }
         }
-
     }
 
     override fun onOrientationClicked() {

@@ -27,7 +27,7 @@ class MediaDetailRepository(private val application: Application) {
     private val apiService by lazy { ApiClient.getLoginClient().create(ApiService::class.java) }
 
     fun callForVideoDetails(video: Video): MutableLiveData<DataLoadingStatus<MediaplaybackData>> {
-        var data: MutableLiveData<DataLoadingStatus<MediaplaybackData>> = MutableLiveData<DataLoadingStatus<MediaplaybackData>>()
+        val data: MutableLiveData<DataLoadingStatus<MediaplaybackData>> = MutableLiveData<DataLoadingStatus<MediaplaybackData>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, ""))
         val call = apiService.getMediaMatadata(video.id.toString(), video.type) as Call<MediaplaybackData>
         call.enqueue(object : Callback<MediaplaybackData> {

@@ -36,7 +36,6 @@ import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_series.*
 import kotlinx.android.synthetic.main.activity_series.otherInfo
-import kotlinx.android.synthetic.main.activity_series.share
 import kotlinx.android.synthetic.main.activity_series.viewMore
 import java.lang.Exception
 
@@ -57,7 +56,6 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     }
     private val videoListViewModelObserver = Observer<DataLoadingStatus<TVSeriesResponseDataNew>> {
         progressBar.gone()
-
         when (it?.status) {
             LoadingStatus.LOADING -> {
                 progressBar.visible()
@@ -105,21 +103,17 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                 viewMore.setImageResource(R.drawable.ic_detail_arrow_up)
             }
         }
-        share.setOnClickListener {
+        vw_share_series.setOnClickListener {
             shareSeriesUrl()
         }
-
     }
-
 
     private fun onGetVideosSuccess(tvSeriesResponseData: TVSeriesResponseDataNew) {
         prepareShareMedia(tvSeriesResponseData.share_url)
         banner_img.visibility = View.VISIBLE
         seriesTitle.text = tvSeriesResponseData.title
         seriesDescription.text = tvSeriesResponseData.detail
-
         val otherText = StringBuilder()
-
         tvSeriesResponseData.rating.let {
             otherInfo.setCompoundDrawablesWithIntrinsicBounds(AppCompatResources.getDrawable(this@SeriesActivity, R.drawable.ic_rating), null, null, null)
             otherText.append(it)
@@ -128,58 +122,34 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
             otherText.append(" | $it")
         }
         tvSeriesResponseData.genres.let {
-
             otherText.append(" | " + it.joinToString())
         }
-
         otherInfo.text = otherText.toString()
-
         Utils.displayImage(this@SeriesActivity, tvSeriesResponseData.thumbnail,
                 R.drawable.video_placeholder, R.drawable.error_placeholder, banner_img)
 
         //seasonSelector.adapter=AlgorithmAdapter(this@SeriesActivity, tvSeriesResponseData.seasons)
         seasonSelector.adapter = ArrayAdapter(this, R.layout.spinner_item, tvSeriesResponseData.seasons)
         seasonSelector.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>,
-                                        view: View, position: Int, id: Long) {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedSeason = parent.getItemAtPosition(position) as Season
+                refreshThumbnailAndData(selectedSeason)
                 episodeAdapter!!.items = selectedSeason.episodes
-                selectedSeason.trailers?.let {
-                    trailerAdapter.items = it
-                }
-
+                selectedSeason.trailers?.let { trailerAdapter.items = it }
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-
-//<<<<<<< Updated upstream
-//        try {
-//            seasonSelector.setSelection(tvSeriesResponseData.seasons.size-1)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//        try {
-//            episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes )
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//        try {
-//            trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//=======
-        seasonSelector.setSelection(tvSeriesResponseData.seasons.size - 1)
+        seasonSelector.setSelection(tvSeriesResponseData.seasons.lastIndex)
         episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes)
         try {
             trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
+            if (tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers
+                            .isNullOrEmpty()) vw_trailer_container.gone()
         } catch (e: Exception) {
-            vw_trailer_separator.gone()
-            rv_season_trailer.gone()
-//>>>>>>> Stashed changes
+            vw_trailer_container.gone()
         }
 
-        play.setOnClickListener {
+        vw_play_series.setOnClickListener {
             if (tvSeriesResponseData.seasons.isNullOrEmpty()) {
                 return@setOnClickListener
             }
@@ -199,7 +169,6 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                     } else {
                         DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
                     }
-
                 } ?: return@setOnClickListener
             }
 //               tvSeriesResponseData.seasons.get(0).episodes.get(0).let {
@@ -216,10 +185,13 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 //                       DialogUtils.showMessage(this@SeriesActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
 //                   }
 //               }
-
         }
+    }
 
-
+    private fun refreshThumbnailAndData(selectedSeason: Season) {
+        Utils.displayImage(this@SeriesActivity, selectedSeason.thumbnail,
+                R.drawable.video_placeholder, R.drawable.error_placeholder, banner_img)
+        seriesDescription.text = (selectedSeason.detail?:"")+ "\n" + (selectedSeason.other_credits?:"")
     }
 
     fun showProgress(message: String) {

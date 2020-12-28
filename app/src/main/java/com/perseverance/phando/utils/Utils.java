@@ -150,13 +150,14 @@ public class Utils {
 
     public static void displayImage(final Context activity, final String url, final int placeHolder, final int errorPlaceholder, final ImageView imageView) {
         ThumbnailResizer thumbnailResizer = new ListItemThumbnail();
-        double imageWidth = thumbnailResizer.getWidth() * 1.0;
+        // double imageWidth = thumbnailResizer.getWidth() * 1.0;
+        double imageWidth = 300 * 1.0;
         String imageUrl = "https://imstool.phando.com/?image_url=" + url + "&width=" + imageWidth + "&service=resize&aspect_ratio=true";
         // MyLog.e("imageUrl", imageUrl);
         if (activity != null) {
             Glide.with(activity)
                     .setDefaultRequestOptions(new RequestOptions().timeout(30000))
-                    .load(url)
+                    .load(imageUrl)
                     .error(errorPlaceholder)
                     .placeholder(placeHolder)
                     .apply(new RequestOptions()

@@ -25,7 +25,8 @@ data class Season(
     val trailer: SeriesTrailer,
     val trailers: List<TrailerX>?,
     val tv_series_id: Int,
-    val type: String
+    val type: String,
+    val other_credits:String
 ){
     override fun toString(): String {
         return title

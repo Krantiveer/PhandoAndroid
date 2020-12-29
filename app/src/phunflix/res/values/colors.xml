@@ -10,16 +10,12 @@
     <color name="textColorSecondary">@color/gray_clouds_dark</color>
     <color name="colorControlNormal">@color/white</color>
     <color name="bg_app">#17202B</color>
-
-
-
+    <color name="spinner_color">#383B3E</color>
 
     <color name="saffron">#d9a042</color>
     <color name="colorActionBarText">@color/white</color>
 
-
     <!--    <color name="bg_app">@color/black</color>-->
-
 
     <color name="red_light">#FF0000</color>
     <color name="red_normal">#FF0000</color>

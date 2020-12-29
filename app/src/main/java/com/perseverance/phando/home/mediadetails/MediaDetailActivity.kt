@@ -309,13 +309,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
         nextEpisode.gone()
+        MyLog.d("debugUrl", mediaUrl)
         playerThumbnailContainer.gone()
         phandoPlayerView.visible()
         play.gone()
         val intent = Intent()
         val uri = Uri.parse(mediaUrl)
         // val uri = Uri.parse("https://seventv.livebox.co.in/sevenwonderstvhls/live.m3u8")
-
         val subtitleUri = ArrayList<String>()
         mediaMetadata?.cc_files?.let {
             if (it.isNotEmpty()) {
@@ -341,7 +341,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 null,
                 if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
                 null,
-                subtitleInfo)
+                subtitleInfo
+        //,null
+                 )
         intent.putExtra(
                 PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
         val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
@@ -349,8 +351,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
         intent.putExtra(PhandoPlayerView.PLAYER_LOGO, R.mipmap.ic_launcher)
         intent.putExtra(PhandoPlayerView.KEY_POSITION, seekTo)
-
-
         sample.addToIntent(intent)
         phandoPlayerView.setVideoData(intent)
         phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
@@ -553,11 +553,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         rentMedia.setOnClickListener {
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
-
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_RENT)
-
-
             } else {
                 val purchaseOptionBottomSheetFragment = PurchaseOptionBottomSheetFragment()
                 val bundle = Bundle()
@@ -633,7 +630,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     }
                 }
             })
-
         }
     }
 
@@ -658,7 +654,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     }
                 }
             })
-
         }
     }
 

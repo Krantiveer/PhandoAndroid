@@ -44,7 +44,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 
     override var screenName = BaseConstants.SERIES_SCREEN
     private var waitingDialog: WaitingDialog? = null
-    private var episodeAdapter: EpisodeListAdapter? = null
+    private lateinit var episodeAdapter: EpisodeListAdapter
     private lateinit var trailerAdapter: TrailerListAdapter
     private lateinit var baseVideo: Video
     private var fromDyLink: Boolean = false
@@ -137,14 +137,19 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
                 episodeAdapter!!.items = selectedSeason.episodes
                 selectedSeason.trailers?.let { trailerAdapter.items = it }
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
-        seasonSelector.setSelection(tvSeriesResponseData.seasons.lastIndex)
-        episodeAdapter!!.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].episodes)
+        seasonSelector.setSelection(0)
         try {
-            trailerAdapter.addAll(tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers)
-            if (tvSeriesResponseData.seasons[tvSeriesResponseData.seasons.lastIndex].trailers
-                            .isNullOrEmpty()) vw_trailer_container.gone()
+            episodeAdapter!!.addAll(tvSeriesResponseData.seasons[0].episodes)
+            if (tvSeriesResponseData.seasons[0].episodes.isNullOrEmpty()) vw_episodes_container.gone()
+        } catch (e: Exception) {
+            vw_episodes_container.gone()
+        }
+        try {
+            trailerAdapter.addAll(tvSeriesResponseData.seasons[0].trailers)
+            if (tvSeriesResponseData.seasons[0].trailers.isNullOrEmpty()) vw_trailer_container.gone()
         } catch (e: Exception) {
             vw_trailer_container.gone()
         }
@@ -191,7 +196,8 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     private fun refreshThumbnailAndData(selectedSeason: Season) {
         Utils.displayImage(this@SeriesActivity, selectedSeason.thumbnail,
                 R.drawable.video_placeholder, R.drawable.error_placeholder, banner_img)
-        seriesDescription.text = (selectedSeason.detail?:"")+ "\n" + (selectedSeason.other_credits?:"")
+        seriesDescription.text = (selectedSeason.detail
+                ?: "") + "\n" + (selectedSeason.other_credits ?: "")
     }
 
     fun showProgress(message: String) {

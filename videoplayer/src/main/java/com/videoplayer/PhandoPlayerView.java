@@ -949,7 +949,6 @@ public class PhandoPlayerView extends FrameLayout implements
     }
 
     private class PlayerErrorMessageProvider implements ErrorMessageProvider<ExoPlaybackException> {
-
         @Override
         public Pair<Integer, String> getErrorMessage(ExoPlaybackException e) {
             String errorString = getContext().getString(R.string.error_generic);

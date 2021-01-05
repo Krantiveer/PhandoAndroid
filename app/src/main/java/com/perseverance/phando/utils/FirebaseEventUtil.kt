@@ -13,13 +13,9 @@ import com.perseverance.phando.Session
 object FirebaseEventUtil {
     private const val APP_NOTIFICATION = "APP_NOTIFICATION"
 
-
-
     fun selectContent(contentType: String?, itemId: String?) {
         if (BuildConfig.DEBUG) {
             MyLog.infoAnalytic("event:id ${itemId} name ${contentType}")
-
-
         }
         try {
             val bundle = Bundle()
@@ -75,9 +71,6 @@ object FirebaseEventUtil {
             bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, name)
             Session.instance.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.VIEW_ITEM, bundle)
         } catch (e: Exception) {
-
         }
-
     }
-
 }

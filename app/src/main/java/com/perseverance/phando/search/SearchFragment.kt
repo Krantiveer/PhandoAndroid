@@ -226,7 +226,6 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
                             val filterList = AppDatabase.getInstance(appCompatActivity!!.applicationContext)?.categoryDao()?.allGenres()
                             filterAdapter.addAll(filterList)
                         }
-
                     }
                 }
             }

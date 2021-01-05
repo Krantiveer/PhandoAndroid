@@ -123,8 +123,6 @@ class PaymentOptionFragment : BaseFragment() {
                     }
                 }
             }
-
-
         })
 
         paymentActivityViewModel.updateOrderOnServerLiveData.observe(viewLifecycleOwner, Observer {
@@ -172,9 +170,7 @@ class PaymentOptionFragment : BaseFragment() {
                             param(FirebaseAnalytics.Param.PRICE, it.final_price.toLong())
                             param(FirebaseAnalytics.Param.TRANSACTION_ID, "wallet")
                             param(FirebaseAnalytics.Param.ITEMS, item1)
-
                         }
-
                         //Facebook tracking
                         logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,"INR")
 
@@ -184,8 +180,6 @@ class PaymentOptionFragment : BaseFragment() {
                 } else {
                     paymentActivityViewModel.createOrderResponseLiveData.value = createOrderResponse
                 }
-
-
             } else {
                 createOrderResponse.message?.let { it1 -> toast(it1) }
             }
@@ -197,7 +191,7 @@ class PaymentOptionFragment : BaseFragment() {
      * This function assumes logger is an instance of AppEventsLogger and has been
      * created using AppEventsLogger.newLogger() call.
      */
-    fun logAddToCartEvent(contentId: String?, contentType: String?, price: Double, currency: String?) {
+    private fun logAddToCartEvent(contentId: String?, contentType: String?, price: Double, currency: String?) {
         val params = Bundle()
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, contentId)
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, contentType)

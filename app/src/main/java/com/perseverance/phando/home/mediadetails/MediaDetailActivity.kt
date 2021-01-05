@@ -1455,8 +1455,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 // Hide the nav bar and status bar
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
-
-
     }
 
     private fun showSystemUI() {
@@ -1474,7 +1472,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
      * This function assumes logger is an instance of AppEventsLogger and has been
      * created using AppEventsLogger.newLogger() call.
      */
-    fun logViewContentEvent(contentId: String?, contentType: String?, contentData: String?) {
+    private fun logViewContentEvent(contentId: String?, contentType: String?, contentData: String?) {
         val params = Bundle()
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, contentId)
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, contentType)

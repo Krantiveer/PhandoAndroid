@@ -60,10 +60,9 @@ open class BaseSplashActivity : BaseScreenTrackingActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
         finish()
-
     }
 
-    fun checkForDynamicLink() {
+    private fun checkForDynamicLink() {
         FacebookSdk.setAutoInitEnabled(true)
         FacebookSdk.fullyInitialize()
         AppLinkData.fetchDeferredAppLinkData(this) {
@@ -108,7 +107,7 @@ open class BaseSplashActivity : BaseScreenTrackingActivity() {
                         } ?: openHome()
                     } ?: openHome()
                 }
-                .addOnFailureListener {
+                .addOnFailureListener {e->
                     openHome()
                 }
     }

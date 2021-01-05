@@ -15,14 +15,14 @@ data class TVSeriesResponseDataNew(
         @SerializedName("maturity_rating")val maturityRating: String,
         @SerializedName("phando_media_id")val phandoMediaId: Any,
         val poster: String,
-        @SerializedName("poster_vertical")val poster_vertical: String,
+        @SerializedName("poster_vertical")val posterVertical: String,
         val price: Int,
-        @SerializedName("publish_year")val publish_year: String,
+        @SerializedName("publish_year")val publishYear: String,
         val rating: Int,
         val seasons: List<Season>,
-        @SerializedName("share_url")val share_url: String,
+        @SerializedName("share_url")val shareUrl: String,
         val thumbnail: String,
-        @SerializedName("thumbnail_vertical")val thumbnail_vertical: String,
+        @SerializedName("thumbnail_vertical")val thumbnailVertical: String,
         val title: String,
         val type: String
 )

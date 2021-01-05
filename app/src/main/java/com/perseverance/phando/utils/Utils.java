@@ -151,7 +151,7 @@ public class Utils {
     public static void displayImage(final Context activity, final String url, final int placeHolder, final int errorPlaceholder, final ImageView imageView) {
         ThumbnailResizer thumbnailResizer = new ListItemThumbnail();
         // double imageWidth = thumbnailResizer.getWidth() * 1.0;
-        double imageWidth = 300 * 1.0;
+        double imageWidth = 600 * 1.0;
         String imageUrl = "https://imstool.phando.com/?image_url=" + url + "&width=" + imageWidth + "&service=resize&aspect_ratio=true";
         // MyLog.e("imageUrl", imageUrl);
         if (activity != null) {
@@ -165,7 +165,6 @@ public class Utils {
                     .into(imageView);
         }
     }
-
 
     public static void displayCircularImage(final Context activity, final String url, final int placeHolder, final int errorPlaceholder, final ImageView imageView) {
         // String imageUrl1 = "https://phandoott.phando.com/images/movies/thumbnails/thumb_15710397243d-wallpaper-1.jpg";

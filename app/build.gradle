@@ -6,14 +6,14 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.gms.google-services'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
     signingConfigs {
         configPhunFlix {
             keyAlias 'phunflix'
             keyPassword 'phunflix'
-            storeFile file('/home/qainfotech/KotlinWorkspace/Phando/PhunFlix/PhunFlix-Android/phunflix.jks')
+            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
             storePassword 'phunflix'
         }
     }
@@ -21,7 +21,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
         vectorDrawables.useSupportLibrary = true
         android.applicationVariants.all { variant ->
             variant.outputs.all {

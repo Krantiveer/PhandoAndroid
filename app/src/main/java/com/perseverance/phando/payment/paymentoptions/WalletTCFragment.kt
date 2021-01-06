@@ -43,7 +43,7 @@ class WalletTCFragment : BaseFragment() {
         //tcWebview.loadUrl("javascript:document.body.style.color=\"white\";")
         paymentActivityViewModel.tcResponseDataLiveData.observe(viewLifecycleOwner, Observer {
             progressBar.gone()
-            tcWebview.loadData(it.data, "text/html", "UTF-8")
+            it.data?.let { it1 -> tcWebview.loadData(it1, "text/html", "UTF-8") }
         })
 
         activate.setOnClickListener {

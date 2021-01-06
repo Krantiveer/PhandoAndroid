@@ -41,7 +41,7 @@ class WebviewActivity : BaseScreenTrackingActivity() {
 
         webview.webViewClient = MyWebViewClient()
         webview.webChromeClient = MyWebChromeClient()
-        val url = intent.getStringExtra("url")
+        val url = intent.getStringExtra("url")?:""
         webview.loadUrl(url)
         // razorpay = Razorpay(getString(R.string.rpkey), webview, this@WebviewActivity)
         webview.addJavascriptInterface(PaymentInterface(this@WebviewActivity, object : PaymentInterface.PaymentListener {
@@ -94,7 +94,7 @@ class WebviewActivity : BaseScreenTrackingActivity() {
 
         @SuppressWarnings("deprecation")
         override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-            webview.loadUrl(url)
+            url?.let { webview.loadUrl(it) }
             return true
         }
 
@@ -103,13 +103,9 @@ class WebviewActivity : BaseScreenTrackingActivity() {
             webview.loadUrl(request?.url.toString())
             return true
         }
-
-
     }
 
     inner class MyWebChromeClient : WebChromeClient() {
-
-
         protected fun openFileChooser(uploadMsg: ValueCallback<Uri?>, acceptType: String?) {
             mUploadMessage = uploadMsg
             val i = Intent(Intent.ACTION_GET_CONTENT)

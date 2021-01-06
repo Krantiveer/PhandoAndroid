@@ -30,12 +30,12 @@ private const val URL = "url"
  */
 class WebviewFragment : Fragment() {
     // TODO: Rename and change types of parameters
-    private var url: String? = null
+    private lateinit var url: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            url = it.getString(URL)
+            url = it.getString(URL)?:""
         }
     }
 

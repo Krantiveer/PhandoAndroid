@@ -209,21 +209,18 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         }
 
     }
-    val favoriteObserver = Observer<Int> {
+    private val favoriteObserver = Observer<Int> {
         when (it) {
             0 -> {
                 imgMyList.setImageResource(R.drawable.ic_detail_mylist)
-
             }
             1 -> {
                 imgMyList.setImageResource(R.drawable.ic_detail_added_in_mylist)
-
             }
         }
-
     }
 
-    val downloadObserver = Observer<DownloadInfo> {
+    private val downloadObserver = Observer<DownloadInfo> {
 
         it?.let {
             when (it.status) {
@@ -268,32 +265,27 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     }
 
-    val likeObserver = Observer<Int> {
+    private val likeObserver = Observer<Int> {
         when (it) {
             0 -> {
                 imgLike.setImageResource(R.drawable.ic_detail_like)
-
             }
             1 -> {
                 imgLike.setImageResource(R.drawable.ic_detail_like_selected)
-
             }
         }
-
     }
     val dislikeObserver = Observer<Int> {
         when (it) {
             0 -> {
                 val drawable = ContextCompat.getDrawable(this@MediaDetailActivity, R.drawable.ic_dislike)
                 // dislike?.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
-
             }
             1 -> {
                 val drawable = ContextCompat.getDrawable(this@MediaDetailActivity, R.drawable.ic_dislike_selected)
                 //  dislike?.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
             }
         }
-
     }
 
     val messageObserver = Observer<String> {
@@ -767,17 +759,17 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     }
 
 
-    private fun onGetVideoMetaDataSuccess(mediaplaybackData: MediaplaybackData) {
-        prepareShareMedia(mediaplaybackData.data.share_url)
+    private fun onGetVideoMetaDataSuccess(mediaPlayBackData: MediaplaybackData) {
+        prepareShareMedia(mediaPlayBackData.data.share_url)
         isPlayerstartSent = false
         detailContent.visible()
-        this.mediaplaybackData = mediaplaybackData
-        this.mediaMetadata = mediaplaybackData.data
+        this.mediaplaybackData = mediaPlayBackData
+        this.mediaMetadata = mediaPlayBackData.data
         videoTitle.text = mediaMetadata?.title
         if (!isVideoPlayed) {
             play.visible()
         }
-        mediaplaybackData.note?.let {
+        mediaPlayBackData.note?.let {
             if (it.isNullOrBlank()) {
                 purchaseNote.gone()
             } else {
@@ -785,8 +777,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 purchaseNote.visible()
             }
         }
-
-        when (mediaplaybackData.mediaCode) {
+        when (mediaPlayBackData.mediaCode) {
             "free", "rented", "buyed", "package_purchased" -> {
                 actionControlersBuy.gone()
                 mediaMetadata?.media_reference_type?.let {
@@ -804,7 +795,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                         }
                     }
                 }
-
             }
             "package_media" -> {
                 playVideoTrailer()
@@ -819,10 +809,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 buyMedia.visible()
                 packageMedia.gone()
                 actionControlersBuy.visible()
-                mediaplaybackData.purchase_option.forEach {
-
+                mediaPlayBackData.purchase_option.forEach {
                     if (it.discount_percentage > 0) {
-
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
@@ -863,7 +851,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 buyMedia.gone()
                 packageMedia.gone()
                 actionControlersBuy.visible()
-                mediaplaybackData.purchase_option.forEach {
+                mediaPlayBackData.purchase_option.forEach {
                     when (it.key) {
                         "rent_price" -> {
                             if (it.discount_percentage > 0) {
@@ -888,7 +876,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 buyMedia.visible()
                 packageMedia.gone()
                 actionControlersBuy.visible()
-                mediaplaybackData.purchase_option.forEach {
+                mediaPlayBackData.purchase_option.forEach {
                     when (it.key) {
                         "purchase_price" -> {
                             if (it.discount_percentage > 0) {
@@ -912,7 +900,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 buyMedia.visible()
                 packageMedia.gone()
                 actionControlersBuy.visible()
-                mediaplaybackData.purchase_option.forEach {
+                mediaPlayBackData.purchase_option.forEach {
 
                     if (it.discount_percentage > 0) {
                         val discount = (it.value * it.discount_percentage) / 100
@@ -1050,7 +1038,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         mediaMetadata?.let {
             logViewContentEvent(it.media_id, it.type, it.title)
         }
-        prepareShareMedia(mediaplaybackData.data.share_url)
+        prepareShareMedia(mediaPlayBackData.data.share_url)
     }
 
     private fun setRelatedVideo() {
@@ -1149,7 +1137,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         return true
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
                 onBackPressed()
@@ -1480,7 +1468,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         logger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, params)
     }
 
-    private var dynamicLink: String? = null
+    private lateinit var dynamicLink: String
     fun prepareShareMedia(linkUrl: String) {
         val sanitizer = UrlQuerySanitizer()
         sanitizer.allowUnregisteredParamaters = true
@@ -1514,11 +1502,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             dynamicLink = result?.shortLink.toString()
             Log.e("dynamicLink**", dynamicLink)
 
-
         }.addOnFailureListener {
             it.printStackTrace()
         }
     }
-
-
 }

@@ -54,9 +54,9 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
-        id = intent.getStringExtra("id")
-        title = intent.getStringExtra("title")
-        type = intent.getStringExtra("type")
+        id = intent.getStringExtra("id")?:""
+        title = intent.getStringExtra("title")?:""
+        type = intent.getStringExtra("type")?:""
         imageOrientation = intent.getIntExtra("imageOrientation", 0)
         setTitle(title)
         homeViewModel = ViewModelProviders.of(this).get(MediaListViewModel::class.java)

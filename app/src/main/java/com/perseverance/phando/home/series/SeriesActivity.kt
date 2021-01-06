@@ -80,7 +80,7 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
             notificationDao?.markNotificationRead(it)
         }
         fromDyLink = intent.getBooleanExtra("fromDyLink", false)
-        baseVideo = intent.getParcelableExtra(Key.CATEGORY)
+        baseVideo = intent.getParcelableExtra(Key.CATEGORY)?:Video()
         homeViewModel.callForSeries(baseVideo.id.toString()).observe(this, videoListViewModelObserver)
 
         rv_season_episodes.layoutManager = LinearLayoutManager(this@SeriesActivity)

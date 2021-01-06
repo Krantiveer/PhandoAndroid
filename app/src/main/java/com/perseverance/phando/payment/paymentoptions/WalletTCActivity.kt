@@ -36,9 +36,9 @@ class WalletTCActivity : BaseFragment() {
         tcWebview.settings.javaScriptEnabled=true
         // tcWebview.setBackgroundColor(R.color.bg_app)
         //tcWebview.loadUrl("javascript:document.body.style.color=\"white\";")
-        walletDetailViewModel.tcResponseDataLiveData.observe(this, Observer {
+        walletDetailViewModel.tcResponseDataLiveData.observe(viewLifecycleOwner, Observer {
             progressBar.gone()
-            tcWebview.loadData(it.data, "text/html", "UTF-8")
+            it.data?.let { it1 -> tcWebview.loadData(it1, "text/html", "UTF-8") }
         })
 
         activate.setOnClickListener {
@@ -50,7 +50,7 @@ class WalletTCActivity : BaseFragment() {
             walletDetailViewModel.activateWallet()
         }
 
-        walletDetailViewModel.activateWalletLiveData.observe(this@WalletTCActivity, Observer {
+        walletDetailViewModel.activateWalletLiveData.observe(viewLifecycleOwner, Observer {
             it?:return@Observer
             progressBar.gone()
             if (it.status == "success"){

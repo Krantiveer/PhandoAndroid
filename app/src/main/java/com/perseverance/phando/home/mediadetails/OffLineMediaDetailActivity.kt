@@ -275,7 +275,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
                 onBackPressed()

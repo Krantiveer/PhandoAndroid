@@ -8,6 +8,7 @@ data class PurchaseOption(
         val key: String,
         val currency: String,
         val currency_symbol:String,
+        val final_points : Int,
         val discount_percentage: Int,
         val note: String,
         var mediaTitle: String?,
@@ -16,3 +17,4 @@ data class PurchaseOption(
         val value: Float,
         val isWallet : Boolean=false
 ) : Parcelable
+

@@ -30,7 +30,6 @@ import kotlinx.android.synthetic.main.activity_payment_options.*
 import kotlinx.android.synthetic.main.activity_payment_options.toolbar
 import org.json.JSONObject
 
-
 class WalletDetailActivity : BaseScreenTrackingActivity(), PaymentResultListener {
 
     override var screenName="WalletDetail"

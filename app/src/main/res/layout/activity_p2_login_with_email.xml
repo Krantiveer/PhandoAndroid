@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/card"
+            android:id="@+id/points_card"
             style="@style/LoginCardStyle"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
@@ -95,7 +95,7 @@
 
         <include
             layout="@layout/login_link_container"
-            app:layout_constraintTop_toBottomOf="@id/card" />
+            app:layout_constraintTop_toBottomOf="@id/points_card" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signup"

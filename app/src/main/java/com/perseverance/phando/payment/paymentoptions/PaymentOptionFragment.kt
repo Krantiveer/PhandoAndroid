@@ -53,7 +53,7 @@ class PaymentOptionFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        priceInfo.text = "${paymentActivityViewModel.purchaseOption?.currency_symbol} ${paymentActivityViewModel.purchaseOption?.final_price} Or ${paymentActivityViewModel.purchaseOption?.final_price} points"
+        priceInfo.text = "${paymentActivityViewModel.purchaseOption?.currency_symbol} ${paymentActivityViewModel.purchaseOption?.final_price} Or ${paymentActivityViewModel.purchaseOption?.final_points} points"
         when (paymentActivityViewModel.purchaseOption?.key) {
             "rent_price" -> {
                 itemName.text = "${paymentActivityViewModel.purchaseOption?.mediaTitle} (Rent)"
@@ -64,7 +64,7 @@ class PaymentOptionFragment : BaseFragment() {
         }
 
         wallet.setOnClickListener {
-            if (paymentActivityViewModel.getWallet()?.balance!! >= paymentActivityViewModel.purchaseOption?.final_price!!){
+            if (paymentActivityViewModel.getWallet()?.balance!! >= paymentActivityViewModel.purchaseOption?.final_points!!){
                 val map: MutableMap<String, String?> = HashMap()
                 map["payment_type"] = paymentActivityViewModel.purchaseOption?.payment_info?.payment_type
                 map["media_id"] =  paymentActivityViewModel.purchaseOption?.payment_info?.media_id.toString()
@@ -72,7 +72,7 @@ class PaymentOptionFragment : BaseFragment() {
                 map["payment_mode"] = "wallet"
                 val alertDialog = MaterialAlertDialogBuilder(appCompatActivity, R.style.AlertDialogTheme).create()
                  alertDialog.setTitle("Payment")
-                alertDialog.setMessage("Are you sure you want to purchase ${paymentActivityViewModel.purchaseOption?.mediaTitle} for ${paymentActivityViewModel.purchaseOption?.final_price} points?")
+                alertDialog.setMessage("Are you sure you want to purchase ${paymentActivityViewModel.purchaseOption?.mediaTitle} for ${paymentActivityViewModel.purchaseOption?.final_points} points?")
                 alertDialog.setCancelable(false)
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, resources.getString(R.string.confirm)
                 ) { dialog, which ->
@@ -106,18 +106,18 @@ class PaymentOptionFragment : BaseFragment() {
                     walletPay.text = "Activate"
                 }
                 1 -> {
-                    if (it.balance >= paymentActivityViewModel.purchaseOption?.final_price!!) {
+                    if (it.balance >= paymentActivityViewModel.purchaseOption?.final_points!!) {
                         walletPay.text = "Pay"
                         walletHint.text = " (Balance:${it.balance} points)"
                     } else {
                         walletPay.text = "Recharge"
-                        walletHint.text = " (Balance:${it.balance} points) Low balance! required points: ${paymentActivityViewModel.purchaseOption?.final_price!! - it.balance}"
+                        walletHint.text = " (Balance:${it.balance} points) Low balance! required points: ${paymentActivityViewModel.purchaseOption?.final_points!! - it.balance}"
                     }
                 }
             }
         })
 
-        paymentActivityViewModel.updateOrderOnServerLiveData.observe(viewLifecycleOwner, Observer {
+        paymentActivityViewModel.updateOrderOnServerLiveData.observe(viewLifecycleOwner, Observer { it ->
             it ?: return@Observer
             paymentActivityViewModel.refreshWallet()
             paymentActivityViewModel.updateOrderOnServerLiveData.value = null
@@ -127,20 +127,17 @@ class PaymentOptionFragment : BaseFragment() {
                 item1.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, it.payment_info.type)
                 item1.putString(FirebaseAnalytics.Param.PAYMENT_TYPE, it.payment_info.payment_type)
                 item1.putString(FirebaseAnalytics.Param.ITEM_NAME, it.mediaTitle)
-
                 Session.instance.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE) {
                     param(FirebaseAnalytics.Param.PRICE, it.final_price.toLong())
                     param(FirebaseAnalytics.Param.TRANSACTION_ID, "razorpay")
                     param(FirebaseAnalytics.Param.ITEMS, arrayOf(item1))
-
                 }
                 //Facebook tracking
-                logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,"INR")
+                logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,it.currency)
             }
             appCompatActivity.setResult(Activity.RESULT_OK)
             appCompatActivity.finish()
         })
-
     }
 
     private fun createOrder(map: Map<String, String?>) {
@@ -157,15 +154,13 @@ class PaymentOptionFragment : BaseFragment() {
                         item1.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, it.payment_info.type)
                         item1.putString(FirebaseAnalytics.Param.PAYMENT_TYPE, it.payment_info.payment_type)
                         item1.putString(FirebaseAnalytics.Param.ITEM_NAME, it.mediaTitle)
-
                         Session.instance.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE){
                             param(FirebaseAnalytics.Param.PRICE, it.final_price.toLong())
                             param(FirebaseAnalytics.Param.TRANSACTION_ID, "wallet")
                             param(FirebaseAnalytics.Param.ITEMS, item1)
                         }
                         //Facebook tracking
-                        logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,"INR")
-
+                        logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,it.currency)
                     }
                     appCompatActivity.setResult(Activity.RESULT_OK)
                     appCompatActivity.finish()
@@ -176,7 +171,6 @@ class PaymentOptionFragment : BaseFragment() {
                 createOrderResponse.message?.let { it1 -> toast(it1) }
             }
         }
-
     }
 
     /**

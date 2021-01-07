@@ -95,13 +95,12 @@ class WalletDetailRepository {
     }
 
     suspend fun createOrder(map: Map<String, String?>): CreateOrderResponse {
-
         try {
             val response = apiService.createOrder(map).execute()
-            if (response.isSuccessful) {
-                return  response.body()
+            return if (response.isSuccessful) {
+                response.body()
             } else {
-                return CreateOrderResponse(status = "error",message =  "Unable to create order")
+                CreateOrderResponse(status = "error",message =  "Unable to create order")
             }
 
         } catch (e: Exception) {

@@ -73,7 +73,6 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
                 }
             }
         }
-
     }
 
     fun getWalletHistory() {
@@ -86,7 +85,6 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
             tcResponseDataLiveData.postValue(walletDetailRepository.getTC())
         }
     }
-
 
     fun activateWallet() {
         viewModelScope.launch {
@@ -109,11 +107,10 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
                     }
                 }
                 activateWalletLiveData.postValue(response)
-
             }
-
         }
     }
+
     fun deActivateWallet() {
         viewModelScope.launch {
             val param = HashMap<String, String>()
@@ -126,16 +123,13 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
             }
         }
     }
+
     //Payment
      suspend fun createOrder(map: Map<String, String?>): CreateOrderResponse {
         return walletDetailRepository.createOrder(map)
-
     }
 
     suspend fun updateOrderOnServer(map: Map<String, String>): BaseResponse {
         return walletDetailRepository.updateOrderOnServer(map)
-
     }
-
 }
-

@@ -295,7 +295,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     var mListener: SimpleOrientationEventListener? = null
     private val handler = Handler()
     private var mediaMetadata: MediaMetadata? = null
-    private lateinit var mediaplaybackData: MediaplaybackData
+    private lateinit var mediaPlaybackData: MediaplaybackData
     private var trailerListAdapter: TrailerListAdapter? = null
     private var relatedEpisodeListAdapter: RelatedEpisodeListAdapter? = null
 
@@ -453,7 +453,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
                 return@setOnClickListener
             }
-            when (mediaplaybackData.mediaCode) {
+            when (mediaPlaybackData.mediaCode) {
                 "package_media", "rent_or_buy", "only_rent", "only_buy" -> {
                     toast("This is a premium content. Please purchase to download.")
                     return@setOnClickListener
@@ -650,7 +650,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     }
 
     private fun playVideo() {
-        when (mediaplaybackData.mediaCode) {
+        when (mediaPlaybackData.mediaCode) {
             "free" -> {
                 mediaMetadata?.media_reference_type?.let {
                     if (it == "media_trailor") {
@@ -710,12 +710,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 }
             }
         }
-        prepareShareMedia(mediaplaybackData.data.share_url)
+        prepareShareMedia(mediaPlaybackData.data.share_url)
 
     }
 
     private fun playVideoTrailer(tId: Int? = null) {
-        var trailerId: Int? = tId ?: mediaplaybackData.data.trailer_id
+        var trailerId: Int? = tId ?: mediaPlaybackData.data.trailer_id
         if (!isVideoPlayed && !isTrailerPlaying) {
             // for dynamic link
             intent.getStringExtra(TRAILER_ID)?.let {
@@ -755,15 +755,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         //createOrder(purchaseOption.payment_info.payment_type, purchaseOption.payment_info.media_id.toString(), purchaseOption.payment_info.type)
         // val paymentOptionBottomSheetFragment = PaymentOptionBottomSheetFragment()
         // paymentOptionBottomSheetFragment.show(supportFragmentManager, paymentOptionBottomSheetFragment.getTag())
-
     }
-
 
     private fun onGetVideoMetaDataSuccess(mediaPlayBackData: MediaplaybackData) {
         prepareShareMedia(mediaPlayBackData.data.share_url)
         isPlayerstartSent = false
         detailContent.visible()
-        this.mediaplaybackData = mediaPlayBackData
+        this.mediaPlaybackData = mediaPlayBackData
         this.mediaMetadata = mediaPlayBackData.data
         videoTitle.text = mediaMetadata?.title
         if (!isVideoPlayed) {
@@ -791,7 +789,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                             intent.getStringExtra(TRAILER_ID)?.let {
                                 playVideoTrailer()
                             }
-
                         }
                     }
                 }
@@ -814,7 +811,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
-                                val originalPrice = "Rent at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
                                 rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -822,7 +819,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                                 rentMedia.tag = it
                             }
                             "purchase_price" -> {
-                                val originalPrice = "Buy at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
                                 buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -833,11 +830,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     } else {
                         when (it.key) {
                             "rent_price" -> {
-                                rentMedia.text = "Rent at INR ${number2digits(it.value)}/-"
+                                rentMedia.text = "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                             }
                             "purchase_price" -> {
-                                buyMedia.text = "Buy at INR ${number2digits(it.value)}/-"
+                                buyMedia.text = "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
                         }
@@ -855,14 +852,14 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     when (it.key) {
                         "rent_price" -> {
                             if (it.discount_percentage > 0) {
-                                val originalPrice = "Rent at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
                                 val discount = (it.value * it.discount_percentage) / 100
                                 rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                             } else {
-                                rentMedia.text = "Rent at INR ${number2digits(it.value)}/-"
+                                rentMedia.text = "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                             }
                         }
@@ -880,14 +877,14 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     when (it.key) {
                         "purchase_price" -> {
                             if (it.discount_percentage > 0) {
-                                val originalPrice = "Buy at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
                                 val discount = (it.value * it.discount_percentage) / 100
                                 buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                             } else {
-                                buyMedia.text = "Buy at INR ${number2digits(it.value)}/-"
+                                buyMedia.text = "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
 
@@ -906,7 +903,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
-                                val originalPrice = "Rent at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
                                 rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -915,7 +912,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                                 rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                val originalPrice = "Buy at INR  ${number2digits(it.value)}/-"
+                                val originalPrice = "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
                                 buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
                                 spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -927,12 +924,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     } else {
                         when (it.key) {
                             "rent_price" -> {
-                                rentMedia.text = "Rent at INR ${number2digits(it.value)}/-"
+                                rentMedia.text = "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                                 rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                buyMedia.text = "Buy at INR ${number2digits(it.value)}/-"
+                                buyMedia.text = "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
                         }

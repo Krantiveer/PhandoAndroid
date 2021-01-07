@@ -4,8 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/login"
     app:startDestination="@id/paymentOptionFragment">
-
-
     <fragment
         android:id="@+id/paymentOptionFragment"
         android:name="com.perseverance.phando.payment.paymentoptions.PaymentOptionFragment"

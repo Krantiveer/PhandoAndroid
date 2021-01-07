@@ -67,11 +67,11 @@ class WalletDetailFragment : BaseFragment() {
         hint.text="Add points to ${getString(R.string.app_name)}"
         chipGroup.isSingleSelection = true
 
-        paymentActivityViewModel.loaderLiveData.observe(this, Observer {
+        paymentActivityViewModel.loaderLiveData.observe(viewLifecycleOwner, Observer {
             if(it) progressBar.visible() else progressBar.gone()
 
         })
-        paymentActivityViewModel.walletDetailLiveData.observe(this, Observer {
+        paymentActivityViewModel.walletDetailLiveData.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             amount.setText("")
             wallet.text = "Balance Points : ${it.balance}"

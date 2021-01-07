@@ -35,14 +35,14 @@ import kotlin.collections.HashMap
 class PaymentOptionFragment : BaseFragment() {
     override var screenName= BaseConstants.PAYMENT_OPTIONS_SCREEN
     private val paymentActivityViewModel: PaymentActivityViewModel by activityViewModels()
-    val logger by lazy {
+    private val logger by lazy {
         AppEventsLogger.newLogger(appCompatActivity)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentActivityViewModel.purchaseOption?.let {
-            logAddToCartEvent(it.payment_info.media_id.toString(),it.payment_info.type, it.final_price.toDouble(),"INR")
+            logAddToCartEvent(it.payment_info.media_id.toString(),it.payment_info.type, it.final_price.toDouble(),it.currency)
         }
     }
 
@@ -53,19 +53,18 @@ class PaymentOptionFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        priceInfo.text = "₹ ${paymentActivityViewModel.purchaseOption?.final_price} Or ${paymentActivityViewModel.purchaseOption?.final_price} points"
+        priceInfo.text = "${paymentActivityViewModel.purchaseOption?.currency_symbol} ${paymentActivityViewModel.purchaseOption?.final_price} Or ${paymentActivityViewModel.purchaseOption?.final_price} points"
         when (paymentActivityViewModel.purchaseOption?.key) {
             "rent_price" -> {
                 itemName.text = "${paymentActivityViewModel.purchaseOption?.mediaTitle} (Rent)"
             }
             "purchase_price" -> {
                 itemName.text = "${paymentActivityViewModel.purchaseOption?.mediaTitle} (Buy)"
-
             }
         }
 
         wallet.setOnClickListener {
-            if (paymentActivityViewModel.getWallet()?.balance!! >= paymentActivityViewModel.purchaseOption?.final_price!!) {
+            if (paymentActivityViewModel.getWallet()?.balance!! >= paymentActivityViewModel.purchaseOption?.final_price!!){
                 val map: MutableMap<String, String?> = HashMap()
                 map["payment_type"] = paymentActivityViewModel.purchaseOption?.payment_info?.payment_type
                 map["media_id"] =  paymentActivityViewModel.purchaseOption?.payment_info?.media_id.toString()
@@ -75,7 +74,6 @@ class PaymentOptionFragment : BaseFragment() {
                  alertDialog.setTitle("Payment")
                 alertDialog.setMessage("Are you sure you want to purchase ${paymentActivityViewModel.purchaseOption?.mediaTitle} for ${paymentActivityViewModel.purchaseOption?.final_price} points?")
                 alertDialog.setCancelable(false)
-
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, resources.getString(R.string.confirm)
                 ) { dialog, which ->
                     createOrder(map)
@@ -84,14 +82,10 @@ class PaymentOptionFragment : BaseFragment() {
                 ) { dialog, which ->
                 }
                 alertDialog.show()
-
             } else {
                 findNavController().navigate(R.id.action_paymentOptionFragment_to_walletDetailFragment)
             }
-
-
         }
-
         razorpay.setOnClickListener {
             val map: MutableMap<String, String?> = HashMap()
             map["payment_type"] = paymentActivityViewModel.purchaseOption?.payment_info?.payment_type
@@ -99,11 +93,9 @@ class PaymentOptionFragment : BaseFragment() {
             map["type"] = paymentActivityViewModel.purchaseOption?.payment_info?.type
             map["payment_mode"] = "razorpay"
             createOrder(map)
-
         }
         paymentActivityViewModel.loaderLiveData.observe(viewLifecycleOwner, Observer {
             if (it) progressBar.visible() else progressBar.gone()
-
         })
         paymentActivityViewModel.walletDetailLiveData.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer

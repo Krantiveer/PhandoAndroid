@@ -32,7 +32,7 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
             val discount = (purchaseOption.value * purchaseOption.discount_percentage) / 100
             price = number2digits(purchaseOption?.value - discount)
         }
-        rentPriceInfo.text = "INR ${price}"
+        rentPriceInfo.text = "${purchaseOption.currency_symbol} ${price}"
         when (purchaseOption.key) {
             "rent_price" -> {
                 rentPriceType.text = "Renting a video"
@@ -52,7 +52,7 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
-    fun number2digits(number: Float): String {
+    private fun number2digits(number: Float): String {
         return String.format("%.2f", number)
     }
 }

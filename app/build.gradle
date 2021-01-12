@@ -13,7 +13,7 @@ android {
         configPhunFlix {
             keyAlias 'phunflix'
             keyPassword 'phunflix'
-            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
+            storeFile file('/home/qainfotech/KotlinWorkspace/Phando/PhunFlix/PhunFlix-Android/phunflix.jks')
             storePassword 'phunflix'
         }
     }

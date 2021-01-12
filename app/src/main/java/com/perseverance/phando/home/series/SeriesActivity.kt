@@ -156,14 +156,14 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
             }
             val seasons = tvSeriesResponseData.seasons
             if (seasons.isNotEmpty()) {
-                val lastSeason = seasons.get(seasons.size - 1)
-                lastSeason.trailer?.let {
+                val selectedSeason = seasonSelector.selectedItem as Season
+                selectedSeason.trailer?.let {
                     if (Utils.isNetworkAvailable(this@SeriesActivity)) {
                         val baseVideo = Video()
                         baseVideo.id = it.id
-                        baseVideo.thumbnail = lastSeason.thumbnail
-                        baseVideo.title = lastSeason.title
-                        baseVideo.is_free = lastSeason.is_free
+                        baseVideo.thumbnail = selectedSeason.thumbnail
+                        baseVideo.title = selectedSeason.title
+                        baseVideo.is_free = selectedSeason.is_free
                         baseVideo.type = it.type
                         startActivity(MediaDetailActivity.getDetailIntent(this@SeriesActivity, baseVideo))
                         Utils.animateActivity(this@SeriesActivity, "next")
@@ -348,6 +348,5 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
 //            }
 //        }
 //        Log.e("dynamicLink : ",dynamicLink.uri.toString())
-
     }
 }

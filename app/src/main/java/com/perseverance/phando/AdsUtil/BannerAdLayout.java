@@ -3,18 +3,13 @@ package com.perseverance.phando.AdsUtil;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.LinearLayout;
-
-import com.perseverance.phando.BaseScreenTrackingActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
-import com.facebook.ads.Ad;
-import com.facebook.ads.AdError;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
@@ -23,7 +18,6 @@ import com.perseverance.phando.db.AppDatabase;
 import com.perseverance.phando.utils.MyLog;
 
 import java.util.List;
-
 
 public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
     int adListIndex = 0;
@@ -118,29 +112,32 @@ public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
     private void loadFacebook(final AdModel banner1) {
 
         facebookAdView = new com.facebook.ads.AdView(this.getContext(), banner1.getPublisherId(), com.facebook.ads.AdSize.BANNER_HEIGHT_50);
-        facebookAdView.setAdListener(new com.facebook.ads.AdListener() {
-            @Override
-            public void onError(Ad ad, AdError adError) {
-                MyLog.i("banner", adListIndex + ">banner facebook failed " + banner1.getPublisherId() + " " + adError.getErrorCode());
-                adListIndex++;
-                loadBanner();
-            }
 
-            @Override
-            public void onAdLoaded(Ad ad) {
-                MyLog.i("banner", "banner Facebook loaded " + banner1.getPublisherId());
-            }
+        //commented it currently as this file isn't being used as of now
 
-            @Override
-            public void onAdClicked(Ad ad) {
-
-            }
-
-            @Override
-            public void onLoggingImpression(Ad ad) {
-
-            }
-        });
+        //        facebookAdView.setAdListener(new com.facebook.ads.AdListener() {
+//            @Override
+//            public void onError(Ad ad, AdError adError) {
+//                MyLog.i("banner", adListIndex + ">banner facebook failed " + banner1.getPublisherId() + " " + adError.getErrorCode());
+//                adListIndex++;
+//                loadBanner();
+//            }
+//
+//            @Override
+//            public void onAdLoaded(Ad ad) {
+//                MyLog.i("banner", "banner Facebook loaded " + banner1.getPublisherId());
+//            }
+//
+//            @Override
+//            public void onAdClicked(Ad ad) {
+//
+//            }
+//
+//            @Override
+//            public void onLoggingImpression(Ad ad) {
+//
+//            }
+//        });
 
         BannerAdLayout.this.removeAllViews();
         BannerAdLayout.this.addView(facebookAdView);

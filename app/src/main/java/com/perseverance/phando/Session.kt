@@ -11,14 +11,10 @@ import com.google.firebase.messaging.FirebaseMessaging
 import com.perseverance.phando.utils.MyLog
 import com.videoplayer.VideoPlayerApplication
 
-//import com.google.android.gms.analytics.GoogleAnalytics
-//import com.google.android.gms.analytics.Tracker
-
 /**
  * Created by TrilokiNath on 14-03-2016.
  */
 class Session : VideoPlayerApplication() {
-
     lateinit var firebaseAnalytics: FirebaseAnalytics
     override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
@@ -33,7 +29,6 @@ class Session : VideoPlayerApplication() {
 //            if(BuildConfig.DEBUG) {
 //                setDryRun(true)
 //            }
-
         }
         FirebaseMessaging.getInstance().subscribeToTopic(BuildConfig.TOPIC).addOnCompleteListener {
             if (it.isSuccessful) {

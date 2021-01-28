@@ -23,7 +23,7 @@ class UserProfileViewModel( application: Application) : BaseViewModel(applicatio
     private val walletDetailDao by lazy {
         AppDatabase.getInstance(application).walletDetailDao()
     }
-    val walletDetailRepository by lazy {
+    private val walletDetailRepository by lazy {
         WalletDetailRepository()
     }
     val languageList by lazy {
@@ -66,7 +66,7 @@ class UserProfileViewModel( application: Application) : BaseViewModel(applicatio
     private val loginUserTrigger = MutableLiveData<Cred>()
     var loginUserData: LiveData<DataLoadingStatus<LoginResponse>> = Transformations.switchMap(loginUserTrigger) {
         it?.let {
-            userProfileRepository.dologin(it)
+            userProfileRepository.doLogin(it)
         }
 
     }
@@ -79,7 +79,7 @@ class UserProfileViewModel( application: Application) : BaseViewModel(applicatio
     private val socialLoginUserTrigger = MutableLiveData<SocialLoggedInUser>()
     var socialLoginUserData: LiveData<DataLoadingStatus<LoginResponse>> = Transformations.switchMap(socialLoginUserTrigger) {
         it?.let {
-            userProfileRepository.doSociallogin(it)
+            userProfileRepository.doSocialLogin(it)
         }
 
     }

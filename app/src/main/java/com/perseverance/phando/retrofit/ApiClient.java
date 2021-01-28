@@ -1,6 +1,8 @@
 package com.perseverance.phando.retrofit;
 
 import android.content.Intent;
+import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
 
 import com.google.gson.Gson;
 import com.perseverance.phando.BuildConfig;
@@ -9,7 +11,8 @@ import com.perseverance.phando.factory.FeatureConfigFactory;
 import com.perseverance.phando.home.dashboard.HomeActivity;
 import com.perseverance.phando.utils.PreferencesUtils;
 import com.perseverance.phando.utils.Utils;
-import com.perseverance.phando.home.profile.login.LoginActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +27,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.content.Context.WIFI_SERVICE;
 import static com.perseverance.phando.retrofit.SSLUtilKt.setSslClent;
 
 /**
@@ -51,7 +55,6 @@ public class ApiClient {
 //    }
 
     public static Retrofit getLoginClient() {
-
         if (retrofitLogin == null) {
             retrofitLogin = new Retrofit.Builder()
                     .baseUrl(REST_HOST_LOGIN)
@@ -72,15 +75,12 @@ public class ApiClient {
             logging.setLevel(HttpLoggingInterceptor.Level.NONE);
         }
 
-
         final OkHttpClient.Builder okHttpClient = new OkHttpClient.Builder()
                 .readTimeout(60, TimeUnit.SECONDS)
                 .connectTimeout(60, TimeUnit.SECONDS)
                 .addInterceptor(new RequestInterceptor())
                 .addInterceptor(new ResponseInterceptor())
                 .addInterceptor(logging);
-
-
         setSslClent(okHttpClient);
         return okHttpClient.build();
     }
@@ -108,35 +108,37 @@ public class ApiClient {
                     loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     Session.Companion.getInstance().startActivity(loginIntent);
                     errorModel.setMessage(null);
-
                 }
                 return response.newBuilder().body(ResponseBody.create(contentType, new Gson().toJson(errorModel))).build();
-
             }
-
             return response;
         }
-
     }
 
     static class RequestInterceptor implements Interceptor {
+        @SuppressWarnings("deprecation")
+        @NotNull
         @Override
         public Response intercept(Chain chain) throws IOException {
-
             if (!Utils.isNetworkAvailable(Session.Companion.getInstance())) {
                 throw new NoConnectivityException();
             }
+            String deviceIp = "";
+            WifiManager wm = (WifiManager) Session.Companion.getInstance().getApplicationContext().getSystemService(WIFI_SERVICE);
+            if (wm != null)
+                deviceIp = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
             final String token = PreferencesUtils.getLoggedStatus();
             Request newRequest = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer " + token)
                     .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept", "application/json; charset=utf-8")
+                    .addHeader("IpAddress", deviceIp)
+//                    .addHeader("IpAddress", "107.181.177.130")
+
                     .build();
             return chain.proceed(newRequest);
-
         }
-
     }
 
     public static class NoConnectivityException extends IOException {

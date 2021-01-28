@@ -41,11 +41,9 @@ class PurchaseOptionBottomSheetFragment : BottomSheetDialogFragment() {
             "purchase_price" -> {
                 rentPriceType.text = "Buying a video"
                 rentDescription.text = purchaseOption.note
-
             }
         }
         offlineDescription.text = "Purchased media will be available for offline viewing (download and watch inside app) until expired"
-
         rentContainer.setOnClickListener {
             purchaseOptionSelection.onPurchaseOptionSelected(purchaseOption)
             dismiss()

@@ -84,7 +84,6 @@ class WalletDetailFragment : BaseFragment() {
                     addPoints.isEnabled=false
                     chipGroup.isEnabled=false
                     findNavController().navigate(R.id.action_walletDetailFragment_to_walletTCFragment)
-
                 }
                 1 -> {
                     deactivate.text = "Deactivate"
@@ -100,7 +99,7 @@ class WalletDetailFragment : BaseFragment() {
                         resources.displayMetrics
                 ).toInt()
                 chip.setPadding(paddingDp, paddingDp, paddingDp, paddingDp)
-                chip.setText(amount)
+                chip.text = amount
                 // chip.isCheckable = true
                 chip.setOnClickListener {
                     this.amount.setText("")
@@ -113,7 +112,7 @@ class WalletDetailFragment : BaseFragment() {
 
         })
 
-        paymentActivityViewModel.updateOrderOnServerLiveData.observe(this, Observer {
+        paymentActivityViewModel.updateOrderOnServerLiveData.observe(viewLifecycleOwner, Observer {
             it?:return@Observer
             paymentActivityViewModel.refreshWallet()
             paymentActivityViewModel.updateOrderOnServerLiveData.value=null
@@ -123,7 +122,7 @@ class WalletDetailFragment : BaseFragment() {
 
         })
 
-        paymentActivityViewModel.activateWalletLiveData.observe(this, Observer {
+        paymentActivityViewModel.activateWalletLiveData.observe(viewLifecycleOwner, Observer {
             it?:return@Observer
             progressBar.gone()
             if (it.status == "success"){
@@ -156,9 +155,6 @@ class WalletDetailFragment : BaseFragment() {
                         ) { dialog, which ->
                         }
                         alertDialog.show()
-
-
-
                     }
                 }
             }
@@ -175,13 +171,9 @@ class WalletDetailFragment : BaseFragment() {
                     toast("Please enter amount")
                 }
             }
-
         }
         history.setOnClickListener {
             startActivity(Intent(appCompatActivity,WalletHistoryActivity::class.java))
         }
     }
-
-
-
 }

@@ -29,7 +29,7 @@ class SubscriptionRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
@@ -57,7 +57,7 @@ class SubscriptionRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
@@ -85,7 +85,7 @@ class SubscriptionRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 

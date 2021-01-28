@@ -59,14 +59,14 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
         val call = apiService.generes as Call<List<Category>>
         call.enqueue(object : Callback<List<Category>> {
             override fun onResponse(call: Call<List<Category>>?, response: Response<List<Category>>?) {
-                if (response == null || response.body() == null) {
+                if (response?.body() == null) {
                     onFailure(call, NullResponseError())
                 } else {
                     val data = response.body()
-                    if (data.isNotEmpty()) {
+                    if (data?.isNotEmpty() == true) {
                         val categoryDao = AppDatabase.getInstance(getApplication())?.categoryDao()
                         categoryDao?.deleteAll()
-                        categoryDao?.insertAll(data)
+                        categoryDao?.insertAll(data!!)
                     }
 
                 }
@@ -83,11 +83,11 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
         val call: Call<ArrayList<Filter>> = apiService.filters
         call.enqueue(object : Callback<ArrayList<Filter>> {
             override fun onResponse(call: Call<ArrayList<Filter>>?, response: Response<ArrayList<Filter>>?) {
-                if (response == null || response.body() == null) {
+                if (response?.body() == null) {
                     onFailure(call, NullResponseError())
                 } else {
                     val data = response.body()
-                    if (data.isNotEmpty()) {
+                    if (data?.isNotEmpty() == true) {
                         val filterDao = AppDatabase.getInstance(getApplication())?.filterDao()
                         filterDao?.deleteAll()
                         filterDao?.insertAll(data)
@@ -112,7 +112,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
                 } else {
 
                     val data = response.body()
-                    if (data.isNotEmpty()) {
+                    if (data?.isNotEmpty() == true) {
                         val languageDao = AppDatabase.getInstance(getApplication())?.languageDao()
                         languageDao?.deleteAll()
                         languageDao?.insertAll(data)

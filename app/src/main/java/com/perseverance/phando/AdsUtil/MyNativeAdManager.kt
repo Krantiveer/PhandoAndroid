@@ -89,7 +89,8 @@ class MyNativeAdManager private constructor() : NativeAdListener {
         /*check for first time if impressionCounter ==0 */
         if (impressionCounter == 0 && canReloadAd()) {
             val nativeAd = nativeAdsManager!!.nextNativeAd()
-            nativeAd?.setAdListener(this)
+            //commented it currently as this file isn't being used as of now
+            //nativeAd?.setAdListener(this)
             if (nativeAd == null) {
                 callLoadAd()
             }
@@ -102,7 +103,8 @@ class MyNativeAdManager private constructor() : NativeAdListener {
 
             callLoadAd()
         }
-        nativeAd?.setAdListener(this)
+        //commented it currently as this file isn't being used as of now
+        //nativeAd?.setAdListener(this)
         return nativeAd
     }
 

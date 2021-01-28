@@ -16,6 +16,8 @@
 package com.videoplayer;
 
 import android.app.Application;
+import android.net.wifi.WifiManager;
+import android.text.format.Formatter;
 
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.RenderersFactory;

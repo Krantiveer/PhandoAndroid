@@ -141,7 +141,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     var isVideoPlayed = false
     var isTrailerPlaying = false
-    var isPlayerstartSent = false
+    private var isPlayerstartSent = false
 
     var nextMediaMetadata: MediaplaybackData? = null
 
@@ -221,7 +221,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     }
 
     private val downloadObserver = Observer<DownloadInfo> {
-
         it?.let {
             when (it.status) {
                 STATE_COMPLETED -> {
@@ -259,10 +258,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         } ?: run {
             imgDownload.setImageResource(R.drawable.ic_detail_download)
-
         }
-
-
     }
 
     private val likeObserver = Observer<Int> {
@@ -275,7 +271,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         }
     }
-    val dislikeObserver = Observer<Int> {
+    private val dislikeObserver = Observer<Int> {
         when (it) {
             0 -> {
                 val drawable = ContextCompat.getDrawable(this@MediaDetailActivity, R.drawable.ic_dislike)
@@ -288,7 +284,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         }
     }
 
-    val messageObserver = Observer<String> {
+    private val messageObserver = Observer<String> {
         Toast.makeText(this, it, Toast.LENGTH_LONG).show()
     }
 
@@ -1353,11 +1349,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     }
                     else -> {
                     }
-
                 }
             }
         }
-
     }
 
     override fun onPlayerProgress(currentProgress: Long) {
@@ -1365,7 +1359,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             return
         }
         mediaMetadata?.next_media?.let {
-
             if (it.next_episode_start_time > 0) {
                 if (currentProgress in it.next_episode_start_time..phandoPlayerView.totalDuration) {
                     nextMediaMetadata?.let {
@@ -1381,7 +1374,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         }
         mediaMetadata?.intro?.let {
-
             if (it.startTime > 0) {
                 if (currentProgress in it.startTime..it.endTime - 1) {
                     if (skipIntro.visibility != View.VISIBLE) {
@@ -1392,7 +1384,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                         skipIntro.gone()
                     }
                 }
-
             }
         }
     }
@@ -1401,11 +1392,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         mediaMetadata?.media_url?.let {
             mediaDetailViewModel.refreshDownloadStatus(it)
         }
-
     }
 
     override fun updateSettingButton(enable: Boolean) {
-
     }
 
     override fun onConrolVisibilityChange(visibility: Int) {
@@ -1417,7 +1406,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 supportActionBar?.hide()
             }
         }
-
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -1498,7 +1486,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
             dynamicLink = result?.shortLink.toString()
             Log.e("dynamicLink**", dynamicLink)
-
         }.addOnFailureListener {
             it.printStackTrace()
         }

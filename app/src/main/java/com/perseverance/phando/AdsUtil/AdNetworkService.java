@@ -87,7 +87,6 @@ public class AdNetworkService extends IntentService {
                 .addInterceptor(new RequestInterceptor())
                 .addInterceptor(logging);
 
-
         setSslClent(okHttpClient);
         return okHttpClient.build();
     }

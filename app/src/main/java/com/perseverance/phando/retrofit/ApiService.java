@@ -61,7 +61,6 @@ public interface ApiService {
     @FormUrlEncoded
     Call<BaseResponse> updateOrderStatus(@FieldMap Map<String, String> bodyMap);
 
-
     @GET("paymenttoken")
     Call<PaymentToken> getPaymentToken();
 
@@ -179,7 +178,6 @@ public interface ApiService {
                                              @Query("type") String type
     );
 
-
     @GET("dashboard")
     Call<List<BrowseData>> getBrowseDataList(
             @Query("type") String type,
@@ -238,7 +236,4 @@ public interface ApiService {
     @POST("mediaplaystarttime")
     @FormUrlEncoded
     Call<BaseResponse> mediaplaystarttime(@FieldMap Map<String, String> bodyMap);
-
-
-
 }

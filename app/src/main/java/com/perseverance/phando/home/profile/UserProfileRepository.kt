@@ -17,6 +17,7 @@ import com.perseverance.phando.utils.PreferencesUtils
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.awaitResponse
 
 
 class UserProfileRepository(private val application: Application) {
@@ -24,7 +25,7 @@ class UserProfileRepository(private val application: Application) {
     private val apiService by lazy { ApiClient.getLoginClient().create(ApiService::class.java) }
 
     fun fetchProfileData(): MutableLiveData<DataLoadingStatus<UserProfileData>> {
-        var data: MutableLiveData<DataLoadingStatus<UserProfileData>> = MutableLiveData<DataLoadingStatus<UserProfileData>>()
+        val data: MutableLiveData<DataLoadingStatus<UserProfileData>> = MutableLiveData<DataLoadingStatus<UserProfileData>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
         val call = apiService.userProfile
         call.enqueue(object : Callback<UserProfileData> {
@@ -33,10 +34,9 @@ class UserProfileRepository(private val application: Application) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                     PreferencesUtils.saveObject("profile", response.body())
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
-
             }
 
             override fun onFailure(call: Call<UserProfileData>?, t: Throwable?) {
@@ -46,16 +46,14 @@ class UserProfileRepository(private val application: Application) {
                 } else {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load profile data"))
                 }
-
             }
         })
-
         return data
     }
 
-    fun dologin(cred: Cred): MutableLiveData<DataLoadingStatus<LoginResponse>> {
+    fun doLogin(cred: Cred): MutableLiveData<DataLoadingStatus<LoginResponse>> {
 
-        var data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
+        val data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.doLogin(cred)
@@ -66,7 +64,7 @@ class UserProfileRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
@@ -83,9 +81,9 @@ class UserProfileRepository(private val application: Application) {
         return data
     }
 
-    fun doSociallogin(socialLoggedInUser: SocialLoggedInUser): MutableLiveData<DataLoadingStatus<LoginResponse>> {
+    fun doSocialLogin(socialLoggedInUser: SocialLoggedInUser): MutableLiveData<DataLoadingStatus<LoginResponse>> {
 
-        var data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
+        val data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.doSocialLogin(socialLoggedInUser)
@@ -96,7 +94,7 @@ class UserProfileRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
@@ -116,7 +114,7 @@ class UserProfileRepository(private val application: Application) {
 
     fun doRegister(map: Map<String, String>): MutableLiveData<DataLoadingStatus<LoginResponse>> {
 
-        var data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
+        val data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.doRegister(map)
@@ -127,7 +125,7 @@ class UserProfileRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
@@ -146,7 +144,7 @@ class UserProfileRepository(private val application: Application) {
 
     fun getOTP(map: Map<String, String>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
 
-        var data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+        val data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.getOTP(map)
@@ -157,7 +155,7 @@ class UserProfileRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
@@ -176,7 +174,7 @@ class UserProfileRepository(private val application: Application) {
 
     fun verifyOTP(map: Map<String, String>): MutableLiveData<DataLoadingStatus<LoginResponse>> {
 
-        var data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
+        val data: MutableLiveData<DataLoadingStatus<LoginResponse>> = MutableLiveData<DataLoadingStatus<LoginResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
 
         val call = apiService.verifyOTP(map)
@@ -187,7 +185,7 @@ class UserProfileRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
@@ -205,7 +203,7 @@ class UserProfileRepository(private val application: Application) {
     }
 
     fun verifyOTPForForgotPassword(map: Map<String, String>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
-        var data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+        val data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Updating order status"))
         val call = apiService.verifyPasswordOTP(map)
 
@@ -214,7 +212,7 @@ class UserProfileRepository(private val application: Application) {
                 if (response.isSuccessful) {
                     data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
                 } else {
-                    val errorModel = Gson().fromJson(response.errorBody().string(), ErrorModel::class.java)
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
                 }
 
@@ -234,7 +232,7 @@ class UserProfileRepository(private val application: Application) {
 
     suspend fun removeUserDownload(param: ArrayList<String>): DataLoadingStatus<BaseResponse> {
         try {
-            val response = apiService.removeUserDownload(param).execute()
+            val response = apiService.removeUserDownload(param).awaitResponse()
             if (response.isSuccessful) {
                 return DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body())
             } else {
@@ -252,19 +250,19 @@ class UserProfileRepository(private val application: Application) {
 
     suspend fun updateLanguagePreference(map: Map<String, String?>): BaseResponse {
 
-        try {
-            val response = apiService.updateLanguagePreference(map).execute()
-            if (response.isSuccessful) {
-                return  response.body()
+        return try {
+            val response = apiService.updateLanguagePreference(map).awaitResponse()
+            if (response.isSuccessful&&response.body()!=null) {
+                response.body()!!
             } else {
-                return BaseResponse(status = "error",message =  "Unable to save language preference")
+                BaseResponse(status = "error",message =  "Unable to save language preference")
             }
 
         } catch (e: Exception) {
             if (e is ApiClient.NoConnectivityException) {
-                return BaseResponse(status = "error",message =  BaseConstants.NETWORK_ERROR)
+                BaseResponse(status = "error",message =  BaseConstants.NETWORK_ERROR)
             } else {
-                return BaseResponse(status = "error", message = "Unable to language preference")
+                BaseResponse(status = "error", message = "Unable to language preference")
             }
         }
     }

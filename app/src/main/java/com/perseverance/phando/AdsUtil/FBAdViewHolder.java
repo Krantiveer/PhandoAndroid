@@ -6,16 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.facebook.ads.AdIconView;
 import com.facebook.ads.AdOptionsView;
 import com.facebook.ads.MediaView;
 import com.facebook.ads.NativeAd;
 import com.facebook.ads.NativeAdLayout;
 import com.perseverance.phando.R;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +44,8 @@ public class FBAdViewHolder extends RecyclerView.ViewHolder {
             adChoicesContainer.addView(adOptionsView, 0);
 
             // Create native UI using the ad metadata.
-            AdIconView nativeAdIcon = adView.findViewById(R.id.native_ad_icon);
+            //commented it currently as this file isn't being used as of now
+            //AdIconView nativeAdIcon = adView.findViewById(R.id.native_ad_icon);
             TextView nativeAdTitle = adView.findViewById(R.id.native_ad_title);
             MediaView nativeAdMedia = adView.findViewById(R.id.native_ad_media);
             TextView nativeAdSocialContext = adView.findViewById(R.id.native_ad_social_context);
@@ -91,7 +88,8 @@ public class FBAdViewHolder extends RecyclerView.ViewHolder {
             nativeAd.registerViewForInteraction(
                     adView,
                     nativeAdMedia,
-                    nativeAdIcon,
+                    //commented it currently as this file isn't being used as of now
+                    //nativeAdIcon,
                     clickableViews);
 
         } catch (Exception e) {

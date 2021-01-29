@@ -40,7 +40,7 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
     private var pCount: Int = 0
     private lateinit var homeViewModel: MediaListViewModel
 
-    val videoListViewModelObserver = Observer<VideosModel> { videoModel ->
+    private val videoListViewModelObserver = Observer<VideosModel> { videoModel ->
         if (videoModel!!.throwable == null) {
             onGetVideosSuccess(videoModel.videos, BaseConstants.Video.CATEGORY, videoModel.pageCount, videoModel.category)
         } else {
@@ -81,7 +81,7 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         }
         swipetorefresh_base.setOnRefreshListener(this)
 
-        lbl_no_video_base.setOnClickListener({ loadVideos(0, true) })
+        lbl_no_video_base.setOnClickListener { loadVideos(0, true) }
 
         loadVideos(0, true)
     }
@@ -97,7 +97,7 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         if (pageCount == 0) {
             showProgress("Loading, please wait...")
         }
-        if (title.equals("EPISODES")) {
+        if (title == "EPISODES") {
             homeViewModel.callForEpisodes(id, pageCount, BaseConstants.LIMIT_VIDEOS)
         } else {
             homeViewModel.callForVideos(id, pageCount, BaseConstants.LIMIT_VIDEOS, type)
@@ -139,7 +139,7 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
     }
 
 
-    fun onGetVideosError(errorMessage: String, type: BaseConstants.Video, pCount: Int, category: Category?) {
+    private fun onGetVideosError(errorMessage: String, type: BaseConstants.Video, pCount: Int, category: Category?) {
         dismissProgress()
         footer_progress_base.visibility = View.GONE
         swipetorefresh_base.isRefreshing = false

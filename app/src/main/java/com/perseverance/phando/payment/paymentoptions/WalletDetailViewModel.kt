@@ -38,6 +38,9 @@ class WalletDetailViewModel(application: Application) : AndroidViewModel(applica
                             deactivate_wallet_msg=walletDetailResponseData.deactivate_wallet_msg
                             hint1=walletDetailResponseData.hint1
                             hint2=walletDetailResponseData.hint2
+                            currency_code=walletDetailResponseData.currency_code?:""
+                            currency_symbol=walletDetailResponseData.currency_symbol?:""
+                            wallet_conversion_points=walletDetailResponseData.wallet_conversion_points
                         })
                         walletDetailLiveData.postValue(walletDetailDao.getWalletDetail())
                     }

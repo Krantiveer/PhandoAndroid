@@ -1,30 +1,24 @@
 package com.perseverance.phando.payment.paymentoptions
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.perseverance.patrikanews.utils.gone
-import com.perseverance.patrikanews.utils.isSuccess
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
-import com.perseverance.phando.payment.subscription.CreateOrderResponse
-import com.razorpay.Checkout
-import com.razorpay.PaymentResultListener
 import kotlinx.android.synthetic.main.activity_payment_options.*
 import kotlinx.android.synthetic.main.activity_payment_options.addPoints
 import kotlinx.android.synthetic.main.activity_payment_options.amount
@@ -37,10 +31,7 @@ import kotlinx.android.synthetic.main.activity_payment_options.wallet
 import kotlinx.android.synthetic.main.activity_wallet_t_c.*
 import kotlinx.android.synthetic.main.fragment_payment_option.*
 import kotlinx.android.synthetic.main.fragment_wallet_detail.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
+import kotlin.properties.Delegates
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -53,9 +44,10 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class WalletDetailFragment : BaseFragment() {
-    override var screenName= BaseConstants.WALLWET_DETAILS_SCREEN
-    var MAX_RECHARGE= 1000
-    private val paymentActivityViewModel : PaymentActivityViewModel by activityViewModels()
+    override var screenName = BaseConstants.WALLWET_DETAILS_SCREEN
+    private var MAX_RECHARGE by Delegates.notNull<Int>()
+    private var MIN_RECHARGE by Delegates.notNull<Int>()
+    private val paymentActivityViewModel: PaymentActivityViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -64,31 +56,31 @@ class WalletDetailFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        hint.text="Add points to ${getString(R.string.app_name)}"
+        hint.text = "Add points to ${getString(R.string.app_name)}"
         chipGroup.isSingleSelection = true
 
         paymentActivityViewModel.loaderLiveData.observe(viewLifecycleOwner, Observer {
-            if(it) progressBar.visible() else progressBar.gone()
-
+            if (it) progressBar.visible() else progressBar.gone()
         })
         paymentActivityViewModel.walletDetailLiveData.observe(viewLifecycleOwner, Observer {
             it ?: return@Observer
             amount.setText("")
             wallet.text = "Balance Points : ${it.balance}"
-            hint1.text=it.hint1
-            hint2.text=it.hint2
-            MAX_RECHARGE= it.max_recharge_point
+            hint1.text = it.hint1
+            hint2.text = it.hint2
+            MAX_RECHARGE = it.max_recharge_point
+            MIN_RECHARGE = it.min_recharge_point
             when (it.is_active) {
                 0 -> {
                     deactivate.text = "Activate"
-                    addPoints.isEnabled=false
-                    chipGroup.isEnabled=false
+                    addPoints.isEnabled = false
+                    chipGroup.isEnabled = false
                     findNavController().navigate(R.id.action_walletDetailFragment_to_walletTCFragment)
                 }
                 1 -> {
                     deactivate.text = "Deactivate"
-                    addPoints.isEnabled=true
-                    chipGroup.isEnabled=true
+                    addPoints.isEnabled = true
+                    chipGroup.isEnabled = true
                 }
             }
             chipGroup.removeAllViews()
@@ -99,48 +91,42 @@ class WalletDetailFragment : BaseFragment() {
                         resources.displayMetrics
                 ).toInt()
                 chip.setPadding(paddingDp, paddingDp, paddingDp, paddingDp)
-                chip.text = amount
+                chip.text = it.currency_symbol + amount
                 // chip.isCheckable = true
                 chip.setOnClickListener {
                     this.amount.setText("")
-                   val action = WalletDetailFragmentDirections.actionWalletDetailFragmentToWalletRechargeFragment(chip.text.toString())
+                    val action = WalletDetailFragmentDirections.actionWalletDetailFragmentToWalletRechargeFragment(amount)
                     findNavController().navigate(action)
                 }
                 chipGroup.addView(chip)
-
             }
-
         })
 
         paymentActivityViewModel.updateOrderOnServerLiveData.observe(viewLifecycleOwner, Observer {
-            it?:return@Observer
+            it ?: return@Observer
             paymentActivityViewModel.refreshWallet()
-            paymentActivityViewModel.updateOrderOnServerLiveData.value=null
+            paymentActivityViewModel.updateOrderOnServerLiveData.value = null
             findNavController().popBackStack()
-
-
-
         })
 
         paymentActivityViewModel.activateWalletLiveData.observe(viewLifecycleOwner, Observer {
-            it?:return@Observer
+            it ?: return@Observer
             progressBar.gone()
-            if (it.status == "success"){
-                if (it.message=="deactivated"){
+            if (it.status == "success") {
+                if (it.message == "deactivated") {
                     appCompatActivity.finish()
                 }
-
             }
         })
 
         deactivate.setOnClickListener {
             paymentActivityViewModel.walletDetailLiveData.value?.let {
-                when(it.is_active){
+                when (it.is_active) {
                     0, 2 -> {
                         progressBar.visible()
                         paymentActivityViewModel.activateWallet()
                     }
-                    else ->{
+                    else -> {
                         val alertDialog = MaterialAlertDialogBuilder(appCompatActivity, R.style.AlertDialogTheme).create()
                         alertDialog.setTitle("Deactivate your Wallet?")
                         alertDialog.setMessage(it.deactivate_wallet_msg)
@@ -161,19 +147,26 @@ class WalletDetailFragment : BaseFragment() {
         }
         addPoints.setOnClickListener {
             amount.text.toString().let {
-                if (it.isNotBlank()){
-                    val action = WalletDetailFragmentDirections.actionWalletDetailFragmentToWalletRechargeFragment(it)
-                    findNavController().navigate(action)
-                }else if(it.toInt() > MAX_RECHARGE) {
-                    toast("Max allowed recharge points is $MAX_RECHARGE")
-                }else
-                {
-                    toast("Please enter amount")
+                when {
+                    it.isBlank() -> {
+                        toast("Please enter amount")
+                        return@setOnClickListener
+                    }
+                    it.toInt() > MAX_RECHARGE -> {
+                        toast("Max allowed recharge points are $MAX_RECHARGE")
+                    }
+                    it.toInt() < MIN_RECHARGE -> {
+                        toast("Minimum allowed recharge points are $MIN_RECHARGE")
+                    }
+                    else -> {
+                        val action = WalletDetailFragmentDirections.actionWalletDetailFragmentToWalletRechargeFragment(it)
+                        findNavController().navigate(action)
+                    }
                 }
             }
         }
         history.setOnClickListener {
-            startActivity(Intent(appCompatActivity,WalletHistoryActivity::class.java))
+            startActivity(Intent(appCompatActivity, WalletHistoryActivity::class.java))
         }
     }
 }

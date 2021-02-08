@@ -135,19 +135,15 @@ public class ApiClient {
                     .addHeader("Accept", "application/json; charset=utf-8")
                     .addHeader("IpAddress", deviceIp)
 //                    .addHeader("IpAddress", "107.181.177.130")
-
                     .build();
             return chain.proceed(newRequest);
         }
     }
 
     public static class NoConnectivityException extends IOException {
-
         @Override
         public String getMessage() {
             return "No Internet Connection";
-
         }
     }
-
 }

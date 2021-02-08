@@ -1,35 +1,20 @@
 package com.perseverance.phando.payment.paymentoptions
 
-import android.app.Activity
 import android.app.Application
-import android.widget.Toast
-import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.perseverance.patrikanews.utils.gone
-import com.perseverance.patrikanews.utils.isSuccess
-import com.perseverance.patrikanews.utils.toast
-import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.db.AppDatabase
-import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
-import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.payment.PurchaseOption
 import com.perseverance.phando.payment.subscription.CreateOrderResponse
-import com.perseverance.phando.payment.subscription.SubscriptionRepository
-import com.razorpay.Checkout
-import com.razorpay.PaymentResultListener
-import kotlinx.android.synthetic.main.activity_payment_options.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 
 class PaymentActivityViewModel(application: Application) : AndroidViewModel(application) {
 
-    var purchaseOption: PurchaseOption?=null
+    var purchaseOption: PurchaseOption? = null
     var walletHistoryLiveData = MutableLiveData<WalletHistoryResponseData>()
     var tcResponseDataLiveData = MutableLiveData<TCResponseData>()
     var activateWalletLiveData = MutableLiveData<BaseResponse>()
@@ -49,24 +34,27 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
     private val walletDetailDao by lazy {
         AppDatabase.getInstance(application).walletDetailDao()
     }
-    val walletDetailLiveData= MutableLiveData<WalletDetail>()
+    val walletDetailLiveData = MutableLiveData<WalletDetail>()
 
     fun getWallet(): WalletDetail? {
-        return  walletDetailDao.getWalletDetail()
+        return walletDetailDao.getWalletDetail()
     }
 
     fun refreshWallet() {
-        loaderLiveData.value=true
+        loaderLiveData.value = true
         viewModelScope.launch(Dispatchers.IO) {
-            val walletDetailResponseData= walletDetailRepository.refreshWallet()
+            val walletDetailResponseData = walletDetailRepository.refreshWallet()
             walletDetailResponseData.let {
                 loaderLiveData.postValue(false)
-                if (it.status=="success"){
-                    it.data?.let {
-                        walletDetailDao.insert(it.apply {
-                            deactivate_wallet_msg=walletDetailResponseData.deactivate_wallet_msg
-                            hint1=walletDetailResponseData.hint1
-                            hint2=walletDetailResponseData.hint2
+                if (it.status == "success") {
+                    it.data?.let { walletDetail ->
+                        walletDetailDao.insert(walletDetail.apply {
+                            deactivate_wallet_msg = walletDetailResponseData.deactivate_wallet_msg
+                            hint1 = walletDetailResponseData.hint1
+                            hint2 = walletDetailResponseData.hint2
+                            currency_code=walletDetailResponseData.currency_code?:""
+                            currency_symbol=walletDetailResponseData.currency_symbol?:""
+                            wallet_conversion_points = walletDetailResponseData.wallet_conversion_points
                         })
                         walletDetailLiveData.postValue(walletDetailDao.getWalletDetail())
                     }
@@ -76,12 +64,13 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
     }
 
     fun getWalletHistory() {
-        viewModelScope.launch(Dispatchers.IO)  {
+        viewModelScope.launch(Dispatchers.IO) {
             walletHistoryLiveData.postValue(walletDetailRepository.getWalletHistory())
         }
     }
+
     fun getTC() {
-        viewModelScope.launch(Dispatchers.IO)  {
+        viewModelScope.launch(Dispatchers.IO) {
             tcResponseDataLiveData.postValue(walletDetailRepository.getTC())
         }
     }
@@ -89,18 +78,21 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
     fun activateWallet() {
         viewModelScope.launch {
             val param = HashMap<String, String>()
-            param.put("status","1")
+            param.put("status", "1")
             withContext(Dispatchers.IO) {
                 val response = walletDetailRepository.activateWallet(param)
-                val walletDetailResponseData= walletDetailRepository.refreshWallet()
+                val walletDetailResponseData = walletDetailRepository.refreshWallet()
                 walletDetailResponseData.let {
                     loaderLiveData.postValue(false)
-                    if (it.status=="success"){
+                    if (it.status == "success") {
                         it.data?.let {
                             walletDetailDao.insert(it.apply {
-                                deactivate_wallet_msg=walletDetailResponseData.deactivate_wallet_msg
-                                hint1=walletDetailResponseData.hint1
-                                hint2=walletDetailResponseData.hint2
+                                deactivate_wallet_msg = walletDetailResponseData.deactivate_wallet_msg
+                                hint1 = walletDetailResponseData.hint1
+                                hint2 = walletDetailResponseData.hint2
+                                currency_code = walletDetailResponseData.currency_code
+                                currency_symbol = walletDetailResponseData.currency_symbol
+                                wallet_conversion_points = walletDetailResponseData.wallet_conversion_points
                             })
                             walletDetailLiveData.postValue(walletDetailDao.getWalletDetail())
                         }
@@ -114,18 +106,18 @@ class PaymentActivityViewModel(application: Application) : AndroidViewModel(appl
     fun deActivateWallet() {
         viewModelScope.launch {
             val param = HashMap<String, String>()
-            param.put("status","0")
+            param.put("status", "0")
             withContext(Dispatchers.IO) {
                 val response = walletDetailRepository.activateWallet(param)
                 activateWalletLiveData.postValue(response.apply {
-                    message="deactivated"
+                    message = "deactivated"
                 })
             }
         }
     }
 
     //Payment
-     suspend fun createOrder(map: Map<String, String?>): CreateOrderResponse {
+    suspend fun createOrder(map: Map<String, String?>): CreateOrderResponse {
         return walletDetailRepository.createOrder(map)
     }
 

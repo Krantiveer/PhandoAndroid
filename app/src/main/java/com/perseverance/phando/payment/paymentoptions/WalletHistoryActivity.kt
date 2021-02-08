@@ -23,7 +23,7 @@ class WalletHistoryActivity : BaseScreenTrackingActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_wallet_history)
         setSupportActionBar(toolbar)
-        setTitle("History")
+        title = "History"
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         val walletRechargeHistoryListAdapter = WalletRechargeHistoryListAdapter(this@WalletHistoryActivity)
@@ -34,7 +34,6 @@ class WalletHistoryActivity : BaseScreenTrackingActivity() {
             it ?: return@Observer
             progressBar.gone()
             walletRechargeHistoryListAdapter.items = it.data
-
         })
         progressBar.visible()
         walletDetailViewModel.getWalletHistory()

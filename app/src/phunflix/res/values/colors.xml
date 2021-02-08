@@ -9,7 +9,7 @@
     <color name="textColorPrimary">@color/white</color>
     <color name="textColorSecondary">@color/gray_clouds_dark</color>
     <color name="colorControlNormal">@color/white</color>
-    <color name="bg_app">#17202B</color>
+    <color name="bg_app">#111F32</color>
     <color name="spinner_color">#383B3E</color>
 
     <color name="saffron">#d9a042</color>

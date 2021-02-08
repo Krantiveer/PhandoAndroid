@@ -12,8 +12,6 @@ class WalletRechargeHistoryListAdapter(context: Context) : GenericRecyclerViewAd
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<WalletRechargeHistory, AdapterClickListener> {
-        return WalletRechargeHistoryListViewHolder(inflate(R.layout.item_wallet_recharge, parent))
+        return WalletRechargeHistoryListViewHolder(inflate(R.layout.item_wallet_history, parent))
     }
-
-
 }

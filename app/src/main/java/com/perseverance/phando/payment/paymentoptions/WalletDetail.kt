@@ -14,7 +14,11 @@ data class WalletDetail(
         var getWalletRechargePoints: List<String> = arrayListOf(),
         val is_active: Int = 0,
         val max_recharge_point: Int,
+        val min_recharge_point: Int,
+        var currency_symbol: String,
+        var currency_code: String,
         var deactivate_wallet_msg: String = "",
         var hint1: String = "",
-        var hint2: String = ""
+        var hint2: String = "",
+        var wallet_conversion_points: Int = 1
 )

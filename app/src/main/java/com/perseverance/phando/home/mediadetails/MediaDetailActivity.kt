@@ -117,8 +117,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         const val TRAILER_ID = "trailer_id"
         fun getDetailIntent(context: Context, video: Video, trailerId: String? = "", fromDyLink: Boolean = false): Intent {
             if (video.is_free == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
-                val intent = Intent(context, LoginActivity::class.java)
-                return intent
+                return Intent(context, LoginActivity::class.java)
             } else {
                 val intent = Intent(context, MediaDetailActivity::class.java)
                 intent.apply {
@@ -1454,7 +1453,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     }
 
     private lateinit var dynamicLink: String
-    fun prepareShareMedia(linkUrl: String) {
+    private fun prepareShareMedia(linkUrl: String) {
         val sanitizer = UrlQuerySanitizer()
         sanitizer.allowUnregisteredParamaters = true
         sanitizer.parseUrl(linkUrl)

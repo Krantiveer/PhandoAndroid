@@ -13,7 +13,6 @@ import com.perseverance.phando.notification.NotificationDao
 import com.perseverance.phando.notification.NotificationData
 import com.perseverance.phando.payment.paymentoptions.WalletDetail
 
-
 @Database(entities = arrayOf(
         Category::class,
         Filter::class,
@@ -50,6 +49,5 @@ abstract class AppDatabase : RoomDatabase() {
             }
             return INSTANCE!!
         }
-
     }
 }

@@ -34,15 +34,17 @@ class WalletRechargeFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val amount = arguments?.getString("amount")
-        priceInfo.text = "₹ $amount"
+        val wallet = paymentActivityViewModel.getWallet()
+        val currencySymbol = wallet?.currency_symbol?:""
+        val priceText = "$currencySymbol $amount" + amount?.toInt()?.let { amt-> wallet?.wallet_conversion_points?.let {
+            pts -> getPoints(amount = amt, walletConversionPoints = pts) } }
+        priceInfo.text = priceText
 
         razorpay.setOnClickListener {
-            createOrder(amount)
-
+            createOrder(amount?:return@setOnClickListener)
         }
         paymentActivityViewModel.loaderLiveData.observe(viewLifecycleOwner, Observer {
             if (it) progressBar.visible() else progressBar.gone()
-
         })
 
         paymentActivityViewModel.updateOrderOnServerLiveData.observe(viewLifecycleOwner, Observer {
@@ -56,10 +58,7 @@ class WalletRechargeFragment : BaseFragment() {
                         .setPopUpTo(R.id.paymentOptionFragment, true)
                         .build()
                 findNavController().navigate(R.id.action_walletRechargeFragment_to_paymentOptionFragment, null, navOptions)
-
             }
-
-
         })
 
         paymentActivityViewModel.walletDetailLiveData.observe(viewLifecycleOwner, Observer {
@@ -67,10 +66,13 @@ class WalletRechargeFragment : BaseFragment() {
             points.text = "Balance Points : ${it.balance}"
 
         })
-
     }
 
-    private fun createOrder(amount: String?) {
+    private fun getPoints(amount: Int, walletConversionPoints: Int): String {
+        return "(${amount.times(walletConversionPoints)} points)"
+    }
+
+    private fun createOrder(amount: String) {
         progressBar.visible()
         val map: MutableMap<String, String?> = HashMap()
         lifecycleScope.launch {
@@ -85,7 +87,5 @@ class WalletRechargeFragment : BaseFragment() {
                 createOrderResponse.message?.let { it1 -> toast(it1) }
             }
         }
-
     }
-
 }

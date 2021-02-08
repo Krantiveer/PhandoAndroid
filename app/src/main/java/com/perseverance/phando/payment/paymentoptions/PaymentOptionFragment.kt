@@ -27,13 +27,11 @@ import kotlinx.android.synthetic.main.fragment_payment_option.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.math.BigDecimal
 import java.util.*
 import kotlin.collections.HashMap
 
-
 class PaymentOptionFragment : BaseFragment() {
-    override var screenName= BaseConstants.PAYMENT_OPTIONS_SCREEN
+    override var screenName = BaseConstants.PAYMENT_OPTIONS_SCREEN
     private val paymentActivityViewModel: PaymentActivityViewModel by activityViewModels()
     private val logger by lazy {
         AppEventsLogger.newLogger(appCompatActivity)
@@ -42,7 +40,7 @@ class PaymentOptionFragment : BaseFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         paymentActivityViewModel.purchaseOption?.let {
-            logAddToCartEvent(it.payment_info.media_id.toString(),it.payment_info.type, it.final_price.toDouble(),it.currency)
+            logAddToCartEvent(it.payment_info.media_id.toString(), it.payment_info.type, it.final_price.toDouble(), it.currency)
         }
     }
 
@@ -53,7 +51,9 @@ class PaymentOptionFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        priceInfo.text = "${paymentActivityViewModel.purchaseOption?.currency_symbol} ${paymentActivityViewModel.purchaseOption?.final_price} Or ${paymentActivityViewModel.purchaseOption?.final_points} points"
+        val priceInfoTxt = "${paymentActivityViewModel.purchaseOption?.currency_symbol} ${paymentActivityViewModel.purchaseOption?.final_price} Or " +
+                "${paymentActivityViewModel.purchaseOption?.final_points} points"
+        priceInfo.text = priceInfoTxt
         when (paymentActivityViewModel.purchaseOption?.key) {
             "rent_price" -> {
                 itemName.text = "${paymentActivityViewModel.purchaseOption?.mediaTitle} (Rent)"
@@ -64,14 +64,14 @@ class PaymentOptionFragment : BaseFragment() {
         }
 
         wallet.setOnClickListener {
-            if (paymentActivityViewModel.getWallet()?.balance!! >= paymentActivityViewModel.purchaseOption?.final_points!!){
+            if (paymentActivityViewModel.getWallet()?.balance!! >= paymentActivityViewModel.purchaseOption?.final_points!!) {
                 val map: MutableMap<String, String?> = HashMap()
                 map["payment_type"] = paymentActivityViewModel.purchaseOption?.payment_info?.payment_type
-                map["media_id"] =  paymentActivityViewModel.purchaseOption?.payment_info?.media_id.toString()
-                map["type"] =  paymentActivityViewModel.purchaseOption?.payment_info?.type
+                map["media_id"] = paymentActivityViewModel.purchaseOption?.payment_info?.media_id.toString()
+                map["type"] = paymentActivityViewModel.purchaseOption?.payment_info?.type
                 map["payment_mode"] = "wallet"
                 val alertDialog = MaterialAlertDialogBuilder(appCompatActivity, R.style.AlertDialogTheme).create()
-                 alertDialog.setTitle("Payment")
+                alertDialog.setTitle("Payment")
                 alertDialog.setMessage("Are you sure you want to purchase ${paymentActivityViewModel.purchaseOption?.mediaTitle} for ${paymentActivityViewModel.purchaseOption?.final_points} points?")
                 alertDialog.setCancelable(false)
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, resources.getString(R.string.confirm)
@@ -111,7 +111,7 @@ class PaymentOptionFragment : BaseFragment() {
                         walletHint.text = " (Balance:${it.balance} points)"
                     } else {
                         walletPay.text = "Recharge"
-                        walletHint.text = " (Balance:${it.balance} points) Low balance! required points: ${paymentActivityViewModel.purchaseOption?.final_points!! - it.balance}"
+                        walletHint.text = " (Balance:${it.balance} points) Low balance! required points: ${paymentActivityViewModel.purchaseOption?.final_points!!}"
                     }
                 }
             }
@@ -133,7 +133,7 @@ class PaymentOptionFragment : BaseFragment() {
                     param(FirebaseAnalytics.Param.ITEMS, arrayOf(item1))
                 }
                 //Facebook tracking
-                logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,it.currency)
+                logAddPurchaseEvent(it.payment_info.media_id.toString(), it.payment_info.type, it.final_price, it.currency)
             }
             appCompatActivity.setResult(Activity.RESULT_OK)
             appCompatActivity.finish()
@@ -154,13 +154,13 @@ class PaymentOptionFragment : BaseFragment() {
                         item1.putString(FirebaseAnalytics.Param.ITEM_CATEGORY, it.payment_info.type)
                         item1.putString(FirebaseAnalytics.Param.PAYMENT_TYPE, it.payment_info.payment_type)
                         item1.putString(FirebaseAnalytics.Param.ITEM_NAME, it.mediaTitle)
-                        Session.instance.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE){
+                        Session.instance.firebaseAnalytics.logEvent(FirebaseAnalytics.Event.PURCHASE) {
                             param(FirebaseAnalytics.Param.PRICE, it.final_price.toLong())
                             param(FirebaseAnalytics.Param.TRANSACTION_ID, "wallet")
                             param(FirebaseAnalytics.Param.ITEMS, item1)
                         }
                         //Facebook tracking
-                        logAddPurchaseEvent(it.payment_info.media_id.toString(),it.payment_info.type,it.final_price,it.currency)
+                        logAddPurchaseEvent(it.payment_info.media_id.toString(), it.payment_info.type, it.final_price, it.currency)
                     }
                     appCompatActivity.setResult(Activity.RESULT_OK)
                     appCompatActivity.finish()
@@ -189,12 +189,12 @@ class PaymentOptionFragment : BaseFragment() {
      * This function assumes logger is an instance of AppEventsLogger and has been
      * created using AppEventsLogger.newLogger() call.
      */
-    private fun logAddPurchaseEvent(mediaId: String, type: String, finalPrice: Int, currency: String) {
+    private fun logAddPurchaseEvent(mediaId: String, type: String, finalPrice: Float, currency: String) {
         val params = Bundle()
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, mediaId)
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, type)
         logger.logPurchase(
-                BigDecimal(finalPrice),
+                finalPrice.toBigDecimal(),
                 Currency.getInstance(currency),
                 params)
     }

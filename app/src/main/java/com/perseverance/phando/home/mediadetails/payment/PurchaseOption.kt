@@ -13,7 +13,7 @@ data class PurchaseOption(
         val note: String,
         var mediaTitle: String?,
         val payment_info: PaymentInfo,
-        val final_price : Int,
+        val final_price : Float,
         val value: Float,
         val isWallet : Boolean=false
 ) : Parcelable

@@ -123,17 +123,17 @@ public class ApiClient {
             if (!Utils.isNetworkAvailable(Session.Companion.getInstance())) {
                 throw new NoConnectivityException();
             }
-            String deviceIp = "";
-            WifiManager wm = (WifiManager) Session.Companion.getInstance().getApplicationContext().getSystemService(WIFI_SERVICE);
-            if (wm != null)
-                deviceIp = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
+//            String deviceIp = "";
+//            WifiManager wm = (WifiManager) Session.Companion.getInstance().getApplicationContext().getSystemService(WIFI_SERVICE);
+//            if (wm != null)
+//                deviceIp = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
 
             final String token = PreferencesUtils.getLoggedStatus();
             Request newRequest = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer " + token)
                     .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept", "application/json; charset=utf-8")
-                    .addHeader("IpAddress", deviceIp)
+                    .addHeader("IpAddress", Session.Companion.getRemoteIp())
 //                    .addHeader("IpAddress", "107.181.177.130")
                     .build();
             return chain.proceed(newRequest);

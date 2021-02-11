@@ -74,14 +74,12 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
                             }
                             "error" -> {
                                 message.value = it.message
-
                             }
                         }
                     }
 
                 }
             }
-
             override fun onFailure(call: Call<UpdateMyListResponse>?, t: Throwable?) {
                 message.value = "Unable to update wishlist"
             }

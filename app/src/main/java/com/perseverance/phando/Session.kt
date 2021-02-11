@@ -10,6 +10,10 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.perseverance.phando.utils.MyLog
 import com.videoplayer.VideoPlayerApplication
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.*
 
 /**
  * Created by TrilokiNath on 14-03-2016.
@@ -21,9 +25,14 @@ class Session : VideoPlayerApplication() {
         MultiDex.install(this)
     }
 
+    private suspend fun getRemoteIp() {
+        remoteIp = getPublicIpAddress()
+    }
+
     override fun onCreate() {
         super.onCreate()
         instance = this
+        CoroutineScope(Dispatchers.IO).launch { getRemoteIp() }
         firebaseAnalytics = Firebase.analytics
         sAnalytics = GoogleAnalytics.getInstance(this).apply {
 //            if(BuildConfig.DEBUG) {
@@ -33,7 +42,6 @@ class Session : VideoPlayerApplication() {
         FirebaseMessaging.getInstance().subscribeToTopic(BuildConfig.TOPIC).addOnCompleteListener {
             if (it.isSuccessful) {
                 if (BuildConfig.DEBUG) MyLog.e("topic ${BuildConfig.TOPIC} subscribed")
-
             } else {
                 if (BuildConfig.DEBUG) MyLog.e("topic ${BuildConfig.TOPIC} subscribtion error")
             }
@@ -70,5 +78,6 @@ class Session : VideoPlayerApplication() {
         private var sAnalytics: GoogleAnalytics? = null
         private var sTracker: Tracker? = null
         var launchHomeAfterLogin = true
+        var remoteIp: String = ""
     }
 }

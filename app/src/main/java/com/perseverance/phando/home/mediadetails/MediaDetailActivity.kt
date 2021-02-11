@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.net.UrlQuerySanitizer
+import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -15,6 +16,7 @@ import android.provider.Settings
 import android.text.Html
 import android.text.Spannable
 import android.text.Spanned
+import android.text.format.Formatter
 import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.Menu
@@ -41,6 +43,8 @@ import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.R
+import com.perseverance.phando.Session
+import com.perseverance.phando.Session.Companion.instance
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.AppDatabase
@@ -173,7 +177,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     onGetVideoMetaDataSuccess(it)
                 }
             }
-            else -> {}
+            else -> {
+            }
         }
     }
     private val nextVideoMetadataModelObserver = Observer<DataLoadingStatus<MediaplaybackData>> {
@@ -329,8 +334,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
                 null,
                 subtitleInfo
-        //,null
-                 )
+                //,null
+        )
         intent.putExtra(
                 PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
         val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
@@ -375,7 +380,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 notificationDao?.markNotificationRead(it)
             }
             fromDyLink = intent.getBooleanExtra("fromDyLink", false)
-        } catch (e: Exception) { }
+        } catch (e: Exception) {
+        }
         baseVideo = intent?.getParcelableExtra(ARG_VIDEO)
         baseVideo?.let {
             mediaDetailViewModel.refreshMediaMetadata(it)
@@ -754,6 +760,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     private fun onGetVideoMetaDataSuccess(mediaPlayBackData: MediaplaybackData) {
         prepareShareMedia(mediaPlayBackData.data.share_url)
+        if (BuildConfig.DEBUG) tv_temp_ip_addr.text = Session.remoteIp
+        else tv_temp_ip_addr.gone()
         isPlayerstartSent = false
         detailContent.visible()
         this.mediaPlaybackData = mediaPlayBackData

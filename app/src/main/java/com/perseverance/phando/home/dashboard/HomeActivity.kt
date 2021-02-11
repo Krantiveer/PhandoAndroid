@@ -132,7 +132,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
     }
 
-    fun onGetAppInfoSuccess(appInfo: AppInfo) {
+    private fun onGetAppInfoSuccess(appInfo: AppInfo) {
         val storeVersion = appInfo.currentVersion
         val forceUpdate = appInfo.isForceUpdate
 

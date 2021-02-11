@@ -37,6 +37,4 @@ public class FeatureConfigClass implements FeatureConfigInterface {
     public String getGATrackerId() {
         return Constants.GA_TRACKER_ID;
     }
-
-
 }

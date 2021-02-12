@@ -38,7 +38,7 @@ class BrowseFragmentNew : BaseBrowseFragmentNew() {
         topBannerMetaDataContainer.setLayoutParams(params)
     }
 
-    override fun setTopBannserHeight() {
+    override fun setTopBannersHeight() {
 
 
     }

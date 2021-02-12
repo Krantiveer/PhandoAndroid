@@ -76,11 +76,11 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
     private var adapter: HomeFragmentParentListAdapter? = null
     private var browseFragmentCategoryTabListAdapter: BrowseFragmentCategoryTabListAdapter? = null
     private var categoryTabListList: ArrayList<CategoryTab> = ArrayList<CategoryTab>()
-    val dataFilters = DataFilters()
+    private val dataFilters = DataFilters()
     var categoryTab: CategoryTab? = null
     var nestedScrollView: NestedScrollView? = null
 
-    val browseDataViewModelObserver = Observer<DataLoadingStatus<List<BrowseData>>> {
+    private val browseDataViewModelObserver = Observer<DataLoadingStatus<List<BrowseData>>> {
 
         when (it?.status) {
             LoadingStatus.LOADING -> {
@@ -112,28 +112,20 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
                         Toast.makeText(activity, "No data to display!", Toast.LENGTH_LONG).show()
                     }
-
                     adapter?.addAll(browseDataList)
                     filterRecyclerView.scrollToPosition(0)
-
                 }
-
-
             }
-
         }
-
     }
 
     abstract fun setBannerSlider(browseData1: List<BrowseData>, browseData: BrowseData)
 
-    val categoryTabDataViewModelObserver = Observer<DataLoadingStatus<List<CategoryTab>>> {
+    private val categoryTabDataViewModelObserver = Observer<DataLoadingStatus<List<CategoryTab>>> {
 
         when (it?.status) {
 
             LoadingStatus.SUCCESS -> {
-
-
                 it.data?.let { browseDataList ->
                     if (browseDataList.isNotEmpty()) {
                         categoryTabListList = browseDataList as ArrayList<CategoryTab>
@@ -151,7 +143,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
                     }
 
-
                 }
 
             }
@@ -160,7 +151,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
     }
 
-    val profileObserver = Observer<DataLoadingStatus<UserProfileData>> {
+    private val profileObserver = Observer<DataLoadingStatus<UserProfileData>> {
 
         when (it?.status) {
             LoadingStatus.ERROR -> {
@@ -305,7 +296,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         PreferencesUtils.saveIntegerPreferences("NOTIFICATION_COUNT", 10)
     }
 
-    abstract fun setTopBannserHeight()
+    abstract fun setTopBannersHeight()
 
     private fun setFilterGravity(viewGravity: Int) {
         val params = LinearLayout.LayoutParams(

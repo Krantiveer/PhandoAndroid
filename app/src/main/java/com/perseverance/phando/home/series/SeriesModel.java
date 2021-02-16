@@ -3,7 +3,7 @@ package com.perseverance.phando.home.series;
 import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
-import com.perseverance.phando.db.dao.RoomDataTypeConvertor;
+import com.perseverance.phando.db.dao.RoomDataTypeConverter;
 import com.perseverance.phando.retrofit.SuperModel;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ public class SeriesModel extends SuperModel {
         @SerializedName("rating")
         private String rating;
 
-        @TypeConverters(RoomDataTypeConvertor.class)
+        @TypeConverters(RoomDataTypeConverter.class)
         @SerializedName("genres")
         private ArrayList<String> genre;
 

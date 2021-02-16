@@ -3,14 +3,14 @@ package com.perseverance.phando.payment.paymentoptions
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
-import com.perseverance.phando.db.dao.RoomDataTypeConvertor
+import com.perseverance.phando.db.dao.RoomDataTypeConverter
 
 @Entity
 data class WalletDetail(
         @PrimaryKey
         val id: Int = 0,
         val balance: Int = 0,
-        @TypeConverters(RoomDataTypeConvertor::class)
+        @TypeConverters(RoomDataTypeConverter::class)
         var getWalletRechargePoints: List<String> = arrayListOf(),
         val is_active: Int = 0,
         val max_recharge_point: Int,

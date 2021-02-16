@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class RoomDataTypeConvertor {
+class RoomDataTypeConverter {
 
     @TypeConverter
     fun convertStringToBehaviorList(value: String?): List<String> {

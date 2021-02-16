@@ -46,6 +46,7 @@ import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.home.profile.ProfileActivity
 import com.perseverance.phando.home.profile.UserProfileData
 import com.perseverance.phando.home.profile.UserProfileViewModel
+import com.perseverance.phando.home.profile.login.LoginActivity
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.home.videolist.BaseVideoListActivity
 import com.perseverance.phando.notification.NotificationDao
@@ -54,10 +55,8 @@ import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.PreferencesUtils
 import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
-import com.perseverance.phando.home.profile.login.LoginActivity
 import kotlinx.android.synthetic.main.bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_browse_new.*
-import kotlinx.android.synthetic.main.fragment_browse_new.progressBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -463,7 +462,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                     } else {
                         it.setText(unreadNotifications.toString())
                         if (it.visibility != View.VISIBLE) {
-                            it.visibility = View.VISIBLE;
+                            it.visibility = View.VISIBLE
                         }
                     }
                 }
@@ -471,10 +470,11 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             }
         }
     }
-    private fun openLanguagePreferenceDialog() {
-        val languageId= StringBuilder()
 
-        val  boolLanguageArray = BooleanArray(userProfileViewModel.languageList.size)
+    private fun openLanguagePreferenceDialog() {
+        val languageId = StringBuilder()
+
+        val boolLanguageArray = BooleanArray(userProfileViewModel.languageList.size)
         val array: Array<String> = Array(userProfileViewModel.languageList.size) {
             userProfileViewModel.languageList[it].language
         }
@@ -523,7 +523,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                             }
                             progressBar.gone()
                             toast(updateLanguagePreferenceResponse.message)
-                            if (updateLanguagePreferenceResponse.status.isSuccess()){
+                            if (updateLanguagePreferenceResponse.status.isSuccess()) {
                                 browseFragmentViewModel.refreshData(dataFilters)
                                 userProfileViewModel.refreshUserProfile()
                             }

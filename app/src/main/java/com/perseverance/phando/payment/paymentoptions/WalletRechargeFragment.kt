@@ -69,7 +69,7 @@ class WalletRechargeFragment : BaseFragment() {
     }
 
     private fun getPoints(amount: Int, walletConversionPoints: Int): String {
-        return "(${amount.times(walletConversionPoints)} points)"
+        return "\nYou will get (${amount.times(walletConversionPoints)} points)"
     }
 
     private fun createOrder(amount: String) {

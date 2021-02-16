@@ -41,7 +41,7 @@
         android:id="@+id/st"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Status"
+        android:text="Points"
         android:gravity="center|right"
         android:padding="@dimen/_5sdp"
         android:textSize="@dimen/_14sdp"

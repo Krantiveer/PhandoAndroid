@@ -760,8 +760,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     private fun onGetVideoMetaDataSuccess(mediaPlayBackData: MediaplaybackData) {
         prepareShareMedia(mediaPlayBackData.data.share_url)
-        if (BuildConfig.DEBUG) tv_temp_ip_addr.text = Session.remoteIp
-        else tv_temp_ip_addr.gone()
+//        if (BuildConfig.DEBUG) tv_temp_ip_addr.text = Session.remoteIp
+//        else tv_temp_ip_addr.gone()
         isPlayerstartSent = false
         detailContent.visible()
         this.mediaPlaybackData = mediaPlayBackData

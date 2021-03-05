@@ -103,7 +103,6 @@ class WalletDetailRepository {
             } else {
                 CreateOrderResponse(status = "error",message =  "Unable to create order")
             }
-
         } catch (e: Exception) {
             if (e is ApiClient.NoConnectivityException) {
                 CreateOrderResponse(status = "error",message =  BaseConstants.NETWORK_ERROR)
@@ -132,5 +131,4 @@ class WalletDetailRepository {
             }
         }
     }
-
 }

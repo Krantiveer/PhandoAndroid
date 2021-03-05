@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.perseverance.phando.R
 import com.perseverance.phando.resize.ThumbnailResizer
 import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.Utils
@@ -204,3 +207,58 @@ fun String.isError(): Boolean =  this == "error"
 
 fun String.isLoading(): Boolean =  this == "loading"
 
+fun Context.showDialog(
+        title: String,
+        message: String,
+        positiveButtonText: String,
+        onPositiveClick: (() -> Unit)? = null,
+        neutralButtonText: String = "",
+        onNeutralClick: (() -> Unit)? = null
+) {
+    val alertD = MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme).apply {
+        setIcon(R.mipmap.ic_launcher)
+        setTitle(title)
+        setMessage(message)
+        setPositiveButton(positiveButtonText) { dialog, whichButton -> }
+        if (neutralButtonText.isNotEmpty()) setNeutralButton(neutralButtonText) { dialog, whichButton -> }
+        //val value: String = input.text.toString()
+        val dialog = this.create()
+        dialog.show()
+        dialog.setCanceledOnTouchOutside(false)
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).apply {
+            this.setOnClickListener {
+                if (dialog.isShowing) dialog.dismiss()
+                onPositiveClick?.invoke() ?: return@setOnClickListener
+            }
+        }
+        if (neutralButtonText.isNotEmpty()) dialog.getButton(AlertDialog.BUTTON_NEUTRAL).apply {
+            this.setOnClickListener {
+                if (dialog.isShowing) dialog.dismiss()
+                onNeutralClick?.invoke() ?: return@setOnClickListener
+            }
+        }
+    }
+
+//    val alert = AlertDialog.Builder(this).apply {
+//        setTitle(title)
+//        setMessage(message)
+//        setPositiveButton(positiveButtonText) { dialog, whichButton -> }
+//        if (neutralButtonText.isNotEmpty()) setNeutralButton(neutralButtonText) { dialog, whichButton -> }
+//        //val value: String = input.text.toString()
+//        val dialog = this.create()
+//        dialog.show()
+//        dialog.setCanceledOnTouchOutside(false)
+//        dialog.getButton(AlertDialog.BUTTON_POSITIVE).apply {
+//            this.setOnClickListener {
+//                if (dialog.isShowing) dialog.dismiss()
+//                onPositiveClick?.invoke() ?: return@setOnClickListener
+//            }
+//        }
+//        if (neutralButtonText.isNotEmpty()) dialog.getButton(AlertDialog.BUTTON_NEUTRAL).apply {
+//            this.setOnClickListener {
+//                if (dialog.isShowing) dialog.dismiss()
+//                onNeutralClick?.invoke() ?: return@setOnClickListener
+//            }
+//        }
+//    }
+}

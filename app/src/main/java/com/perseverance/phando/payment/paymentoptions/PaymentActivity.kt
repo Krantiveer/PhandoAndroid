@@ -3,7 +3,6 @@ package com.perseverance.phando.payment.paymentoptions
 import android.app.Activity
 import android.os.Bundle
 import android.view.MenuItem
-import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -11,9 +10,12 @@ import androidx.navigation.NavOptions
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import com.perseverance.patrikanews.utils.isSuccess
+import com.perseverance.patrikanews.utils.showDialog
 import com.perseverance.patrikanews.utils.toast
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
+import com.perseverance.phando.utils.DialogUtils
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
 import kotlinx.android.synthetic.main.activity_payment.*
@@ -22,14 +24,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-
-class PaymentActivity : BaseScreenTrackingActivity(),PaymentResultListener {
-    override var screenName=""
-    private var razorpayOrderId :String?=null
+class PaymentActivity : BaseScreenTrackingActivity(), PaymentResultListener {
+    override var screenName = ""
+    private var razorpayOrderId: String? = null
 
     private val paymentActivityViewModel by lazy {
         ViewModelProvider(this).get(PaymentActivityViewModel::class.java)
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_payment)
@@ -38,7 +40,7 @@ class PaymentActivity : BaseScreenTrackingActivity(),PaymentResultListener {
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         val navController = findNavController(R.id.dashboard_container)// where nav_host_fragment is the id for your Main NavHost fragment
         setupActionBarWithNavController(this@PaymentActivity, navController)
-        paymentActivityViewModel.purchaseOption=intent.getParcelableExtra(BaseConstants.PURCHASE_OPTION)
+        paymentActivityViewModel.purchaseOption = intent.getParcelableExtra(BaseConstants.PURCHASE_OPTION)
         paymentActivityViewModel.refreshWallet()
         paymentActivityViewModel.createOrderResponseLiveData.observe(this, Observer { orderResponse ->
             orderResponse?.let { createOrderResponse ->
@@ -57,7 +59,6 @@ class PaymentActivity : BaseScreenTrackingActivity(),PaymentResultListener {
                     prefill.put("contact", createOrderResponse.user_mobile)
                     options.put("prefill", prefill)
                     co.open(activity, options)
-
                 } catch (e: Exception) {
                     razorpayOrderId = null
                     toast("Error in payment: " + e.message)
@@ -65,11 +66,11 @@ class PaymentActivity : BaseScreenTrackingActivity(),PaymentResultListener {
                 }
             } ?: toast("Error in payment. Unable to get order ")
         })
-        if (paymentActivityViewModel.purchaseOption==null){
+        if (paymentActivityViewModel.purchaseOption == null) {
             val navOptions = NavOptions.Builder()
                     .setPopUpTo(R.id.paymentOptionFragment, true)
                     .build()
-            findNavController(R.id.dashboard_container).navigate(R.id.action_paymentOptionFragment_to_walletDetailFragment,null,navOptions)
+            findNavController(R.id.dashboard_container).navigate(R.id.action_paymentOptionFragment_to_walletDetailFragment, null, navOptions)
         }
     }
 
@@ -85,14 +86,19 @@ class PaymentActivity : BaseScreenTrackingActivity(),PaymentResultListener {
 
     override fun onPaymentError(p0: Int, p1: String?) {
         // MyLog.e("razorpay", "$p0 : $p1")
+        alertPaymentFailed()
+    }
+
+    private fun alertPaymentFailed() {
+        this.showDialog(getString(R.string.payment_failed_alert_label),getString(R.string.payment_failed_alert_msg),"OK")
     }
 
     override fun onPaymentSuccess(razorpayPaymentId: String?) {
         if (razorpayPaymentId == null) {
-            toast("Payment failed")
+            alertPaymentFailed()
             return
         }
-        paymentActivityViewModel.loaderLiveData.value=true
+        paymentActivityViewModel.loaderLiveData.value = true
         val map: MutableMap<String, String> = HashMap()
         map["razorpay_order_id"] = razorpayOrderId!!
         map["razorpay_payment_id"] = razorpayPaymentId
@@ -100,15 +106,12 @@ class PaymentActivity : BaseScreenTrackingActivity(),PaymentResultListener {
             val updateOrderOnServer = withContext(Dispatchers.IO) {
                 paymentActivityViewModel.updateOrderOnServer(map)
             }
-            paymentActivityViewModel.loaderLiveData.value=false
-            if (updateOrderOnServer.status.isSuccess()){
-                paymentActivityViewModel.updateOrderOnServerLiveData.value=updateOrderOnServer
-            }else{
+            paymentActivityViewModel.loaderLiveData.value = false
+            if (updateOrderOnServer.status.isSuccess()) {
+                paymentActivityViewModel.updateOrderOnServerLiveData.value = updateOrderOnServer
+            } else {
                 toast("Payment failed")
             }
-
         }
-
     }
-
 }

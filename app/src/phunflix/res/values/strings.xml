@@ -26,6 +26,7 @@
 
     <string name="default_notification_channel_id">com.perseverance.phunflix</string>
 
-
+    <string name="payment_failed_alert_label">Payment Failed</string>
+    <string name="payment_failed_alert_msg">Payment failed, please try again.</string>
 
 </resources>

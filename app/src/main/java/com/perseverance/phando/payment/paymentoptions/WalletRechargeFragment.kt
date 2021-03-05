@@ -21,9 +21,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
 class WalletRechargeFragment : BaseFragment() {
-    override var screenName= BaseConstants.WALLWET_RECHARGE_SCREEN
+    override var screenName = BaseConstants.WALLWET_RECHARGE_SCREEN
     private val paymentActivityViewModel: PaymentActivityViewModel by activityViewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -35,13 +34,14 @@ class WalletRechargeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         val amount = arguments?.getString("amount")
         val wallet = paymentActivityViewModel.getWallet()
-        val currencySymbol = wallet?.currency_symbol?:""
-        val priceText = "$currencySymbol $amount" + amount?.toInt()?.let { amt-> wallet?.wallet_conversion_points?.let {
-            pts -> getPoints(amount = amt, walletConversionPoints = pts) } }
+        val currencySymbol = wallet?.currency_symbol ?: ""
+        val priceText = "$currencySymbol $amount" + amount?.toInt()?.let { amt ->
+            wallet?.wallet_conversion_points?.let { pts -> getPoints(amount = amt, walletConversionPoints = pts) }
+        }
         priceInfo.text = priceText
 
         razorpay.setOnClickListener {
-            createOrder(amount?:return@setOnClickListener)
+            createOrder(amount ?: return@setOnClickListener)
         }
         paymentActivityViewModel.loaderLiveData.observe(viewLifecycleOwner, Observer {
             if (it) progressBar.visible() else progressBar.gone()
@@ -77,12 +77,12 @@ class WalletRechargeFragment : BaseFragment() {
         val map: MutableMap<String, String?> = HashMap()
         lifecycleScope.launch {
             map["payment_type"] = "wallet_recharge"
-            map["points"] =amount
+            map["points"] = amount
             map["payment_mode"] = "razorpay"
             val createOrderResponse = withContext(Dispatchers.IO) { paymentActivityViewModel.createOrder(map) }
             progressBar.gone()
             if (createOrderResponse.status.isSuccess()) {
-                paymentActivityViewModel.createOrderResponseLiveData.value=createOrderResponse
+                paymentActivityViewModel.createOrderResponseLiveData.value = createOrderResponse
             } else {
                 createOrderResponse.message?.let { it1 -> toast(it1) }
             }

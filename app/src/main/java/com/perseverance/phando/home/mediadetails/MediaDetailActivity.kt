@@ -553,7 +553,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 val bundle = Bundle()
                 bundle.putParcelable("payment_option", rentMedia.tag as PurchaseOption)
                 purchaseOptionBottomSheetFragment.arguments = bundle
-                purchaseOptionBottomSheetFragment.show(supportFragmentManager, purchaseOptionBottomSheetFragment.getTag())
+                purchaseOptionBottomSheetFragment.show(supportFragmentManager, purchaseOptionBottomSheetFragment.tag)
             }
         }
         buyMedia.setOnClickListener {
@@ -568,7 +568,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 val bundle = Bundle()
                 bundle.putParcelable("payment_option", buyMedia.tag as PurchaseOption)
                 purchaseOptionBottomSheetFragment.arguments = bundle
-                purchaseOptionBottomSheetFragment.show(supportFragmentManager, purchaseOptionBottomSheetFragment.getTag())
+                purchaseOptionBottomSheetFragment.show(supportFragmentManager, purchaseOptionBottomSheetFragment.tag)
             }
         }
         packageMedia.setOnClickListener {

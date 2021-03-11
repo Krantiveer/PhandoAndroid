@@ -72,8 +72,8 @@ android {
     productFlavors {
         phunflix {
             applicationId "com.perseverance.phunflix"
-            versionCode 9
-            versionName "1.9"
+            versionCode 10
+            versionName "2.0"
             signingConfig signingConfigs.configPhunFlix
         }
 

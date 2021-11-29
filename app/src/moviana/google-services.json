@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "428333810662",
+    "firebase_url": "https://afghan-star-android.firebaseio.com",
+    "project_id": "afghan-star-android",
+    "storage_bucket": "afghan-star-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:428333810662:android:059e0790fbb05e8c",
+        "android_client_info": {
+          "package_name": "com.perseverance.afghanstar"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "428333810662-ptu9dqobpbeuscj9lgt8v9v9bsop7t8g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.perseverance.afghanstar",
+            "certificate_hash": "97720274402c7652a352d5e367ee4408c33c8bc2"
+          }
+        },
+        {
+          "client_id": "428333810662-0jbh0rlumd37s7qck53onfkp7sbcc9vh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAomnmesjWc4AlUVLqMUIy7dIP45XcN1n8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "428333810662-0jbh0rlumd37s7qck53onfkp7sbcc9vh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

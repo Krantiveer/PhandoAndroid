@@ -10,11 +10,30 @@ android {
     buildToolsVersion "29.0.3"
 
     signingConfigs {
+        configMoviana {
+//            keyAlias 'moviana'
+            keyAlias 'afghan star'
+//            keyPassword 'moviana'
+            keyPassword 'qainfotech'
+////            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
+//            storeFile file('‪D:\\Work\\Phando\\moviana.jks')
+//            storePassword 'moviana'
+            storePassword 'qainfotech'
+
+//            keyAlias 'key0'
+//            keyPassword 'shubham'
+//            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
+//            storeFile file('C:\\Users\\Shubham verma\\Desktop\\moviana.jks')
+            storeFile file('C:\\Users\\Shubham verma\\Downloads\\afghan_star_store_key.jks')
+//            storePassword 'shubham'
+        }
+
         configPhunFlix {
-            keyAlias 'phunflix'
-            keyPassword 'phunflix'
-            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
-            storePassword 'phunflix'
+            keyAlias 'key0'
+            keyPassword 'shubham'
+//            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
+            storeFile file('C:\\Users\\Shubham verma\\Desktop\\phunflix.jks')
+            storePassword 'shubham'
         }
     }
 
@@ -53,8 +72,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
-            buildConfigField("String","TOPIC","\"com.perseverance.phunflix\"")
-            buildConfigField("String","DOMAIN_URI","\"https://dlinks.phunflix.com\"")
+            buildConfigField("String","TOPIC","\"com.perseverance.moviana\"")
+            buildConfigField("String","DOMAIN_URI","\"https://dlinks.moviana.com\"")
             //http://qa.phunflix.com
         }
         STAGE {
@@ -64,12 +83,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://stage.admaster.in/api-v1/\"")
-            buildConfigField("String","TOPIC","\"com.perseverance.phunflix_stage\"")
-            buildConfigField("String","DOMAIN_URI","\"https://dlinks.phunflix.com\"")
+            buildConfigField("String","TOPIC","\"com.perseverance.moviana_stage\"")
+            buildConfigField("String","DOMAIN_URI","\"https://dlinks.moviana.com\"")
         }
     }
     flavorDimensions "default"
     productFlavors {
+//        com.qait.bhaktinow
+        moviana {
+//            applicationId "ott.moviana.tv"
+            applicationId "com.perseverance.afghanstar"
+            versionCode 20
+            versionName "20"
+            signingConfig signingConfigs.configMoviana
+        }
+
         phunflix {
             applicationId "com.perseverance.phunflix"
             versionCode 10
@@ -116,7 +144,7 @@ dependencies {
 
     implementation 'androidx.navigation:navigation-fragment-ktx:2.3.1'
     implementation 'androidx.navigation:navigation-ui-ktx:2.3.1'
-    
+
     implementation 'androidx.browser:browser:1.3.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"

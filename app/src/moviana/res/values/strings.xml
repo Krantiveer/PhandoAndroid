@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Moviana</string>
+    <string name="app_name_hint">Welcome to Moviana</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="activity_search_result">Search Result</string>
+
+    <string name="label_home">Home</string>
+    <string name="label_latest_videos">Latest Videos</string>
+    <string name="label_popular_videos">Popular Videos</string>
+    <string name="label_most_viewed_videos">Most Viewed Videos</string>
+    <string name="label_more">See More</string>
+    <string name="label_channels">Channels</string>
+    <string name="label_live_stream">Live Stream</string>
+    <string name="label_featured_video">Featured Videos</string>
+    <string name="label_related_video">Related Videos</string>
+    <string name="label_series">Series</string>
+
+    <string name="facebook_app_id">652200288813778</string>
+    <string name="fb_login_protocol_scheme">fb652200288813778</string>
+
+    <string name="Rs">\u20B9</string>
+
+    <string name="default_notification_channel_id">com.perseverance.phunflix</string>
+
+    <string name="payment_failed_alert_label">Payment Failed</string>
+    <string name="payment_failed_alert_msg">Payment failed, please try again.</string>
+
+</resources>

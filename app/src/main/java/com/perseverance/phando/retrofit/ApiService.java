@@ -112,11 +112,17 @@ public interface ApiService {
     @GET("subscribedmedia")
     Call<MyPurchaseListResponse> getMyPurchasedVideoList(@Query("limit") String limit);
 
-    @POST("addwishlist")
-    Call<UpdateMyListResponse> updateMyList(@Query("id") String id, @Query("type") String type, @Query("value") String value);
+//    @POST("addwishlist")
+//    Call<UpdateMyListResponse> updateMyList(@Query("id") String id, @Query("type") String type, @Query("value") String value);
 
+    @FormUrlEncoded
+    @POST("addwishlist")
+    Call<UpdateMyListResponse> updateMyList(@Field("id") String id, @Field("type") String type, @Field("value") String value);
+
+    @FormUrlEncoded
     @POST("likedislike")
-    Call<UpdateMyListResponse> likedislike(@Query("id") String id, @Query("type") String type, @Query("action") String action, @Query("value") String value);
+    Call<UpdateMyListResponse> likedislike(@Field("id") String id, @Field("type") String type, @Field("action") String action,
+                                           @Field("value") String value);
 
 
     @GET("featuredmedia")

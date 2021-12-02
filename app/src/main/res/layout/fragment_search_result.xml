@@ -83,6 +83,7 @@
                 app:iconifiedByDefault="false"
                 android:focusableInTouchMode="true"
                 app:searchIcon="@null"
+
                 android:layout_marginRight="@dimen/_5sdp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/filter"

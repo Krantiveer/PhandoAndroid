@@ -58,7 +58,7 @@
     <color name="circular_background_stroke_color">#FFFFFF</color>
 
     <!--Phase 2-->
-    <color name="login_background">@color/bg_app</color>
+    <color name="login_background">#D5D3D3</color>
     <color name="login_card_background">@color/bg_app</color>
     <color name="login_blue">#00A7DB</color>
     <color name="video_detail_icon_tint">@color/login_blue</color>

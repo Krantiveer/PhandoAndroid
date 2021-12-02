@@ -11,20 +11,20 @@ android {
 
     signingConfigs {
         configMoviana {
-//            keyAlias 'moviana'
-            keyAlias 'afghan star'
-//            keyPassword 'moviana'
-            keyPassword 'qainfotech'
-////            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
+            keyAlias 'moviana'
+//            keyAlias 'afghan star'
+            keyPassword 'moviana'
+//            keyPassword 'qainfotech'
 //            storeFile file('‪D:\\Work\\Phando\\moviana.jks')
-//            storePassword 'moviana'
-            storePassword 'qainfotech'
+            storePassword 'moviana'
+//            storePassword 'qainfotech'
 
 //            keyAlias 'key0'
 //            keyPassword 'shubham'
 //            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
 //            storeFile file('C:\\Users\\Shubham verma\\Desktop\\moviana.jks')
-            storeFile file('C:\\Users\\Shubham verma\\Downloads\\afghan_star_store_key.jks')
+            storeFile file('D:\\Work\\Phando\\keystore\\moviana Latest\\moviana.jks')
+//            storeFile file('C:\\Users\\Shubham verma\\Downloads\\afghan_star_store_key.jks')
 //            storePassword 'shubham'
         }
 
@@ -91,10 +91,11 @@ android {
     productFlavors {
 //        com.qait.bhaktinow
         moviana {
-//            applicationId "ott.moviana.tv"
-            applicationId "com.perseverance.afghanstar"
-            versionCode 20
-            versionName "20"
+            applicationId "ott.moviana.tv"
+//            applicationId "com.moviana.tv"
+//            applicationId "com.perseverance.afghanstar"
+            versionCode 1
+            versionName "1"
             signingConfig signingConfigs.configMoviana
         }
 

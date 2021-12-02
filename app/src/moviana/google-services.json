@@ -1,42 +1,33 @@
 {
   "project_info": {
-    "project_number": "428333810662",
-    "firebase_url": "https://afghan-star-android.firebaseio.com",
-    "project_id": "afghan-star-android",
-    "storage_bucket": "afghan-star-android.appspot.com"
+    "project_number": "530545471869",
+    "project_id": "movinama-69c2e",
+    "storage_bucket": "movinama-69c2e.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:428333810662:android:059e0790fbb05e8c",
+        "mobilesdk_app_id": "1:530545471869:android:93654225837117f266dc14",
         "android_client_info": {
-          "package_name": "com.perseverance.afghanstar"
+          "package_name": "ott.moviana.tv"
         }
       },
       "oauth_client": [
         {
-          "client_id": "428333810662-ptu9dqobpbeuscj9lgt8v9v9bsop7t8g.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.perseverance.afghanstar",
-            "certificate_hash": "97720274402c7652a352d5e367ee4408c33c8bc2"
-          }
-        },
-        {
-          "client_id": "428333810662-0jbh0rlumd37s7qck53onfkp7sbcc9vh.apps.googleusercontent.com",
+          "client_id": "530545471869-f4ncu44h34qce0hem86l6f8pingl7bie.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAomnmesjWc4AlUVLqMUIy7dIP45XcN1n8"
+          "current_key": "AIzaSyAe4wGz-YvDdd4bq9VBdC1c4HkQKwhDH6k"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "428333810662-0jbh0rlumd37s7qck53onfkp7sbcc9vh.apps.googleusercontent.com",
+              "client_id": "530545471869-f4ncu44h34qce0hem86l6f8pingl7bie.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

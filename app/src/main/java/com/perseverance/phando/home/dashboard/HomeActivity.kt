@@ -54,6 +54,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
             onGetAppInfoSuccess(appInfoModel.appInfo)
         }
     }
+
     var navController: NavController? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,25 +95,25 @@ class HomeActivity : BaseScreenTrackingActivity(),
     }
 
 
-    override fun onBackPressed() {
-        if (!navController!!.popBackStack()) {
-            showAppCloseDialog()
-        }
-    }
+//    override fun onBackPressed() {
+//        if (!navController!!.popBackStack()) {
+//            showAppCloseDialog()
+//        }
+//    }
 
-    fun showAppCloseDialog() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed()
-            return
-        }
+//    fun showAppCloseDialog() {
+//        if (doubleBackToExitPressedOnce) {
+//            super.onBackPressed()
+//            return
+//        }
+//
+//        this.doubleBackToExitPressedOnce = true
+//        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
+//
+//        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
+//
 
-        this.doubleBackToExitPressedOnce = true
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show()
-
-        Handler().postDelayed(Runnable { doubleBackToExitPressedOnce = false }, 2000)
-
-
-    }
+//    }
 
     private fun showSearchScreen() {
         val intent = Intent(this, SearchActivity::class.java)

@@ -6,8 +6,6 @@
     android:background="@color/bg_app"
     android:clickable="true">
 
-
-
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

@@ -275,20 +275,21 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
     override fun onSearchResultSuccess(videos: List<Video>) {
         try {
             progressBar.gone()
-        } catch (e: Exception) {
-        }
-        if (videos.size > 0) {
-            error.text = ""
-            error.gone()
-            if (pageCount == 0) {
+            if (videos.size > 0) {
+                error.text = ""
+                error.gone()
+                if (pageCount == 0) {
+                    adapter!!.clear()
+                }
                 adapter!!.clear()
+                adapter!!.addAll(videos)
+            } else {
+                adapter!!.clear()
+                error.visible()
+                error.text = "No result found for \"$query\""
             }
-            adapter!!.clear()
-            adapter!!.addAll(videos)
-        } else {
-            adapter!!.clear()
-            error.visible()
-            error.text = "No result found for \"$query\""
+
+        } catch (e: Exception) {
         }
 
 

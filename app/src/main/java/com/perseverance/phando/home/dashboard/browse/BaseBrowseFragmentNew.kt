@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -213,26 +215,19 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         browseFragmentViewModel.getCategoryTabList().observe(viewLifecycleOwner, categoryTabDataViewModelObserver)
         browseFragmentViewModel.getBrowseList().observe(viewLifecycleOwner, browseDataViewModelObserver)
         browseFragmentViewModel.refreshData(dataFilters)
+
         imgHeaderImage.setOnClickListener {
-
-            dataFilters.apply {
-                type = ""
-                genre_id = ""
-                filter = ""
-                filter_type = ""
-
-            }
-            browseFragmentViewModel.refreshData(dataFilters)
-            setFilterGravity(Gravity.CENTER)
-            categoryTabListList.map {
-
-                it.show = true
-                it.showFilter = false
-
-            }
-            browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
-            categoryTab = null
+            close()
         }
+
+        requireActivity().onBackPressedDispatcher.addCallback {
+            if (categoryTab != null) {
+                close()
+            } else {
+                requireActivity().finish()
+            }
+        }
+
 
         closeButton.setOnClickListener(View.OnClickListener {
             if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -293,6 +288,26 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         }
 
         PreferencesUtils.saveIntegerPreferences("NOTIFICATION_COUNT", 10)
+    }
+
+    private fun close() {
+        dataFilters.apply {
+            type = ""
+            genre_id = ""
+            filter = ""
+            filter_type = ""
+
+        }
+        browseFragmentViewModel.refreshData(dataFilters)
+        setFilterGravity(Gravity.CENTER)
+        categoryTabListList.map {
+
+            it.show = true
+            it.showFilter = false
+
+        }
+        browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
+        categoryTab = null
     }
 
     abstract fun setTopBannersHeight()

@@ -88,7 +88,7 @@
 
                     <LinearLayout
                         android:id="@+id/vw_play_series"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
@@ -117,6 +117,7 @@
                     <LinearLayout
                         android:id="@+id/vw_share_series"
                         android:layout_width="wrap_content"
+                        android:visibility="gone"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"

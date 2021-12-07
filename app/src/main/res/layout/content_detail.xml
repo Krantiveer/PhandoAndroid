@@ -154,6 +154,7 @@
             <LinearLayout
                 android:id="@+id/share"
                 android:layout_width="0dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:gravity="center"

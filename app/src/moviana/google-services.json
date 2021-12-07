@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "530545471869",
-    "project_id": "movinama-69c2e",
-    "storage_bucket": "movinama-69c2e.appspot.com"
+    "project_number": "48254600528",
+    "project_id": "moviana-53199",
+    "storage_bucket": "moviana-53199.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:530545471869:android:93654225837117f266dc14",
+        "mobilesdk_app_id": "1:48254600528:android:f8778c721cef4f05755855",
         "android_client_info": {
-          "package_name": "ott.moviana.tv"
+          "package_name": "com.moviana.entertainment"
         }
       },
       "oauth_client": [
         {
-          "client_id": "530545471869-f4ncu44h34qce0hem86l6f8pingl7bie.apps.googleusercontent.com",
+          "client_id": "48254600528-d8imtq3q573017f8cleimbvcskltgi04.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAe4wGz-YvDdd4bq9VBdC1c4HkQKwhDH6k"
+          "current_key": "AIzaSyBhXzWRur5Gy0ZCK3amFbmhMdP1GRZ2EF8"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "530545471869-f4ncu44h34qce0hem86l6f8pingl7bie.apps.googleusercontent.com",
+              "client_id": "48254600528-d8imtq3q573017f8cleimbvcskltgi04.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

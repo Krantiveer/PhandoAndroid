@@ -176,7 +176,7 @@
                     android:gravity="center"
                     android:text="Share"
                     android:textColor="@drawable/white_text_selector"
-                    android:textSize="@dimen/_10sdp" />ut>
+                    android:textSize="@dimen/_10sdp" />
 
             </LinearLayout>
 

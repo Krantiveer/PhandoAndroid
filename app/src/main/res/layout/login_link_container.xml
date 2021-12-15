@@ -69,11 +69,14 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/linkGmail"
+                android:visibility="gone"
                 style="@style/LoginImageStyle"
                 app:srcCompat="@drawable/ic_gmail" />
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/linkFacebook"
+                android:visibility="gone"
+
                 style="@style/LoginImageStyle"
                 app:srcCompat="@drawable/ic_facebook" />
         </LinearLayout>

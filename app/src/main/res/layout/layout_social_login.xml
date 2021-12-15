@@ -8,6 +8,7 @@
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/buttonGmailLogin"
         android:layout_width="wrap_content"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/_20sdp"
         android:background="@color/transparent"
@@ -16,6 +17,7 @@
     <androidx.appcompat.widget.AppCompatImageButton
         android:id="@+id/buttonFacebookLogin"
         android:layout_width="wrap_content"
+        android:visibility="gone"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="@color/transparent"

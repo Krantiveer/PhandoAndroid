@@ -35,9 +35,11 @@ import kotlinx.coroutines.withContext
 
 class ProfileActivity : BaseScreenTrackingActivity() {
     override var screenName=BaseConstants.PROFILE_SCREEN
+
     private val userProfileViewModel by lazy {
         ViewModelProvider(this).get(UserProfileViewModel::class.java)
     }
+
     val downloadMetadataDao by lazy {
         AppDatabase.getInstance(this@ProfileActivity)?.downloadMetadataDao()
     }

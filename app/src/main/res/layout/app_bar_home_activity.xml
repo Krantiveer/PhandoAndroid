@@ -36,7 +36,7 @@
                     android:maxLines="2"
                     android:ellipsize="end"
                     android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                    android:textColor="@color/colorActionBarText"
+                    android:textColor="@color/white_main"
                     android:visibility="gone"
                     tools:ignore="MissingPrefix" />
 

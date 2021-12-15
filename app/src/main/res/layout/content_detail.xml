@@ -116,7 +116,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Watch Now"
-                    android:textColor="@drawable/white_text_selector"
+                    android:textColor="@color/white_main"
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 
@@ -146,7 +146,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Like"
-                    android:textColor="@drawable/white_text_selector"
+                    android:textColor="@color/white_main"
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 
@@ -233,7 +233,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="My List"
-                    android:textColor="@drawable/white_text_selector"
+                    android:textColor="@color/white_main"
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 

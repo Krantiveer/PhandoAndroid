@@ -153,12 +153,12 @@
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
                     android:foreground="?attr/selectableItemBackground"
-                    android:background="#535353"
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"
                     android:visibility="visible"
                     android:text="My List" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/btnWallet"
                     android:layout_width="match_parent"
@@ -166,19 +166,18 @@
                     android:gravity="left|center_vertical"
                     android:foreground="?attr/selectableItemBackground"
                     android:layout_marginTop="1dp"
-                    android:background="#535353"
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:text="Wallet" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/btnBilling"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left|center_vertical"
                     android:foreground="?attr/selectableItemBackground"
-                    android:background="#535353"
                     android:layout_marginTop="1dp"
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
@@ -193,11 +192,10 @@
                     android:gravity="left|center_vertical"
                     android:foreground="?attr/selectableItemBackground"
                     android:layout_marginTop="1dp"
-                    android:background="#535353"
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     android:text="Downloads" />
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/btnChangeLanguage"
@@ -221,7 +219,6 @@
                     android:gravity="left|center_vertical"
                     android:foreground="?attr/selectableItemBackground"
                     android:layout_marginTop="1dp"
-                    android:background="#535353"
                     android:padding="@dimen/_11sdp"
                     android:textColor="@color/white"
                     android:textSize="@dimen/_12sdp"

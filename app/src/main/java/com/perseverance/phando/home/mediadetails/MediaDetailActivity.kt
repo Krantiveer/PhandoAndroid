@@ -427,9 +427,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 //                playerViewModel.addToDislike(it.entryId, it.type)
 //            }
 //        }
-        if (BuildConfig.APPLICATION_ID == "com.perseverance.anvitonmovies") {
-            share.gone()
-        }
+//        if (BuildConfig.APPLICATION_ID == "com.perseverance.anvitonmovies") {
+//            share.gone()
+//        }
         share.setOnClickListener {
             mediaMetadata?.can_share?.let {
                 if (it != 1) {
@@ -1025,9 +1025,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 //        }
 
         // play video if live media or last_watch_time > 0
-        if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
+//        if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
             playVideo()
-        }
+//        }
 
         mediaMetadata?.next_media?.let {
             mediaDetailViewModel.getNextEpisodeMediaMetadata(Video().apply {

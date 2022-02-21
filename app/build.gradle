@@ -23,7 +23,7 @@ android {
 //            keyPassword 'shubham'
 //            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
 //            storeFile file('C:\\Users\\Shubham verma\\Desktop\\moviana.jks')
-            storeFile file('D:\\Work\\Phando\\keystore\\moviana Latest\\moviana.jks')
+            storeFile file('C:\\Phando\\keystore\\moviana Latest\\moviana.jks')
 //            storeFile file('C:\\Users\\Shubham verma\\Downloads\\afghan_star_store_key.jks')
 //            storePassword 'shubham'
         }

@@ -29,8 +29,8 @@
 
                 <ImageView
                     android:id="@+id/imgHeaderImage"
-                    android:layout_width="?attr/actionBarSize"
-                    android:layout_height="?attr/actionBarSize"
+                    android:layout_width="@dimen/_80sdp"
+                    android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:foreground="?attr/selectableItemBackground"
                     android:src="@drawable/browse_home_logo" />

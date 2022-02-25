@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="@drawable/header_shaddow"
+    android:background="#FFFFFF"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/_15sdp"
@@ -12,8 +12,6 @@
         android:id="@+id/imgHeaderImage"
         android:layout_width="?attr/actionBarSize"
         android:layout_height="?attr/actionBarSize"
-        android:scaleType="fitCenter"
-        android:padding="@dimen/_5sdp"
         android:src="@drawable/browse_home_logo" />
 
     <androidx.appcompat.widget.AppCompatTextView

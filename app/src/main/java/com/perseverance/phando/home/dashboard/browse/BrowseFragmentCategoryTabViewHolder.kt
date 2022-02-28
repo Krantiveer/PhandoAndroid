@@ -14,10 +14,10 @@ import kotlinx.android.synthetic.main.item_home_tab.view.*
 
 
 class BrowseFragmentCategoryTabViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<CategoryTab, AdapterClickListener>(itemView, listener) {
-//    var padding = 5
+    var padding = 5
 
     init {
-//        padding = Utils.dpToPixel(itemView.context, itemView.context.getResources().getDimension(com.intuit.sdp.R.dimen._3sdp)).toInt()
+        padding = Utils.dpToPixel(itemView.context, itemView.context.getResources().getDimension(com.intuit.sdp.R.dimen._3sdp)).toInt()
         itemView.type.setOnClickListener {
             var categoryTab = it.tag as CategoryTab
             categoryTab.isFilter = false
@@ -38,13 +38,13 @@ class BrowseFragmentCategoryTabViewHolder(itemView: View, listener: AdapterClick
             itemView.type.text = item.displayName
             if (item.showFilter) {
                 if (item.filters.isNotEmpty()) {
-                    itemView.filter.gone()
+                    itemView.filter.visible()
                     val selected = item.filters.filter {
                         it.isSelected == true
                     }
                     if (selected.isNotEmpty()) {
                         itemView.filter.text = selected.get(0).name
-//                        itemView.filter.setPadding(padding, 0, 0, 0);
+                        itemView.filter.setPadding(padding, 0, 0, 0);
                     }
                 }
 
@@ -55,7 +55,7 @@ class BrowseFragmentCategoryTabViewHolder(itemView: View, listener: AdapterClick
             if (adapterPosition == 0) {
                 // itemView.type.setPadding(0,0,50,0);
             } else {
-//                itemView.type.setPadding(padding, 0, 0, 0);
+                itemView.type.setPadding(padding, 0, 0, 0);
             }
         } else {
             itemView.type.gone()

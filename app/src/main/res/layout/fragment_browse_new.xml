@@ -111,14 +111,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:paddingLeft="@dimen/_10sdp"
-                android:paddingRight="@dimen/_10sdp">
+                android:gravity="center">
+
+                <ImageView
+                    android:id="@+id/imgFilterBack"
+                    android:layout_width="wrap_content"
+                    android:visibility="gone"
+                    android:layout_height="wrap_content"
+                    android:foreground="?selectableItemBackground"
+                    android:src="@drawable/ic_baseline_navigate_before_24" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/filterRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:id="@+id/imgFilterNext"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:visibility="gone"
+
+                    android:layout_height="wrap_content"
+                    android:foreground="?selectableItemBackground"
+                    android:src="@drawable/ic_baseline_navigate_next_24" />
             </LinearLayout>
 
         </LinearLayout>
@@ -167,7 +183,20 @@
                             app:tabIndicatorHeight="0dp" />
                     </LinearLayout>
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal">
 
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/filterRecyclerViewSecond"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_10sdp"
+                            android:layout_centerInParent="true"
+                            android:layout_gravity="center_horizontal" />
+
+                    </RelativeLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewUpcomingVideos"
@@ -178,7 +207,6 @@
                         android:visibility="visible" />
                 </LinearLayout>
             </FrameLayout>
-
 
         </androidx.core.widget.NestedScrollView>
 

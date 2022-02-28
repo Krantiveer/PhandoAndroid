@@ -1,6 +1,7 @@
 package com.perseverance.patrikanews.utils
 
 import android.content.Context
+import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.CountDownTimer
 import android.text.Editable
@@ -27,6 +28,7 @@ import com.perseverance.phando.R
 import com.perseverance.phando.resize.ThumbnailResizer
 import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.Utils
+import java.util.*
 
 fun View.visible() {
     visibility = View.VISIBLE
@@ -34,6 +36,18 @@ fun View.visible() {
 
 fun View.invisible() {
     visibility = View.INVISIBLE
+}
+
+
+fun getRandomColor(): Int {
+    val rnd = Random()
+//    val color: Int = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
+
+    val color = (Math.random() * 16777215).toInt() or (0xFF shl 23)
+
+    return color
+
+
 }
 
 fun View.gone() {
@@ -104,10 +118,10 @@ fun Context.getDrawableCompat(@DrawableRes resId: Int, @ColorRes tintColorRes: I
 
 fun ImageView.loadImage(url: String?) {
     Glide.with(context)
-            .load(url)
-            .apply(RequestOptions()
-                    .diskCacheStrategy(DiskCacheStrategy.ALL))
-            .into(this)
+        .load(url)
+        .apply(RequestOptions()
+            .diskCacheStrategy(DiskCacheStrategy.ALL))
+        .into(this)
 }
 
 fun ImageView.loadRoundedImage(url: String?) {
@@ -176,7 +190,7 @@ fun LinearLayout.resizeCategoryItem() {
 
 fun RecyclerView.addDividerDecoration(orientation: Int) {
     val dividerItemDecoration = DividerItemDecoration(this.context,
-            orientation)
+        orientation)
     this.addItemDecoration(dividerItemDecoration)
 }
 
@@ -201,19 +215,20 @@ fun TextView.afterTextChangedDelayed(afterTextChanged: (String) -> Unit) {
     })
 
 }
+
 fun String?.isSuccess(): Boolean = this == "success"
 
-fun String.isError(): Boolean =  this == "error"
+fun String.isError(): Boolean = this == "error"
 
-fun String.isLoading(): Boolean =  this == "loading"
+fun String.isLoading(): Boolean = this == "loading"
 
 fun Context.showDialog(
-        title: String,
-        message: String,
-        positiveButtonText: String,
-        onPositiveClick: (() -> Unit)? = null,
-        neutralButtonText: String = "",
-        onNeutralClick: (() -> Unit)? = null
+    title: String,
+    message: String,
+    positiveButtonText: String,
+    onPositiveClick: (() -> Unit)? = null,
+    neutralButtonText: String = "",
+    onNeutralClick: (() -> Unit)? = null
 ) {
     val alertD = MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme).apply {
         setIcon(R.mipmap.ic_launcher)

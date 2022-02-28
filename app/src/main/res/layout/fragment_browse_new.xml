@@ -23,9 +23,9 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:orientation="horizontal"
                 android:paddingLeft="@dimen/_15sdp"
-                android:paddingRight="@dimen/_15sdp"
-                android:orientation="horizontal">
+                android:paddingRight="@dimen/_15sdp">
 
                 <ImageView
                     android:id="@+id/imgHeaderImage"
@@ -36,15 +36,15 @@
                     android:src="@drawable/browse_home_logo" />
 
 
-<!--                <LinearLayout-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:layout_weight="1"-->
-<!--                    android:gravity="center"-->
-<!--                    android:paddingLeft="@dimen/_10sdp"-->
-<!--                    android:paddingRight="@dimen/_10sdp">-->
+                <!--                <LinearLayout-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_weight="1"-->
+                <!--                    android:gravity="center"-->
+                <!--                    android:paddingLeft="@dimen/_10sdp"-->
+                <!--                    android:paddingRight="@dimen/_10sdp">-->
 
-<!--                </LinearLayout>-->
+                <!--                </LinearLayout>-->
 
                 <!--                <LinearLayout-->
                 <!--                    android:id="@+id/filterContainer"-->
@@ -148,7 +148,6 @@
                     android:orientation="vertical">
 
 
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -167,6 +166,8 @@
                             app:tabGravity="center"
                             app:tabIndicatorHeight="0dp" />
                     </LinearLayout>
+
+
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerViewUpcomingVideos"

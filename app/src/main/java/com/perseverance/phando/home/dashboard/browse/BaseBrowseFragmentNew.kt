@@ -17,7 +17,9 @@ import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -211,7 +213,10 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         nestedScrollView = view.findViewById(R.id.nestedScrollView)
         recyclerViewUpcomingVideos.layoutManager = LinearLayoutManager(activity)
         val filterRecyclerViewLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+//        filterRecyclerView.layoutManager =  StaggeredGridLayoutManager(3,
+//            StaggeredGridLayoutManager.VERTICAL)
         filterRecyclerView.layoutManager = filterRecyclerViewLayoutManager
+
         browseFragmentViewModel.getCategoryTabList().observe(viewLifecycleOwner, categoryTabDataViewModelObserver)
         browseFragmentViewModel.getBrowseList().observe(viewLifecycleOwner, browseDataViewModelObserver)
         browseFragmentViewModel.refreshData(dataFilters)

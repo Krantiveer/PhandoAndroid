@@ -20,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -215,7 +216,17 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         val filterRecyclerViewLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 //        filterRecyclerView.layoutManager =  StaggeredGridLayoutManager(3,
 //            StaggeredGridLayoutManager.VERTICAL)
-        filterRecyclerView.layoutManager = filterRecyclerViewLayoutManager
+
+
+        val chipsLayoutManager = ChipsLayoutManager.newBuilder(context)
+            .setScrollingEnabled(false)
+            .setChildGravity(Gravity.TOP)
+            .setGravityResolver { Gravity.NO_GRAVITY }
+            .setOrientation(ChipsLayoutManager.HORIZONTAL)
+            .setRowStrategy(ChipsLayoutManager.STRATEGY_DEFAULT)
+            .build()
+
+        filterRecyclerView.layoutManager = chipsLayoutManager
 
         browseFragmentViewModel.getCategoryTabList().observe(viewLifecycleOwner, categoryTabDataViewModelObserver)
         browseFragmentViewModel.getBrowseList().observe(viewLifecycleOwner, browseDataViewModelObserver)

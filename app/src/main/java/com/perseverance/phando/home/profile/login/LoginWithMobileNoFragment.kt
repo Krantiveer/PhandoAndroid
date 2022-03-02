@@ -47,7 +47,6 @@ class LoginWithMobileNoFragment : BaseUserLoginFragment() {
                 val bundle = bundleOf(
                         "MOBILE" to inputMobile.text.toString().trim(),
                         "COUNTRY_CODE" to countryCode
-
                 )
                 val navOption = NavOptions.Builder().setPopUpTo(R.id.P2LoginWithMobileNoActivity, false).build()
                 navigator.navigate(R.id.P2OTPVerificationActivity, bundle, navOption)

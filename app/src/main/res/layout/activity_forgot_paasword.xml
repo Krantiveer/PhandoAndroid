@@ -59,9 +59,9 @@
 
                 <EditText
                     android:id="@+id/input_email"
+                    style="@style/LoginHintTextStyleBlack"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/base_grey_color"
                     android:hint="Enter your email"
                     android:inputType="textEmailAddress"
                     android:padding="@dimen/_8sdp"

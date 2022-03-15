@@ -4,6 +4,7 @@
     <color name="white_main">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="grey">#EFF0F1</color>
+    <color name="txtgrey">#B5B5B6</color>
     <color name="colorPrimary">@color/white</color>
     <color name="colorPrimaryDark">@color/white</color>
     <color name="colorAccent">@color/gray_clouds_dark</color>

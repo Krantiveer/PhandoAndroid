@@ -39,6 +39,7 @@ class LoginWithEmailFragment : BaseUserLoginFragment() {
 
         }
     }
+
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        setContentView(R.layout.activity_p2_login_with_email)

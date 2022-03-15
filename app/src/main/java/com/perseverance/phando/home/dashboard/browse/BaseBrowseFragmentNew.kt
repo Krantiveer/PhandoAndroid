@@ -11,13 +11,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.addCallback
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.beloo.widget.chipslayoutmanager.ChipsLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -76,8 +78,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
     private var notificationDao: NotificationDao? = null
     private var adapter: HomeFragmentParentListAdapter? = null
     private var browseFragmentCategoryTabListAdapter: BrowseFragmentCategoryTabListAdapter? = null
-    private var browseFragmentCategoryTabListAdapterSecond: BrowseFragmentCategoryTabListAdapterSecond? =
-        null
     private var categoryTabListList: ArrayList<CategoryTab> = ArrayList<CategoryTab>()
     private val dataFilters = DataFilters()
     var categoryTab: CategoryTab? = null
@@ -94,8 +94,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             }
             LoadingStatus.SUCCESS -> {
                 progressBar.gone()
-                adapter =
-                    HomeFragmentParentListAdapter(activity as Context, this, childFragmentManager)
+                adapter = HomeFragmentParentListAdapter(activity as Context, this, childFragmentManager)
                 recyclerViewUpcomingVideos.adapter = adapter
                 it.data?.let { browseDataList ->
                     if (browseDataList.isNotEmpty()) {
@@ -128,10 +127,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
     private val categoryTabDataViewModelObserver = Observer<DataLoadingStatus<List<CategoryTab>>> {
 
         when (it?.status) {
-            LoadingStatus.LOADING -> {
-                imgFilterBack.gone()
-                imgFilterNext.gone()
-            }
+
             LoadingStatus.SUCCESS -> {
                 it.data?.let { browseDataList ->
                     if (browseDataList.isNotEmpty()) {
@@ -139,23 +135,11 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                         categoryTabListList.map {
                             it.show = true
                             it.showFilter = false
-                        }
-                        browseFragmentCategoryTabListAdapter =
-                            BrowseFragmentCategoryTabListAdapter(activity as Context, this)
-                        browseFragmentCategoryTabListAdapterSecond =
-                            BrowseFragmentCategoryTabListAdapterSecond(activity as Context, this)
 
-                        if (categoryTabListList.size > 4) {
-                            imgFilterBack.visible()
-                            imgFilterNext.visible()
                         }
-
+                        browseFragmentCategoryTabListAdapter = BrowseFragmentCategoryTabListAdapter(activity as Context, this)
                         filterRecyclerView.adapter = browseFragmentCategoryTabListAdapter
-                        filterRecyclerViewSecond.adapter =
-                            browseFragmentCategoryTabListAdapterSecond
-
                         browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
-                        browseFragmentCategoryTabListAdapterSecond?.setItems(categoryTabListList)
                         //filterRecyclerView.itemAnimator = SlideInLeftAnimator()
 
                     } else {
@@ -195,8 +179,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
     }
 
     private suspend fun syncDownload(userDownloads: List<DownloadMetadata>?) {
-        val downloadMetadataDao =
-            activity?.let { AppDatabase.getInstance(it)?.downloadMetadataDao() }
+        val downloadMetadataDao = activity?.let { AppDatabase.getInstance(it)?.downloadMetadataDao() }
         val allData = downloadMetadataDao?.getAllData()
         if (allData != null) {
             if (allData.isEmpty()) {
@@ -218,11 +201,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
     private var sheetBehavior: BottomSheetBehavior<*>? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         return inflater.inflate(R.layout.fragment_browse_new, container, false)
     }
@@ -233,43 +212,23 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         notificationDao = AppDatabase.getInstance(requireActivity()).notificationDao()
         nestedScrollView = view.findViewById(R.id.nestedScrollView)
         recyclerViewUpcomingVideos.layoutManager = LinearLayoutManager(activity)
-        val filterRecyclerViewLayoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        val filterRecyclerViewLayoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 //        filterRecyclerView.layoutManager =  StaggeredGridLayoutManager(3,
 //            StaggeredGridLayoutManager.VERTICAL)
 
-        val chipsLayoutManager =
-            ChipsLayoutManager.newBuilder(context) //set vertical gravity for all items in a row. Default = Gravity.CENTER_VERTICAL
-                .setChildGravity(Gravity.TOP) //whether RecyclerView can scroll. TRUE by default
-                .setScrollingEnabled(true) //set maximum views count in a particular row
-                .setGravityResolver { Gravity.CENTER } //you are able to break row due to your conditions. Row breaker should return true for that views
-                .setOrientation(ChipsLayoutManager.HORIZONTAL) // row strategy for views in completed row, could be STRATEGY_DEFAULT, STRATEGY_FILL_VIEW,
-                .setRowStrategy(ChipsLayoutManager.STRATEGY_FILL_SPACE) // whether strategy is applied to last row. FALSE by default
-                .build()
-
 //        val chipsLayoutManager = ChipsLayoutManager.newBuilder(context)
+//            .setChildGravity(Gravity.CENTER)
 //            .setScrollingEnabled(false)
+//            .setGravityResolver { Gravity.NO_GRAVITY }
 //            .setOrientation(ChipsLayoutManager.HORIZONTAL)
-//            .setRowStrategy(ChipsLayoutManager. STRATEGY_DEFAULT)
+//            .setRowStrategy(ChipsLayoutManager.STRATEGY_DEFAULT)
 //            .build()
 
         filterRecyclerView.layoutManager = filterRecyclerViewLayoutManager
-        filterRecyclerViewSecond.layoutManager = chipsLayoutManager
 
-        browseFragmentViewModel.getCategoryTabList()
-            .observe(viewLifecycleOwner, categoryTabDataViewModelObserver)
-        browseFragmentViewModel.getBrowseList()
-            .observe(viewLifecycleOwner, browseDataViewModelObserver)
+        browseFragmentViewModel.getCategoryTabList().observe(viewLifecycleOwner, categoryTabDataViewModelObserver)
+        browseFragmentViewModel.getBrowseList().observe(viewLifecycleOwner, browseDataViewModelObserver)
         browseFragmentViewModel.refreshData(dataFilters)
-
-        imgFilterBack.setOnClickListener {
-            filterRecyclerView.scrollToPosition(0)
-        }
-
-        imgFilterNext.setOnClickListener {
-            if (!categoryTabListList.isNullOrEmpty())
-                filterRecyclerView.scrollToPosition(categoryTabListList.size - 1)
-        }
 
         imgHeaderImage.setOnClickListener {
             close()
@@ -312,8 +271,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                     BottomSheetBehavior.STATE_SETTLING -> {
                         filters.adapter = null
                         filters.layoutManager = LinearLayoutManager(activity)
-                        val allFilterAdapter =
-                            FilterAdapter(activity as Context, this@BaseBrowseFragmentNew)
+                        val allFilterAdapter = FilterAdapter(activity as Context, this@BaseBrowseFragmentNew)
                         filters.adapter = allFilterAdapter
                         val filterList = categoryTab?.filters as ArrayList
                         allFilterAdapter.addAll(filterList)
@@ -347,7 +305,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
     }
 
     private fun close() {
-
         dataFilters.apply {
             type = ""
             genre_id = ""
@@ -364,12 +321,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
         }
         browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
-        browseFragmentCategoryTabListAdapterSecond?.setItems(categoryTabListList)
-        if (categoryTabListList.size > 4) {
-            imgFilterBack.visible()
-            imgFilterNext.visible()
-        }
-        filterRecyclerViewSecond.visible()
         categoryTab = null
     }
 
@@ -395,15 +346,11 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                         intent.putExtra(Key.CATEGORY, data)
                         startActivity(intent)
                     } else {
-                        startActivity(MediaDetailActivity.getDetailIntent(activity as Context,
-                            data))
+                        startActivity(MediaDetailActivity.getDetailIntent(activity as Context, data))
                         Utils.animateActivity(activity, "next")
                     }
                 } else {
-                    DialogUtils.showMessage(activity,
-                        BaseConstants.CONNECTION_ERROR,
-                        Toast.LENGTH_SHORT,
-                        false)
+                    DialogUtils.showMessage(activity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
                 }
             }
             is BrowseData -> {
@@ -445,9 +392,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             }
 
             is CategoryTab -> {
-                imgFilterBack.gone()
-                imgFilterNext.gone()
-                filterRecyclerViewSecond.gone()
                 if (data.isFilter) {
                     if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
                         sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
@@ -536,8 +480,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         observeUserProfile()
         val allNotifications = notificationDao?.getAllNotifications()
         val unreadNotifications = notificationDao?.getUnreadNotifications()
-        notificationContainer.visibility =
-            if (allNotifications == null || allNotifications == 0) View.GONE else View.VISIBLE
+        notificationContainer.visibility = if (allNotifications == null || allNotifications == 0) View.GONE else View.VISIBLE
         if (allNotifications != null && allNotifications > 0) {
             try {
                 cart_badge?.let {
@@ -580,47 +523,42 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                     boolLanguageArray,
                     object : DialogInterface.OnMultiChoiceClickListener {
 
-                        override fun onClick(
-                            dialog: DialogInterface?,
-                            which: Int,
-                            isChecked: Boolean
-                        ) {
+                        override fun onClick(dialog: DialogInterface?, which: Int, isChecked: Boolean) {
                             boolLanguageArray[which] = isChecked;
                         }
 
                     })
                 setCancelable(false)
-                setPositiveButton("OK",
-                    DialogInterface.OnClickListener { dialog, which -> // Do something when click positive button
-                        languageId.clear()
-                        boolLanguageArray.forEachIndexed { index, isSelected ->
-                            if (isSelected) {
-                                val audienceCategory = userProfileViewModel.languageList.get(index)
-                                val id = audienceCategory.id
-                                if (languageId.isEmpty()) {
-                                    languageId.append(id)
-                                } else {
-                                    languageId.append(",$id")
-                                }
+                setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> // Do something when click positive button
+                    languageId.clear()
+                    boolLanguageArray.forEachIndexed { index, isSelected ->
+                        if (isSelected) {
+                            val audienceCategory = userProfileViewModel.languageList.get(index)
+                            val id = audienceCategory.id
+                            if (languageId.isEmpty()) {
+                                languageId.append(id)
+                            } else {
+                                languageId.append(",$id")
                             }
                         }
+                    }
 
-                        val map = HashMap<String, String>()
-                        map["languages_ids"] = languageId.toString()
-                        progressBar.visible()
-                        lifecycleScope.launch {
-                            val updateLanguagePreferenceResponse = withContext(Dispatchers.IO) {
-                                userProfileViewModel.updateLanguagePreference(map)
-                            }
-                            progressBar.gone()
-                            toast(updateLanguagePreferenceResponse.message)
-                            if (updateLanguagePreferenceResponse.status.isSuccess()) {
-                                browseFragmentViewModel.refreshData(dataFilters)
-                                userProfileViewModel.refreshUserProfile()
-                            }
+                    val map = HashMap<String, String>()
+                    map["languages_ids"] = languageId.toString()
+                    progressBar.visible()
+                    lifecycleScope.launch {
+                        val updateLanguagePreferenceResponse = withContext(Dispatchers.IO) {
+                            userProfileViewModel.updateLanguagePreference(map)
                         }
+                        progressBar.gone()
+                        toast(updateLanguagePreferenceResponse.message)
+                        if (updateLanguagePreferenceResponse.status.isSuccess()) {
+                            browseFragmentViewModel.refreshData(dataFilters)
+                            userProfileViewModel.refreshUserProfile()
+                        }
+                    }
 
-                    })
+                })
                 setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
 
                 })

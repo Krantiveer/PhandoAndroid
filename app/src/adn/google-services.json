@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "160372527596",
+    "project_id": "adnmobile-35353",
+    "storage_bucket": "adnmobile-35353.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:160372527596:android:f1c70e15c8a4cfe9b9b0c9",
+        "android_client_info": {
+          "package_name": "ott.adn.tv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "160372527596-o7ckbme20rocel6vkccm3ua1r3roiak2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0bIvNOXdMOV4q99eakgn0De_EKKpduXQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "160372527596-o7ckbme20rocel6vkccm3ua1r3roiak2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

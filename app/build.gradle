@@ -27,7 +27,12 @@ android {
 //            storeFile file('C:\\Users\\Shubham verma\\Downloads\\afghan_star_store_key.jks')
 //            storePassword 'shubham'
         }
-
+        configAdn {
+            keyAlias 'adnbroadband'
+            keyPassword 'adnbroadband'
+            storeFile file('C:\\Phando\\keystore\\adn\\adn.jks')
+            storePassword 'adnbroadband'
+        }
         configPhunFlix {
             keyAlias 'key0'
             keyPassword 'shubham'
@@ -70,10 +75,10 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable true
+            debuggable false
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
-            buildConfigField("String","TOPIC","\"com.perseverance.moviana\"")
-            buildConfigField("String","DOMAIN_URI","\"https://dlinks.moviana.com\"")
+            buildConfigField("String","TOPIC","\"com.perseverance.adn\"")
+            buildConfigField("String","DOMAIN_URI","\"https://dlinks.adn.com\"")
             //http://qa.phunflix.com
         }
         STAGE {
@@ -106,6 +111,13 @@ android {
             signingConfig signingConfigs.configPhunFlix
         }
 
+        adn {
+            applicationId "ott.adn.tv"
+            versionCode 1
+            versionName "1.0"
+            signingConfig signingConfigs.configAdn
+        }
+
     }
     dexOptions {
         javaMaxHeapSize "4g"
@@ -117,6 +129,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
 //    configurations.all {
 //        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
 //            def requested = details.requested
@@ -132,6 +145,7 @@ android {
 ////            }
 //        }
 //    }
+
 }
 
 dependencies {

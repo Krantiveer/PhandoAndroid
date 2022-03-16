@@ -13,10 +13,10 @@
         android:orientation="vertical">
 
         <com.google.android.material.appbar.AppBarLayout
-            android:elevation="0dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay">
+            android:theme="@style/AppTheme.AppBarOverlay"
+            android:visibility="invisible">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -52,8 +52,8 @@
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/LoginTextStyleBlack"
                     android:layout_width="match_parent"
-                    android:text="Enter OTP sent to"
                     android:padding="@dimen/_1sdp"
+                    android:text="Enter OTP sent to"
                     android:textSize="@dimen/_14sdp" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -67,21 +67,21 @@
                     android:id="@+id/inputOTP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:layout_marginBottom="@dimen/_20sdp"
                     android:textColor="@color/white"
-                    android:layout_gravity="center"
+                    app:bar_active_color="@color/red"
                     app:bar_enabled="true"
                     app:bar_height="2dp"
-                    app:width="@dimen/_30sdp"
+                    app:bar_inactive_color="@color/grey"
                     app:height="@dimen/_30sdp"
                     app:length="6"
-                    app:otp_box_background="@color/login_background"
-                    app:otp_box_background_active="@color/login_background"
-                    app:otp_box_background_inactive="@color/login_background"
-                    app:bar_inactive_color="@color/login_background"
-                    app:bar_active_color="@color/login_blue"
-                    app:otp_text_size="@dimen/_10sdp" />
+                    app:otp_box_background="@color/grey"
+                    app:otp_box_background_active="@color/grey"
+                    app:otp_box_background_inactive="@color/grey"
+                    app:otp_text_size="@dimen/_10sdp"
+                    app:width="@dimen/_30sdp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/verifyOTP"
@@ -92,27 +92,27 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:padding="@dimen/_2sdp"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_2sdp">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/otpHint"
                         style="@style/LoginTextStyleBlack"
-                        android:textColor="@color/gray_concrete_dark"
-                        android:textStyle="normal"
                         android:padding="0dp"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textColor="@color/gray_concrete_dark"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="normal" />
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/resendOTP"
                         style="@style/LoginTextStyleBlack"
-                        android:foreground="?attr/selectableItemBackground"
-                        android:text=""
                         android:layout_marginLeft="@dimen/_5sdp"
+                        android:foreground="?attr/selectableItemBackground"
                         android:padding="0dp"
-                        android:textStyle="normal"
+                        android:text=""
                         android:textColor="@color/login_blue"
-                        android:textSize="@dimen/_12sdp" />
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="normal" />
                 </LinearLayout>
             </LinearLayout>
 

@@ -30,5 +30,6 @@
     <string name="transaction_id_label">Transaction ID:</string>
     <string name="amount_label">Amount:</string>
     <string name="status_label">Status:</string>
+    <string name="category">Category</string>
 
 </resources>

@@ -340,11 +340,11 @@
             android:textSize="@dimen/_11sdp"
             android:visibility="gone" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_1sdp"
-            android:layout_marginTop="@dimen/_10sdp"
-            android:background="#0F161F" />
+<!--        <View-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="@dimen/_1sdp"-->
+<!--            android:layout_marginTop="@dimen/_10sdp"-->
+<!--            android:background="#0F161F" />-->
 
         <LinearLayout
             android:id="@+id/relatedVideoContainer"

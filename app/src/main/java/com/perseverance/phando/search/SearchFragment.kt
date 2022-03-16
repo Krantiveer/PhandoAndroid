@@ -2,12 +2,14 @@ package com.perseverance.phando.search
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -71,6 +73,9 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
         adapter = BaseCategoryListAdapter(requireActivity(), this)
         adapter!!.items = videos
         recyclerView.adapter = adapter
+
+        val editText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+        editText.setTextColor(Color.BLACK)
 //        searchView.setOnQueryTextFocusChangeListener(object : View.OnFocusChangeListener{
 //            override fun onFocusChange(view: View?, hasFocus: Boolean) {
 //
@@ -137,7 +142,7 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
 
         })
         searchView.setOnCloseListener {
-            Toast.makeText(appCompatActivity, "Clodes", Toast.LENGTH_SHORT).show()
+            Toast.makeText(appCompatActivity, "Closed", Toast.LENGTH_SHORT).show()
             false
         }
 

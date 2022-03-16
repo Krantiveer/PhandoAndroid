@@ -114,29 +114,29 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:background="@drawable/input_background"
                     android:layout_marginTop="@dimen/_12sdp"
+                    android:background="@drawable/input_background"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <com.hbb20.CountryCodePicker
                         android:id="@+id/ccp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        app:ccp_autoFormatNumber="false"
                         app:ccp_contentColor="@color/white"
                         app:ccp_defaultPhoneCode="91"
                         app:ccp_showFlag="false"
-                        app:ccp_autoFormatNumber="false"
                         app:ccp_textSize="@dimen/_12sdp" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/LoginTextInputLayoutStyle"
+                        style="@style/LoginTextInputLayoutStyleNoBackgroung"
                         app:hintAnimationEnabled="false"
                         app:hintEnabled="false">
 
                         <EditText
                             android:id="@+id/inputMobile"
-                            style="@style/LoginInputStyle"
+                            style="@style/LoginInputStyleNoBackground"
                             android:hint="Mobile number*"
                             android:inputType="phone" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -149,16 +149,16 @@
                 <!-- Name Label -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/LoginTextInputLayoutStyle"
-                    app:hintAnimationEnabled="false"
                     android:layout_marginTop="@dimen/_12sdp"
+                    app:hintAnimationEnabled="false"
                     app:hintEnabled="false"
-                    app:passwordToggleTint="#7a8086"
-                    app:passwordToggleEnabled="true">
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="#7a8086">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/input_password"
-                        android:hint="Password*"
                         style="@style/LoginInputStyle"
+                        android:hint="Password*"
                         android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -170,11 +170,11 @@
                 <!-- Name Label -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/LoginTextInputLayoutStyle"
-                    app:hintAnimationEnabled="false"
                     android:layout_marginTop="@dimen/_12sdp"
+                    app:hintAnimationEnabled="false"
                     app:hintEnabled="false"
-                    app:passwordToggleTint="#7a8086"
-                    app:passwordToggleEnabled="true">
+                    app:passwordToggleEnabled="true"
+                    app:passwordToggleTint="#7a8086">
 
                     <EditText
                         android:id="@+id/input_confirm_password"

@@ -61,13 +61,13 @@
                         app:ccp_defaultPhoneCode="91" />
 
                     <com.google.android.material.textfield.TextInputLayout
-                        style="@style/LoginTextInputLayoutStyle"
+                        style="@style/LoginTextInputLayoutStyleNoBackgroung"
                         app:hintAnimationEnabled="false"
                         app:hintEnabled="false">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/inputMobile"
-                            style="@style/LoginInputStyle"
+                            style="@style/LoginInputStyleNoBackground"
                             android:paddingLeft="0dp"
                             android:maxLength="15"
                             android:hint="Enter mobile number"

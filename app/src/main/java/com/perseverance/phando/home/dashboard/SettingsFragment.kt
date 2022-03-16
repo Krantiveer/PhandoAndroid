@@ -51,7 +51,7 @@ class SettingsFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bitmap = getBitmapFromVectorDrawable(activity!!, R.drawable.ic_arrow_back_black_24dp)
+        bitmap = getBitmapFromVectorDrawable(requireActivity(), R.drawable.ic_arrow_back_black_24dp)
 
 
     }

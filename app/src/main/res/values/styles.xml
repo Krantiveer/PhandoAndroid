@@ -81,4 +81,14 @@
         <item name="colorAccent">@color/theme_color</item>
     </style>
 
+
+    <style name="pullBottomfromTop" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowAnimationStyle">@style/dilog_slide_top_to_down</item>
+    </style>
+
+    <style name="dilog_slide_top_to_down" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowEnterAnimation">@anim/slide_up</item>
+        <item name="android:windowExitAnimation">@anim/slide_down</item>
+    </style>
+
 </resources>

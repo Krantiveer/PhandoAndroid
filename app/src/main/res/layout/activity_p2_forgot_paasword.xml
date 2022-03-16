@@ -10,6 +10,7 @@
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:theme="@style/AppTheme.AppBarOverlay"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -72,13 +73,13 @@
                     app:ccp_textSize="@dimen/_12sdp" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    style="@style/LoginTextInputLayoutStyle"
+                    style="@style/LoginTextInputLayoutStyleNoBackgroung"
                     app:hintAnimationEnabled="false"
                     app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/inputPhone"
-                        style="@style/LoginInputStyle"
+                        style="@style/LoginInputStyleNoBackground"
                         android:hint="Enter mobile number"
                         android:inputType="phone" />
                 </com.google.android.material.textfield.TextInputLayout>

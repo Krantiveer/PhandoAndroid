@@ -33,6 +33,12 @@ android {
             storeFile file('C:\\Phando\\keystore\\adn\\adn.jks')
             storePassword 'adnbroadband'
         }
+        configTrueSports {
+            keyAlias 'adnbroadband'
+            keyPassword 'adnbroadband'
+            storeFile file('C:\\Phando\\keystore\\adn\\adn.jks')
+            storePassword 'adnbroadband'
+        }
         configPhunFlix {
             keyAlias 'key0'
             keyPassword 'shubham'
@@ -116,6 +122,13 @@ android {
             versionCode 2
             versionName "1.1"
             signingConfig signingConfigs.configAdn
+        }
+
+        truesports {
+            applicationId "com.truesports.ott"
+            versionCode 1
+            versionName "1.0"
+            signingConfig signingConfigs.configTrueSports
         }
 
     }

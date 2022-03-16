@@ -1,7 +1,6 @@
 package com.perseverance.patrikanews.utils
 
 import android.content.Context
-import android.graphics.Color
 import android.graphics.PorterDuff
 import android.os.CountDownTimer
 import android.text.Editable
@@ -25,6 +24,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.perseverance.phando.R
+import com.perseverance.phando.dialogs.ListDialog
+import com.perseverance.phando.home.dashboard.models.BrowseData
+import com.perseverance.phando.home.dashboard.models.CategoryTab
 import com.perseverance.phando.resize.ThumbnailResizer
 import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.Utils
@@ -222,6 +224,24 @@ fun String.isError(): Boolean = this == "error"
 
 fun String.isLoading(): Boolean = this == "loading"
 
+fun Context.openListDialog(
+    mUserList: ArrayList<CategoryTab>,
+    returns: (CategoryTab) -> Unit
+) {
+    ListDialog(
+        this,
+        R.style.pullBottomfromTop,
+        R.layout.dialog_list_category,
+        mUserList,
+        object : ListDialog.ItemClick {
+            override fun onItemClick(data: CategoryTab) {
+                returns(data)
+            }
+        }
+    ).showDialog()
+}
+
+
 fun Context.showDialog(
     title: String,
     message: String,
@@ -253,6 +273,9 @@ fun Context.showDialog(
             }
         }
     }
+
+
+
 
 //    val alert = AlertDialog.Builder(this).apply {
 //        setTitle(title)

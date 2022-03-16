@@ -1,0 +1,15 @@
+
+keytool -exportcert -list -v \
+-alias sadhna -keystore /home/qainfotech/Drive1/QA_Project/ZuloTV/OTTAndroid/app/src/sadhnatv/sadhna.jks
+
+SHA1: 81:08:14:13:A4:41:14:3D:A4:28:1E:93:CE:70:5B:19:FB:68:7A:A7
+
+
+keytool -exportcert -alias sadhna -keystore/home/qainfotech/Drive1/QA_Project/ZuloTV/OTTAndroid/app/src/sadhnatv/sadhna.jks | openssl sha1 -binary | openssl base64
+
+2jmj7l5rSw0yVb/vlWAYkK/YBwk=
+
+
+keytool -exportcert -alias anything -keystore '/home/adminuser/Documents/user/certificate.jks' | xxd -p | tr -d "[:space:]" | echo -n com.elbarid.mobilepaymenthey `cat` | sha256sum | tr -d "[:space:]-" | xxd -r -p | base64 | cut -c1-11
+
+keytool -exportcert -alias phunflix -keystore /home/qainfotech/Drive1/QA_Project/PhunFlix-Android/phunflix.jks | xxd -p | tr -d "[:space:]" | echo -n com.perseverance.phunflix `cat` | sha256sum | tr -d "[:space:]-" | xxd -r -p | base64 | cut -c1-11

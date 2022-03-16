@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "761870467981",
+    "project_id": "truesports-a194e",
+    "storage_bucket": "truesports-a194e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:761870467981:android:fdefb82c14d982c160f3c4",
+        "android_client_info": {
+          "package_name": "com.truesports.ott"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "761870467981-a7gkgmjc0e31usqsa1quhuv3e41hsqd4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgm3ABrkKUa61lbObHkMa9Xvgk5c44zx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "761870467981-a7gkgmjc0e31usqsa1quhuv3e41hsqd4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

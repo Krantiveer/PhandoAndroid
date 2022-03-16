@@ -5,8 +5,8 @@
     android:id="@+id/container_video"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="@dimen/_2sdp"
-    android:layout_marginRight="@dimen/_2sdp"
+    android:layout_marginLeft="@dimen/_5sdp"
+    android:layout_marginRight="@dimen/_5sdp"
     android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
     android:padding="0.5px">
@@ -14,7 +14,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/_5sdp">
+        app:cardCornerRadius="@dimen/_10sdp">
 
         <RelativeLayout
             android:layout_width="wrap_content"

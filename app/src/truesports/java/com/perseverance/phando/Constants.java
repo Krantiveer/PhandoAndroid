@@ -9,7 +9,7 @@ public class Constants {
     public static final boolean BUILD_PROD = BuildConfig.BUILD_TYPE.equalsIgnoreCase("PROD");
 //    public static final String  BASE_URL_PROD = "https://moviana.tv/";
 
-    public static final String BASE_URL_PROD = "https://ott1.phando.com/";
+    public static final String BASE_URL_PROD = "https://ott2.phando.com/";
     public static final String BASE_URL_STAGE = "https://phunflixqa.phando.com/";
 
     public static final String GA_TRACKER_ID = "UA-152515869-1";

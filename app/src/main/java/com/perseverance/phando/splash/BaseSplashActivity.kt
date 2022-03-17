@@ -1,6 +1,7 @@
 package com.perseverance.phando.splash
 
 import android.content.Intent
+import android.net.Uri
 import android.net.UrlQuerySanitizer
 import android.os.Bundle
 import android.text.TextUtils
@@ -29,29 +30,37 @@ open class BaseSplashActivity : BaseScreenTrackingActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         //version?.text = "${BuildConfig.VERSION_CODE}-${BuildConfig.VERSION_NAME}(${BuildConfig.BUILD_TYPE})"
-        intent.data?.let {
-            imageView.visibility = View.VISIBLE
-            checkForDynamicLink()
-        } ?: run {
-            val animation = AlphaAnimation(0.0f, 1.0f)
-            animation.duration = 2000
-            animation.startOffset = 10
-            animation.fillAfter = true
-            animation.setAnimationListener(object : Animation.AnimationListener {
-                override fun onAnimationStart(animation: Animation) {
-                    imageView.visibility = View.VISIBLE
-                }
+        val path = "android.resource://" + packageName + "/" + R.raw.splash
+        imageView.setVideoURI(Uri.parse(path))
+        imageView.start()
 
-                override fun onAnimationEnd(animation: Animation) {
-                    openHome()
-                }
+        imageView.setOnCompletionListener { openHome() }
 
-                override fun onAnimationRepeat(animation: Animation) {
 
-                }
-            })
-            imageView.startAnimation(animation)
-        }
+
+//        intent.data?.let {
+//            imageView.visibility = View.VISIBLE
+//            checkForDynamicLink()
+//        } ?: run {
+//            val animation = AlphaAnimation(0.0f, 1.0f)
+//            animation.duration = 2000
+//            animation.startOffset = 10
+//            animation.fillAfter = true
+//            animation.setAnimationListener(object : Animation.AnimationListener {
+//                override fun onAnimationStart(animation: Animation) {
+//                    imageView.visibility = View.VISIBLE
+//                }
+//
+//                override fun onAnimationEnd(animation: Animation) {
+//                    openHome()
+//                }
+//
+//                override fun onAnimationRepeat(animation: Animation) {
+//
+//                }
+//            })
+//            imageView.startAnimation(animation)
+//        }
     }
 
 

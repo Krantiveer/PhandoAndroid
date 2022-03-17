@@ -359,6 +359,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back));
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             landscape()
         } else {

@@ -134,6 +134,7 @@
 
     </style>
 
+
     <style name="RedIconButtonStyle" parent="@style/Widget.MaterialComponents.Button.Icon">
 
         <item name="iconTint">@color/white</item>

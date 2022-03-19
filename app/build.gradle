@@ -34,10 +34,10 @@ android {
             storePassword 'adnbroadband'
         }
         configTrueSports {
-            keyAlias 'adnbroadband'
-            keyPassword 'adnbroadband'
-            storeFile file('C:\\Phando\\keystore\\adn\\adn.jks')
-            storePassword 'adnbroadband'
+            keyAlias 'truesports'
+            keyPassword 'truesports'
+            storeFile file('C:\\Phando\\keystore\\truesports\\truesports.jks')
+            storePassword 'truesports'
         }
         configPhunFlix {
             keyAlias 'key0'

@@ -15,18 +15,18 @@ import java.util.List;
  */
 
 public class AdConfig {
-    public static final String FB_AD_1 = "144081699640724_144082426307318";
-    //public static final String FB_AD_1 = "";
+//    public static final String FB_AD_1 = "144081699640724_144082426307318";
+    public static final String FB_AD_1 = "";
     private static final List<String> GOOGLE_TEST_DEVICES = new ArrayList<String>() {
         {
-            add("7F0BD7C082CBCF75DFD4B64A5C56A5E2");
+//            add("7F0BD7C082CBCF75DFD4B64A5C56A5E2");
         }
     };
 
     private static final List<String> FACEBOOK_TEST_DEVICES = new ArrayList<String>() {
         {
-            add("c0b8cce3-a5e7-4338-8314-635284d309f6");
-            add("a6eb5114-ba61-4cbd-874d-745c98ab2c8c");
+//            add("c0b8cce3-a5e7-4338-8314-635284d309f6");
+//            add("a6eb5114-ba61-4cbd-874d-745c98ab2c8c");
         }
     };
 

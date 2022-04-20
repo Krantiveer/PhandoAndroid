@@ -9,10 +9,10 @@ public class Constants {
     public static final boolean BUILD_PROD = BuildConfig.BUILD_TYPE.equalsIgnoreCase("PROD");
 //    public static final String  BASE_URL_PROD = "https://moviana.tv/";
 
-    public static final String BASE_URL_PROD = "https://truesport.phando.com/";
+    public static final String BASE_URL_PROD = "https://truesports.in/";
     public static final String BASE_URL_STAGE = "https://phunflixqa.phando.com/";
 
-    public static final String GA_TRACKER_ID = "UA-152515869-1";
+    public static final String GA_TRACKER_ID = "";
 
     public static final String URL_HELP = new FeatureConfigClass().getBaseUrl() + "page?type=help";
     public static final String URL_ABOUT_US = new FeatureConfigClass().getBaseUrl() + "page?type=aboutus";

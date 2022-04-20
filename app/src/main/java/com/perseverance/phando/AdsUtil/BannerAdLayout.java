@@ -99,7 +99,7 @@ public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
 
 
         });
-        AdConfig.setRequestConfiguration();
+//        AdConfig.setRequestConfiguration();
         // Create an ad request.
         PublisherAdRequest.Builder publisherAdRequestBuilder = new PublisherAdRequest.Builder();
         // Add the PublisherAdView to the view hierarchy.

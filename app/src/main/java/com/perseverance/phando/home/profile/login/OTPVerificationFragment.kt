@@ -34,15 +34,12 @@ class OTPVerificationFragment : BaseOTPVerificationFragment() {
                 }
             }
             LoadingStatus.SUCCESS -> {
-
                 var loginResponse = it.data
                 loginResponse?.accessToken?.let {
                     onVerifyOtpSuccess(loginResponse)
                 } ?: loginResponse?.message?.let {
                     toast(it, Toast.LENGTH_LONG)
                 }
-
-
             }
 
         }
@@ -78,7 +75,7 @@ class OTPVerificationFragment : BaseOTPVerificationFragment() {
         linkMobile.gone()
     }
 
-    //
+
 //    override fun onCreate(savedInstanceState: Bundle?) {
 //        super.onCreate(savedInstanceState)
 //        userProfileViewModel.verifyOTPTForLoginData.observe(this, verifyOtpObserver)

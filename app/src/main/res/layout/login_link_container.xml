@@ -69,7 +69,7 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/linkGmail"
-                android:visibility="gone"
+                android:visibility="visible"
                 style="@style/LoginImageStyle"
                 app:srcCompat="@drawable/ic_gmail" />
 

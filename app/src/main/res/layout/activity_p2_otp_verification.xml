@@ -71,7 +71,7 @@
                     android:layout_marginTop="@dimen/_20sdp"
                     android:layout_marginBottom="@dimen/_20sdp"
                     android:textColor="@color/white"
-                    app:bar_active_color="@color/red"
+                    app:bar_active_color="@color/app_theme_color"
                     app:bar_enabled="true"
                     app:bar_height="2dp"
                     app:bar_inactive_color="@color/grey"

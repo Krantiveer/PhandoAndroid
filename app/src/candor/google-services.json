@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "246457605085",
+    "project_id": "candorott-677c7",
+    "storage_bucket": "candorott-677c7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246457605085:android:d0cb64dcd5e5632538f434",
+        "android_client_info": {
+          "package_name": "ott.candor.tv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246457605085-ugltk5gj817cbsdrt9hh0ji1u1lb6jnd.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ott.candor.tv",
+            "certificate_hash": "8a5f6af3e3d69a9a904b2ad792acb54fb8b78317"
+          }
+        },
+        {
+          "client_id": "246457605085-g7t063ph1mou7hp6bbfdqnn6j2ssqhs2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFdlgB0gpfN9ww98f9Jlg7aYycsv8JI38"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "246457605085-g7t063ph1mou7hp6bbfdqnn6j2ssqhs2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

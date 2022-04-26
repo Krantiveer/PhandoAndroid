@@ -4,53 +4,48 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 30
     buildToolsVersion "29.0.3"
 
     signingConfigs {
-        configMoviana {
-            keyAlias 'moviana'
-//            keyAlias 'afghan star'
-            keyPassword 'moviana'
-//            keyPassword 'qainfotech'
-//            storeFile file('‪D:\\Work\\Phando\\moviana.jks')
-            storePassword 'moviana'
-//            storePassword 'qainfotech'
-
-//            keyAlias 'key0'
-//            keyPassword 'shubham'
-//            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
-//            storeFile file('C:\\Users\\Shubham verma\\Desktop\\moviana.jks')
-            storeFile file('C:\\Phando\\keystore\\moviana Latest\\moviana.jks')
-//            storeFile file('C:\\Users\\Shubham verma\\Downloads\\afghan_star_store_key.jks')
-//            storePassword 'shubham'
-        }
-        configAdn {
-            keyAlias 'adnbroadband'
-            keyPassword 'adnbroadband'
-            storeFile file('C:\\Phando\\keystore\\adn\\adn.jks')
-            storePassword 'adnbroadband'
-        }
-        configTrueSports {
-            keyAlias 'truesports'
-            keyPassword 'truesports'
-            storeFile file('C:\\Phando\\keystore\\truesports\\truesports.jks')
-            storePassword 'truesports'
-        }
-        configBrightWay{
-            keyAlias 'truesports'
-            keyPassword 'truesports'
-            storeFile file('C:\\Phando\\keystore\\truesports\\truesports.jks')
-            storePassword 'truesports'
-        }
         configPhunFlix {
-            keyAlias 'key0'
-            keyPassword 'shubham'
-//            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
-            storeFile file('C:\\Users\\Shubham verma\\Desktop\\phunflix.jks')
-            storePassword 'shubham'
+            keyAlias 'phunflix'
+            keyPassword 'phunflix'
+            storeFile file('/home/qainfotech/Drive2/Phando-android-projects/PhunFlix-Android/phunflix.jks')
+            storePassword 'phunflix'
+        }
+        configDreamFlix {
+            keyAlias 'dreamflix'
+            keyPassword 'dreamflix'
+            storeFile file('C:\\Phando\\keystore\\DreamFlix\\dreamflix.jks')
+            storePassword 'dreamflix'
+        }
+        configOhogujarati {
+            keyAlias 'ohogujarati'
+            keyPassword 'ohogujarati'
+            storeFile file('C:\\Phando\\keystore\\ohogujarati\\ohogujarati.jks')
+            storePassword 'ohogujarati'
+        }
+        configCinemobs {
+            keyAlias 'ohogujarati'
+            keyPassword 'ohogujarati'
+            storeFile file('C:\\Phando\\keystore\\ohogujarati\\ohogujarati.jks')
+            storePassword 'ohogujarati'
+        }
+        configMitwa {
+            keyAlias 'mitwatv'
+            keyPassword 'mitwatv'
+            storeFile file('C:\\Phando\\keystore\\mitwa\\mitwatv.jks')
+            storePassword 'mitwatv'
+        }
+        configCandor {
+            keyAlias 'mitwatv'
+            keyPassword 'mitwatv'
+            storeFile file('C:\\Phando\\keystore\\mitwa\\mitwatv.jks')
+            storePassword 'mitwatv'
         }
     }
 
@@ -87,12 +82,13 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
+            debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
-            buildConfigField("String","TOPIC","\"com.perseverance.brightway\"")
-            buildConfigField("String","DOMAIN_URI","\"https://dlinks.brightway.com\"")
+            buildConfigField("String","TOPIC","\"com.perseverance.candor\"")
+            buildConfigField("String","DOMAIN_URI","\"https://candor.page.link\"")
             //http://qa.phunflix.com
         }
+
         STAGE {
             multiDexEnabled true
             minifyEnabled false
@@ -100,45 +96,47 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://stage.admaster.in/api-v1/\"")
-            buildConfigField("String","TOPIC","\"com.perseverance.moviana_stage\"")
-            buildConfigField("String","DOMAIN_URI","\"https://dlinks.moviana.com\"")
+            buildConfigField("String","TOPIC","\"com.perseverance.mitwa_stage\"")
+            buildConfigField("String","DOMAIN_URI","\"https://dlinks.phunflix.com\"")
         }
     }
     flavorDimensions "default"
     productFlavors {
-        moviana {
-            applicationId "com.moviana.entertainment"
-            versionCode 5
-            versionName "2"
-            signingConfig signingConfigs.configMoviana
-        }
-
         phunflix {
             applicationId "com.perseverance.phunflix"
             versionCode 10
             versionName "2.0"
             signingConfig signingConfigs.configPhunFlix
         }
-
-        adn {
-            applicationId "ott.adn.tv"
-            versionCode 2
-            versionName "1.1"
-            signingConfig signingConfigs.configAdn
-        }
-
-        truesports {
-            applicationId "com.truesports.ott"
-            versionCode 3
-            versionName "1.2"
-            signingConfig signingConfigs.configTrueSports
-        }
-
-        brightway {
-            applicationId "com.brightway.ott"
+        dreamflix {
+            applicationId "ott.dreamflix.tv"
             versionCode 1
             versionName "1.0"
-            signingConfig signingConfigs.configBrightWay
+            signingConfig signingConfigs.configDreamFlix
+        }
+        ohogujarati {
+            applicationId "ott.perseverance.ohogujarati"
+            versionCode 1
+            versionName "1.0"
+            signingConfig signingConfigs.configOhogujarati
+        }
+        cinemobs {
+            applicationId "ott.perseverance.cinemobs"
+            versionCode 1
+            versionName "1.0"
+            signingConfig signingConfigs.configCinemobs
+        }
+        mitwa {
+            applicationId "com.release.mitwatv"
+            versionCode 20
+            versionName "3.1"
+            signingConfig signingConfigs.configMitwa
+        }
+        candor {
+            applicationId "ott.candor.tv"
+            versionCode 1
+            versionName "1"
+            signingConfig signingConfigs.configCandor
         }
 
     }
@@ -152,7 +150,6 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-
 //    configurations.all {
 //        resolutionStrategy.eachDependency { DependencyResolveDetails details ->
 //            def requested = details.requested
@@ -168,12 +165,12 @@ android {
 ////            }
 //        }
 //    }
-
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(path: ':videoplayer')
+
     // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //X
     implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -225,6 +222,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-analytics:17.0.0'
     implementation 'com.facebook.android:facebook-login:8.1.0'
     implementation 'com.facebook.android:facebook-android-sdk:8.1.0'
+    // Recommended: Add the Firebase SDK for Google Analytics.
+    implementation 'com.google.firebase:firebase-analytics:20.1.1'
+
+    // Add the Firebase SDK for Crashlytics.
+    implementation 'com.google.firebase:firebase-crashlytics:18.2.9'
 
     //implementation files('src/main/libs/razorpay-upi-intent-sdk.jar')
     implementation 'com.razorpay:checkout:1.5.13'
@@ -239,5 +241,15 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics-ktx:18.0.1'
     implementation 'com.google.firebase:firebase-dynamic-links-ktx:19.1.1'
 
-    implementation 'com.beloo.widget:ChipsLayoutManager:0.3.7@aar'
+    implementation 'com.yandex.android:mobmetricalib:4.2.0'
+
+    def uploadServiceVersion = "4.5.5"
+//    implementation 'com.google.android.exoplayer:extension-cast:2.9.6'
+//    //noinspection GradleCompatible
+//    implementation  'com.android.support:mediarouter-v7:28.0.0'
+    implementation "net.gotev:uploadservice:$uploadServiceVersion"
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
+
+
+    implementation 'com.afollestad.assent:core:3.0.0-RC4'
 }

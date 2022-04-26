@@ -1,11 +1,13 @@
 package com.perseverance.phando.home.profile.login
 
+import android.content.Intent
 import android.os.Bundle
 import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.navigation.findNavController
 import com.newgendroid.news.utils.AppDialogListener
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
+import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.utils.DialogUtils
 import com.perseverance.phando.utils.TrackingUtils
 
@@ -35,6 +37,15 @@ class LoginActivity : BaseScreenTrackingActivity() {
 
     companion object {
         const val REQUEST_CODE_LOGIN = 101
+    }
+
+    override fun onBackPressed() {
+        if (intent.hasExtra("login_error")) {
+            startActivity(Intent(this, HomeActivity::class.java))
+            finish()
+        } else {
+            super.onBackPressed()
+        }
     }
 
 }

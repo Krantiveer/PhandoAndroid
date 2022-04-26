@@ -1,6 +1,7 @@
 package com.perseverance.phando.home.profile.login
 
 import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -13,6 +14,7 @@ import androidx.navigation.NavOptions
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.phando.R
 import com.perseverance.phando.data.BaseResponse
+import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.profile.UserProfileViewModel
@@ -195,6 +197,9 @@ open abstract class BaseUserLoginFragment : BaseSocialLoginFragment() {
 
     fun onLoginSuccess(loginResponse: LoginResponse) {
         PreferencesUtils.setLoggedIn(loginResponse.accessToken)
+        if (requireActivity().intent.hasExtra("login_error")) {
+            startActivity(Intent(requireContext(), HomeActivity::class.java))
+        }
         appCompatActivity.setResult(RESULT_OK)
         appCompatActivity.finish()
     }

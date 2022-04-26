@@ -111,14 +111,16 @@ public class ApiClient {
                     errorModel.setMessage(null);
                 }
 
-                if (errorModel.getStatus_code().equalsIgnoreCase("E0004")) {
+                if (errorModel.getStatus_code() != null && errorModel.getStatus_code().equalsIgnoreCase("E0004")) {
                     PreferencesUtils.setLoggedIn("");
                     PreferencesUtils.deleteAllPreferences();
                     Intent loginIntent = new Intent(Session.Companion.getInstance(), LoginActivity.class);
-                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    loginIntent.putExtra("login_error", errorModel.getMessage());
+                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     Session.Companion.getInstance().startActivity(loginIntent);
                     errorModel.setMessage(null);
                 }
+
 
                 return response.newBuilder().body(ResponseBody.create(contentType, new Gson().toJson(errorModel))).build();
             }

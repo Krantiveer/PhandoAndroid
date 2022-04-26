@@ -96,6 +96,11 @@ class OTPVerificationFragment : BaseOTPVerificationFragment() {
     fun onVerifyOtpSuccess(loginResponse: LoginResponse) {
         countDownTimer?.cancel()
         PreferencesUtils.setLoggedIn(loginResponse.accessToken)
+
+        if (requireActivity().intent.hasExtra("login_error")) {
+            startActivity(Intent(requireContext(), HomeActivity::class.java))
+        }
+
         appCompatActivity.setResult(Activity.RESULT_OK)
         appCompatActivity.finish()
     }

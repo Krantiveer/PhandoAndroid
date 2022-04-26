@@ -39,6 +39,12 @@ android {
             storeFile file('C:\\Phando\\keystore\\truesports\\truesports.jks')
             storePassword 'truesports'
         }
+        configBrightWay{
+            keyAlias 'truesports'
+            keyPassword 'truesports'
+            storeFile file('C:\\Phando\\keystore\\truesports\\truesports.jks')
+            storePassword 'truesports'
+        }
         configPhunFlix {
             keyAlias 'key0'
             keyPassword 'shubham'
@@ -83,8 +89,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable false
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
-            buildConfigField("String","TOPIC","\"com.perseverance.adn\"")
-            buildConfigField("String","DOMAIN_URI","\"https://dlinks.adn.com\"")
+            buildConfigField("String","TOPIC","\"com.perseverance.brightway\"")
+            buildConfigField("String","DOMAIN_URI","\"https://dlinks.brightway.com\"")
             //http://qa.phunflix.com
         }
         STAGE {
@@ -100,11 +106,8 @@ android {
     }
     flavorDimensions "default"
     productFlavors {
-//        com.qait.bhaktinow
         moviana {
             applicationId "com.moviana.entertainment"
-//            applicationId "com.moviana.tv"
-//            applicationId "com.perseverance.afghanstar"
             versionCode 5
             versionName "2"
             signingConfig signingConfigs.configMoviana
@@ -129,6 +132,13 @@ android {
             versionCode 3
             versionName "1.2"
             signingConfig signingConfigs.configTrueSports
+        }
+
+        brightway {
+            applicationId "com.brightway.ott"
+            versionCode 1
+            versionName "1.0"
+            signingConfig signingConfigs.configBrightWay
         }
 
     }

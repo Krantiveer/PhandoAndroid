@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "905854374070",
+    "project_id": "brightway-27abf",
+    "storage_bucket": "brightway-27abf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905854374070:android:277fda3f37e647cba81617",
+        "android_client_info": {
+          "package_name": "com.brightway.ott"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905854374070-dfb9lclojhjpr7mvmeleotv54mtj7rfg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAyyIr_3aHWNJ0ybIfqvcCnhDgqF9FxiSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905854374070-dfb9lclojhjpr7mvmeleotv54mtj7rfg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

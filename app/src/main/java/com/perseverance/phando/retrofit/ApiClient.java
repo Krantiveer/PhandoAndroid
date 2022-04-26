@@ -9,6 +9,7 @@ import com.perseverance.phando.BuildConfig;
 import com.perseverance.phando.Session;
 import com.perseverance.phando.factory.FeatureConfigFactory;
 import com.perseverance.phando.home.dashboard.HomeActivity;
+import com.perseverance.phando.home.profile.login.LoginActivity;
 import com.perseverance.phando.utils.PreferencesUtils;
 import com.perseverance.phando.utils.Utils;
 
@@ -109,6 +110,16 @@ public class ApiClient {
                     Session.Companion.getInstance().startActivity(loginIntent);
                     errorModel.setMessage(null);
                 }
+
+                if (errorModel.getStatus_code().equalsIgnoreCase("E0004")) {
+                    PreferencesUtils.setLoggedIn("");
+                    PreferencesUtils.deleteAllPreferences();
+                    Intent loginIntent = new Intent(Session.Companion.getInstance(), LoginActivity.class);
+                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Session.Companion.getInstance().startActivity(loginIntent);
+                    errorModel.setMessage(null);
+                }
+
                 return response.newBuilder().body(ResponseBody.create(contentType, new Gson().toJson(errorModel))).build();
             }
             return response;

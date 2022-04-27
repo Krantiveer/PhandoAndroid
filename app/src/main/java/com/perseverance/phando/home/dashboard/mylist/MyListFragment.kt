@@ -99,8 +99,10 @@ class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, Ada
         val token = PreferencesUtils.getLoggedStatus()
         if (token.isEmpty()) {
             message.setOnClickListener {
-                val intent = Intent(context, LoginActivity::class.java)
-                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                if (token.isEmpty()) {
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                }
             }
 
         } else {

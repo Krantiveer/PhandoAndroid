@@ -21,8 +21,21 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 
     private var appInfoMutableLiveData: MutableLiveData<AppInfoModel>? = null
 
+     var onCategoryClick = MutableLiveData<Boolean>()
+     var onLanguageClick = MutableLiveData<Boolean>()
+     var title = MutableLiveData<String>()
+
     private var apiService: ApiService = ApiClient.getLoginClient().create(ApiService::class.java)
 
+
+    fun categoryClick(){
+        onCategoryClick.value=true
+    }
+
+
+    fun languageClick(){
+        onLanguageClick.value=true
+    }
 
     fun getAppInfoMutableLiveData(): MutableLiveData<AppInfoModel> {
 

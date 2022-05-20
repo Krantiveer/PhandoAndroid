@@ -36,6 +36,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
@@ -43,6 +44,7 @@ import com.google.gson.Gson
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
+import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.fragment_user_list.*
 import java.util.*
@@ -53,6 +55,9 @@ import java.util.*
  */
 class UserListFragment : BaseFragment() {
     override var screenName = BaseConstants.USER_LIST_SCREEN
+    private val homeActivityViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(DashboardViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +68,8 @@ class UserListFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbarTitle.text = "My List"
+        homeActivityViewModel.title.value="My List"
+
         container.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         val tabPagerAdapter = TabPagerAdapter(arrayListOf("My List","My Subscriptions"))
         container.adapter = tabPagerAdapter

@@ -76,7 +76,7 @@ class NotificationListActivity : BaseListActivity() {
                     baseVideo.type = data.type
                     baseVideo.description = data.detail
                     baseVideo.rating = data.rating
-                    baseVideo.is_free = data.is_free
+                    baseVideo.is_free = data.free
                     if ("T".equals(data.type)) {
                         val intent = Intent(this@NotificationListActivity, SeriesActivity::class.java)
                         intent.putExtra(Key.CATEGORY, baseVideo)

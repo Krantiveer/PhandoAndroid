@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -16,6 +15,7 @@ import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.isSuccess
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
@@ -28,13 +28,14 @@ import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
 import com.perseverance.phando.utils.*
 import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_user_profile.*
+import kotlinx.android.synthetic.main.layout_header_new.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
 class ProfileActivity : BaseScreenTrackingActivity() {
-    override var screenName=BaseConstants.PROFILE_SCREEN
+    override var screenName = BaseConstants.PROFILE_SCREEN
 
     private val userProfileViewModel by lazy {
         ViewModelProvider(this).get(UserProfileViewModel::class.java)
@@ -48,10 +49,14 @@ class ProfileActivity : BaseScreenTrackingActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
-        title = "Profile"
+//        setSupportActionBar(toolbar)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        txtTitle.text = "Profile"
+
+        imgBack.setOnClickListener {
+            finish()
+        }
         btnSubscribe.setOnClickListener {
             if (!Utils.isNetworkAvailable(this@ProfileActivity)) {
                 DialogUtils.showNetworkErrorToast()
@@ -92,7 +97,8 @@ class ProfileActivity : BaseScreenTrackingActivity() {
             Util.openWebview(this@ProfileActivity, url)
         }
         btnLogout.setOnClickListener {
-            val alertDialog = MaterialAlertDialogBuilder(this@ProfileActivity, R.style.AlertDialogTheme).create()
+            val alertDialog =
+                MaterialAlertDialogBuilder(this@ProfileActivity, R.style.AlertDialogTheme).create()
             alertDialog.setIcon(R.mipmap.ic_launcher)
             alertDialog.setTitle("Logout")
             alertDialog.setMessage(resources.getString(R.string.logout_message))
@@ -124,14 +130,26 @@ class ProfileActivity : BaseScreenTrackingActivity() {
         userProfileViewModel.getSavesUserProfile()?.let {
             progressBar.gone()
             userName.visible()
-            userName.text = it.user?.name
-            userEmail.text = it.user?.email
-            it.user?.mobile?.let {
+
+
+            userName.text = it.user.name
+            userEmail.text = it.user.email
+            it.user.mobile.let {
                 userMobile.text = it
-            } ?: userMobile.gone()
+            }
+
+            if (it.user.name.isEmpty()) {
+                userName.gone()
+            }
+            if (it.user.email.isEmpty()) {
+                userEmail.gone()
+            }
+            if (it.user.mobile.isEmpty() && it.user.mobile.length > 4) {
+                userMobile.gone()
+            }
 
             Utils.displayCircularProfileImage(this@ProfileActivity, it.user?.image,
-                    R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, avatar)
+                R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, avatar)
 
             it.is_subscribed?.let {
                 if (it == 0) {
@@ -150,7 +168,6 @@ class ProfileActivity : BaseScreenTrackingActivity() {
     }
 
     private fun observeUserProfile() {
-
         userProfileViewModel.getUserProfile().observe(this, Observer {
             progressBar.gone()
 
@@ -172,8 +189,19 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                         userMobile.text = it
                     } ?: userMobile.gone()
 
+
+                    if (it.data?.user?.name!!.isEmpty()) {
+                        userName.gone()
+                    }
+                    if (it.data.user.email.isEmpty()) {
+                        userEmail.gone()
+                    }
+                    if (it.data.user.mobile.length < 4) {
+                        userMobile.gone()
+                    }
+
                     Utils.displayCircularProfileImage(this@ProfileActivity, it.data?.user?.image,
-                            R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, avatar)
+                        R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, avatar)
 
                     it.data?.is_subscribed?.let {
                         if (it == 0) {
@@ -182,13 +210,8 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                             btnSubscribe.text = "View Subscriptions"
                         }
                     }
-
-
                 }
-
             }
-
-
         })
     }
 
@@ -218,9 +241,9 @@ class ProfileActivity : BaseScreenTrackingActivity() {
     }
 
     private fun openLanguagePreferenceDialog() {
-        val languageId= StringBuilder()
+        val languageId = StringBuilder()
 
-      val  boolLanguageArray = BooleanArray(userProfileViewModel.languageList.size)
+        val boolLanguageArray = BooleanArray(userProfileViewModel.languageList.size)
         val array: Array<String> = Array(userProfileViewModel.languageList.size) {
             userProfileViewModel.languageList[it].language
         }
@@ -233,20 +256,25 @@ class ProfileActivity : BaseScreenTrackingActivity() {
         }
 
         MaterialAlertDialogBuilder(this@ProfileActivity, R.style.AlertDialogTheme)
-                .apply {
-                    setTitle("Select Language")
-                    setMultiChoiceItems(
-                            array,
-                            boolLanguageArray,
-                            object : DialogInterface.OnMultiChoiceClickListener {
+            .apply {
+                setTitle("Select Language")
+                setMultiChoiceItems(
+                    array,
+                    boolLanguageArray,
+                    object : DialogInterface.OnMultiChoiceClickListener {
 
-                                override fun onClick(dialog: DialogInterface?, which: Int, isChecked: Boolean) {
-                                    boolLanguageArray[which] = isChecked;
-                                }
+                        override fun onClick(
+                            dialog: DialogInterface?,
+                            which: Int,
+                            isChecked: Boolean,
+                        ) {
+                            boolLanguageArray[which] = isChecked;
+                        }
 
-                            })
-                    setCancelable(false)
-                    setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which -> // Do something when click positive button
+                    })
+                setCancelable(false)
+                setPositiveButton("OK",
+                    DialogInterface.OnClickListener { dialog, which -> // Do something when click positive button
                         languageId.clear()
                         boolLanguageArray.forEachIndexed { index, isSelected ->
                             if (isSelected) {
@@ -269,19 +297,19 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                             }
                             progressBar.gone()
                             toast(updateLanguagePreferenceResponse.message)
-                            if (updateLanguagePreferenceResponse.status.isSuccess()){
+                            if (updateLanguagePreferenceResponse.status.isSuccess()) {
                                 userProfileViewModel.refreshUserProfile()
                             }
                         }
 
                     })
-                    setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
+                setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which ->
 
-                    })
-                    create()
-                    show()
+                })
+                create()
+                show()
 
-                }
+            }
     }
 
 }

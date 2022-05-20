@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
-import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
@@ -24,11 +24,14 @@ import com.perseverance.phando.ui.WaitingDialog
 import com.perseverance.phando.utils.*
 import com.perseverance.phando.videoplayer.VideosModel
 import kotlinx.android.synthetic.main.activity_base_list.*
+import kotlinx.android.synthetic.main.activity_dashboard_list.*
 import kotlinx.android.synthetic.main.fragment_base.*
+import kotlinx.android.synthetic.main.layout_header_new.*
 
-class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.OnRefreshListener, AdapterClickListener {
+class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.OnRefreshListener,
+    AdapterClickListener {
 
-    override var screenName=BaseConstants.VIDEO_CATEGORY_SCREEN
+    override var screenName = BaseConstants.VIDEO_CATEGORY_SCREEN
 
     private var waitingDialog: WaitingDialog? = null
     private lateinit var id: String
@@ -42,23 +45,36 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
 
     private val videoListViewModelObserver = Observer<VideosModel> { videoModel ->
         if (videoModel!!.throwable == null) {
-            onGetVideosSuccess(videoModel.videos, BaseConstants.Video.CATEGORY, videoModel.pageCount, videoModel.category)
+            onGetVideosSuccess(videoModel.videos,
+                BaseConstants.Video.CATEGORY,
+                videoModel.pageCount,
+                videoModel.category)
         } else {
-            onGetVideosError(Utils.getErrorMessage(videoModel.throwable), BaseConstants.Video.CATEGORY, videoModel.pageCount, videoModel.category)
+            onGetVideosError(Utils.getErrorMessage(videoModel.throwable),
+                BaseConstants.Video.CATEGORY,
+                videoModel.pageCount,
+                videoModel.category)
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_list)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
-        id = intent.getStringExtra("id")?:""
-        title = intent.getStringExtra("title")?:""
-        type = intent.getStringExtra("type")?:""
+//        setSupportActionBar(toolbar)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayShowHomeEnabled(true)
+
+        id = intent.getStringExtra("id") ?: ""
+        title = intent.getStringExtra("title") ?: ""
+        type = intent.getStringExtra("type") ?: ""
         imageOrientation = intent.getIntExtra("imageOrientation", 0)
-        setTitle(title)
+//        setTitle(title)
+
+        txtTitle.text = title
+
+        imgBack.setOnClickListener {
+            finish()
+        }
         homeViewModel = ViewModelProviders.of(this).get(MediaListViewModel::class.java)
 
         homeViewModel.videoListMutableLiveData.observe(this, videoListViewModelObserver)
@@ -109,7 +125,12 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         dismissProgress()
     }
 
-    fun onGetVideosSuccess(tempVideos: List<Video>, type: BaseConstants.Video, pCount: Int, category: Category?) {
+    fun onGetVideosSuccess(
+        tempVideos: List<Video>,
+        type: BaseConstants.Video,
+        pCount: Int,
+        category: Category?,
+    ) {
         dismissProgress()
         footer_progress_base.visibility = View.GONE
         lbl_no_video_base.visibility = View.GONE
@@ -120,7 +141,8 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         }
 
         if (pCount == 0 && tempVideos.size == 0) {
-            lbl_no_video_base.text = String.format(BaseConstants.RETRY_LABEL, BaseConstants.VIDEOS_NOT_FOUND_ERROR)
+            lbl_no_video_base.text =
+                String.format(BaseConstants.RETRY_LABEL, BaseConstants.VIDEOS_NOT_FOUND_ERROR)
             lbl_no_video_base.visibility = View.VISIBLE
             rv_season_episodes.visibility = View.GONE
             return
@@ -139,7 +161,12 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
     }
 
 
-    private fun onGetVideosError(errorMessage: String, type: BaseConstants.Video, pCount: Int, category: Category?) {
+    private fun onGetVideosError(
+        errorMessage: String,
+        type: BaseConstants.Video,
+        pCount: Int,
+        category: Category?,
+    ) {
         dismissProgress()
         footer_progress_base.visibility = View.GONE
         swipetorefresh_base.isRefreshing = false
@@ -201,14 +228,21 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
                     intent.putExtra(Key.CATEGORY, video)
                     startActivity(intent)
                 } else {
-                    startActivity(MediaDetailActivity.getDetailIntent(this@BaseVideoListActivity as Context, video))
+                    startActivity(MediaDetailActivity.getDetailIntent(this@BaseVideoListActivity as Context,
+                        video))
                     Utils.animateActivity(this@BaseVideoListActivity, "next")
                 }
             } else {
-                DialogUtils.showMessage(this@BaseVideoListActivity, "BASE VIDEO CAST", Toast.LENGTH_SHORT, false)
+                DialogUtils.showMessage(this@BaseVideoListActivity,
+                    "BASE VIDEO CAST",
+                    Toast.LENGTH_SHORT,
+                    false)
             }
         } else {
-            DialogUtils.showMessage(this@BaseVideoListActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+            DialogUtils.showMessage(this@BaseVideoListActivity,
+                BaseConstants.CONNECTION_ERROR,
+                Toast.LENGTH_SHORT,
+                false)
         }
     }
 }

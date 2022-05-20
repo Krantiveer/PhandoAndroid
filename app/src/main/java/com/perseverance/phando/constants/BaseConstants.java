@@ -43,10 +43,12 @@ public class BaseConstants {
     public static final String USER_LIST_SCREEN = "UserList";
     public static final String USER_LIST_PURCHASED_SCREEN = "UserPurchasedList";
     public static final String SETTINGS_SCREEN = "Settings";
+    public static final String CATEGORY_SCREEN = "Category";
     public static final String MEDIA_DETAILS_SCREEN = "MediaDetails";
     public static final String NOTIFICATION_LIST_SCREEN = "NotificationList";
 
     public static final String PROFILE_SCREEN = "Profile";
+    public static final String Dashboard_SCREEN = "DashboardList";
     public static final String LOGIN_SCREEN = "LoginScreen";
     public static final String SIGNUP_SCREEN = "SignupScreen";
     public static final String LOGIN_WITH_EMAIL_SCREEN = "LoginWithEmail";

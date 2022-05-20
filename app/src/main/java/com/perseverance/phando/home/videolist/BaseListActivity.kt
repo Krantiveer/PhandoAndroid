@@ -18,12 +18,11 @@ abstract class BaseListActivity : BaseScreenTrackingActivity(), AdapterClickList
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base_list)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+//        setSupportActionBar(toolbar)
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayShowHomeEnabled(true)
         val decoration = BaseRecycleMarginDecoration(this@BaseListActivity)
         rv_season_episodes.addItemDecoration(decoration)
-
 
     }
 

@@ -24,7 +24,7 @@ class NotificationListViewHolder(itemView: View, listener: AdapterClickListener)
 
     override fun onBind(video: NotificationData) {
         itemView.tag = video
-        if (video.is_free == 0) { // if paid video then show premium icon
+        if (video.free == 0) { // if paid video then show premium icon
             itemView.free.visible()
         } else {
             itemView.free.gone()

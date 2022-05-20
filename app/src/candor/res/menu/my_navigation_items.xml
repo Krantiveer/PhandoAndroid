@@ -4,6 +4,12 @@
         android:id="@+id/navigation_browse"
         android:icon="@drawable/ic_home_new"
         android:title="Browse" />
+
+    <item
+        android:id="@+id/navigation_category"
+        android:icon="@drawable/ic_category_white"
+        android:title="@string/category" />
+
     <item
         android:id="@+id/navigation_my_list"
         android:icon="@drawable/ic_list"
@@ -13,7 +19,6 @@
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_fn_global_search"
         android:title="Search" />
-
 
     <item
         android:id="@+id/navigation_settings"

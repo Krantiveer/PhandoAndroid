@@ -15,7 +15,7 @@ data class NotificationData(
         @PrimaryKey
         var dbID: Long = -1,
         var id: Int? = null,
-        var isRead: Int? = 0,
+        var read: Int? = 0,
         var title: String? = "",
         var type: String? = "",
         var thumbnail: String? = "",
@@ -23,7 +23,7 @@ data class NotificationData(
         var detail: String? = "",
         var duration: Int? = 0,
         var poster: String? = "",
-        var is_free: Int? = 0,
+        var free: Int? = 0,
         var maturity_rating: String? = "",
         var poster_vertical: String? = "",
         var rating: Int? = 0

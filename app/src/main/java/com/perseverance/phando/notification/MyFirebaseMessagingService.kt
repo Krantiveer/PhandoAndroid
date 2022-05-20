@@ -89,7 +89,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationModel.type = type
             notificationModel.description = detail
             notificationModel.rating = rating?.toInt()
-            notificationModel.is_free = isFree!!.toInt()
+            notificationModel.free = isFree!!.toInt()
 
             AppDatabase.getInstance(this)?.notificationDao()?.insert(notificationModel)
 

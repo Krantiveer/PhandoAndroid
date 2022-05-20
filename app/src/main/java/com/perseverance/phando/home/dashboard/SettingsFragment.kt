@@ -13,10 +13,12 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.lifecycle.ViewModelProvider
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.Constants
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
+import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
 import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.app_toolbar.*
@@ -27,6 +29,10 @@ class SettingsFragment : BaseFragment() {
 
     override var screenName = BaseConstants.SETTINGS_SCREEN
     private var bitmap: Bitmap? = null
+    private val homeActivityViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(DashboardViewModel::class.java)
+    }
+
     val menuOnClickListener = View.OnClickListener {
         when (it.id) {
             help.id -> openWebview(Constants.URL_HELP)
@@ -35,9 +41,7 @@ class SettingsFragment : BaseFragment() {
             aboutus.id -> openWebview(Constants.URL_ABOUT_US)
             btnRate.id -> rateApplication()
             btnShare.id -> shareApplication()
-
         }
-
     }
 
     private fun initClick() {
@@ -64,8 +68,10 @@ class SettingsFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarTitle.text = "Settings"
+        homeActivityViewModel.title.value="Settings"
+
         initClick()
-        Util.hideKeyBoard(activity!!)
+        Util.hideKeyBoard(requireActivity())
     }
 
 

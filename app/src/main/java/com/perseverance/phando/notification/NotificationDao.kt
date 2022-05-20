@@ -17,13 +17,13 @@ interface NotificationDao {
     @Query("SELECT * FROM NotificationData ORDER BY dbID DESC")
     fun getNotifications(): LiveData<List<NotificationData>>
 
-    @Query("SELECT COUNT(*) FROM NotificationData WHERE isRead =0")
+    @Query("SELECT COUNT(*) FROM NotificationData WHERE read =0")
     fun getUnreadNotifications(): Int
 
-    @Query("UPDATE NotificationData SET isRead = 1 WHERE  dbID = :id")
+    @Query("UPDATE NotificationData SET read = 1 WHERE  dbID = :id")
     fun markNotificationRead(id: Long)
 
-    @Query("UPDATE NotificationData SET isRead = 1")
+    @Query("UPDATE NotificationData SET read = 1")
     fun markAllNotificationRead()
 
     @Query("SELECT COUNT(*) FROM NotificationData")

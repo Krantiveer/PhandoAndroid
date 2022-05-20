@@ -7,8 +7,9 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.net.UrlQuerySanitizer
 import android.os.Bundle
-import android.os.Handler
+import android.view.Gravity
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
@@ -19,24 +20,37 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
+import com.google.gson.Gson
 import com.newgendroid.news.utils.AppDialogListener
+import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseScreenTrackingActivity
+import com.perseverance.phando.Constants
+import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
+import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.db.Video
+import com.perseverance.phando.home.dashboard.mylist.UserListActivity
+import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
+import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
+import com.perseverance.phando.home.profile.ProfileActivity
+import com.perseverance.phando.home.profile.UserProfileData
+import com.perseverance.phando.home.profile.UserProfileViewModel
+import com.perseverance.phando.home.profile.login.LoginActivity
+import com.perseverance.phando.notification.NotificationDao
 import com.perseverance.phando.search.SearchActivity
 import com.perseverance.phando.search.SearchResultActivity
 import com.perseverance.phando.splash.AppInfo
 import com.perseverance.phando.splash.AppInfoModel
-import com.perseverance.phando.utils.DialogUtils
-import com.perseverance.phando.utils.MyLog
-import com.perseverance.phando.utils.Utils
+import com.perseverance.phando.utils.*
+import kotlinx.android.synthetic.main.activity_home.*
 
 class HomeActivity : BaseScreenTrackingActivity(),
-        BottomNavigationView.OnNavigationItemSelectedListener {
+    BottomNavigationView.OnNavigationItemSelectedListener {
 
     override var screenName = BaseConstants.HOME_SCREEN
 
@@ -48,6 +62,10 @@ class HomeActivity : BaseScreenTrackingActivity(),
         ViewModelProvider(this@HomeActivity).get(DashboardViewModel::class.java)
     }
 
+    private val userProfileViewModel by lazy {
+        ViewModelProvider(this).get(UserProfileViewModel::class.java)
+    }
+
 
     private val appInfoModelObserver = Observer<AppInfoModel> { appInfoModel ->
         if (appInfoModel!!.throwable == null) {
@@ -56,21 +74,67 @@ class HomeActivity : BaseScreenTrackingActivity(),
     }
 
     var navController: NavController? = null
+    private var notificationDao: NotificationDao? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-
-        //  mCustomTabActivityHelper = CustomTabActivityHelper()
+        notificationDao = AppDatabase.getInstance(this).notificationDao()
 
         val navView: BottomNavigationView = findViewById(R.id.bottomNavigation)
         navController = findNavController(R.id.nav_host_fragment)
         navView.setupWithNavController(navController!!)
-//         navView.setOnNavigationItemSelectedListener {item ->
-//
-//            onNavDestinationSelected(item, Navigation.findNavController(this, R.id.nav_host_fragment))
+
+        homeActivityViewModel.title.observe(this, Observer {
+            txtTitle.text = it.toString()
+            if (it.isEmpty()) {
+                imgCenter.visible()
+            }else{
+                imgCenter.gone()
+            }
+        })
+
+        help?.setOnClickListener(menuOnClickListener)
+        tc?.setOnClickListener(menuOnClickListener)
+        privacyPolicy?.setOnClickListener(menuOnClickListener)
+        aboutus?.setOnClickListener(menuOnClickListener)
+
+        llProfile.setOnClickListener {
+            drawer_layout.closeDrawer(Gravity.LEFT);
+            openProfile()
+        }
+        imgHeaderImage.setOnClickListener {
+            drawer_layout.openDrawer(Gravity.LEFT);
+        }
+
+        txtCategory.setOnClickListener {
+            drawer_layout.closeDrawer(Gravity.LEFT);
+
+            homeActivityViewModel.categoryClick()
+        }
+
+        txtWishlist.setOnClickListener {
+            drawer_layout.closeDrawer(Gravity.LEFT);
+
+            startActivity(Intent(this@HomeActivity, UserListActivity::class.java))
+        }
+
+//        txtLanguages.setOnClickListener {
+//            homeActivityViewModel.languageClick()
 //
 //        }
-        // navView.setOnNavigationItemSelectedListener(this)
+
+        txtBilling.setOnClickListener {
+            drawer_layout.closeDrawer(Gravity.LEFT);
+
+            if (!Utils.isNetworkAvailable(this@HomeActivity)) {
+                DialogUtils.showNetworkErrorToast()
+                return@setOnClickListener
+            }
+            val token = PreferencesUtils.getLoggedStatus()
+            val url = FeatureConfigClass().baseUrl + "billinghistory?token=" + token
+            Util.openWebview(this@HomeActivity, url)
+        }
 
         homeActivityViewModel.getAppInfoMutableLiveData().observe(this, appInfoModelObserver)
         homeActivityViewModel.callForGenres()
@@ -90,7 +154,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
             })
         }
-      // checkForDynamicLink()
+        // checkForDynamicLink()
         //ad.loadAds(BannerType.SCREEN_HOME)
     }
 
@@ -115,6 +179,21 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
 //    }
 
+    private fun openWebview(url: String?) {
+        Util.openWebview(this, url)
+    }
+
+    val menuOnClickListener = View.OnClickListener {
+        drawer_layout.closeDrawer(Gravity.LEFT);
+        when (it.id) {
+            help.id -> openWebview(Constants.URL_HELP)
+            tc.id -> openWebview(Constants.URL_TC)
+            privacyPolicy.id -> openWebview(Constants.URL_PRIVACY_POLICY)
+            aboutus.id -> openWebview(Constants.URL_ABOUT_US)
+        }
+
+    }
+
     private fun showSearchScreen() {
         val intent = Intent(this, SearchActivity::class.java)
         startActivityForResult(intent, BaseConstants.REQUEST_CODE_SEARCH)
@@ -131,6 +210,18 @@ class HomeActivity : BaseScreenTrackingActivity(),
             startActivityForResult(intent, BaseConstants.REQUEST_CODE_SEARCH_RESULT)
         }
 
+    }
+
+    fun openProfile() {
+        val token = PreferencesUtils.getLoggedStatus()
+        if (token.isEmpty()) {
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+        } else {
+
+            val intent = Intent(this, ProfileActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun onGetAppInfoSuccess(appInfo: AppInfo) {
@@ -157,9 +248,11 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
             dialog.setPositiveButton("Yes, update") { dialog, which ->
                 try {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+                    startActivity(Intent(Intent.ACTION_VIEW,
+                        Uri.parse("market://details?id=$packageName")))
                 } catch (ex: ActivityNotFoundException) {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
+                    startActivity(Intent(Intent.ACTION_VIEW,
+                        Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
                 }
 
                 this@HomeActivity.finish()
@@ -190,32 +283,99 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
     fun checkForDynamicLink() {
         Firebase.dynamicLinks
-                .getDynamicLink(intent)
-                .addOnSuccessListener(this) {
-                    it?.let {
-                        it.link?.let {
-                            if (Utils.isNetworkAvailable(this@HomeActivity)) {
-                                val sanitizer = UrlQuerySanitizer()
-                                sanitizer.allowUnregisteredParamaters = true
-                                sanitizer.parseUrl(it.toString())
-                                val id = sanitizer.getValue("id")
-                                val type = sanitizer.getValue("type")
-                                val image = sanitizer.getValue("image")
-                                id?.let {
-                                    val video = Video()
-                                    video.id = it.toInt()
-                                    video.type = type
-                                    video.thumbnail = image
-                                    startActivity(MediaDetailActivity.getDetailIntent(this@HomeActivity, video))
-
-                                }
+            .getDynamicLink(intent)
+            .addOnSuccessListener(this) {
+                it?.let {
+                    it.link?.let {
+                        if (Utils.isNetworkAvailable(this@HomeActivity)) {
+                            val sanitizer = UrlQuerySanitizer()
+                            sanitizer.allowUnregisteredParamaters = true
+                            sanitizer.parseUrl(it.toString())
+                            val id = sanitizer.getValue("id")
+                            val type = sanitizer.getValue("type")
+                            val image = sanitizer.getValue("image")
+                            id?.let {
+                                val video = Video()
+                                video.id = it.toInt()
+                                video.type = type
+                                video.thumbnail = image
+                                startActivity(MediaDetailActivity.getDetailIntent(this@HomeActivity,
+                                    video))
 
                             }
-                        }
 
+                        }
                     }
+
                 }
+            }
 
 
     }
+
+    private val profileObserver = Observer<DataLoadingStatus<UserProfileData>> {
+
+        when (it?.status) {
+            LoadingStatus.ERROR -> {
+                it.message?.let {
+                    // Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
+                }
+            }
+            LoadingStatus.SUCCESS -> {
+                Utils.displayCircularProfileImage(this, it.data?.user?.image,
+                    R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
+
+                txtName.text = it.data?.user?.name
+                txtPhoneNumber.text = it.data?.user?.email
+//               if (it.data?.preferred_language?.isEmpty()!!){
+//                   openLanguagePreferenceDialog()
+//               }
+            }
+
+        }
+
+    }
+
+    private fun observeUserProfile() {
+        userProfileViewModel.getUserProfile().observe(this, profileObserver)
+        userProfileViewModel.refreshUserProfile()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        userProfileViewModel.refreshUserProfile()
+        userProfileViewModel.refreshWallet()
+        val strProfile = PreferencesUtils.getStringPreferences("profile")
+        val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
+        userProfileData?.let {
+            Utils.displayCircularProfileImage(this, it.user?.image,
+                R.drawable.ic_user_profile, R.drawable.ic_user_profile, imgHeaderProfile)
+        } ?: Utils.displayCircularProfileImage(this, "",
+            R.drawable.ic_user_profile, R.drawable.ic_user_profile, imgHeaderProfile)
+        observeUserProfile()
+
+        val allNotifications = notificationDao?.getAllNotifications()
+        val unreadNotifications = notificationDao?.getUnreadNotifications()
+        llNotification.visibility =
+            if (allNotifications == null || allNotifications == 0) View.GONE else View.VISIBLE
+        if (allNotifications != null && allNotifications > 0) {
+            try {
+                cart_badge?.let {
+                    if (unreadNotifications == 0) {
+                        if (it.visibility != View.GONE) {
+                            it.visibility = View.GONE;
+                        }
+                    } else {
+                        it.setText(unreadNotifications.toString())
+                        if (it.visibility != View.VISIBLE) {
+                            it.visibility = View.VISIBLE
+                        }
+                    }
+                }
+            } catch (e: Exception) {
+            }
+        }
+    }
+
+
 }

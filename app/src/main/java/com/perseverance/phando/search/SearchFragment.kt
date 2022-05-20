@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -25,6 +26,7 @@ import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.filter.GenresFilterAdapter
 import com.perseverance.phando.home.dashboard.filter.LanguageFilterAdapter
 import com.perseverance.phando.home.dashboard.models.DataFilters
+import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.home.videolist.BaseCategoryListAdapter
@@ -47,6 +49,11 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
     val dataFilters = DataFilters()
     var timer: CountDownTimer? = null
 
+    private val homeActivityViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(DashboardViewModel::class.java)
+    }
+
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         return inflater.inflate(R.layout.fragment_search_result, container, false)
@@ -58,7 +65,8 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
         recyclerView.layoutManager = manager
         val decoration = BaseRecycleMarginDecoration(appCompatActivity)
         recyclerView.addItemDecoration(decoration)
-        toolbarTitle.text = "Search"
+        homeActivityViewModel.title.value="Search"
+
         pageCount = 0
         endlessScrollListener = object : EndlessScrollListener(manager) {
             override fun onLoadMore(currentPage: Int) {

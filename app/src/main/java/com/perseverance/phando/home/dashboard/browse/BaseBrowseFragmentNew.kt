@@ -38,6 +38,7 @@ import com.perseverance.phando.home.dashboard.models.DataFilters
 import com.perseverance.phando.home.dashboard.models.FilterForAdopter
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
+import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
 import com.perseverance.phando.home.list.HomeFragmentParentListAdapter
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
@@ -68,6 +69,10 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
     private val userProfileViewModel by lazy {
         ViewModelProvider(this).get(UserProfileViewModel::class.java)
+    }
+
+    private val homeActivityViewModel by lazy {
+        ViewModelProvider(requireActivity()).get(DashboardViewModel::class.java)
     }
 
     private var notificationDao: NotificationDao? = null
@@ -205,7 +210,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         return inflater.inflate(R.layout.fragment_browse_new, container, false)
     }
 
@@ -215,6 +219,9 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         notificationDao = AppDatabase.getInstance(requireActivity()).notificationDao()
         nestedScrollView = view.findViewById(R.id.nestedScrollView)
         recyclerViewUpcomingVideos.layoutManager = LinearLayoutManager(activity)
+
+        homeActivityViewModel.title.value=""
+
         val filterRecyclerViewLayoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
 //        filterRecyclerView.layoutManager =  StaggeredGridLayoutManager(3,
@@ -236,9 +243,9 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             .observe(viewLifecycleOwner, browseDataViewModelObserver)
         browseFragmentViewModel.refreshData(dataFilters)
 
-        imgHeaderImage.setOnClickListener {
-            close()
-        }
+        homeActivityViewModel.onCategoryClick.observe(viewLifecycleOwner, Observer {
+            openCategoryDialog()
+        })
 
         requireActivity().onBackPressedDispatcher.addCallback {
             if (categoryTab != null) {
@@ -249,49 +256,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         }
 
         txtCategory.setOnClickListener {
-            if (categoryTabListList.isNotEmpty())
-                requireActivity().openListDialog(categoryTabListList) { data ->
-                    txtCategory.text = data.displayName
-                    if (data.isFilter) {
-                        if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
-                            sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
-                        } else {
-                            sheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
-                        }
-                    } else {
-                        categoryTab?.let {
-                            if (it.displayName == data.displayName) {
-                                return@let
-                            }
-                        }
-                        categoryTab = data
-                        categoryTabListList.map {
-                            if (it == data) {
-                                it.show = true
-                                it.showFilter = true
-                                if (it.filters.isNotEmpty()) {
-                                    it.filters.map {
-                                        it.isSelected = false
-                                    }
-                                    it.filters?.get(0)?.isSelected = true
-                                }
-                            } else {
-                                it.show = false
-                                it.showFilter = false
-                            }
-                        }
-                        browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
-                        dataFilters.apply {
-                            type = categoryTab!!.type
-                            genre_id = ""
-                            filter = ""
-                            filter_type = ""
-                        }
-                        browseFragmentViewModel.refreshData(dataFilters)
-//                    setFilterGravity(Gravity.LEFT)
-                    }
-
-                }
+            openCategoryDialog()
 
         }
 
@@ -311,7 +276,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                     BottomSheetBehavior.STATE_HIDDEN -> {
                     }
                     BottomSheetBehavior.STATE_EXPANDED -> {
-
 
                     }
                     BottomSheetBehavior.STATE_COLLAPSED -> {
@@ -348,6 +312,19 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             }
 
         }
+        imgHeaderImage.setOnClickListener {
+            close()
+        }
+
+
+//        imgHeaderImage.setOnClickListener {
+////            if (drawer.isDrawerOpen(Gravity.LEFT)) {
+////                drawer.closeDrawer(Gravity.LEFT)
+////            } else {
+//                drawer.openDrawer(Gravity.LEFT)
+////            }
+//        }
+
         Util.hideKeyBoard(requireActivity())
 
         notificationContainer.setOnClickListener {
@@ -355,6 +332,52 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         }
 
         PreferencesUtils.saveIntegerPreferences("NOTIFICATION_COUNT", 10)
+    }
+
+    private fun openCategoryDialog() {
+        if (categoryTabListList.isNotEmpty())
+            requireActivity().openListDialog(categoryTabListList) { data ->
+                txtCategory.text = data.displayName
+                if (data.isFilter) {
+                    if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
+                        sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
+                    } else {
+                        sheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
+                    }
+                } else {
+                    categoryTab?.let {
+                        if (it.displayName == data.displayName) {
+                            return@let
+                        }
+                    }
+                    categoryTab = data
+                    categoryTabListList.map {
+                        if (it == data) {
+                            it.show = true
+                            it.showFilter = true
+                            if (it.filters.isNotEmpty()) {
+                                it.filters.map {
+                                    it.isSelected = false
+                                }
+                                it.filters?.get(0)?.isSelected = true
+                            }
+                        } else {
+                            it.show = false
+                            it.showFilter = false
+                        }
+                    }
+                    browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
+                    dataFilters.apply {
+                        type = categoryTab!!.type
+                        genre_id = ""
+                        filter = ""
+                        filter_type = ""
+                    }
+                    browseFragmentViewModel.refreshData(dataFilters)
+                    //                    setFilterGravity(Gravity.LEFT)
+                }
+
+            }
     }
 
     private fun close() {

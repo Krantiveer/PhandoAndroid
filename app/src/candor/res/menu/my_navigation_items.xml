@@ -12,8 +12,8 @@
 
     <item
         android:id="@+id/navigation_my_list"
-        android:icon="@drawable/ic_list"
-        android:title="My List" />
+        android:icon="@drawable/ic_sports"
+        android:title="Sports" />
 
     <item
         android:id="@+id/navigation_search"

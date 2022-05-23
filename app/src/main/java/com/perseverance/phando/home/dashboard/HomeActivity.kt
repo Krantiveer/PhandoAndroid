@@ -89,7 +89,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
             txtTitle.text = it.toString()
             if (it.isEmpty()) {
                 imgCenter.visible()
-            }else{
+            } else {
                 imgCenter.gone()
             }
         })
@@ -317,6 +317,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
         when (it?.status) {
             LoadingStatus.ERROR -> {
+                txtBilling.gone()
                 it.message?.let {
                     // Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
                 }
@@ -327,6 +328,8 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
                 txtName.text = it.data?.user?.name
                 txtPhoneNumber.text = it.data?.user?.email
+                txtBilling.visible()
+
 //               if (it.data?.preferred_language?.isEmpty()!!){
 //                   openLanguagePreferenceDialog()
 //               }

@@ -20,6 +20,7 @@ import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.AppDatabase
+import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.home.dashboard.mylist.UserListActivity
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
@@ -110,6 +111,10 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                 PreferencesUtils.deleteAllPreferences()
                 downloadMetadataDao?.deleteAll()
                 VideoSdkUtil.deleteAllDownloadedVideo(this@ProfileActivity.application)
+
+                val intent = Intent(this@ProfileActivity, HomeActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
                 finish()
             }
             alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, resources.getString(R.string.no)

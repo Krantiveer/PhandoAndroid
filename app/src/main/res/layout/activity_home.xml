@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
+    tools:openDrawer="left"
     android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -102,7 +103,7 @@
                 android:orientation="horizontal"
                 android:padding="@dimen/_5sdp">
 
-                <ImageView
+                <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgHeaderProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -175,7 +176,7 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 android:gravity="left"
                 android:padding="@dimen/_11sdp"
-                android:text="Wishlist"
+                android:text=" My Wishlist"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12sdp" />
 
@@ -239,6 +240,19 @@
                     android:textSize="10sp" />
 
             </LinearLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtSettings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:drawableStart="@drawable/ic_settings_color"
+                android:drawablePadding="@dimen/_5sdp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:gravity="left"
+                android:padding="@dimen/_11sdp"
+                android:text="Settings"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12sdp" />
 
             <View
                 android:layout_width="match_parent"

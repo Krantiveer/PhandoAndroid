@@ -22,9 +22,11 @@ import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
-import com.perseverance.phando.utils.*
 import com.perseverance.phando.home.profile.login.LoginActivity
-import kotlinx.android.synthetic.main.app_toolbar.*
+import com.perseverance.phando.utils.BaseRecycleMarginDecoration
+import com.perseverance.phando.utils.DialogUtils
+import com.perseverance.phando.utils.PreferencesUtils
+import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.fragment_mylist.*
 
 class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, AdapterClickListener {
@@ -66,15 +68,15 @@ class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, Ada
                     message.text = "Add videos to your list to save \nand watch them later"
                     message.visible()
                 }
-
-
             }
         }
     }
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         return inflater.inflate(R.layout.fragment_mylist, container, false)
     }
 
@@ -96,19 +98,24 @@ class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, Ada
         recyclerView.adapter = adapter
 
         swipetorefresh_base.setOnRefreshListener(this)
-        val token = PreferencesUtils.getLoggedStatus()
-        if (token.isEmpty()) {
-            message.setOnClickListener {
-                if (token.isEmpty()) {
-                    val intent = Intent(context, LoginActivity::class.java)
-                    startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
-                }
-            }
+        token = PreferencesUtils.getLoggedStatus()
 
-        } else {
+        message.setOnClickListener {
+            if (token.isEmpty()) {
+                val intent = Intent(context, LoginActivity::class.java)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+            }
+        }
+        if (token.isNotEmpty()) {
             loadVideos(0, true)
         }
+    }
 
+    var token: String = ""
+
+    override fun onResume() {
+        super.onResume()
+        token = PreferencesUtils.getLoggedStatus()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -136,7 +143,10 @@ class MyListFragment : BaseFragment(), SwipeRefreshLayout.OnRefreshListener, Ada
                     startActivity(MediaDetailActivity.getDetailIntent(activity as Context, data))
                     Utils.animateActivity(activity, "next")
                 } else {
-                    DialogUtils.showMessage(activity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+                    DialogUtils.showMessage(activity,
+                        BaseConstants.CONNECTION_ERROR,
+                        Toast.LENGTH_SHORT,
+                        false)
                 }
             }
             is String -> {

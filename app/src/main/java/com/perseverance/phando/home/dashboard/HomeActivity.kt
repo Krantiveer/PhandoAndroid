@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
@@ -318,6 +319,9 @@ class HomeActivity : BaseScreenTrackingActivity(),
         when (it?.status) {
             LoadingStatus.ERROR -> {
                 txtBilling.gone()
+                txtName.text = "Log in"
+                txtPhoneNumber.text = "For better experience"
+                imgHeaderProfile.setImageDrawable(resources.getDrawable(R.drawable.ic_user_profile_home))
                 it.message?.let {
                     // Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
                 }
@@ -326,8 +330,19 @@ class HomeActivity : BaseScreenTrackingActivity(),
                 Utils.displayCircularProfileImage(this, it.data?.user?.image,
                     R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
 
-                txtName.text = it.data?.user?.name
-                txtPhoneNumber.text = it.data?.user?.email
+                Glide.with(this)
+                    .load( it.data?.user?.image)
+                    .into(imgHeaderProfile);
+                it.data?.user?.name.let { name ->
+                    txtName.text = name
+                } ?: {
+                    txtName.text = ""
+                }
+                it.data?.user?.email.let { email ->
+                    txtPhoneNumber.text = email
+                } ?: {
+                    txtPhoneNumber.text = ""
+                }
                 txtBilling.visible()
 
 //               if (it.data?.preferred_language?.isEmpty()!!){

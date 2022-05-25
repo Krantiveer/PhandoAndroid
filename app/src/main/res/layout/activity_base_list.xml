@@ -16,8 +16,9 @@
     <include
         layout="@layout/fragment_base"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/header" />
 
     <!--    <androidx.coordinatorlayout.widget.CoordinatorLayout-->

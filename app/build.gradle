@@ -42,10 +42,10 @@ android {
             storePassword 'mitwatv'
         }
         configCandor {
-            keyAlias 'mitwatv'
-            keyPassword 'mitwatv'
-            storeFile file('C:\\Phando\\keystore\\mitwa\\mitwatv.jks')
-            storePassword 'mitwatv'
+            keyAlias 'candor'
+            keyPassword 'candor'
+            storeFile file('C:\\Phando\\keystore\\candor\\candor.jks')
+            storePassword 'candor'
         }
     }
 
@@ -82,7 +82,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable true
+            debuggable false
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
             buildConfigField("String","TOPIC","\"com.perseverance.candor\"")
             buildConfigField("String","DOMAIN_URI","\"https://candor.page.link\"")

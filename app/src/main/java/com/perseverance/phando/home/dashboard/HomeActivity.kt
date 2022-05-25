@@ -122,7 +122,6 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
 //        txtLanguages.setOnClickListener {
 //            homeActivityViewModel.languageClick()
-//
 //        }
 
         txtBilling.setOnClickListener {

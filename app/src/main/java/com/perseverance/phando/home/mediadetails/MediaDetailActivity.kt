@@ -765,6 +765,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 //        else tv_temp_ip_addr.gone()
         isPlayerstartSent = false
         detailContent.visible()
+
+        if (mediaPlayBackData.data.is_live == 0) {
+            imgHeaderImage.visible()
+            imgHeaderBottom.gone()
+        } else {
+            imgHeaderImage.gone()
+            imgHeaderBottom.visible()
+        }
+
         this.mediaPlaybackData = mediaPlayBackData
         this.mediaMetadata = mediaPlayBackData.data
         videoTitle.text = mediaMetadata?.title

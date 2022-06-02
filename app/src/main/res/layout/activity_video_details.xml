@@ -9,10 +9,10 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/relativeLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
 
         <FrameLayout
             android:id="@+id/fragmentContainer"
@@ -62,22 +62,22 @@
                     android:id="@+id/skipIntro"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
                     android:text="Skip Intro"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:backgroundTint="@color/white" />
 
                 <Button
                     android:id="@+id/nextEpisode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/white"
-                    android:drawableLeft="@drawable/ic_play"
                     android:text="Next Episode"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:backgroundTint="@color/white"
+                    android:drawableLeft="@drawable/ic_play" />
 
             </LinearLayout>
 
@@ -85,11 +85,25 @@
                 android:id="@+id/imgHeaderImage"
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"
+                android:visibility="gone"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_gravity="right|top"
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_marginRight="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginRight="@dimen/_15sdp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/app_logo" />
+
+            <ImageView
+                android:id="@+id/imgHeaderBottom"
+                android:layout_width="@dimen/_35sdp"
+                android:visibility="gone"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right|bottom"
+                android:layout_marginBottom="@dimen/_25sdp"
+                android:layout_marginRight="@dimen/_10sdp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/app_logo" />
         </FrameLayout>
@@ -99,8 +113,8 @@
             layout="@layout/content_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/ad"
-            android:layout_below="@id/fragmentContainer" />
+            android:layout_below="@id/fragmentContainer"
+            android:layout_above="@id/ad" />
 
         <com.perseverance.phando.AdsUtil.BannerAdLayout
             android:id="@+id/ad"
@@ -108,6 +122,21 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:gravity="center" />
+
+        <LinearLayout
+            android:id="@+id/progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:gravity="center">
+
+            <ProgressBar
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="visible" />
+        </LinearLayout>
 
 
     </RelativeLayout>
@@ -119,21 +148,5 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_collapseMode="pin"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:title=""/>
-
-    <LinearLayout
-        android:id="@+id/progressBar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:gravity="center"
-        app:layout_anchor="@+id/relativeLayout2"
-        app:layout_anchorGravity="center">
-
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:visibility="visible" />
-    </LinearLayout>
+        app:title=""></androidx.appcompat.widget.Toolbar>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

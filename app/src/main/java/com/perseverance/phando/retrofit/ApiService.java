@@ -48,7 +48,7 @@ import retrofit2.http.Query;
 public interface ApiService {
 
     @GET("userappversion")
-    Call<AppInfo> getAppInfo(@Query("app_type") String appType);
+    Call<AppInfo> getAppInfo(@Query("app_type") String appType,@Query("device_id") String device_id);
 
     @GET("package")
     Call<Package> getPackageDetails();

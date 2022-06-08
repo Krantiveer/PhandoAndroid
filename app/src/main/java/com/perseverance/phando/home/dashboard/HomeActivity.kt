@@ -140,7 +140,6 @@ class HomeActivity : BaseScreenTrackingActivity(),
         homeActivityViewModel.callForGenres()
         homeActivityViewModel.callForFilters()
         homeActivityViewModel.callLanguage()
-        homeActivityViewModel.callForAppInfo()
         val msg = intent.getStringExtra("msg")
         msg?.let {
             DialogUtils.showDialog(this, "Error!", it, "Close", null, object : AppDialogListener {
@@ -362,6 +361,8 @@ class HomeActivity : BaseScreenTrackingActivity(),
         super.onResume()
         userProfileViewModel.refreshUserProfile()
         userProfileViewModel.refreshWallet()
+        homeActivityViewModel.callForAppInfo()
+
         val strProfile = PreferencesUtils.getStringPreferences("profile")
         val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
         userProfileData?.let {

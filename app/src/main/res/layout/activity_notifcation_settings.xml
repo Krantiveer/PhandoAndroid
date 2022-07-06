@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/bg_app"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/layout_header_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="visible"
+        tools:itemCount="50"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_notification_setting_list" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSave"
+        style="@style/LoginButtonStyle"
+        android:layout_margin="@dimen/_15sdp"
+        android:backgroundTint="@color/red_light_new"
+        android:text="Save"
+        android:textColor="@color/white_main"
+        android:textSize="@dimen/_16sdp" />
+
+
+</LinearLayout>
+
+

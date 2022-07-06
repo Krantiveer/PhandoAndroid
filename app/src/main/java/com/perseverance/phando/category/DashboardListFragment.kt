@@ -28,9 +28,11 @@ class DashboardListFragment : BaseFragment(), DashboardListAdapter.AdapterClick 
 
     private var mArrayList: ArrayList<BrowseData> = ArrayList<BrowseData>()
 
+
     private val browseFragmentViewModel by lazy {
         ViewModelProvider(this).get(BrowseFragmentViewModel::class.java)
     }
+
     private val homeActivityViewModel by lazy {
         ViewModelProvider(requireActivity()).get(DashboardViewModel::class.java)
     }
@@ -53,7 +55,6 @@ class DashboardListFragment : BaseFragment(), DashboardListAdapter.AdapterClick 
             }
             LoadingStatus.ERROR -> {
                 progressBar.gone()
-
             }
             LoadingStatus.SUCCESS -> {
                 progressBar.gone()
@@ -74,10 +75,11 @@ class DashboardListFragment : BaseFragment(), DashboardListAdapter.AdapterClick 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeActivityViewModel.title.value = "Sports"
+        homeActivityViewModel.title.value =
+            DashboardListFragmentArgs.fromBundle(requireArguments()).typeName
 
         dataFilters.apply {
-            type = "6"
+            type = DashboardListFragmentArgs.fromBundle(requireArguments()).type
             genre_id = ""
             filter = ""
             filter_type = ""

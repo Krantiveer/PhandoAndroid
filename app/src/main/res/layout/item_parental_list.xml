@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/llMain"
+    android:layout_marginTop="@dimen/_5sdp"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:layout_marginHorizontal="@dimen/_10sdp"
+    android:elevation="@dimen/_2sdp"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/_5sdp">
+
+
+    <LinearLayout
+        android:id="@+id/llChild"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/btn_enable"
+        android:foreground="?attr/selectableItemBackground"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/txtTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/asap_bold"
+            android:gravity="start|center_vertical"
+            android:padding="@dimen/_14sdp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_12sdp" />
+
+        <ImageView
+            android:id="@+id/swValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5sdp"
+            android:layout_marginHorizontal="@dimen/_4sdp"
+            android:src="@drawable/ic_uncheck"/>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

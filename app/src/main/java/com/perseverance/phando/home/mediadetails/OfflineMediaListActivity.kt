@@ -29,7 +29,7 @@ import com.perseverance.phando.utils.Utils
 import com.videoplayer.VideoPlayerMetadata
 import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_offline_media.*
-import kotlinx.android.synthetic.main.activity_offline_media.toolbar
+import kotlinx.android.synthetic.main.layout_header_new.*
 
 class OfflineMediaListActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     override var screenName="OfflineMediaList"
@@ -45,10 +45,16 @@ class OfflineMediaListActivity : BaseScreenTrackingActivity(), AdapterClickListe
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_offline_media)
-        setSupportActionBar(toolbar)
-        title = "Downloads"
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+//        setSupportActionBar(toolbar)
+//        title = "Downloads"
+//        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar!!.setDisplayShowHomeEnabled(true)
+
+        txtTitle.text = "Downloads"
+
+        imgBack.setOnClickListener {
+            finish()
+        }
         val manager = LinearLayoutManager(this@OfflineMediaListActivity)
         recyclerView.layoutManager = manager
         recyclerView.setHasFixedSize(true)
@@ -59,7 +65,6 @@ class OfflineMediaListActivity : BaseScreenTrackingActivity(), AdapterClickListe
         downloadMetadataDao?.getAllDownloadLiveData()?.observe(this, Observer {
             if (it.isNotEmpty()) {
                 adapter?.items = it
-
             } else {
                 toast("Download is empty")
                 finish()

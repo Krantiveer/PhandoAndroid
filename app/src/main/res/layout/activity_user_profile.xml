@@ -175,18 +175,27 @@
                 android:textSize="@dimen/_12sdp"
                 android:visibility="gone" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/btnDownloads"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cvDownload"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:foreground="?attr/selectableItemBackground"
-                android:gravity="left|center_vertical"
-                android:padding="@dimen/_11sdp"
-                android:text="Downloads"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_12sdp"
-                android:visibility="gone" />
+                android:layout_margin="@dimen/_10sdp"
+                android:elevation="0dp"
+                android:visibility="gone"
+                app:cardCornerRadius="@dimen/_5sdp">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/btnDownloads"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="left|center_vertical"
+                    android:padding="@dimen/_11sdp"
+                    android:text="Downloads"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="visible" />
+            </androidx.cardview.widget.CardView>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/btnChangeLanguage"

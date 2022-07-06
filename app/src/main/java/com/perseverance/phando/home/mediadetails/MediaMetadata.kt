@@ -25,6 +25,7 @@ data class MediaMetadata(
         val poster: String,
         val poster_vertical: String,
         val rating: Int,
+        val can_download: Boolean,
         val released: String,
         val maturity_rating: String,
         val media_reference_type: String,
@@ -53,6 +54,5 @@ data class MediaMetadata(
 ) {
     fun getDirectors(): String? {
        return if (directors.isNotEmpty()) "Directed By: "+directors.joinToString() else null
-
     }
 }

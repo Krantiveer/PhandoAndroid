@@ -31,5 +31,6 @@
     <string name="amount_label">Amount:</string>
     <string name="status_label">Status:</string>
     <string name="category">Category</string>
+    <string name="set_a_parental_lock_to_block_your_child_from_n_accessing_certain_content">Set a parental lock to block your child from\n accessing certain content</string>
 
 </resources>

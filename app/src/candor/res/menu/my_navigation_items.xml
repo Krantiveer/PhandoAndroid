@@ -9,6 +9,10 @@
         android:id="@+id/navigation_category"
         android:icon="@drawable/ic_category_white"
         android:title="@string/category" />
+    <item
+        android:id="@+id/navigation_sports"
+        android:icon="@drawable/ic_news"
+        android:title="News" />
 
     <item
         android:id="@+id/navigation_my_list"
@@ -20,8 +24,10 @@
         android:icon="@drawable/ic_fn_global_search"
         android:title="Search" />
 
-    <item
-        android:id="@+id/navigation_settings"
-        android:icon="@drawable/ic_settings_cog"
-        android:title="Settings" />
+    <!--
+        <item
+            android:id="@+id/navigation_settings"
+            android:icon="@drawable/ic_settings_cog"
+            android:title="Settings" />
+    -->
 </menu>

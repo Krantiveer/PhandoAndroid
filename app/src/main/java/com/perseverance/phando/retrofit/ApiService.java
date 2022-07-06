@@ -2,6 +2,9 @@ package com.perseverance.phando.retrofit;
 
 
 import com.perseverance.phando.data.BaseResponse;
+import com.perseverance.phando.data.NotificationsSettingsModel;
+import com.perseverance.phando.data.ParentSettingPost;
+import com.perseverance.phando.data.ParentalControlData;
 import com.perseverance.phando.db.Category;
 import com.perseverance.phando.db.Filter;
 import com.perseverance.phando.db.Language;
@@ -60,6 +63,27 @@ public interface ApiService {
     @POST("razorpay/order/status")
     @FormUrlEncoded
     Call<BaseResponse> updateOrderStatus(@FieldMap Map<String, String> bodyMap);
+
+    @GET("notificationsettings")
+    Call<NotificationsSettingsModel> notificationsettings();
+
+    @GET("parental-control")
+    Call<ParentalControlData> parentalControlSettings();
+
+    @POST("notificationsettings")
+    @FormUrlEncoded
+    Call<BaseResponse> setNotificationsSettings(@FieldMap Map<String, Boolean> bodyMap);
+
+    @POST("updateUserPin")
+    @FormUrlEncoded
+    Call<BaseResponse> updateUserPin(@FieldMap Map<String, String> bodyMap);
+
+    @POST("validateUserPin")
+    @FormUrlEncoded
+    Call<BaseResponse> validateUserPin(@FieldMap Map<String, String> bodyMap);
+
+    @POST("parentalSetting")
+    Call<BaseResponse> parentalSetting(@Body ParentSettingPost bodyMap);
 
     @GET("paymenttoken")
     Call<PaymentToken> getPaymentToken();

@@ -1,0 +1,11 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:drawable="@drawable/btn_enable"
+        android:state_enabled="false" />
+
+    <item android:drawable="@drawable/btn_disable"
+        android:state_enabled="true" />
+
+    <!-- default state-->
+    <item android:drawable="@drawable/btn_enable" />
+</selector>

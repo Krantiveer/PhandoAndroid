@@ -14,11 +14,16 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.lifecycle.ViewModelProvider
+import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.Constants
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
+import com.perseverance.phando.settings.NotificationsSettingsActivity
+import com.perseverance.phando.settings.ParentalControlActivity
+import com.perseverance.phando.utils.PreferencesUtils
 import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.app_toolbar.*
@@ -41,6 +46,15 @@ class SettingsFragment : BaseFragment() {
             aboutus.id -> openWebview(Constants.URL_ABOUT_US)
             btnRate.id -> rateApplication()
             btnShare.id -> shareApplication()
+            cvNotificationSettings.id -> {
+                startActivity(Intent(activity,
+                    NotificationsSettingsActivity::class.java))
+            }
+            cvParentalControl.id -> {
+                startActivity(Intent(activity,
+                    ParentalControlActivity::class.java))
+            }
+
         }
     }
 
@@ -51,24 +65,39 @@ class SettingsFragment : BaseFragment() {
         aboutus?.setOnClickListener(menuOnClickListener)
         btnRate?.setOnClickListener(menuOnClickListener)
         btnShare?.setOnClickListener(menuOnClickListener)
+        cvNotificationSettings?.setOnClickListener(menuOnClickListener)
+        cvParentalControl?.setOnClickListener(menuOnClickListener)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val token = PreferencesUtils.getLoggedStatus()
+        if (token.isEmpty()) {
+            cvNotificationSettings.gone()
+            cvParentalControl.gone()
+        } else {
+            cvNotificationSettings.visible()
+            cvParentalControl.visible()
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bitmap = getBitmapFromVectorDrawable(requireActivity(), R.drawable.ic_arrow_back_black_24dp)
 
-
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         return inflater.inflate(R.layout.fragment_setting, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         toolbarTitle.text = "Settings"
-        homeActivityViewModel.title.value="Settings"
+        homeActivityViewModel.title.value = "Settings"
 
         initClick()
         Util.hideKeyBoard(requireActivity())
@@ -77,11 +106,14 @@ class SettingsFragment : BaseFragment() {
 
     private fun rateApplication() {
         try {
-            val rateIntent = Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${activity?.packageName}"))
+            val rateIntent = Intent(Intent.ACTION_VIEW,
+                Uri.parse("market://details?id=${activity?.packageName}"))
             startActivity(rateIntent)
         } catch (e: Exception) {
             e.printStackTrace()
-            Utils.showErrorToast(activity, "Play Store app is not installed in your device.", Toast.LENGTH_SHORT)
+            Utils.showErrorToast(activity,
+                "Play Store app is not installed in your device.",
+                Toast.LENGTH_SHORT)
         }
 
     }
@@ -96,7 +128,9 @@ class SettingsFragment : BaseFragment() {
             startActivity(Intent.createChooser(sharingIntent, "Share using..."))
         } catch (e: Exception) {
             e.printStackTrace()
-            Utils.showErrorToast(activity, "Sharing app is not installed in your device.", Toast.LENGTH_SHORT)
+            Utils.showErrorToast(activity,
+                "Sharing app is not installed in your device.",
+                Toast.LENGTH_SHORT)
         }
 
     }
@@ -128,7 +162,7 @@ class SettingsFragment : BaseFragment() {
         }
 
         val bitmap = Bitmap.createBitmap(drawable!!.intrinsicWidth,
-                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)

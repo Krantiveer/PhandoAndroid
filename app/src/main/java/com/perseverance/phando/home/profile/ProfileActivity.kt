@@ -123,8 +123,14 @@ class ProfileActivity : BaseScreenTrackingActivity() {
             alertDialog.show()
         }
 
-        btnDownloads.setOnClickListener {
-            val allData = downloadMetadataDao?.getAllDownloadData()
+        val allData = downloadMetadataDao.getAllDownloadData()
+        if (allData == null || allData.isEmpty()) {
+            cvDownload.gone()
+        } else {
+            cvDownload.gone()
+        }
+
+        cvDownload.setOnClickListener {
             if (allData == null || allData.isEmpty()) {
                 toast("Download is empty")
                 return@setOnClickListener

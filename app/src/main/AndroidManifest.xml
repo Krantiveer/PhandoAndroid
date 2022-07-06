@@ -92,6 +92,23 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait" />
+
+        <activity
+            android:name=".settings.NotificationsSettingsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".settings.ParentalControlActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="sensorPortrait" />
+
         <activity
             android:name=".search.SearchResultActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -141,6 +158,16 @@
             android:name=".home.dashboard.mylist.UserListActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:label="@string/app_name"
+            android:name=".payment.ccavenue.activity.WebViewCcavenueActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:label="@string/app_name"
+            android:name=".payment.ccavenue.activity.StatusActivity"
+            android:screenOrientation="portrait" >
+        </activity>
         <service
             android:name=".AdsUtil.AdNetworkService"
             android:exported="false" />

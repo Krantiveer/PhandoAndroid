@@ -13,6 +13,7 @@
         android:visibility="gone" />
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvNotificationSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5sdp"
@@ -36,6 +37,7 @@
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cvParentalControl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/_5sdp"

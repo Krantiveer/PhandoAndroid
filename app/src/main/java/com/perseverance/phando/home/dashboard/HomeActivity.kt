@@ -14,9 +14,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
@@ -24,20 +26,29 @@ import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import com.newgendroid.news.utils.AppDialogListener
 import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.openLanguageDialog
+import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.Constants
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
+import com.perseverance.phando.adapter.ListDialogAdapter
+import com.perseverance.phando.category.CategorySideNavAdapter
+import com.perseverance.phando.category.DashboardListActivity
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.db.Video
+import com.perseverance.phando.home.dashboard.browse.BrowseFragmentViewModel
+import com.perseverance.phando.home.dashboard.models.CategoryTab
+import com.perseverance.phando.home.dashboard.models.DataFilters
 import com.perseverance.phando.home.dashboard.mylist.UserListActivity
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
 import com.perseverance.phando.home.mediadetails.MediaDetailActivity
+import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
 import com.perseverance.phando.home.profile.ProfileActivity
 import com.perseverance.phando.home.profile.UserProfileData
 import com.perseverance.phando.home.profile.UserProfileViewModel
@@ -45,19 +56,30 @@ import com.perseverance.phando.home.profile.login.LoginActivity
 import com.perseverance.phando.notification.NotificationDao
 import com.perseverance.phando.search.SearchActivity
 import com.perseverance.phando.search.SearchResultActivity
+import com.perseverance.phando.settings.ParentalControlActivity
+import com.perseverance.phando.settings.SettingsActivity
 import com.perseverance.phando.splash.AppInfo
 import com.perseverance.phando.splash.AppInfoModel
 import com.perseverance.phando.utils.*
 import kotlinx.android.synthetic.main.activity_home.*
+import kotlinx.android.synthetic.main.activity_home.progressBar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeActivity : BaseScreenTrackingActivity(),
-    BottomNavigationView.OnNavigationItemSelectedListener {
+    BottomNavigationView.OnNavigationItemSelectedListener, CategorySideNavAdapter.AdapterClick {
 
     override var screenName = BaseConstants.HOME_SCREEN
 
     // private var mCustomTabActivityHelper: CustomTabActivityHelper? = null
     private var selectedTab = 0
     private var doubleBackToExitPressedOnce = false
+
+
+    private val browseFragmentViewModel by lazy {
+        ViewModelProvider(this).get(BrowseFragmentViewModel::class.java)
+    }
 
     private val homeActivityViewModel by lazy {
         ViewModelProvider(this@HomeActivity).get(DashboardViewModel::class.java)
@@ -74,9 +96,23 @@ class HomeActivity : BaseScreenTrackingActivity(),
         }
     }
 
+    val downloadMetadataDao by lazy {
+        AppDatabase.getInstance(this@HomeActivity)?.downloadMetadataDao()
+    }
+
     var navController: NavController? = null
     private var notificationDao: NotificationDao? = null
 
+    var mCatListAdapter: CategorySideNavAdapter? = null
+
+    private fun setCatListAdapter() {
+        mCatListAdapter = CategorySideNavAdapter(this, categoryTabListList, this)
+        rvList.layoutManager =
+            LinearLayoutManager(this)
+        rvList.adapter = mCatListAdapter
+    }
+
+    var isCatVisible = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -85,6 +121,10 @@ class HomeActivity : BaseScreenTrackingActivity(),
         val navView: BottomNavigationView = findViewById(R.id.bottomNavigation)
         navController = findNavController(R.id.nav_host_fragment)
         navView.setupWithNavController(navController!!)
+
+
+        browseFragmentViewModel.getCategoryTabList()
+            .observe(this, categoryTabDataViewModelObserver)
 
         homeActivityViewModel.title.observe(this, Observer {
             txtTitle.text = it.toString()
@@ -108,21 +148,72 @@ class HomeActivity : BaseScreenTrackingActivity(),
             drawer_layout.openDrawer(Gravity.LEFT);
         }
 
-        txtCategory.setOnClickListener {
-            drawer_layout.closeDrawer(Gravity.LEFT);
+        val allData = downloadMetadataDao.getAllDownloadData()
 
-            homeActivityViewModel.categoryClick()
+        if (allData == null || allData.isEmpty()) {
+            txtDownload.gone()
+        } else {
+            txtDownload.visible()
+        }
+
+        txtDownload.setOnClickListener {
+            if (allData == null || allData.isEmpty()) {
+                toast("Download is empty")
+                return@setOnClickListener
+            }
+            drawer_layout.closeDrawer(Gravity.LEFT);
+            val intent = Intent(this@HomeActivity, OfflineMediaListActivity::class.java)
+            startActivity(intent)
+        }
+
+        txtSettings.setOnClickListener {
+            drawer_layout.closeDrawer(Gravity.LEFT);
+            startActivity(Intent(this,
+                SettingsActivity::class.java))
+        }
+
+        llCategory.setOnClickListener {
+            if (!isCatVisible) {
+                imgCatArrow.setImageDrawable(resources.getDrawable(R.drawable.ic_red_arrow_up))
+                isCatVisible = true
+                rvList.visible()
+            } else {
+                imgCatArrow.setImageDrawable(resources.getDrawable(R.drawable.ic_red_arrow_down))
+                isCatVisible = false
+                rvList.gone()
+            }
+
+//            drawer_layout.closeDrawer(Gravity.LEFT);
+//            homeActivityViewModel.categoryClick()
         }
 
         txtWishlist.setOnClickListener {
             drawer_layout.closeDrawer(Gravity.LEFT);
-
             startActivity(Intent(this@HomeActivity, UserListActivity::class.java))
         }
 
-//        txtLanguages.setOnClickListener {
-//            homeActivityViewModel.languageClick()
-//        }
+
+        homeActivityViewModel.mLanguagesList.observe(this, Observer { mlist ->
+            val mLanguageList = mlist
+            progressBar.gone()
+            openLanguageDialog(mLanguageList) {
+                val map = HashMap<String, String>()
+                map["languages_ids"] = it.toString()
+                lifecycleScope.launch {
+                    val updateLanguagePreferenceResponse = withContext(Dispatchers.IO) {
+                        userProfileViewModel.updateLanguagePreference(map)
+                    }
+                    toast(updateLanguagePreferenceResponse.message)
+                    homeActivityViewModel.languageClick()
+                }
+            }
+        })
+
+        txtLanguage.setOnClickListener {
+            drawer_layout.closeDrawer(Gravity.LEFT);
+            progressBar.visible()
+            homeActivityViewModel.clickLanguage()
+        }
 
         txtBilling.setOnClickListener {
             drawer_layout.closeDrawer(Gravity.LEFT);
@@ -223,6 +314,34 @@ class HomeActivity : BaseScreenTrackingActivity(),
         }
     }
 
+    private var categoryTabListList: ArrayList<CategoryTab> = ArrayList<CategoryTab>()
+
+    private val categoryTabDataViewModelObserver = Observer<DataLoadingStatus<List<CategoryTab>>> {
+
+        when (it?.status) {
+            LoadingStatus.SUCCESS -> {
+                it.data?.let { browseDataList ->
+                    if (browseDataList.isNotEmpty()) {
+                        categoryTabListList = browseDataList as ArrayList<CategoryTab>
+                        categoryTabListList.map {
+                            it.show = true
+                            it.showFilter = false
+                        }
+                        setCatListAdapter()
+
+                    } else {
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+
     private fun onGetAppInfoSuccess(appInfo: AppInfo) {
         val storeVersion = appInfo.currentVersion
         val forceUpdate = appInfo.isForceUpdate
@@ -317,6 +436,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
         when (it?.status) {
             LoadingStatus.ERROR -> {
                 txtBilling.gone()
+                txtLanguage.gone()
                 txtName.text = "Log in"
                 txtPhoneNumber.text = "For better experience"
                 imgHeaderProfile.setImageDrawable(resources.getDrawable(R.drawable.ic_user_profile_home))
@@ -329,7 +449,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
                     R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
 
                 Glide.with(this)
-                    .load( it.data?.user?.image)
+                    .load(it.data?.user?.image)
                     .into(imgHeaderProfile);
                 it.data?.user?.name.let { name ->
                     txtName.text = name
@@ -342,10 +462,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
                     txtPhoneNumber.text = ""
                 }
                 txtBilling.visible()
-
-//               if (it.data?.preferred_language?.isEmpty()!!){
-//                   openLanguagePreferenceDialog()
-//               }
+                txtLanguage.visible()
             }
 
         }
@@ -362,6 +479,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
         userProfileViewModel.refreshUserProfile()
         userProfileViewModel.refreshWallet()
         homeActivityViewModel.callForAppInfo()
+        homeActivityViewModel.callLanguage()
 
         val strProfile = PreferencesUtils.getStringPreferences("profile")
         val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
@@ -395,5 +513,23 @@ class HomeActivity : BaseScreenTrackingActivity(),
         }
     }
 
+    private val dataFilters = DataFilters()
+
+
+    override fun onItemClick(data: CategoryTab) {
+        drawer_layout.closeDrawer(Gravity.LEFT)
+//        homeActivityViewModel.categoryClick(data)
+
+        dataFilters.apply {
+            type = data.type
+            genre_id = ""
+            filter = ""
+            filter_type = ""
+        }
+        val intent = Intent(this@HomeActivity, DashboardListActivity::class.java)
+        intent.putExtra("FILTER", Gson().toJson(dataFilters))
+        intent.putExtra("TITLE", data.displayName)
+        startActivity(intent)
+    }
 
 }

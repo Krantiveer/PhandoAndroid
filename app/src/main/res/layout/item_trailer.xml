@@ -4,7 +4,7 @@
     android:id="@+id/containerTrailer"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginRight="@dimen/_10sdp"
+    android:layout_marginHorizontal="@dimen/_10sdp"
     android:foreground="?attr/selectableItemBackground"
     android:padding="@dimen/_1sdp"
     android:gravity="center"

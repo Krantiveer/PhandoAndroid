@@ -8,6 +8,9 @@ import com.perseverance.phando.Constants
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.data.BaseResponse
+import com.perseverance.phando.data.NotificationsSettingsModel
+import com.perseverance.phando.data.ParentSettingPost
+import com.perseverance.phando.data.ParentalControlData
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.profile.login.SocialLoggedInUser
@@ -110,6 +113,188 @@ class UserProfileRepository(private val application: Application) {
         })
         return data
     }
+
+
+    fun notificationSettings(): MutableLiveData<DataLoadingStatus<NotificationsSettingsModel>> {
+
+        val data: MutableLiveData<DataLoadingStatus<NotificationsSettingsModel>> = MutableLiveData<DataLoadingStatus<NotificationsSettingsModel>>()
+        data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
+
+        val call = apiService.notificationsettings()
+        call.enqueue(object : Callback<NotificationsSettingsModel> {
+
+            override fun onResponse(call: Call<NotificationsSettingsModel>?, response: Response<NotificationsSettingsModel>) {
+
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
+
+            }
+
+            override fun onFailure(call: Call<NotificationsSettingsModel>?, t: Throwable?) {
+                if (t is ApiClient.NoConnectivityException) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                } else {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to fecth data"))
+                }
+            }
+        })
+        return data
+    }
+
+    fun parentalControlSettings(): MutableLiveData<DataLoadingStatus<ParentalControlData>> {
+
+        val data: MutableLiveData<DataLoadingStatus<ParentalControlData>> = MutableLiveData<DataLoadingStatus<ParentalControlData>>()
+        data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
+
+        val call = apiService.parentalControlSettings()
+        call.enqueue(object : Callback<ParentalControlData> {
+
+            override fun onResponse(call: Call<ParentalControlData>?, response: Response<ParentalControlData>) {
+
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
+
+            }
+
+            override fun onFailure(call: Call<ParentalControlData>?, t: Throwable?) {
+                if (t is ApiClient.NoConnectivityException) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                } else {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to fecth data"))
+                }
+            }
+        })
+        return data
+    }
+
+    fun setNotificationsSettings(map: Map<String, Boolean>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
+
+        val data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+        data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
+
+        val call = apiService.setNotificationsSettings(map)
+        call.enqueue(object : Callback<BaseResponse> {
+
+            override fun onResponse(call: Call<BaseResponse>?, response: Response<BaseResponse>) {
+
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
+
+            }
+
+            override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
+                if (t is ApiClient.NoConnectivityException) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                } else {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to fecth data"))
+                }
+            }
+        })
+        return data
+    }
+
+    fun updateUserPin(map: Map<String, String>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
+
+        val data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+        data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
+
+        val call = apiService.updateUserPin(map)
+        call.enqueue(object : Callback<BaseResponse> {
+
+            override fun onResponse(call: Call<BaseResponse>?, response: Response<BaseResponse>) {
+
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
+
+            }
+
+            override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
+                if (t is ApiClient.NoConnectivityException) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                } else {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to fecth data"))
+                }
+            }
+        })
+        return data
+    }
+
+    fun validateUserPin(map: Map<String, String>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
+
+        val data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+        data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
+
+        val call = apiService.validateUserPin(map)
+        call.enqueue(object : Callback<BaseResponse> {
+
+            override fun onResponse(call: Call<BaseResponse>?, response: Response<BaseResponse>) {
+
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
+
+            }
+
+            override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
+                if (t is ApiClient.NoConnectivityException) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                } else {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to fecth data"))
+                }
+            }
+        })
+        return data
+    }
+
+    fun parentalSetting(map: ParentSettingPost): MutableLiveData<DataLoadingStatus<BaseResponse>> {
+
+        val data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+        data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
+
+        val call = apiService.parentalSetting(map)
+        call.enqueue(object : Callback<BaseResponse> {
+
+            override fun onResponse(call: Call<BaseResponse>?, response: Response<BaseResponse>) {
+
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
+
+            }
+
+            override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
+                if (t is ApiClient.NoConnectivityException) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                } else {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to fecth data"))
+                }
+            }
+        })
+        return data
+    }
+
 
 
     fun doRegister(map: Map<String, String>): MutableLiveData<DataLoadingStatus<LoginResponse>> {

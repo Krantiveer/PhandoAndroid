@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    tools:openDrawer="left"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:openDrawer="left">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -29,8 +29,8 @@
                 android:layout_height="?attr/actionBarSize"
                 android:layout_centerInParent="true"
                 android:scaleType="fitCenter"
-                android:visibility="gone"
-                android:src="@drawable/ic_top_logo" />
+                android:src="@drawable/ic_top_logo"
+                android:visibility="gone" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/txtTitle"
@@ -81,6 +81,20 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:menu="@menu/my_navigation_items" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="@dimen/_5sdp"
+            android:outlineAmbientShadowColor="@color/app_theme_color"
+            android:outlineSpotShadowColor="@color/app_theme_color"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
@@ -89,248 +103,315 @@
         android:layout_height="match_parent"
         android:layout_gravity="start">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
             <LinearLayout
-                android:id="@+id/llProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="@dimen/_5sdp">
-
-                <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/imgHeaderProfile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/circular_background_white"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:padding="@dimen/_5sdp"
-                    android:src="@drawable/ic_user_profile_home" />
+                android:orientation="vertical">
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:id="@+id/llProfile"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/_5sdp">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/txtName"
-                        android:layout_width="match_parent"
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/imgHeaderProfile"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_5sdp"
-                        android:text="Log in"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_14sdp" />
+                        android:background="@drawable/circular_background_white"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:padding="@dimen/_5sdp"
+                        android:src="@drawable/ic_user_profile_home" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/txtPhoneNumber"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="@dimen/_5sdp"
-                        android:text="For better experience"
-                        android:textColor="@color/base_grey_color"
-                        android:textSize="@dimen/_8sdp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/txtName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_5sdp"
+                            android:text="Log in"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_14sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/txtPhoneNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_5sdp"
+                            android:text="For better experience"
+                            android:textColor="@color/base_grey_color"
+                            android:textSize="@dimen/_8sdp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/app_theme_color"
+                        android:src="@drawable/ic_arrow_right_app" />
 
                 </LinearLayout>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/app_theme_color"
-                    android:src="@drawable/ic_arrow_right_app" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:alpha="0.5"
+                    android:background="@color/app_theme_color" />
 
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:alpha="0.5"
-                android:background="@color/app_theme_color" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtCategory"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_category"
-                android:drawablePadding="@dimen/_5sdp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="left"
-                android:padding="@dimen/_11sdp"
-                android:text="Category"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp"
-                android:visibility="gone" />
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtWishlist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_wishlist"
-                android:drawablePadding="@dimen/_5sdp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="left"
-                android:padding="@dimen/_11sdp"
-                android:text=" My Wishlist"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
-
-            <!--            <androidx.appcompat.widget.AppCompatTextView-->
-            <!--                android:id="@+id/txtLanguages"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:drawableStart="@drawable/ic_languages"-->
-            <!--                android:drawablePadding="@dimen/_5sdp"-->
-            <!--                android:foreground="?android:attr/selectableItemBackground"-->
-            <!--                android:gravity="left"-->
-            <!--                android:padding="@dimen/_11sdp"-->
-            <!--                android:text="Languages"-->
-            <!--                android:textColor="@color/black"-->
-            <!--                android:textSize="@dimen/_12sdp" />-->
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtBilling"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_bill"
-                android:drawablePadding="@dimen/_5sdp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="left"
-                android:padding="@dimen/_11sdp"
-                android:text="Billing"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
-
-            <LinearLayout
-                android:id="@+id/llNotification"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
 
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txtNotification"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/txtWishlist"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_notifications_black_24dp"
+                    android:drawableStart="@drawable/ic_wishlist"
                     android:drawablePadding="@dimen/_5sdp"
                     android:foreground="?android:attr/selectableItemBackground"
                     android:gravity="left"
                     android:padding="@dimen/_11sdp"
-                    android:text="Notification"
+                    android:text=" My Wishlist"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/cart_badge"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="right|end|top"
-                    android:layout_marginHorizontal="@dimen/_10sdp"
-                    android:background="@drawable/badge_background"
-                    android:gravity="center"
-                    android:padding="3dp"
-                    android:text="0"
-                    android:textColor="@android:color/white"
-                    android:textSize="10sp" />
+                <!--            <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                android:id="@+id/txtLanguages"-->
+                <!--                android:layout_width="match_parent"-->
+                <!--                android:layout_height="wrap_content"-->
+                <!--                android:drawableStart="@drawable/ic_languages"-->
+                <!--                android:drawablePadding="@dimen/_5sdp"-->
+                <!--                android:foreground="?android:attr/selectableItemBackground"-->
+                <!--                android:gravity="left"-->
+                <!--                android:padding="@dimen/_11sdp"-->
+                <!--                android:text="Languages"-->
+                <!--                android:textColor="@color/black"-->
+                <!--                android:textSize="@dimen/_12sdp" />-->
 
-            </LinearLayout>
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/txtSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:drawableStart="@drawable/ic_settings_color"
-                android:drawablePadding="@dimen/_5sdp"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:gravity="left"
-                android:padding="@dimen/_11sdp"
-                android:text="Settings"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_12sdp" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtBilling"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_bill"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="left"
+                    android:padding="@dimen/_11sdp"
+                    android:text="Billing"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_1sdp"
-                android:layout_margin="@dimen/_5sdp"
-                android:alpha="0.5"
-                android:background="@color/app_theme_color" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtLanguage"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_languages"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="left"
+                    android:padding="@dimen/_11sdp"
+                    android:text="Language Preferences"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_5sdp"
-                android:background="#F2F2F4"
-                android:backgroundTint="#F2F2F4"
-                android:elevation="0dp"
-                android:gravity="center_vertical"
-                android:orientation="vertical"
-                app:cardCornerRadius="@dimen/_5sdp">
-
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtDownload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:drawableStart="@drawable/ic_baseline_download_for_offline"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="left"
+                    android:padding="@dimen/_11sdp"
+                    android:text="Download"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/help"
+                    <LinearLayout
+                        android:id="@+id/llCategory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
                         android:foreground="?android:attr/selectableItemBackground"
-                        android:gravity="left"
-                        android:padding="@dimen/_11sdp"
-                        android:text="Help"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="@dimen/_12sdp" />
 
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/tc"
+                        android:orientation="horizontal">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/txtCategory"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:drawableStart="@drawable/ic_category"
+                            android:drawablePadding="@dimen/_5sdp"
+                            android:gravity="left"
+                            android:padding="@dimen/_11sdp"
+                            android:text="Category"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            android:visibility="visible" />
+                        <ImageView
+                            android:id="@+id/imgCatArrow"
+                            android:layout_width="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_15sdp"
+
+                            android:layout_gravity="center_vertical"
+                            android:src="@drawable/ic_red_arrow_down"
+                            android:layout_height="wrap_content"/>
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvList"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
+                        android:layout_marginStart="@dimen/_25sdp"
+                        android:visibility="gone"
+                        tools:itemCount="5"
+                        tools:listitem="@layout/item_cat_list" />
 
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:gravity="left"
-                        android:padding="@dimen/_11sdp"
-                        android:text="Terms of Service"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="@dimen/_12sdp" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/privacyPolicy"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:gravity="left"
-                        android:padding="@dimen/_11sdp"
-                        android:text="Privacy Policy"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="@dimen/_12sdp" />
-
-                    <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/aboutus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:foreground="?android:attr/selectableItemBackground"
-                        android:gravity="left"
-                        android:padding="@dimen/_11sdp"
-                        android:text="About Us"
-                        android:textColor="@color/app_theme_color"
-                        android:textSize="@dimen/_12sdp" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/llNotification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/txtNotification"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:drawableStart="@drawable/ic_notifications_black_24dp"
+                        android:drawablePadding="@dimen/_5sdp"
+                        android:foreground="?android:attr/selectableItemBackground"
+                        android:gravity="left"
+                        android:padding="@dimen/_11sdp"
+                        android:text="Notification"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/cart_badge"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="right|end|top"
+                        android:layout_marginHorizontal="@dimen/_10sdp"
+                        android:background="@drawable/badge_background"
+                        android:gravity="center"
+                        android:padding="3dp"
+                        android:text="0"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/txtSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_settings_color"
+                    android:drawablePadding="@dimen/_5sdp"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:gravity="left"
+                    android:padding="@dimen/_11sdp"
+                    android:text="Settings"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_12sdp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:alpha="0.5"
+                    android:background="@color/app_theme_color" />
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_5sdp"
+                    android:background="#F2F2F4"
+                    android:backgroundTint="#F2F2F4"
+                    android:elevation="0dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical"
+                    app:cardCornerRadius="@dimen/_5sdp">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/help"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:gravity="left"
+                            android:padding="@dimen/_11sdp"
+                            android:text="Help"
+                            android:textColor="@color/app_theme_color"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/tc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:gravity="left"
+                            android:padding="@dimen/_11sdp"
+                            android:text="Terms of Service"
+                            android:textColor="@color/app_theme_color"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/privacyPolicy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:gravity="left"
+                            android:padding="@dimen/_11sdp"
+                            android:text="Privacy Policy"
+                            android:textColor="@color/app_theme_color"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/aboutus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:foreground="?android:attr/selectableItemBackground"
+                            android:gravity="left"
+                            android:padding="@dimen/_11sdp"
+                            android:text="About Us"
+                            android:textColor="@color/app_theme_color"
+                            android:textSize="@dimen/_12sdp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+        </androidx.core.widget.NestedScrollView>
 
 
     </com.google.android.material.navigation.NavigationView>

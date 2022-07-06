@@ -42,6 +42,7 @@ class PaymentActivity : BaseScreenTrackingActivity(), PaymentResultListener {
         setupActionBarWithNavController(this@PaymentActivity, navController)
         paymentActivityViewModel.purchaseOption = intent.getParcelableExtra(BaseConstants.PURCHASE_OPTION)
         paymentActivityViewModel.refreshWallet()
+
         paymentActivityViewModel.createOrderResponseLiveData.observe(this, Observer { orderResponse ->
             orderResponse?.let { createOrderResponse ->
                 val activity: Activity = this@PaymentActivity

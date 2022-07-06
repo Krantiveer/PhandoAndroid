@@ -24,10 +24,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.perseverance.phando.R
+import com.perseverance.phando.db.Language
 import com.perseverance.phando.dialogs.ListDialog
-import com.perseverance.phando.home.dashboard.models.BrowseData
 import com.perseverance.phando.home.dashboard.models.CategoryTab
 import com.perseverance.phando.resize.ThumbnailResizer
+import com.perseverance.phando.ui.LanguagesDialog
+import com.perseverance.phando.ui.ParentalControlPinDialog
 import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.Utils
 import java.util.*
@@ -226,7 +228,7 @@ fun String.isLoading(): Boolean = this == "loading"
 
 fun Context.openListDialog(
     mUserList: ArrayList<CategoryTab>,
-    returns: (CategoryTab) -> Unit
+    returns: (CategoryTab) -> Unit,
 ) {
     ListDialog(
         this,
@@ -242,13 +244,52 @@ fun Context.openListDialog(
 }
 
 
+fun Context.openLanguageDialog(
+    mUserList: ArrayList<Language>,
+    returns: (StringBuilder) -> Unit,
+) {
+    if (!LanguagesDialog.isOpen) {
+        LanguagesDialog(
+            this,
+            R.style.pullBottomfromTop,
+            R.layout.dialog_language,
+            mUserList,
+            object : LanguagesDialog.ItemClick {
+                override fun onItemClick(data: StringBuilder) {
+                    returns(data)
+                }
+            }
+        ).showDialog()
+    }
+}
+
+fun Context.openParentalPinDialog(
+    isPinSet: Int,
+    isUpdate: Boolean=false,
+    returns: (String, String,String) -> Unit,
+) {
+    ParentalControlPinDialog(
+        this,
+        isPinSet,
+        isUpdate,
+        R.style.pullBottomfromTop,
+        R.layout.dialog_parental_pin,
+        object : ParentalControlPinDialog.ItemClick {
+            override fun onItemClick(pin: String, confirm: String,current: String) {
+                returns(pin, confirm,current)
+            }
+        }
+    ).showDialog()
+}
+
+
 fun Context.showDialog(
     title: String,
     message: String,
     positiveButtonText: String,
     onPositiveClick: (() -> Unit)? = null,
     neutralButtonText: String = "",
-    onNeutralClick: (() -> Unit)? = null
+    onNeutralClick: (() -> Unit)? = null,
 ) {
     val alertD = MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme).apply {
         setIcon(R.mipmap.ic_launcher)
@@ -273,8 +314,6 @@ fun Context.showDialog(
             }
         }
     }
-
-
 
 
 //    val alert = AlertDialog.Builder(this).apply {

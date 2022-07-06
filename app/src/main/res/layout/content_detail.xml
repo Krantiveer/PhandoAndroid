@@ -187,7 +187,6 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:gravity="center"
-
                 android:orientation="vertical"
                 android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/favorite"
@@ -206,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Download"
-                    android:textColor="@drawable/white_text_selector"
+                    android:textColor="@color/white_main"
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>
 

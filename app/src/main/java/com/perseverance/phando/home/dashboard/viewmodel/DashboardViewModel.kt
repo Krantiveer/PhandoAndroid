@@ -10,6 +10,7 @@ import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.db.Category
 import com.perseverance.phando.db.Filter
 import com.perseverance.phando.db.Language
+import com.perseverance.phando.home.dashboard.models.CategoryTab
 import com.perseverance.phando.retrofit.ApiClient
 import com.perseverance.phando.retrofit.ApiService
 import com.perseverance.phando.retrofit.NullResponseError
@@ -25,15 +26,15 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 
     private var appInfoMutableLiveData: MutableLiveData<AppInfoModel>? = null
 
-    var onCategoryClick = MutableLiveData<Boolean>()
+    var onCategoryClick = MutableLiveData<CategoryTab>()
     var onLanguageClick = MutableLiveData<Boolean>()
     var title = MutableLiveData<String>()
 
     private var apiService: ApiService = ApiClient.getLoginClient().create(ApiService::class.java)
 
 
-    fun categoryClick() {
-        onCategoryClick.value = true
+    fun categoryClick(value: CategoryTab) {
+        onCategoryClick.value = value
     }
 
 
@@ -137,8 +138,38 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
         })
     }
 
-    fun callLanguage() {
+    var mLanguagesList = MutableLiveData<ArrayList<Language>>()
 
+    fun clickLanguage() {
+        val call: Call<ArrayList<Language>> = apiService.language
+        call.enqueue(object : Callback<ArrayList<Language>> {
+            override fun onResponse(
+                call: Call<ArrayList<Language>>?,
+                response: Response<ArrayList<Language>>?,
+            ) {
+                if (response == null || response.body() == null) {
+                    onFailure(call, NullResponseError())
+                } else {
+
+                    val data = response.body()
+                    if (data?.isNotEmpty() == true) {
+                        val languageDao = AppDatabase.getInstance(getApplication())?.languageDao()
+                        languageDao?.deleteAll()
+                        languageDao?.insertAll(data)
+
+                        mLanguagesList.value = data
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<Language>>?, t: Throwable?) {
+                MyLog.e("", "Language not found")
+            }
+        })
+    }
+
+    fun callLanguage() {
         val call: Call<ArrayList<Language>> = apiService.language
         call.enqueue(object : Callback<ArrayList<Language>> {
             override fun onResponse(
@@ -155,7 +186,6 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
                         languageDao?.deleteAll()
                         languageDao?.insertAll(data)
                     }
-
                 }
             }
 

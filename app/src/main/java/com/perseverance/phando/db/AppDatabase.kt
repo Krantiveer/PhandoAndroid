@@ -22,7 +22,7 @@ import com.perseverance.phando.payment.paymentoptions.WalletDetail
         AdModel::class,
         WalletDetail::class,
         NotificationData::class
-), version = 11)
+), version = 13)
 @TypeConverters(RoomDataTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao

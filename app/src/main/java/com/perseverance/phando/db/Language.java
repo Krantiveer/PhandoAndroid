@@ -21,10 +21,19 @@ public class Language implements Serializable {
     @SerializedName("id")
     private String id = "";
 
-
     @SerializedName("language")
     private String language;
 
+    @SerializedName("isSelected")
+    private boolean isSelected = false;
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
+    }
 
     public String getId() {
         return id;
@@ -48,11 +57,12 @@ public class Language implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         Language language1 = (Language) o;
         return id.equals(language1.id) &&
-                language.equals(language1.language);
+                language.equals(language1.language) &&
+                isSelected == language1.isSelected;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, language);
+        return Objects.hash(id, language, isSelected);
     }
 }

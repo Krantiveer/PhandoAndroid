@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_5sdp"
             android:gravity="right|center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="@dimen/_32sdp"
@@ -53,7 +54,9 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+
+                android:visibility="gone">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/walletCart"
@@ -138,7 +141,8 @@
             android:gravity="center"
             android:orientation="horizontal"
             android:padding="@dimen/_10sdp"
-            app:cardBackgroundColor="@color/white"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/white_main"
             app:cardCornerRadius="@dimen/_5sdp"
             app:contentPadding="@dimen/_10sdp">
 
@@ -153,14 +157,14 @@
                     android:scaleType="fitStart"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:srcCompat="@drawable/logo_wallet" />
+                    app:srcCompat="@drawable/app_logo" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/walletHint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Activate Phunflix Wallet to pay for your favourite movies and series."
                     android:padding="@dimen/_5sdp"
+                    android:text="Activate Wallet to pay for your favourite movies and series."
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -176,9 +180,9 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_14sdp"
 
+                    app:layout_constraintBottom_toBottomOf="@id/walletImg"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/walletImg"
-                    app:layout_constraintBottom_toBottomOf="@id/walletImg"/>
+                    app:layout_constraintTop_toTopOf="@id/walletImg" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -197,47 +201,101 @@
             android:background="@color/white"
             android:clickable="true"
             android:gravity="center"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="@color/white_main"
             app:cardCornerRadius="@dimen/_5sdp"
             app:contentPadding="@dimen/_10sdp">
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/rezorpayImg"
-                android:layout_width="@dimen/_200sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_gravity="left"
-                android:scaleType="fitStart"
-                app:srcCompat="@drawable/logo_razorpay"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/rezorpayImg"
+                    android:layout_width="@dimen/_200sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_gravity="left"
+                    android:scaleType="fitStart"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/logo_razorpay" />
+
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/rezorpayHint"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-
+                    android:padding="@dimen/_5sdp"
                     android:text="Pay from Net Banking/UPI/Credit/Debit Cards"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_10sdp"
-                    android:padding="@dimen/_5sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/rezorpayImg" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/rezorpayPay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right|center"
-                android:layout_weight="1"
-                android:text="Pay"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_14sdp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/rezorpayImg"
-                app:layout_constraintBottom_toBottomOf="@id/rezorpayImg"/>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/rezorpayPay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center"
+                    android:layout_weight="1"
+                    android:text="Pay"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/rezorpayImg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/rezorpayImg" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/ccAvenue"
+            style="@style/LoginCardStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="0dp"
+            android:visibility="gone"
+            android:background="@color/white"
+            android:clickable="true"
+            android:gravity="center"
+            app:cardBackgroundColor="@color/white_main"
+            app:cardCornerRadius="@dimen/_5sdp"
+            app:contentPadding="@dimen/_10sdp">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/ccAvenueImg"
+                    android:layout_width="@dimen/_200sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_gravity="left"
+                    android:scaleType="fitStart"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/cc_avenue" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/_5sdp"
+                    android:text="Pay from Net Banking/UPI/Credit/Debit Cards"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ccAvenueImg" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center"
+                    android:layout_weight="1"
+                    android:text="Pay"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sdp"
+                    app:layout_constraintBottom_toBottomOf="@id/ccAvenueImg"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/ccAvenueImg" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 

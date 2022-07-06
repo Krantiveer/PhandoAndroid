@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Window
+import com.perseverance.phando.ui.LanguagesDialog
 
 abstract class BaseDialog : Dialog {
     var mContext: Context? = null
@@ -64,6 +65,8 @@ abstract class BaseDialog : Dialog {
     }
 
     fun dismissDialog() {
+        LanguagesDialog.isOpen = false
+
         if (this.isShowing) {
             this.dismiss()
         } else {

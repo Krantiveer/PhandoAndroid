@@ -3,17 +3,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/_10sdp"
+    android:layout_marginHorizontal="@dimen/_10sdp"
+    android:layout_marginBottom="@dimen/_5sdp"
+    android:layout_marginTop="@dimen/_5sdp"
     android:elevation="@dimen/_2sdp"
-
     android:gravity="center_vertical"
     android:orientation="vertical"
+    android:background="@color/white_main"
     app:cardCornerRadius="@dimen/_5sdp">
 
     <LinearLayout
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white_main"
         android:gravity="center_vertical"
         android:orientation="vertical">
 

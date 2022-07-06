@@ -30,6 +30,39 @@
         android:name="com.perseverance.phando.category.DashboardListFragment"
         tools:layout="@layout/fragment_dashboard_list" >
 
+        <argument
+            android:name="type"
+            app:argType="string"
+            android:defaultValue="6" />
+
+        <argument
+            android:name="type_name"
+            app:argType="string"
+            android:defaultValue="Sports" />
+
+        <action
+            android:id="@+id/action_navigation_my_list_to_navigation_browse"
+            app:destination="@id/navigation_browse"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim"/>
+    </fragment>
+    <fragment
+        android:id="@+id/navigation_sports"
+        android:name="com.perseverance.phando.category.DashboardListFragment"
+        tools:layout="@layout/fragment_dashboard_list" >
+
+        <argument
+            android:name="type"
+            app:argType="string"
+            android:defaultValue="8" />
+
+        <argument
+            android:name="type_name"
+            app:argType="string"
+            android:defaultValue="News" />
+
         <action
             android:id="@+id/action_navigation_my_list_to_navigation_browse"
             app:destination="@id/navigation_browse"

@@ -2,7 +2,6 @@ package com.perseverance.phando.home.dashboard.browse
 
 
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
@@ -19,7 +18,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.gson.Gson
 import com.perseverance.patrikanews.utils.*
 import com.perseverance.phando.BaseFragment
@@ -100,15 +98,15 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                 it.data?.let { browseDataList ->
                     if (browseDataList.isNotEmpty()) {
                         val headerBrowseData = browseDataList.get(0)
-                        headerBrowseData?.let { browseData ->
+                        headerBrowseData.let { browseData ->
                             setBannerSlider(browseDataList, browseData)
                             /*if (browseData.displayType == "TOP_BANNER") {
-                                homeHeaderView?.setData(browseData.list)
-                                (browseDataList as ArrayList).removeAt(0)
-                                homeHeaderView.visible()
-                            }else{
-                                homeHeaderView.gone()
-                            }*/
+                                                    homeHeaderView?.setData(browseData.list)
+                                                    (browseDataList as ArrayList).removeAt(0)
+                                                    homeHeaderView.visible()
+                                                }else{
+                                                    homeHeaderView.gone()
+                                                }*/
                         }
                         nestedScrollView?.visible()
                     } else {
@@ -136,7 +134,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                         categoryTabListList.map {
                             it.show = true
                             it.showFilter = false
-
                         }
 
 //                        browseFragmentCategoryTabListAdapter =
@@ -157,6 +154,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
     }
 
+
     private val profileObserver = Observer<DataLoadingStatus<UserProfileData>> {
 
         when (it?.status) {
@@ -171,9 +169,10 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                 lifecycleScope.launch(Dispatchers.IO) {
                     syncDownload(it.data?.user_downloads)
                 }
-//               if (it.data?.preferred_language?.isEmpty()!!){
-//                   openLanguagePreferenceDialog()
-//               }
+                if (it.data?.preferred_language?.isEmpty()!!) {
+                    openLanguagePreferenceDialog()
+//                    homeActivityViewModel.clickLanguage()
+                }
 
             }
 
@@ -183,13 +182,13 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
     private suspend fun syncDownload(userDownloads: List<DownloadMetadata>?) {
         val downloadMetadataDao =
-            activity?.let { AppDatabase.getInstance(it)?.downloadMetadataDao() }
+            activity?.let { AppDatabase.getInstance(it).downloadMetadataDao() }
         val allData = downloadMetadataDao?.getAllData()
         if (allData != null) {
             if (allData.isEmpty()) {
                 userDownloads?.let { downloadMetadataDao.insertAll(it) }
             } else {
-                val allDeleted = downloadMetadataDao?.getDeletedDownload()
+                val allDeleted = downloadMetadataDao.getDeletedDownload()
                 if (allDeleted == null || allDeleted.isEmpty()) {
                     return
                 }
@@ -208,7 +207,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_browse_new, container, false)
     }
@@ -220,7 +219,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         nestedScrollView = view.findViewById(R.id.nestedScrollView)
         recyclerViewUpcomingVideos.layoutManager = LinearLayoutManager(activity)
 
-        homeActivityViewModel.title.value=""
+        homeActivityViewModel.title.value = ""
 
         val filterRecyclerViewLayoutManager =
             LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
@@ -244,8 +243,33 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         browseFragmentViewModel.refreshData(dataFilters)
 
         homeActivityViewModel.onCategoryClick.observe(viewLifecycleOwner, Observer {
-            openCategoryDialog()
+//            openCategoryDialog()
+            setCategory(it)
+
         })
+
+        homeActivityViewModel.onLanguageClick.observe(viewLifecycleOwner, Observer {
+//            openLanguagePreferenceDialog()
+            lifecycleScope.launch {
+                browseFragmentViewModel.refreshData(dataFilters)
+                userProfileViewModel.refreshUserProfile()
+            }
+        })
+
+//        homeActivityViewModel.mLanguagesList.observe(viewLifecycleOwner, Observer { mlist ->
+//            val mLanguageList = mlist
+//            requireActivity().openLanguageDialog(mLanguageList) {
+//                val map = HashMap<String, String>()
+//                map["languages_ids"] = it.toString()
+//                lifecycleScope.launch {
+//                    val updateLanguagePreferenceResponse = withContext(Dispatchers.IO) {
+//                        userProfileViewModel.updateLanguagePreference(map)
+//                    }
+//                    toast(updateLanguagePreferenceResponse.message)
+//                    homeActivityViewModel.languageClick()
+//                }
+//            }
+//        })
 
         requireActivity().onBackPressedDispatcher.addCallback {
             if (categoryTab != null) {
@@ -334,6 +358,48 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         PreferencesUtils.saveIntegerPreferences("NOTIFICATION_COUNT", 10)
     }
 
+
+    fun setCategory(data: CategoryTab) {
+        txtCategory.text = data.displayName
+        if (data.isFilter) {
+            if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
+                sheetBehavior?.setState(BottomSheetBehavior.STATE_EXPANDED)
+            } else {
+                sheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
+            }
+        } else {
+            categoryTab?.let {
+                if (it.displayName == data.displayName) {
+                    return@let
+                }
+            }
+            categoryTab = data
+            categoryTabListList.map {
+                if (it == data) {
+                    it.show = true
+                    it.showFilter = true
+                    if (it.filters.isNotEmpty()) {
+                        it.filters.map {
+                            it.isSelected = false
+                        }
+                        it.filters.get(0).isSelected = true
+                    }
+                } else {
+                    it.show = false
+                    it.showFilter = false
+                }
+            }
+            browseFragmentCategoryTabListAdapter?.items = categoryTabListList
+            dataFilters.apply {
+                type = categoryTab!!.type
+                genre_id = ""
+                filter = ""
+                filter_type = ""
+            }
+            browseFragmentViewModel.refreshData(dataFilters)
+        }
+    }
+
     private fun openCategoryDialog() {
         if (categoryTabListList.isNotEmpty())
             requireActivity().openListDialog(categoryTabListList) { data ->
@@ -359,14 +425,14 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                                 it.filters.map {
                                     it.isSelected = false
                                 }
-                                it.filters?.get(0)?.isSelected = true
+                                it.filters.get(0).isSelected = true
                             }
                         } else {
                             it.show = false
                             it.showFilter = false
                         }
                     }
-                    browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
+                    browseFragmentCategoryTabListAdapter?.items = categoryTabListList
                     dataFilters.apply {
                         type = categoryTab!!.type
                         genre_id = ""
@@ -396,7 +462,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             it.showFilter = false
 
         }
-        browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
+        browseFragmentCategoryTabListAdapter?.items = categoryTabListList
         categoryTab = null
         txtCategory.text = getString(R.string.category)
     }
@@ -494,14 +560,14 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                                 it.filters.map {
                                     it.isSelected = false
                                 }
-                                it.filters?.get(0)?.isSelected = true
+                                it.filters.get(0).isSelected = true
                             }
                         } else {
                             it.show = false
                             it.showFilter = false
                         }
                     }
-                    browseFragmentCategoryTabListAdapter?.setItems(categoryTabListList)
+                    browseFragmentCategoryTabListAdapter?.items = categoryTabListList
                     dataFilters.apply {
                         type = categoryTab!!.type
                         genre_id = ""
@@ -521,11 +587,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                 }
                 categoryTabListList.map {
                     it.filters.map {
-                        if (it.name == data.name) {
-                            it.isSelected = true
-                        } else {
-                            it.isSelected = false
-                        }
+                        it.isSelected = it.name == data.name
                     }
 
                 }
@@ -551,10 +613,11 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
         super.onResume()
         userProfileViewModel.refreshUserProfile()
         userProfileViewModel.refreshWallet()
+        homeActivityViewModel.callLanguage()
         val strProfile = PreferencesUtils.getStringPreferences("profile")
         val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
         userProfileData?.let {
-            Utils.displayCircularProfileImage(context, it.user?.image,
+            Utils.displayCircularProfileImage(context, it.user.image,
                 R.drawable.ic_user_profile, R.drawable.ic_user_profile, imgHeaderProfile)
         } ?: Utils.displayCircularProfileImage(context, "",
             R.drawable.ic_user_profile, R.drawable.ic_user_profile, imgHeaderProfile)
@@ -568,10 +631,10 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                 cart_badge?.let {
                     if (unreadNotifications == 0) {
                         if (it.visibility != View.GONE) {
-                            it.visibility = View.GONE;
+                            it.visibility = View.GONE
                         }
                     } else {
-                        it.setText(unreadNotifications.toString())
+                        it.text = unreadNotifications.toString()
                         if (it.visibility != View.VISIBLE) {
                             it.visibility = View.VISIBLE
                         }
@@ -597,6 +660,27 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             }
         }
 
+        val mLanguageList = userProfileViewModel.languageList as ArrayList
+        if (mLanguageList.isNotEmpty()) {
+            requireActivity().openLanguageDialog(mLanguageList) {
+                val map = HashMap<String, String>()
+                map["languages_ids"] = it.toString()
+                progressBar.visible()
+                lifecycleScope.launch {
+                    val updateLanguagePreferenceResponse = withContext(Dispatchers.IO) {
+                        userProfileViewModel.updateLanguagePreference(map)
+                    }
+                    progressBar.gone()
+                    toast(updateLanguagePreferenceResponse.message)
+                    if (updateLanguagePreferenceResponse.status.isSuccess()) {
+                        browseFragmentViewModel.refreshData(dataFilters)
+                        userProfileViewModel.refreshUserProfile()
+                    }
+                }
+            }
+        }
+
+/*
         MaterialAlertDialogBuilder(appCompatActivity, R.style.AlertDialogTheme)
             .apply {
                 setTitle("Select Language")
@@ -608,7 +692,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                         override fun onClick(
                             dialog: DialogInterface?,
                             which: Int,
-                            isChecked: Boolean
+                            isChecked: Boolean,
                         ) {
                             boolLanguageArray[which] = isChecked;
                         }
@@ -653,5 +737,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                 show()
 
             }
+*/
     }
 }

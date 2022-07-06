@@ -8,7 +8,6 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.net.UrlQuerySanitizer
-import android.net.wifi.WifiManager
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -16,7 +15,6 @@ import android.provider.Settings
 import android.text.Html
 import android.text.Spannable
 import android.text.Spanned
-import android.text.format.Formatter
 import android.text.style.StrikethroughSpan
 import android.util.Log
 import android.view.Menu
@@ -43,8 +41,6 @@ import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.BuildConfig
 import com.perseverance.phando.R
-import com.perseverance.phando.Session
-import com.perseverance.phando.Session.Companion.instance
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.constants.Key
 import com.perseverance.phando.db.AppDatabase
@@ -71,7 +67,8 @@ import com.videoplayer.VideoPlayerMetadata.UriSample
 import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.content_detail.*
 
-class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, PhandoPlayerCallback, PurchaseOptionSelection {
+class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
+    PhandoPlayerCallback, PurchaseOptionSelection {
     override var screenName = ""
     private lateinit var purchaseOption: PurchaseOption
     private var razorpayOrdertId: String? = null
@@ -119,7 +116,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         const val REQUEST_CODE_PAYMENT = 114
         const val ARG_VIDEO = "param_video"
         const val TRAILER_ID = "trailer_id"
-        fun getDetailIntent(context: Context, video: Video, trailerId: String? = "", fromDyLink: Boolean = false): Intent {
+        fun getDetailIntent(
+            context: Context,
+            video: Video,
+            trailerId: String? = "",
+            fromDyLink: Boolean = false,
+        ): Intent {
             if (video.is_free == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
                 return Intent(context, LoginActivity::class.java)
             } else {
@@ -278,11 +280,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
     private val dislikeObserver = Observer<Int> {
         when (it) {
             0 -> {
-                val drawable = ContextCompat.getDrawable(this@MediaDetailActivity, R.drawable.ic_dislike)
+                val drawable =
+                    ContextCompat.getDrawable(this@MediaDetailActivity, R.drawable.ic_dislike)
                 // dislike?.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
             }
             1 -> {
-                val drawable = ContextCompat.getDrawable(this@MediaDetailActivity, R.drawable.ic_dislike_selected)
+                val drawable = ContextCompat.getDrawable(this@MediaDetailActivity,
+                    R.drawable.ic_dislike_selected)
                 //  dislike?.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
             }
         }
@@ -321,23 +325,24 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             isLive = it == 1
         }
 
-        val subtitleInfo: VideoPlayerMetadata.SubtitleInfo? = if (subtitleUri == null || subtitleUri.isEmpty()) null else VideoPlayerMetadata.SubtitleInfo(
+        val subtitleInfo: VideoPlayerMetadata.SubtitleInfo? =
+            if (subtitleUri == null || subtitleUri.isEmpty()) null else VideoPlayerMetadata.SubtitleInfo(
                 subtitleUri,
                 "application/ttml+xml",
                 "en")
         val sample: VideoPlayerMetadata = UriSample(
-                null,
-                uri,
-                null,
-                isLive,
-                null,
-                if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
-                null,
-                subtitleInfo
-                //,null
+            null,
+            uri,
+            null,
+            isLive,
+            null,
+            if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
+            null,
+            subtitleInfo
+            //,null
         )
         intent.putExtra(
-                PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
+            PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
         val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
         intent.putExtra(PhandoPlayerView.ABR_ALGORITHM_EXTRA, abrAlgorithm)
         intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
@@ -352,7 +357,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         super.onCreate(savedInstanceState)
         window.apply {
             setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                    WindowManager.LayoutParams.FLAG_SECURE)
+                WindowManager.LayoutParams.FLAG_SECURE)
         }
         setContentView(R.layout.activity_video_details)
         setSupportActionBar(toolbar)
@@ -368,8 +373,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         val decoration = BaseRecycleMarginDecoration(this@MediaDetailActivity)
         recyclerView.addItemDecoration(decoration)
 
-        mediaDetailViewModel.getVideoDetailMutableLiveData().observe(this, videoMetadataModelObserver)
-        mediaDetailViewModel.getNextEpisodeVideoDetailMutableLiveData().observe(this, nextVideoMetadataModelObserver)
+        mediaDetailViewModel.getVideoDetailMutableLiveData()
+            .observe(this, videoMetadataModelObserver)
+        mediaDetailViewModel.getNextEpisodeVideoDetailMutableLiveData()
+            .observe(this, nextVideoMetadataModelObserver)
         mediaDetailViewModel.message.observe(this, messageObserver)
 
         mediaDetailViewModel.isInWishlist.observe(this, favoriteObserver)
@@ -386,7 +393,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         baseVideo = intent?.getParcelableExtra(ARG_VIDEO)
         baseVideo?.let {
             mediaDetailViewModel.refreshMediaMetadata(it)
-            Utils.displayImage(this, it.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
+            Utils.displayImage(this,
+                it.thumbnail,
+                R.drawable.video_placeholder,
+                R.drawable.video_placeholder,
+                playerThumbnail)
         }
         favorite.setOnClickListener {
             mediaMetadata?.can_share?.let {
@@ -463,7 +474,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
             mediaDetailViewModel.downloadStatus.value?.let {
                 val mBottomSheetDialog = BottomSheetDialog(this)
-                val sheetView: View = layoutInflater.inflate(R.layout.fragment_download_control_options, null)
+                val sheetView: View =
+                    layoutInflater.inflate(R.layout.fragment_download_control_options, null)
                 mBottomSheetDialog.setContentView(sheetView)
                 val downloadDelete = sheetView.findViewById<TextView>(R.id.downloadDelete)
                 val downloadResume = sheetView.findViewById<TextView>(R.id.downloadResume)
@@ -554,7 +566,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 val bundle = Bundle()
                 bundle.putParcelable("payment_option", rentMedia.tag as PurchaseOption)
                 purchaseOptionBottomSheetFragment.arguments = bundle
-                purchaseOptionBottomSheetFragment.show(supportFragmentManager, purchaseOptionBottomSheetFragment.tag)
+                purchaseOptionBottomSheetFragment.show(supportFragmentManager,
+                    purchaseOptionBottomSheetFragment.tag)
             }
         }
         buyMedia.setOnClickListener {
@@ -569,7 +582,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 val bundle = Bundle()
                 bundle.putParcelable("payment_option", buyMedia.tag as PurchaseOption)
                 purchaseOptionBottomSheetFragment.arguments = bundle
-                purchaseOptionBottomSheetFragment.show(supportFragmentManager, purchaseOptionBottomSheetFragment.tag)
+                purchaseOptionBottomSheetFragment.show(supportFragmentManager,
+                    purchaseOptionBottomSheetFragment.tag)
             }
         }
         packageMedia.setOnClickListener {
@@ -579,7 +593,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
                 startActivityForResult(intent, REQUEST_CODE_PACKAGE)
             } else {
-                val intent = Intent(this@MediaDetailActivity, SubscriptionPackageActivity::class.java)
+                val intent =
+                    Intent(this@MediaDetailActivity, SubscriptionPackageActivity::class.java)
                 startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             }
         }
@@ -600,20 +615,22 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                 when (result.status) {
                     LoadingStatus.SUCCESS -> {
                         val videoPlayerMetadata = UriSample(
-                                null,
-                                Uri.parse(mediaMetadata?.media_url),
-                                null,
-                                false,
-                                null,
-                                null,
-                                null,
-                                null)
-                        VideoSdkUtil.startDownload(this@MediaDetailActivity, videoPlayerMetadata, mediaMetadata?.title)
+                            null,
+                            Uri.parse(mediaMetadata?.media_url),
+                            null,
+                            false,
+                            null,
+                            null,
+                            null,
+                            null)
+                        VideoSdkUtil.startDownload(this@MediaDetailActivity,
+                            videoPlayerMetadata,
+                            mediaMetadata?.title)
                         downloadMetadataDao.insert(DownloadMetadata(mediaMetadata?.document_media_id!!.toString(),
-                                mediaMetadata?.title,
-                                mediaMetadata?.getDirectors() + "\n" + mediaMetadata?.detail + "\n" + mediaMetadata?.other_credits,
-                                mediaMetadata?.thumbnail,
-                                mediaMetadata?.media_url
+                            mediaMetadata?.title,
+                            mediaMetadata?.getDirectors() + "\n" + mediaMetadata?.detail + "\n" + mediaMetadata?.other_credits,
+                            mediaMetadata?.thumbnail,
+                            mediaMetadata?.media_url
 
                         ))
                         progressBar.gone()
@@ -664,7 +681,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                             play.gone()
                             videoTitle.text = mediaMetadata?.title
                             gaTitle = mediaMetadata?.title ?: "media_title_not_found"
-                            setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
+                            setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app,
+                                mediaUrl = mediaMetadata?.media_url!!,
+                                seekTo = mediaMetadata!!.last_watch_time)
                         }
                     }
                 } ?: kotlin.run {
@@ -674,7 +693,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                         play.gone()
                         videoTitle.text = mediaMetadata?.title
                         gaTitle = mediaMetadata?.title ?: "media_title_not_found"
-                        setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
+                        setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app,
+                            mediaUrl = mediaMetadata?.media_url!!,
+                            seekTo = mediaMetadata!!.last_watch_time)
                     }
                 }
             }
@@ -686,7 +707,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     play.gone()
                     videoTitle.text = mediaMetadata?.title
                     gaTitle = mediaMetadata?.title ?: "media_title_not_found"
-                    setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
+                    setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app,
+                        mediaUrl = mediaMetadata?.media_url!!,
+                        seekTo = mediaMetadata!!.last_watch_time)
                 }
             }
             "package_media" -> {
@@ -708,7 +731,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     play.gone()
                     gaTitle = mediaMetadata?.title ?: "media_title_not_found"
                     videoTitle.text = mediaMetadata?.title
-                    setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app, mediaUrl = mediaMetadata?.media_url!!, seekTo = mediaMetadata!!.last_watch_time)
+                    setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app,
+                        mediaUrl = mediaMetadata?.media_url!!,
+                        seekTo = mediaMetadata!!.last_watch_time)
                 }
             }
         }
@@ -824,18 +849,28 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
-                                val originalPrice = "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
-                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
+                                val originalPrice =
+                                    "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
+                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-",
+                                    TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
-                                spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                spannable.setSpan(STRIKE_THROUGH_SPAN,
+                                    12,
+                                    originalPrice.length,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                                 rentMedia.tag = it
                             }
                             "purchase_price" -> {
-                                val originalPrice = "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
-                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
+                                val originalPrice =
+                                    "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
+                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-",
+                                    TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
-                                spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                spannable.setSpan(STRIKE_THROUGH_SPAN,
+                                    11,
+                                    originalPrice.length,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
                                 buyMedia.tag = it
                             }
                         }
@@ -843,11 +878,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     } else {
                         when (it.key) {
                             "rent_price" -> {
-                                rentMedia.text = "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
+                                rentMedia.text =
+                                    "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                             }
                             "purchase_price" -> {
-                                buyMedia.text = "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
+                                buyMedia.text =
+                                    "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
                         }
@@ -865,14 +902,20 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     when (it.key) {
                         "rent_price" -> {
                             if (it.discount_percentage > 0) {
-                                val originalPrice = "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
+                                val originalPrice =
+                                    "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
                                 val discount = (it.value * it.discount_percentage) / 100
-                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
+                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-",
+                                    TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
-                                spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                spannable.setSpan(STRIKE_THROUGH_SPAN,
+                                    12,
+                                    originalPrice.length,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                             } else {
-                                rentMedia.text = "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
+                                rentMedia.text =
+                                    "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                             }
                         }
@@ -890,14 +933,20 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     when (it.key) {
                         "purchase_price" -> {
                             if (it.discount_percentage > 0) {
-                                val originalPrice = "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
+                                val originalPrice =
+                                    "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
                                 val discount = (it.value * it.discount_percentage) / 100
-                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
+                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-",
+                                    TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
-                                spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                spannable.setSpan(STRIKE_THROUGH_SPAN,
+                                    11,
+                                    originalPrice.length,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                             } else {
-                                buyMedia.text = "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
+                                buyMedia.text =
+                                    "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
 
@@ -916,19 +965,29 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                         val discount = (it.value * it.discount_percentage) / 100
                         when (it.key) {
                             "rent_price" -> {
-                                val originalPrice = "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
-                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
+                                val originalPrice =
+                                    "Rent at ${it.currency_symbol}  ${number2digits(it.value)}/-"
+                                rentMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-",
+                                    TextView.BufferType.SPANNABLE)
                                 val spannable = rentMedia.getText() as Spannable
-                                spannable.setSpan(STRIKE_THROUGH_SPAN, 12, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                spannable.setSpan(STRIKE_THROUGH_SPAN,
+                                    12,
+                                    originalPrice.length,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                                 rentMedia.tag = it
                                 rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                val originalPrice = "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
-                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-", TextView.BufferType.SPANNABLE)
+                                val originalPrice =
+                                    "Buy at ${it.currency_symbol}  ${number2digits(it.value)}/-"
+                                buyMedia.setText("$originalPrice  \n${number2digits(it.value - discount)}/-",
+                                    TextView.BufferType.SPANNABLE)
                                 val spannable = buyMedia.getText() as Spannable
-                                spannable.setSpan(STRIKE_THROUGH_SPAN, 11, originalPrice.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
+                                spannable.setSpan(STRIKE_THROUGH_SPAN,
+                                    11,
+                                    originalPrice.length,
+                                    Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)
 
                                 buyMedia.tag = it
                             }
@@ -937,12 +996,14 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     } else {
                         when (it.key) {
                             "rent_price" -> {
-                                rentMedia.text = "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
+                                rentMedia.text =
+                                    "Rent at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 rentMedia.tag = it
                                 rentMedia.isEnabled = false
                             }
                             "purchase_price" -> {
-                                buyMedia.text = "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
+                                buyMedia.text =
+                                    "Buy at ${it.currency_symbol} ${number2digits(it.value)}/-"
                                 buyMedia.tag = it
                             }
                         }
@@ -952,8 +1013,20 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
             }
         }
         actionControlers.visible()
+
         mediaMetadata?.is_live?.let {
             download.isEnabled = it == 0
+            if (it == 1) {
+                download.gone()
+            } else {
+                mediaMetadata?.can_download?.let {
+                    if (it) {
+                        download.visible()
+                    } else {
+                        download.gone()
+                    }
+                }
+            }
             if (it == 1) {
                 txtPlay.text = "Go Live"
             }
@@ -995,7 +1068,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         mListener = object : SimpleOrientationEventListener(this@MediaDetailActivity) {
             @SuppressLint("SourceLockedOrientationActivity")
             override fun onChanged(lastOrientation: Int, orientation: Int) {
-                if (Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) != 1) {
+                if (Settings.System.getInt(contentResolver,
+                        Settings.System.ACCELEROMETER_ROTATION,
+                        0) != 1
+                ) {
                     return
                 }
 
@@ -1036,7 +1112,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
         // play video if live media or last_watch_time > 0
 //        if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
-            playVideo()
+        playVideo()
 //        }
 
         mediaMetadata?.next_media?.let {
@@ -1055,7 +1131,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         mediaMetadata?.let {
             if (it.trailers != null && it.trailers.isNotEmpty()) {
                 trailerContainer.visible()
-                val manager = LinearLayoutManager(this@MediaDetailActivity, LinearLayoutManager.HORIZONTAL, false)
+                val manager = LinearLayoutManager(this@MediaDetailActivity,
+                    LinearLayoutManager.HORIZONTAL,
+                    false)
                 trailerRecyclerView.layoutManager = manager
                 trailerListAdapter = TrailerListAdapter(this@MediaDetailActivity, this)
                 trailerListAdapter?.items = it.trailers
@@ -1066,9 +1144,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
             if (it.episodes != null && it.episodes.isNotEmpty()) {
                 episodeContainer.visible()
-                val manager = LinearLayoutManager(this@MediaDetailActivity, LinearLayoutManager.HORIZONTAL, false)
+                val manager = LinearLayoutManager(this@MediaDetailActivity,
+                    LinearLayoutManager.HORIZONTAL,
+                    false)
                 episodeRecyclerView.layoutManager = manager
-                relatedEpisodeListAdapter = RelatedEpisodeListAdapter(this@MediaDetailActivity, this)
+                relatedEpisodeListAdapter =
+                    RelatedEpisodeListAdapter(this@MediaDetailActivity, this)
                 relatedEpisodeListAdapter?.items = it.episodes
                 episodeRecyclerView.adapter = relatedEpisodeListAdapter
             } else {
@@ -1210,7 +1291,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
         mediaMetadata?.let { mediaMetaData ->
             phandoPlayerView.currentPosition?.let {
                 if (it > 0) {
-                    mediaDetailViewModel.setContinueWatchingTime(mediaMetaData?.document_media_id.toString(), it.toString())
+                    mediaDetailViewModel.setContinueWatchingTime(mediaMetaData?.document_media_id.toString(),
+                        it.toString())
                 }
             }
         }
@@ -1279,7 +1361,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
                     intent.putExtra(Key.CATEGORY, data)
                     startActivity(intent)
                 } else {
-                    Utils.displayImage(this, data.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
+                    Utils.displayImage(this,
+                        data.thumbnail,
+                        R.drawable.video_placeholder,
+                        R.drawable.video_placeholder,
+                        playerThumbnail)
                     mediaDetailViewModel.refreshMediaMetadata(data)
                     mediaDetailViewModel.loginFor.value = 0
                     baseVideo = data
@@ -1297,7 +1383,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 //                    startActivity(getDetailIntent(this@MediaDetailActivity, baseVideo))
 //                    finish()
                 } else {
-                    DialogUtils.showMessage(this@MediaDetailActivity, BaseConstants.CONNECTION_ERROR, Toast.LENGTH_SHORT, false)
+                    DialogUtils.showMessage(this@MediaDetailActivity,
+                        BaseConstants.CONNECTION_ERROR,
+                        Toast.LENGTH_SHORT,
+                        false)
                 }
             }
             is Trailer -> {
@@ -1312,7 +1401,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
     override fun onSettingClicked() {
         val mBottomSheetDialog = BottomSheetDialog(this)
-        val sheetView: View = layoutInflater.inflate(R.layout.bottomsheet_settings_control_options, null)
+        val sheetView: View =
+            layoutInflater.inflate(R.layout.bottomsheet_settings_control_options, null)
         mBottomSheetDialog.setContentView(sheetView)
         val settingVideoQuality = sheetView.findViewById<TextView>(R.id.settingVideoQuality)
         val settingVideoCC = sheetView.findViewById<TextView>(R.id.settingVideoCC)
@@ -1339,18 +1429,24 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
 
             if (it.action == "playerstart") {
                 if (!isPlayerstartSent) {
-                    TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
-                    TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS_SCREEN, eventData.toString())
-                    mediaDetailViewModel.updateMediaPlayStartTime(mediaMetadata?.document_media_id!!.toString()).observe(this, Observer {
-                        val result = it ?: return@Observer
-                        MyLog.i("updateMediaPlayStartTime", it.toString())
+                    TrackingUtils.sendVideoEvent(eventData.toString(),
+                        mediaMetadata?.analytics_category_id,
+                        it.action)
+                    TrackingUtils.sendScreenTracker(BaseConstants.MEDIA_DETAILS_SCREEN,
+                        eventData.toString())
+                    mediaDetailViewModel.updateMediaPlayStartTime(mediaMetadata?.document_media_id!!.toString())
+                        .observe(this, Observer {
+                            val result = it ?: return@Observer
+                            MyLog.i("updateMediaPlayStartTime", it.toString())
 
-                    })
+                        })
                     isPlayerstartSent = true
                 } else {
                 }
             } else {
-                TrackingUtils.sendVideoEvent(eventData.toString(), mediaMetadata?.analytics_category_id, it.action)
+                TrackingUtils.sendVideoEvent(eventData.toString(),
+                    mediaMetadata?.analytics_category_id,
+                    it.action)
                 when (it.action) {
                     "adplay" -> {
                         imgHeaderImage.gone()
@@ -1462,7 +1558,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, 
      * This function assumes logger is an instance of AppEventsLogger and has been
      * created using AppEventsLogger.newLogger() call.
      */
-    private fun logViewContentEvent(contentId: String?, contentType: String?, contentData: String?) {
+    private fun logViewContentEvent(
+        contentId: String?,
+        contentType: String?,
+        contentData: String?,
+    ) {
         val params = Bundle()
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_ID, contentId)
         params.putString(AppEventsConstants.EVENT_PARAM_CONTENT_TYPE, contentType)

@@ -82,7 +82,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
+            debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
             buildConfigField("String","TOPIC","\"com.perseverance.candor\"")
             buildConfigField("String","DOMAIN_URI","\"https://candor.page.link\"")

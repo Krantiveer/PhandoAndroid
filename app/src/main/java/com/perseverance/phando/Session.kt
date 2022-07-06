@@ -26,7 +26,14 @@ class Session : VideoPlayerApplication() {
     }
 
     private suspend fun getRemoteIp() {
-        remoteIp = getPublicIpAddress()
+        remoteIp = ""
+
+        /* try {
+                ""
+    //            getPublicIpAddress()
+            } catch (e: Exception) {
+                ""
+            }*/
     }
 
     override fun onCreate() {

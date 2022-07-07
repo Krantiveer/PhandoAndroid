@@ -76,8 +76,8 @@ class SettingsFragment : BaseFragment() {
             cvNotificationSettings.gone()
             cvParentalControl.gone()
         } else {
-            cvNotificationSettings.visible()
-            cvParentalControl.visible()
+            cvNotificationSettings.gone()
+            cvParentalControl.gone()
         }
     }
 

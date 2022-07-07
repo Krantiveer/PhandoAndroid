@@ -1,6 +1,5 @@
 package com.perseverance.phando.home.dashboard.browse
 
-
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -662,6 +661,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
         val mLanguageList = userProfileViewModel.languageList as ArrayList
         if (mLanguageList.isNotEmpty()) {
+/*
             requireActivity().openLanguageDialog(mLanguageList) {
                 val map = HashMap<String, String>()
                 map["languages_ids"] = it.toString()
@@ -678,6 +678,7 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                     }
                 }
             }
+*/
         }
 
 /*

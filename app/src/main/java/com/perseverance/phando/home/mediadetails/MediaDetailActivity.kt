@@ -1021,7 +1021,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             } else {
                 mediaMetadata?.can_download?.let {
                     if (it) {
-                        download.visible()
+                        download.gone()
                     } else {
                         download.gone()
                     }

@@ -17,6 +17,7 @@
         android:id="@+id/cvNotificationSettings"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/red_light_new"
         android:layout_margin="@dimen/_5sdp"
         android:elevation="@dimen/_2sdp"
         android:gravity="center_vertical"
@@ -27,9 +28,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
+            android:background="@color/red_light_new"
+
             android:fontFamily="@font/asap_bold"
             android:drawableEnd="@drawable/ic_right"
-            android:foreground="?attr/selectableItemBackground"
             android:gravity="start|center_vertical"
             android:padding="@dimen/_15sdp"
             android:text="Notification Settings"
@@ -41,6 +43,8 @@
         android:id="@+id/cvParentalControl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/red_light_new"
+
         android:layout_margin="@dimen/_5sdp"
         android:elevation="@dimen/_2sdp"
         android:gravity="center_vertical"
@@ -51,6 +55,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="0dp"
+            android:background="@color/red_light_new"
+
             android:fontFamily="@font/asap_bold"
             android:drawableEnd="@drawable/ic_right"
             android:foreground="?attr/selectableItemBackground"
@@ -64,13 +70,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/_5sdp"
             android:layout_weight="1"
+            android:background="@color/red_light_new"
+
             android:elevation="@dimen/_2sdp"
             android:gravity="center_vertical"
             android:orientation="vertical"
@@ -81,6 +89,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:background="@color/red_light_new"
+
                 android:layout_margin="0dp"
                 android:clickable="true"
                 android:fontFamily="@font/asap_bold"
@@ -112,6 +122,8 @@
                 android:id="@+id/btnRate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/red_light_new"
+
                 android:layout_margin="0dp"
                 android:fontFamily="@font/asap_bold"
                 android:foreground="?attr/selectableItemBackground"

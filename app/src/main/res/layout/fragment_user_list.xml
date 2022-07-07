@@ -24,7 +24,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/header"
-        app:strokeColor="@color/app_theme_color"
+        app:strokeColor="@color/red_dark"
         app:strokeWidth="@dimen/_1sdp">
 
         <com.google.android.material.tabs.TabLayout
@@ -35,7 +35,7 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/header"
             app:tabGravity="fill"
-            app:tabIndicatorColor="@color/app_theme_color"
+            app:tabIndicatorColor="@color/red_dark"
             app:tabIndicatorGravity="stretch"
             app:tabMaxWidth="0dp"
             app:tabMode="fixed"

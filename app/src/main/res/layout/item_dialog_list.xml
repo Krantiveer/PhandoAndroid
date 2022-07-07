@@ -9,14 +9,13 @@
     android:elevation="@dimen/_2sdp"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:background="@color/white_main"
     app:cardCornerRadius="@dimen/_5sdp">
 
     <LinearLayout
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white_main"
+        android:background="@color/red_light_new"
         android:gravity="center_vertical"
         android:orientation="vertical">
 

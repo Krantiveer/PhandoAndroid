@@ -16,11 +16,12 @@
             android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/white_main"
+            android:background="@color/app_theme_color"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/_15sdp"
             android:paddingRight="@dimen/_15sdp"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
@@ -72,8 +73,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
-            android:background="@color/red_light_new"
-            app:itemBackground="@color/red_light_new"
+            android:background="@color/app_theme_color"
+            app:itemBackground="@color/app_theme_color"
             app:itemIconTint="@drawable/bottom_tab_selector"
             app:itemTextColor="@drawable/bottom_tab_selector"
             app:labelVisibilityMode="auto"
@@ -101,7 +102,8 @@
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_gravity="start">
+        android:layout_gravity="start"
+        android:background="@color/app_theme_color">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -122,10 +124,9 @@
                     android:padding="@dimen/_5sdp">
 
                     <androidx.appcompat.widget.AppCompatImageView
-                        android:id="@+id/imgHeaderProfile"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/circular_background_white"
+                        android:id="@+id/imgHeaderProfile1"
+                        android:layout_width="@dimen/_35sdp"
+                        android:layout_height="@dimen/_35sdp"
                         android:foreground="?attr/selectableItemBackground"
                         android:padding="@dimen/_5sdp"
                         android:src="@drawable/ic_user_profile_home" />
@@ -159,7 +160,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="@color/app_theme_color"
+                        android:backgroundTint="@color/red_dark"
                         android:src="@drawable/ic_arrow_right_app" />
 
                 </LinearLayout>
@@ -169,7 +170,7 @@
                     android:layout_height="@dimen/_1sdp"
                     android:layout_margin="@dimen/_5sdp"
                     android:alpha="0.5"
-                    android:background="@color/app_theme_color" />
+                    android:background="@color/red_dark" />
 
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -213,6 +214,7 @@
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtLanguage"
+                    android:visibility="gone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_languages"
@@ -228,7 +230,6 @@
                     android:id="@+id/txtDownload"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:drawableStart="@drawable/ic_baseline_download_for_offline"
                     android:drawablePadding="@dimen/_5sdp"
                     android:foreground="?android:attr/selectableItemBackground"
@@ -236,7 +237,8 @@
                     android:padding="@dimen/_11sdp"
                     android:text="Download"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_12sdp" />
+                    android:textSize="@dimen/_12sdp"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -247,8 +249,8 @@
                         android:id="@+id/llCategory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:foreground="?android:attr/selectableItemBackground"
-
                         android:orientation="horizontal">
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -264,14 +266,14 @@
                             android:textColor="@color/black"
                             android:textSize="@dimen/_12sdp"
                             android:visibility="visible" />
+
                         <ImageView
                             android:id="@+id/imgCatArrow"
                             android:layout_width="wrap_content"
-                            android:layout_marginHorizontal="@dimen/_15sdp"
-
+                            android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:src="@drawable/ic_red_arrow_down"
-                            android:layout_height="wrap_content"/>
+                            android:layout_marginHorizontal="@dimen/_15sdp"
+                            android:src="@drawable/ic_red_arrow_down" />
                     </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -289,6 +291,7 @@
                     android:id="@+id/llNotification"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <androidx.appcompat.widget.AppCompatTextView

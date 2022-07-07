@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "448113002968",
+    "project_id": "dflix-32a87",
+    "storage_bucket": "dflix-32a87.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:448113002968:android:7ca3616c49d033c2138aad",
+        "android_client_info": {
+          "package_name": "com.dnet.ott"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "448113002968-lup46i6phvgts8t1390a9kg270rk4pck.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dnet.ott",
+            "certificate_hash": "2c006f409c2722a620538572fa3e074653ed2c56"
+          }
+        },
+        {
+          "client_id": "448113002968-7lmbt2iltqvtmr77mlb5rbhsr99067eb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDic3nn394eoeMJAYA40jdr7f3PItCkCp8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "448113002968-7lmbt2iltqvtmr77mlb5rbhsr99067eb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

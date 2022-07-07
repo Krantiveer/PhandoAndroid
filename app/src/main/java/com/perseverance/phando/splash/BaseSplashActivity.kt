@@ -9,6 +9,9 @@ import android.net.UrlQuerySanitizer
 import android.os.Bundle
 import android.util.Base64
 import android.util.Log
+import android.view.View
+import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -50,6 +53,7 @@ open class BaseSplashActivity : BaseScreenTrackingActivity() {
 //        imageView.setOnCompletionListener { checkForDynamicLink() }
 
 //        Glide.with(this).asGif().load(AppCompatResources.getDrawable(this, R.drawable.logo_gif)!!)
+/*
         Glide.with(this).asGif()
             .load("https://firebasestorage.googleapis.com/v0/b/candorott-677c7.appspot.com/o/logo-new.gif?alt=media&token=1ce6db94-4bfb-460d-bed3-ca25d1692af4")
             .listener(object : RequestListener<GifDrawable?> {
@@ -82,30 +86,31 @@ open class BaseSplashActivity : BaseScreenTrackingActivity() {
                 }
 
             }).into(imageView)
+*/
 
-//        intent.data?.let {
-//            imageView.visibility = View.VISIBLE
-//            checkForDynamicLink()
-//        } ?: run {
-//            val animation = AlphaAnimation(0.0f, 1.0f)
-//            animation.duration = 2000
-//            animation.startOffset = 10
-//            animation.fillAfter = true
-//            animation.setAnimationListener(object : Animation.AnimationListener {
-//                override fun onAnimationStart(animation: Animation) {
-//                    imageView.visibility = View.VISIBLE
-//                }
-//
-//                override fun onAnimationEnd(animation: Animation) {
-//                    checkForDynamicLink()
-//                }
-//
-//                override fun onAnimationRepeat(animation: Animation) {
-//
-//                }
-//            })
-//            imageView.startAnimation(animation)
-//        }
+        intent.data?.let {
+            imageView.visibility = View.VISIBLE
+            checkForDynamicLink()
+        } ?: run {
+            val animation = AlphaAnimation(0.0f, 1.0f)
+            animation.duration = 2000
+            animation.startOffset = 10
+            animation.fillAfter = true
+            animation.setAnimationListener(object : Animation.AnimationListener {
+                override fun onAnimationStart(animation: Animation) {
+                    imageView.visibility = View.VISIBLE
+                }
+
+                override fun onAnimationEnd(animation: Animation) {
+                    checkForDynamicLink()
+                }
+
+                override fun onAnimationRepeat(animation: Animation) {
+
+                }
+            })
+            imageView.startAnimation(animation)
+        }
     }
 
 

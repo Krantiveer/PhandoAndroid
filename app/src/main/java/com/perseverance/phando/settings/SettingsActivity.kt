@@ -70,8 +70,8 @@ class SettingsActivity : BaseScreenTrackingActivity() {
             cvNotificationSettings.gone()
             cvParentalControl.gone()
         } else {
-            cvNotificationSettings.visible()
-            cvParentalControl.visible()
+            cvNotificationSettings.gone()
+            cvParentalControl.gone()
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {

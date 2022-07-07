@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/grey"
+    android:background="@color/app_theme_color"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -15,7 +15,6 @@
         android:paddingTop="@dimen/_11sdp"
         android:paddingRight="@dimen/_10sdp"
         android:paddingBottom="@dimen/_5sdp"
-        android:background="@color/white"
         android:text="Select an option"
         android:textColor="@color/black"
         android:textSize="@dimen/_14sdp" />
@@ -26,7 +25,6 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         android:layout_marginTop="1dp"
-        android:background="@color/white"
         android:foreground="?android:attr/selectableItemBackground"
         android:gravity="left"
         android:padding="@dimen/_11sdp"
@@ -42,7 +40,6 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:gravity="left"
         android:layout_marginTop="1dp"
-        android:background="@color/white"
         android:padding="@dimen/_11sdp"
         android:text="Resume"
         android:textColor="@color/black"
@@ -57,13 +54,11 @@
         android:foreground="?android:attr/selectableItemBackground"
         android:gravity="left"
         android:padding="@dimen/_11sdp"
-        android:background="@color/white"
         android:text="Pause"
         android:textColor="@color/black"
         android:textSize="@dimen/_14sdp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_50sdp"
-        android:background="@color/white" />
+        android:layout_height="@dimen/_50sdp"/>
 </LinearLayout>

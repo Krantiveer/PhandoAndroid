@@ -24,7 +24,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/_30sdp"
             android:layout_marginRight="@dimen/_10sdp"
-            android:background="@color/gray_concrete_dark" />
+            android:background="@color/red_dark" />
 
         <com.google.android.material.textview.MaterialTextView
             style="@style/LoginTextStyleBlack"
@@ -32,7 +32,7 @@
             android:paddingLeft="@dimen/_10sdp"
             android:gravity="center"
             android:textStyle="normal"
-            android:textColor="@color/gray_concrete_dark"
+            android:textColor="@color/red_dark"
             android:textSize="@dimen/_12sdp" />
 
         <View
@@ -41,7 +41,7 @@
             android:layout_weight="1"
             android:layout_marginLeft="@dimen/_10sdp"
             android:layout_marginRight="@dimen/_30sdp"
-            android:background="@color/gray_concrete_dark" />
+            android:background="@color/red_dark" />
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView

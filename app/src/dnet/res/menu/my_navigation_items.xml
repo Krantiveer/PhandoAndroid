@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_browse"
+        android:icon="@drawable/ic_home_new"
+        android:title="Browse" />
+
+    <item
+        android:id="@+id/navigation_category"
+        android:icon="@drawable/ic_category_white"
+        android:title="@string/category" />
+    <item
+        android:id="@+id/navigation_sports"
+        android:icon="@drawable/ic_noun_movies_4458587"
+        android:title="Movies" />
+
+    <item
+        android:id="@+id/navigation_my_list"
+        android:icon="@drawable/ic_live"
+        android:title="Live" />
+
+    <item
+        android:id="@+id/navigation_search"
+        android:icon="@drawable/ic_fn_global_search"
+        android:title="Search" />
+
+    <!--
+        <item
+            android:id="@+id/navigation_settings"
+            android:icon="@drawable/ic_settings_cog"
+            android:title="Settings" />
+    -->
+</menu>

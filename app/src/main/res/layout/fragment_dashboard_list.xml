@@ -26,6 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
+        android:textColor="@color/white_main"
         android:layout_centerInParent="true"
         android:text="No Data Available!!"
         android:textSize="@dimen/_14sdp" />

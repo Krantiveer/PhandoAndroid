@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/white_main"
+        android:background="@color/app_theme_color"
         app:layout_scrollFlags="scroll|enterAlways"
         android:layout_alignParentTop="true"
         app:theme="@style/HomeToolbarTheme"

@@ -16,15 +16,21 @@
             android:contentDescription="@string/app_name"
             android:scaleType="fitXY" />
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
-            android:src="@drawable/play_logo"
-            android:layout_alignParentBottom="true"
-            android:padding="@dimen/_10sdp"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_height="wrap_content"/>
+            android:background="@drawable/bg_round_cor"
+            android:backgroundTint="@color/red_light_new"
+            android:padding="@dimen/_5sdp"
+            android:text="Watch Now"
+            android:layout_margin="@dimen/_5sdp"
+            android:layout_above="@id/llFree"
+            android:textColor="@color/white_main"
+            android:textSize="@dimen/_10sdp" />
 
         <LinearLayout
+            android:id="@+id/llFree"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

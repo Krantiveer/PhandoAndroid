@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/login_background"
+    android:background="@drawable/ic_bg_splash"
     tools:context="com.perseverance.phando.home.profile.login.LoginFragment">
 
     <LinearLayout
@@ -96,7 +96,7 @@
             android:layout_marginTop="@dimen/_20sdp"
             android:onClick="signup"
             android:text="SIGN UP"
-            android:textColor="@color/gray_concrete_dark"
+            android:textColor="@color/red_dark"
             app:strokeColor="@color/transparent" />
 
     </LinearLayout>

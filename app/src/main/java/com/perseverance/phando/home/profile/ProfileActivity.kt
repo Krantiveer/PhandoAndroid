@@ -124,7 +124,7 @@ class ProfileActivity : BaseScreenTrackingActivity() {
         }
 
         val allData = downloadMetadataDao.getAllDownloadData()
-        if (allData == null || allData.isEmpty()) {
+        if (allData == null || allData.isNullOrEmpty()) {
             cvDownload.gone()
         } else {
             cvDownload.gone()
@@ -149,13 +149,13 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                 userMobile.text = it
             }
 
-            if (it.user.name.isEmpty()) {
+            if (it.user.name.isNullOrEmpty()) {
                 userName.gone()
             }
-            if (it.user.email.isEmpty()) {
+            if (it.user.email.isNullOrEmpty()) {
                 userEmail.gone()
             }
-            if (it.user.mobile.isEmpty() && it.user.mobile.length > 4) {
+            if (it.user.mobile.isNullOrEmpty() && it.user.mobile.length > 4) {
                 userMobile.gone()
             }
 
@@ -201,10 +201,10 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                     } ?: userMobile.gone()
 
 
-                    if (it.data?.user?.name!!.isEmpty()) {
+                    if (it.data?.user?.name!!.isNullOrEmpty()) {
                         userName.gone()
                     }
-                    if (it.data.user.email.isEmpty()) {
+                    if (it.data.user.email.isNullOrEmpty()) {
                         userEmail.gone()
                     }
                     if (it.data.user.mobile.length < 4) {
@@ -291,7 +291,7 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                             if (isSelected) {
                                 val audienceCategory = userProfileViewModel.languageList.get(index)
                                 val id = audienceCategory.id
-                                if (languageId.isEmpty()) {
+                                if (languageId.isNullOrEmpty()) {
                                     languageId.append(id)
                                 } else {
                                     languageId.append(",$id")

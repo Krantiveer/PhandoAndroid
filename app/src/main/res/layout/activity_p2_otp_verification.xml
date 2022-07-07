@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/login_background"
+    android:background="@drawable/ic_bg_splash"
     tools:context="com.perseverance.phando.home.profile.login.LoginFragment">
 
     <LinearLayout
@@ -70,7 +70,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/_20sdp"
                     android:layout_marginBottom="@dimen/_20sdp"
-                    android:textColor="@color/white"
+                    android:textColor="@color/black_main"
                     app:bar_active_color="@color/app_theme_color"
                     app:bar_enabled="true"
                     app:bar_height="2dp"

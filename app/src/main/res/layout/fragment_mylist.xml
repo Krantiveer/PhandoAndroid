@@ -39,7 +39,7 @@
         android:gravity="center_horizontal"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:textColor="@color/gray_clouds_dark"
+        android:textColor="@color/white_main"
         android:textSize="16sp"
         android:text="Login to view List"
         app:layout_constraintLeft_toLeftOf="parent"

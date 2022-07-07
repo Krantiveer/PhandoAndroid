@@ -83,7 +83,7 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
         recyclerView.adapter = adapter
 
         val editText = searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-        editText.setTextColor(Color.BLACK)
+        editText.setTextColor(resources.getColor(R.color.white))
 //        searchView.setOnQueryTextFocusChangeListener(object : View.OnFocusChangeListener{
 //            override fun onFocusChange(view: View?, hasFocus: Boolean) {
 //

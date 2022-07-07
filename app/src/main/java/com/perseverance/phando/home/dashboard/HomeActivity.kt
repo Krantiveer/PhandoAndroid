@@ -19,7 +19,6 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.dynamiclinks.ktx.dynamicLinks
 import com.google.firebase.ktx.Firebase
@@ -33,7 +32,6 @@ import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.Constants
 import com.perseverance.phando.FeatureConfigClass
 import com.perseverance.phando.R
-import com.perseverance.phando.adapter.ListDialogAdapter
 import com.perseverance.phando.category.CategorySideNavAdapter
 import com.perseverance.phando.category.DashboardListActivity
 import com.perseverance.phando.constants.BaseConstants
@@ -56,13 +54,11 @@ import com.perseverance.phando.home.profile.login.LoginActivity
 import com.perseverance.phando.notification.NotificationDao
 import com.perseverance.phando.search.SearchActivity
 import com.perseverance.phando.search.SearchResultActivity
-import com.perseverance.phando.settings.ParentalControlActivity
 import com.perseverance.phando.settings.SettingsActivity
 import com.perseverance.phando.splash.AppInfo
 import com.perseverance.phando.splash.AppInfoModel
 import com.perseverance.phando.utils.*
 import kotlinx.android.synthetic.main.activity_home.*
-import kotlinx.android.synthetic.main.activity_home.progressBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -144,6 +140,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
             drawer_layout.closeDrawer(Gravity.LEFT);
             openProfile()
         }
+
         imgHeaderImage.setOnClickListener {
             drawer_layout.openDrawer(Gravity.LEFT);
         }
@@ -153,7 +150,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
         if (allData == null || allData.isEmpty()) {
             txtDownload.gone()
         } else {
-            txtDownload.visible()
+            txtDownload.gone()
         }
 
         txtDownload.setOnClickListener {
@@ -439,18 +436,14 @@ class HomeActivity : BaseScreenTrackingActivity(),
                 txtLanguage.gone()
                 txtName.text = "Log in"
                 txtPhoneNumber.text = "For better experience"
-                imgHeaderProfile.setImageDrawable(resources.getDrawable(R.drawable.ic_user_profile_home))
                 it.message?.let {
                     // Toast.makeText(activity, it, Toast.LENGTH_LONG).show()
                 }
             }
             LoadingStatus.SUCCESS -> {
                 Utils.displayCircularProfileImage(this, it.data?.user?.image,
-                    R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile)
+                    R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile1)
 
-                Glide.with(this)
-                    .load(it.data?.user?.image)
-                    .into(imgHeaderProfile);
                 it.data?.user?.name.let { name ->
                     txtName.text = name
                 } ?: {
@@ -462,7 +455,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
                     txtPhoneNumber.text = ""
                 }
                 txtBilling.visible()
-                txtLanguage.visible()
+                txtLanguage.gone()
             }
 
         }
@@ -483,17 +476,17 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
         val strProfile = PreferencesUtils.getStringPreferences("profile")
         val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)
-        userProfileData?.let {
-            Utils.displayCircularProfileImage(this, it.user?.image,
-                R.drawable.ic_user_profile, R.drawable.ic_user_profile, imgHeaderProfile)
-        } ?: Utils.displayCircularProfileImage(this, "",
-            R.drawable.ic_user_profile, R.drawable.ic_user_profile, imgHeaderProfile)
+        /* userProfileData?.let {
+             Utils.displayCircularProfileImage(this, it.user?.image,
+                 R.drawable.ic_user_profile, R.drawable.ic_user_profile, imgHeaderProfile)
+         } ?: Utils.displayCircularProfileImage(this, "",
+             R.drawable.ic_user_profile, R.drawable.ic_user_profile, imgHeaderProfile)
+             */
         observeUserProfile()
 
         val allNotifications = notificationDao?.getAllNotifications()
         val unreadNotifications = notificationDao?.getUnreadNotifications()
-        llNotification.visibility =
-            if (allNotifications == null || allNotifications == 0) View.GONE else View.VISIBLE
+        llNotification.gone()
         if (allNotifications != null && allNotifications > 0) {
             try {
                 cart_badge?.let {

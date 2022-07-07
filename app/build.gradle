@@ -47,6 +47,12 @@ android {
             storeFile file('C:\\Phando\\keystore\\candor\\candor.jks')
             storePassword 'candor'
         }
+        configDnet {
+            keyAlias 'candor'
+            keyPassword 'candor'
+            storeFile file('C:\\Phando\\keystore\\candor\\candor.jks')
+            storePassword 'candor'
+        }
     }
 
     defaultConfig {
@@ -84,8 +90,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
-            buildConfigField("String","TOPIC","\"com.perseverance.candor\"")
-            buildConfigField("String","DOMAIN_URI","\"https://candor.page.link\"")
+            buildConfigField("String","TOPIC","\"com.perseverance.dflix\"")
+            buildConfigField("String","DOMAIN_URI","\"https://dflix.page.link\"")
             //http://qa.phunflix.com
         }
 
@@ -137,6 +143,12 @@ android {
             versionCode 3
             versionName "1.2"
             signingConfig signingConfigs.configCandor
+        }
+        dnet {
+            applicationId "com.dnet.ott"
+            versionCode 1
+            versionName "1.0"
+            signingConfig signingConfigs.configDnet
         }
 
     }

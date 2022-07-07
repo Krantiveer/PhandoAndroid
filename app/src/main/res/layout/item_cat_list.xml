@@ -5,14 +5,13 @@
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
     android:orientation="vertical"
-    android:foreground="?selectableItemBackgroundBorderless"
-    android:background="@color/white_main">
+    android:foreground="?selectableItemBackgroundBorderless">
 
     <LinearLayout
         android:id="@+id/llMain"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white_main"
+        android:background="@color/app_theme_color"
         android:gravity="center_vertical"
         android:orientation="vertical">
 

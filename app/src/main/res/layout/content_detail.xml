@@ -17,7 +17,7 @@
             android:id="@+id/actionControlersBuy"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:background="@color/bg_app"
             android:paddingTop="@dimen/_5sdp"
             android:visibility="gone"
             android:paddingBottom="@dimen/_5sdp">
@@ -87,7 +87,7 @@
             android:id="@+id/actionControlers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/black"
+            android:background="@color/bg_app"
             android:gravity="center"
             android:paddingTop="@dimen/_10sdp"
             android:paddingBottom="@dimen/_10sdp">
@@ -108,14 +108,14 @@
                     android:id="@+id/imgPlay"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
-                    app:srcCompat="@drawable/ic_detail_play" />
+                    app:srcCompat="@drawable/player_replay" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtPlay"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Watch Now"
+                    android:text="Replay"
                     android:textColor="@color/white_main"
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>
@@ -124,6 +124,7 @@
             <LinearLayout
                 android:id="@+id/like"
                 android:layout_width="0dp"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="1dp"
                 android:layout_marginRight="1dp"
@@ -231,7 +232,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="My List"
+                    android:text="Add To My List"
                     android:textColor="@color/white_main"
                     android:textSize="@dimen/_10sdp" />
             </LinearLayout>

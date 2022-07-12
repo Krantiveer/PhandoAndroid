@@ -69,14 +69,14 @@
                             android:id="@+id/userEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/base_grey_color"
+                            android:textColor="@color/white_main"
                             android:textSize="@dimen/_10sdp" />
 
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/userMobile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/base_grey_color"
+                            android:textColor="@color/white_main"
                             android:textSize="@dimen/_10sdp" />
 
                     </LinearLayout>

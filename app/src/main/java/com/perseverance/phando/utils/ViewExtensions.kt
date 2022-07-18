@@ -32,6 +32,7 @@ import com.perseverance.phando.ui.LanguagesDialog
 import com.perseverance.phando.ui.ParentalControlPinDialog
 import com.perseverance.phando.utils.MyLog
 import com.perseverance.phando.utils.Utils
+import java.text.DecimalFormat
 import java.util.*
 
 fun View.visible() {
@@ -41,7 +42,36 @@ fun View.visible() {
 fun View.invisible() {
     visibility = View.INVISIBLE
 }
+fun decimalFormat(value:Int):String? {
+    val form = DecimalFormat("0.0")
+   return form.format(value)
+}
 
+fun getDurationString(seconds: Int): String? {
+    var seconds = seconds
+    val hours = seconds / 3600
+    val minutes = seconds % 3600 / 60
+    seconds = seconds % 60
+
+    if (hours <= 0) {
+        return twoDigitString(minutes) + " min"
+    }
+
+    if (hours <= 0 && minutes <= 0) {
+        return twoDigitString(seconds) + " sec"
+    }
+
+    return twoDigitString(hours) + "hrs : " + twoDigitString(minutes) + "min"
+}
+
+fun twoDigitString(number: Int): String {
+    if (number == 0) {
+        return "0"
+    }
+    return if (number / 10 == 0) {
+        "$number"
+    } else number.toString()
+}
 
 fun getRandomColor(): Int {
     val rnd = Random()
@@ -265,8 +295,8 @@ fun Context.openLanguageDialog(
 
 fun Context.openParentalPinDialog(
     isPinSet: Int,
-    isUpdate: Boolean=false,
-    returns: (String, String,String) -> Unit,
+    isUpdate: Boolean = false,
+    returns: (String, String, String) -> Unit,
 ) {
     ParentalControlPinDialog(
         this,
@@ -275,8 +305,8 @@ fun Context.openParentalPinDialog(
         R.style.pullBottomfromTop,
         R.layout.dialog_parental_pin,
         object : ParentalControlPinDialog.ItemClick {
-            override fun onItemClick(pin: String, confirm: String,current: String) {
-                returns(pin, confirm,current)
+            override fun onItemClick(pin: String, confirm: String, current: String) {
+                returns(pin, confirm, current)
             }
         }
     ).showDialog()

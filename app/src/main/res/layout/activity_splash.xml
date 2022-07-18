@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:adjustViewBounds="true"
+            android:padding="@dimen/_30sdp"
             app:srcCompat="@drawable/splash_logo" />
 
         <ImageView

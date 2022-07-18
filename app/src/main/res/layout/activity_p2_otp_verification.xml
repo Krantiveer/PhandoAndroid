@@ -12,31 +12,34 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            android:visibility="invisible">
+        <!--        <com.google.android.material.appbar.AppBarLayout-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:theme="@style/AppTheme.AppBarOverlay"-->
+        <!--            android:visibility="invisible">-->
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/login_background"
-                app:layout_scrollFlags="scroll|enterAlways"
-                app:theme="@style/HomeToolbarTheme"
-                app:titleTextColor="@color/white" />
+        <!--            <androidx.appcompat.widget.Toolbar-->
+        <!--                android:id="@+id/toolbar"-->
+        <!--                android:layout_width="match_parent"-->
+        <!--                android:layout_height="?attr/actionBarSize"-->
+        <!--                android:background="@color/login_background"-->
+        <!--                app:layout_scrollFlags="scroll|enterAlways"-->
+        <!--                app:theme="@style/HomeToolbarTheme"-->
+        <!--                app:titleTextColor="@color/white" />-->
 
-        </com.google.android.material.appbar.AppBarLayout>
+        <!--        </com.google.android.material.appbar.AppBarLayout>-->
 
         <include
             android:id="@+id/logo"
             layout="@layout/common_app_logo"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:id="@+id/points_card"
-            style="@style/LoginCardStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:paddingHorizontal="@dimen/_20sdp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo">
@@ -44,44 +47,50 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/_20sdp"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:paddingTop="@dimen/_10sdp">
+                android:orientation="vertical">
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="@style/LoginTextStyleBlack"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:padding="@dimen/_1sdp"
-                    android:text="Enter OTP sent to"
-                    android:textSize="@dimen/_14sdp" />
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/mobile"
-                    style="@style/LoginTextStyleBlack"
-                    android:padding="@dimen/_2sdp"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/_12sdp" />
+                    <com.google.android.material.textview.MaterialTextView
+                        style="@style/LoginTextStyleBlack"
+                        android:layout_width="wrap_content"
+                        android:padding="@dimen/_1sdp"
+                        android:text="Enter OTP sent to"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/mobile"
+                        style="@style/LoginTextStyleBlack"
+                        android:padding="@dimen/_2sdp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_12sdp" />
+                </LinearLayout>
+
 
                 <in.aabhasjindal.otptextview.OtpTextView
                     android:id="@+id/inputOTP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_15sdp"
+                    android:layout_marginBottom="@dimen/_10sdp"
                     android:textColor="@color/black_main"
                     app:bar_active_color="@color/app_theme_color"
                     app:bar_enabled="true"
                     app:bar_height="2dp"
                     app:bar_inactive_color="@color/grey"
-                    app:height="@dimen/_30sdp"
+                    app:height="@dimen/_35sdp"
                     app:length="6"
                     app:otp_box_background="@color/grey"
                     app:otp_box_background_active="@color/grey"
                     app:otp_box_background_inactive="@color/grey"
                     app:otp_text_size="@dimen/_10sdp"
-                    app:width="@dimen/_30sdp" />
+                    app:width="@dimen/_35sdp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/verifyOTP"
@@ -91,6 +100,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="@dimen/_2sdp">
@@ -106,6 +116,7 @@
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/resendOTP"
                         style="@style/LoginTextStyleBlack"
+                        android:layout_width="wrap_content"
                         android:layout_marginLeft="@dimen/_5sdp"
                         android:foreground="?attr/selectableItemBackground"
                         android:padding="0dp"
@@ -114,12 +125,26 @@
                         android:textSize="@dimen/_12sdp"
                         android:textStyle="normal" />
                 </LinearLayout>
+
+                <!--                <androidx.appcompat.widget.AppCompatTextView-->
+                <!--                    android:id="@+id/cancel"-->
+                <!--                    android:layout_width="wrap_content"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:clickable="true"-->
+                <!--                    android:foreground="?android:attr/selectableItemBackground"-->
+                <!--                    android:gravity="left"-->
+                <!--                    android:padding="@dimen/_11sdp"-->
+                <!--                    android:text="Cancel"-->
+                <!--                    android:textColor="@color/red_light_new"-->
+                <!--                    android:textSize="@dimen/_12sdp" />-->
+
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
         <include
             layout="@layout/login_link_container"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/points_card" />
 
 

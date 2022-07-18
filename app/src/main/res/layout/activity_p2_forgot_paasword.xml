@@ -30,9 +30,11 @@
         layout="@layout/common_app_logo"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:id="@+id/points_card"
-        style="@style/LoginCardStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_30sdp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logo">
@@ -66,7 +68,7 @@
                     android:id="@+id/ccp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:ccp_contentColor="@color/white"
+                    app:ccp_contentColor="@color/black_main"
                     app:ccp_defaultPhoneCode="91"
                     app:ccp_showFlag="false"
                     app:ccp_autoFormatNumber="false"
@@ -91,6 +93,6 @@
                 android:text="Reset Password" />
 
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
 </LinearLayout>

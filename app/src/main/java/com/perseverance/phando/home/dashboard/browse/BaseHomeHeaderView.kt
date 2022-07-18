@@ -59,7 +59,7 @@ open class BaseHomeHeaderView @JvmOverloads constructor(context: Context, attrs:
         if (list.isNotEmpty()) {
             bannerViewPager.adapter = BannerViewPagerAdapter(list, childFragmentManager)
             bannerViewPager.setClipToPadding(false)
-            bannerViewPager.setPadding(50, 50, 50, 50)
+            bannerViewPager.setPadding(50, 0, 50, 50)
             bannerViewPager.pageMargin = 25
             tabLayout.setupWithViewPager(bannerViewPager, true)
             if (list.size < 2) {

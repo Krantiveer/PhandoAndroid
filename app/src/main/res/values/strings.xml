@@ -32,5 +32,6 @@
     <string name="status_label">Status:</string>
     <string name="category">Category</string>
     <string name="set_a_parental_lock_to_block_your_child_from_n_accessing_certain_content">Set a parental lock to block your child from\n accessing certain content</string>
+    <string name="new_on_dflix_sign_up">New on DFlix? Sign Up!</string>
 
 </resources>

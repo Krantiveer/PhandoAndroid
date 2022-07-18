@@ -14,23 +14,23 @@ import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.retrofit.LoginResponse
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_p2_signup.*
-import kotlinx.coroutines.withContext
 
 
 class SignupFragment : BaseSignupFragment() {
-    override var screenName= BaseConstants.SIGNUP_SCREEN
+    override var screenName = BaseConstants.SIGNUP_SCREEN
     var countryCode = ""
     val logger by lazy {
         AppEventsLogger.newLogger(appCompatActivity)
     }
+
     override fun onRegisterSuccess(loginResponse: LoginResponse) {
         val bundle = bundleOf(
-                "MOBILE" to inputMobile.text.toString().trim(),
-                "COUNTRY_CODE" to countryCode,
-                "FRON_SIGNUP" to true
-
+            "MOBILE" to inputMobile.text.toString().trim(),
+            "COUNTRY_CODE" to countryCode,
+            "FRON_SIGNUP" to true
         )
-        val navOption = NavOptions.Builder().setPopUpTo(R.id.P2OTPVerificationActivity, false).build()
+        val navOption =
+            NavOptions.Builder().setPopUpTo(R.id.P2OTPVerificationActivity, false).build()
         navigator.navigate(R.id.P2OTPVerificationActivity, bundle, navOption)
 //        val intent = Intent(appCompatActivity, P2OTPVerificationActivity::class.java)
 //        intent.putExtra("ONLY_VERIFY_OTP", true)
@@ -38,11 +38,15 @@ class SignupFragment : BaseSignupFragment() {
 //        intent.putExtra("COUNTRY_CODE", countryCode)
 //        intent.putExtra("FRON_SIGNUP", true)
 //        startActivity(intent)
-          logCompleteRegistrationEvent()
-       
+        logCompleteRegistrationEvent()
+
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? {
         return inflater.inflate(R.layout.activity_p2_signup, container, false)
     }
 
@@ -51,6 +55,12 @@ class SignupFragment : BaseSignupFragment() {
         input_password.isLongClickable = false
         input_confirm_password.isLongClickable = false
         ccp.registerCarrierNumberEditText(inputMobile)
+
+        txtAlreadyLogin.setOnClickListener {
+            val navOption = NavOptions.Builder().setPopUpTo(R.id.P2SignupActivity, false).build()
+            navigator.navigate(R.id.P2LoginWithMobileNoActivity, null, navOption)
+        }
+
         doSignup.setOnClickListener {
             Utils.hideKeyboard(appCompatActivity)
             if (input_first_name.text.toString().isNullOrBlank()) {
@@ -62,15 +72,20 @@ class SignupFragment : BaseSignupFragment() {
 //                    return@setOnClickListener
 //                }
             else if (inputMobile.text.toString().isNullOrBlank()) {
-                Toast.makeText(appCompatActivity, "Please enter Mobile Number", Toast.LENGTH_LONG).show()
+                Toast.makeText(appCompatActivity, "Please enter Mobile Number", Toast.LENGTH_LONG)
+                    .show()
                 return@setOnClickListener
             } else if (input_password.text.toString().isNullOrBlank()) {
                 Toast.makeText(appCompatActivity, "Please enter password", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             } else if (!ccp.isValidFullNumber) {
-                Toast.makeText(appCompatActivity, "number " + ccp.fullNumber.toString() + " not valid!", Toast.LENGTH_LONG).show()
+                Toast.makeText(appCompatActivity,
+                    "number " + ccp.fullNumber.toString() + " not valid!",
+                    Toast.LENGTH_LONG).show()
                 return@setOnClickListener
-            } else if (checkPassword(input_password.text.toString(), input_confirm_password.text.toString())) {
+            } else if (checkPassword(input_password.text.toString(),
+                    input_confirm_password.text.toString())
+            ) {
                 countryCode = ccp.selectedCountryCode
                 val map: MutableMap<String, String> = HashMap()
                 map["email"] = input_email.text.toString()
@@ -80,7 +95,9 @@ class SignupFragment : BaseSignupFragment() {
                 map["mobile"] = inputMobile.text.toString()
                 doRegister(map)
             } else {
-                Toast.makeText(appCompatActivity, "Password and Confirm Password don't match", Toast.LENGTH_LONG).show()
+                Toast.makeText(appCompatActivity,
+                    "Password and Confirm Password don't match",
+                    Toast.LENGTH_LONG).show()
             }
 
         }

@@ -17,12 +17,23 @@
             layout="@layout/common_app_logo"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:id="@+id/points_card"
-            style="@style/LoginCardStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/label_email"
+                style="@style/LoginHintTextStyleBlack"
+                android:layout_gravity="center"
+                android:fontFamily="@font/asap_bold"
+                android:textSize="@dimen/_14sdp"
+                android:text="Login with Email"
+                android:visibility="visible" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,11 +44,6 @@
                 android:paddingTop="@dimen/_10sdp">
 
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/label_email"
-                    style="@style/LoginHintTextStyleBlack"
-                    android:text="Email"
-                    android:visibility="gone" />
                 <!-- Email Label -->
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/LoginTextInputLayoutStyle"
@@ -60,9 +66,10 @@
 
                 <com.google.android.material.textfield.TextInputLayout
                     style="@style/LoginTextInputLayoutStyle"
-                    app:passwordToggleTint="#7a8086"
                     android:layout_marginTop="@dimen/_10sdp"
-                    app:passwordToggleEnabled="true">
+                    app:passwordToggleEnabled="true"
+
+                    app:passwordToggleTint="@color/red_dark">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/inputPassword"
@@ -74,24 +81,24 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/login"
                     style="@style/LoginButtonStyle"
-                    android:text="Login" />
+                    android:text="Next" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    style="@style/LoginTextStyleBlack"
                     android:id="@+id/forgotPassword"
+                    style="@style/LoginTextStyleBlack"
                     android:layout_width="match_parent"
-                    android:text="Forgot password?"
+                    android:gravity="center"
                     android:onClick="forgotPassword"
                     android:paddingLeft="@dimen/_10sdp"
                     android:paddingTop="@dimen/_5sdp"
-                    android:textColor="@color/gray_concrete_dark"
+                    android:text="Forgot password?"
+                    android:textColor="@color/red_dark"
                     android:textSize="@dimen/_12sdp"
-                    android:gravity="center"
                     android:textStyle="normal"
                     app:strokeColor="@color/transparent" />
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
         <include
             layout="@layout/login_link_container"
@@ -100,9 +107,9 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/signup"
             style="@style/LoginOutlineButtonStyle"
-            android:text="SIGN UP"
             android:onClick="signup"
-            android:textColor="@color/gray_concrete_dark"
+            android:text="New on DFlix? Sign Up!"
+            android:textColor="@color/red_dark"
             app:strokeColor="@color/transparent" />
 
     </LinearLayout>

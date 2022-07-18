@@ -203,7 +203,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 //                    }
 //
 //                }
-
             }
             LoadingStatus.SUCCESS -> {
                 progressBar.gone()
@@ -218,10 +217,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     private val favoriteObserver = Observer<Int> {
         when (it) {
             0 -> {
-                imgMyList.setImageResource(R.drawable.ic_detail_mylist)
+                imgMyList.setImageResource(R.drawable.ic_wishlist_unselected)
             }
             1 -> {
-                imgMyList.setImageResource(R.drawable.ic_detail_added_in_mylist)
+                imgMyList.setImageResource(R.drawable.ic_wishlist)
             }
         }
     }

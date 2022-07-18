@@ -5,7 +5,7 @@
     android:id="@+id/container_video"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
- android:layout_margin="@dimen/_5sdp"
+    android:layout_margin="@dimen/_5sdp"
     android:foreground="?attr/selectableItemBackground"
     android:orientation="vertical"
     android:padding="0.5px">
@@ -29,26 +29,26 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/video_placeholder" />
 
-            <TextView
-                android:id="@+id/duration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/free"
-                android:layout_alignRight="@+id/img_thumbnail"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_8sdp"
-                android:fontFamily="@font/asap"
-                android:background="@drawable/duration_textview_round_rect_border"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:layout_marginRight="@dimen/_5sdp"
-                android:visibility="gone" />
+            <!--            <TextView-->
+            <!--                android:id="@+id/duration"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_above="@+id/free"-->
+            <!--                android:layout_alignRight="@+id/img_thumbnail"-->
+            <!--                android:textColor="@color/white"-->
+            <!--                android:textSize="@dimen/_8sdp"-->
+            <!--                android:fontFamily="@font/asap"-->
+            <!--                android:background="@drawable/duration_textview_round_rect_border"-->
+            <!--                android:layout_marginBottom="@dimen/_5sdp"-->
+            <!--                android:layout_marginRight="@dimen/_5sdp"-->
+            <!--                android:visibility="gone" />-->
 
             <TextView
                 android:id="@+id/free"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/img_thumbnail"
                 android:layout_above="@+id/watchingProgress"
+                android:layout_alignRight="@+id/img_thumbnail"
                 android:layout_margin="@dimen/_5sdp"
                 android:background="#F6B126"
                 android:paddingLeft="@dimen/_2sdp"
@@ -63,16 +63,16 @@
                 style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignRight="@+id/img_thumbnail"
                 android:layout_alignLeft="@+id/img_thumbnail"
-                android:layout_alignParentLeft="true"
+                android:layout_alignRight="@+id/img_thumbnail"
                 android:layout_alignBottom="@+id/img_thumbnail"
+                android:layout_alignParentLeft="true"
                 android:max="100"
-                android:progress="45"
-                android:padding="0dp"
-                android:visibility="invisible"
                 android:minHeight="@dimen/_1sdp"
-                android:progressTint="@color/red_normal" />
+                android:padding="0dp"
+                android:progress="45"
+                android:progressTint="@color/red_normal"
+                android:visibility="invisible" />
 
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
@@ -84,12 +84,44 @@
         android:layout_marginTop="@dimen/_3sdp"
         android:ellipsize="end"
         android:fontFamily="@font/asap"
-        android:lineSpacingExtra="@dimen/_2sdp"
         android:maxLines="2"
-        android:minLines="2"
         android:textColor="@color/video_title_color"
-        android:textSize="@dimen/_12sdp"
+        android:textSize="@dimen/_8sdp"
         android:textStyle="bold"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:ignore="MissingPrefix" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:drawablePadding="@dimen/_3sdp"
+            android:drawableStart="@drawable/ic_star_small"
+            android:drawableTint="@color/red_dark"
+            android:fontFamily="@font/asap"
+            android:text="-- --"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_8sdp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/duration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/_5sdp"
+            android:drawablePadding="@dimen/_3sdp"
+            android:drawableStart="@drawable/ic_baseline_watch_later_small"
+            android:drawableTint="@color/red_light_new"
+            android:fontFamily="@font/asap"
+            android:text="-- --"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_8sdp"
+            android:visibility="visible" />
+    </LinearLayout>
 </LinearLayout>

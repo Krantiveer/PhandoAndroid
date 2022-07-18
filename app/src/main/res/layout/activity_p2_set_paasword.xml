@@ -29,9 +29,11 @@
         layout="@layout/common_app_logo"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.google.android.material.card.MaterialCardView
+    <LinearLayout
         android:id="@+id/points_card"
-        style="@style/LoginCardStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/_30sdp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logo">
@@ -46,6 +48,7 @@
             <com.google.android.material.textview.MaterialTextView
                 style="@style/LoginTextStyleBlack"
                 android:text="Create new password"
+                android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/_20sdp" />
             <!-- Password Label -->
             <com.google.android.material.textview.MaterialTextView
@@ -57,7 +60,8 @@
                 style="@style/LoginTextInputLayoutStyle"
                 app:hintAnimationEnabled="false"
                 app:hintEnabled="false"
-                app:passwordToggleTint="#7a8086"
+
+                app:passwordToggleTint="@color/red_dark"
                 app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -75,7 +79,8 @@
 
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/LoginTextInputLayoutStyle"
-                app:passwordToggleTint="#7a8086"
+
+                app:passwordToggleTint="@color/red_dark"
                 android:layout_marginTop="@dimen/_12sdp"
                 app:passwordToggleEnabled="true"
                 app:hintAnimationEnabled="false"
@@ -95,6 +100,6 @@
                 android:text="Update Password" />
 
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
 
 </LinearLayout>

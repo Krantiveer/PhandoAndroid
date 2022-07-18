@@ -72,6 +72,7 @@ class OTPVerificationFragment : BaseOTPVerificationFragment() {
         } else {
             startTimer()
         }
+
         linkMobile.gone()
     }
 

@@ -6,14 +6,11 @@
     android:layout_height="wrap_content"
     android:id="@+id/home_widget"
     android:paddingTop="@dimen/_5sdp"
-    android:paddingBottom="@dimen/_10sdp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:layout_marginBottom="@dimen/_10sdp"
         android:orientation="horizontal">
 
         <TextView
@@ -22,13 +19,12 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:textColor="@drawable/white_text_selector"
-            android:textSize="@dimen/_16sdp"
+            android:textSize="@dimen/_14sdp"
             android:paddingLeft="@dimen/_5sdp"
             android:maxLines="1"
             android:gravity="left"
             android:ellipsize="end"
             android:textStyle="bold"
-            android:fontFamily="@font/helvetica_neue"
             tools:ignore="MissingPrefix" />
 
         <TextView
@@ -37,13 +33,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/red_dark"
-            android:text="More"
-            android:drawableRight="@drawable/ic_arrow_right_red"
+            android:text="View All"
             android:visibility="visible"
             android:minWidth="80dp"
             android:gravity="right"
             android:paddingRight="@dimen/_5sdp"
-            android:textSize="@dimen/_12sdp"
+            android:textSize="@dimen/_10sdp"
             tools:ignore="MissingPrefix" />
     </LinearLayout>
 
@@ -55,7 +50,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_home_items"
             android:layout_width="0dp"
-            android:layout_margin="@dimen/_2sdp"
+            android:layout_marginHorizontal="@dimen/_2sdp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
 

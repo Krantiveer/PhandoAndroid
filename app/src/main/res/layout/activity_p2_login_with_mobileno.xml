@@ -17,9 +17,10 @@
             layout="@layout/common_app_logo"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.card.MaterialCardView
+        <LinearLayout
             android:id="@+id/points_card"
-            style="@style/LoginCardStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo">
@@ -35,6 +36,9 @@
                 <com.google.android.material.textview.MaterialTextView
                     style="@style/LoginTextStyleBlack"
                     android:layout_width="match_parent"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textSize="@dimen/_12sdp"
                     android:layout_marginBottom="@dimen/_20sdp"
                     android:text="Log In with mobile number" />
 
@@ -46,19 +50,20 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
                     android:background="@drawable/input_background"
+
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <com.hbb20.CountryCodePicker
                         android:id="@+id/ccp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        app:ccp_contentColor="@color/white"
-                        app:ccp_showFlag="false"
                         app:ccp_autoFormatNumber="false"
-                        app:ccp_textSize="@dimen/_12sdp"
-                        app:ccp_defaultPhoneCode="91" />
+                        app:ccp_contentColor="@color/black_main"
+                        app:ccp_defaultPhoneCode="91"
+                        app:ccp_showFlag="false"
+                        app:ccp_textSize="@dimen/_12sdp" />
 
                     <com.google.android.material.textfield.TextInputLayout
                         style="@style/LoginTextInputLayoutStyleNoBackgroung"
@@ -68,23 +73,23 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/inputMobile"
                             style="@style/LoginInputStyleNoBackground"
-                            android:paddingLeft="0dp"
-                            android:maxLength="15"
                             android:hint="Enter mobile number"
-                            android:inputType="phone" />
+                            android:inputType="phone"
+                            android:maxLength="15"
+                            android:paddingLeft="0dp" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/next"
                     style="@style/LoginButtonStyle"
+                    android:id="@+id/next"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:text="Next" />
 
             </LinearLayout>
 
-        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
 
         <include
             layout="@layout/login_link_container"
@@ -95,7 +100,8 @@
             style="@style/LoginOutlineButtonStyle"
             android:layout_marginTop="@dimen/_20sdp"
             android:onClick="signup"
-            android:text="SIGN UP"
+            android:textSize="@dimen/_12sdp"
+            android:text="@string/new_on_dflix_sign_up"
             android:textColor="@color/red_dark"
             app:strokeColor="@color/transparent" />
 

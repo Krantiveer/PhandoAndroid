@@ -151,7 +151,6 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom"
                             android:background="@color/transparent"
-                            android:paddingBottom="@dimen/_5sdp"
                             app:tabBackground="@drawable/page_indicator_selector"
                             app:tabGravity="center"
                             app:tabIndicatorHeight="0dp" />

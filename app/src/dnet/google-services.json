@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "448113002968-jnj0d829sm1lvporu1kt32j8p02btdni.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dnet.ott",
+            "certificate_hash": "7253ed0997ffc60beec01c356b7110ff6c28a021"
+          }
+        },
+        {
           "client_id": "448113002968-lup46i6phvgts8t1390a9kg270rk4pck.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

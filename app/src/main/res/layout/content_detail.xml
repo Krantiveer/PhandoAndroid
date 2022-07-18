@@ -96,23 +96,25 @@
                 android:id="@+id/watchNow"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="13dp"
                 android:clickable="true"
                 android:gravity="center"
-                android:orientation="vertical"
+                android:orientation="horizontal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/like"
-                app:layout_constraintStart_toStartOf="parent">
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgPlay"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
-                    app:srcCompat="@drawable/player_replay" />
+                    android:backgroundTint="@color/red_dark"
+                    android:tint="@color/red_dark"
+                    app:srcCompat="@drawable/player_replay_tint" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtPlay"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="Replay"
@@ -216,21 +218,23 @@
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:gravity="center"
-                android:orientation="vertical"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/download"
                 app:layout_constraintTop_toTopOf="@+id/download">
 
                 <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/imgMyList"
-                    android:layout_width="@dimen/_20sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    app:srcCompat="@drawable/ic_detail_mylist" />
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    app:srcCompat="@drawable/ic_wishlist_unselected" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/txtMyList"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_5sdp"
                     android:gravity="center"
                     android:text="Add To My List"
                     android:textColor="@color/white_main"

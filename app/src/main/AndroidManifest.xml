@@ -153,6 +153,7 @@
             android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".home.profile.login.LoginActivity"
+            android:windowSoftInputMode="adjustNothing"
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.dashboard.mylist.UserListActivity"

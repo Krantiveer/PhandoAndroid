@@ -5,8 +5,8 @@
     android:gravity="center">
 
     <ImageView
-        android:layout_width="@dimen/_60sdp"
-        android:layout_height="@dimen/_60sdp"
-        android:layout_margin="@dimen/_5sdp"
+        android:layout_width="@dimen/_160sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_margin="@dimen/_15sdp"
         android:src="@drawable/splash_logo" />
 </LinearLayout>

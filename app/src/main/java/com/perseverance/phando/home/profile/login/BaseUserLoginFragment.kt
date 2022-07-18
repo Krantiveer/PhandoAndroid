@@ -26,10 +26,10 @@ import com.perseverance.phando.utils.PreferencesUtils
 open abstract class BaseUserLoginFragment : BaseSocialLoginFragment() {
 
     abstract fun onGetOtpSuccess(baseResponse: BaseResponse)
-    private var linkMobile: ImageView? = null
-    private var linkEmail: ImageView? = null
-    private var linkGmail: ImageView? = null
-    private var linkFacebook: ImageView? = null
+    private var linkMobile: Button? = null
+    private var linkEmail: Button? = null
+    private var linkGmail: Button? = null
+    private var linkFacebook: Button? = null
     private var mobileLogin: Button? = null
     private var signup: Button? = null
     private var forgotPassword: TextView? = null
@@ -135,10 +135,10 @@ open abstract class BaseUserLoginFragment : BaseSocialLoginFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        linkMobile = view.findViewById<ImageView>(R.id.linkMobile)
-        linkEmail = view.findViewById<ImageView>(R.id.linkEmail)
-        linkGmail = view.findViewById<ImageView>(R.id.linkGmail)
-        linkFacebook = view.findViewById<ImageView>(R.id.linkFacebook)
+        linkMobile = view.findViewById<Button>(R.id.linkMobile)
+        linkEmail = view.findViewById<Button>(R.id.linkEmail)
+        linkGmail = view.findViewById<Button>(R.id.linkGmail)
+        linkFacebook = view.findViewById<Button>(R.id.linkFacebook)
         mobileLogin = view.findViewById<Button>(R.id.mobileLogin)
         signup = view.findViewById<Button>(R.id.signup)
         forgotPassword = view.findViewById<TextView>(R.id.forgotPassword)

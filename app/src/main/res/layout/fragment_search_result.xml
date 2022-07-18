@@ -81,7 +81,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:iconifiedByDefault="false"
-                app:defaultQueryHint=""
+                app:defaultQueryHint="Type to search channels"
                 app:iconifiedByDefault="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/filter"

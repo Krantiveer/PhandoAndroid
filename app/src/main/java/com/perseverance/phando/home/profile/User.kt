@@ -8,6 +8,7 @@ data class User(
         val created_at: String,
         val deleted_at: Any,
         val dob: Any,
+        val paypal_subscriptions: ArrayList<Any>,
         val email: String,
         val facebook_id: Any,
         val google_id: Any,

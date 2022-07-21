@@ -44,18 +44,22 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logo">
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/linearLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textview.MaterialTextView
                         style="@style/LoginTextStyleBlack"
@@ -77,14 +81,15 @@
                     android:id="@+id/inputOTP"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_15sdp"
-                    android:layout_marginBottom="@dimen/_10sdp"
                     android:textColor="@color/black_main"
                     app:bar_active_color="@color/app_theme_color"
                     app:bar_enabled="true"
                     app:bar_height="2dp"
                     app:bar_inactive_color="@color/grey"
                     app:height="@dimen/_35sdp"
+                    app:layout_constraintEnd_toEndOf="@+id/verifyOTP"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout"
                     app:length="6"
                     app:otp_box_background="@color/grey"
                     app:otp_box_background_active="@color/grey"
@@ -95,15 +100,20 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/verifyOTP"
                     style="@style/LoginButtonStyle"
-                    android:text="Submit" />
+                    android:text="Submit"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/inputOTP" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
                     android:gravity="center"
                     android:orientation="horizontal"
-                    android:padding="@dimen/_2sdp">
+                    android:padding="@dimen/_2sdp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/verifyOTP">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/otpHint"
@@ -138,7 +148,7 @@
                 <!--                    android:textColor="@color/red_light_new"-->
                 <!--                    android:textSize="@dimen/_12sdp" />-->
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 

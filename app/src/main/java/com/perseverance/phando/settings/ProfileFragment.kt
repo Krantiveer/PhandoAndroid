@@ -116,7 +116,7 @@ class ProfileFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeActivityViewModel.title.value="Search"
+        homeActivityViewModel.title.value="Profile"
 
         help?.setOnClickListener(menuOnClickListener)
         tc?.setOnClickListener(menuOnClickListener)
@@ -241,7 +241,12 @@ class ProfileFragment : BaseFragment() {
                     }
                 }
                 LoadingStatus.SUCCESS -> {
-                    txtBilling.visible()
+                    if(!it.data?.user?.paypal_subscriptions.isNullOrEmpty()){
+                        txtBilling.visible()
+                    }else{
+                        txtBilling.gone()
+                    }
+
                     txtWishlist.visible()
                     btnLogout.visible()
                     userName.visible()

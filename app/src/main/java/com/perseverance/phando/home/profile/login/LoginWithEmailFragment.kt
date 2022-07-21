@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.spaceFilter
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.data.BaseResponse
@@ -24,6 +25,9 @@ class LoginWithEmailFragment : BaseUserLoginFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         linkEmail.gone()
+        inputPassword.spaceFilter()
+        inputEmail.spaceFilter()
+
         login.setOnClickListener {
             Utils.hideKeyboard(appCompatActivity)
             if (inputEmail.text.toString().isNullOrBlank()) {

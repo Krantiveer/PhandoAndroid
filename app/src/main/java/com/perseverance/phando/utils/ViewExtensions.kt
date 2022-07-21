@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.PorterDuff
 import android.os.CountDownTimer
 import android.text.Editable
+import android.text.InputFilter
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
@@ -86,6 +87,15 @@ fun getRandomColor(): Int {
 
 fun View.gone() {
     visibility = View.GONE
+}
+
+
+fun EditText.spaceFilter() {
+    this.filters = this.filters.let {
+        it + InputFilter { source, _, _, _, _, _ ->
+            source.filterNot { char -> char.isWhitespace() }
+        }
+    }
 }
 
 fun Context.getColorCompat(@ColorRes colorRes: Int) = ContextCompat.getColor(this, colorRes)

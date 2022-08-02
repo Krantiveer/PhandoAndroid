@@ -214,7 +214,7 @@
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:gravity="center"
                 android:padding="@dimen/_10sdp"
-                android:text="Already on DFlix? Login!"
+                android:text="@string/already_on_dflix_login"
                 android:textColor="@color/red_dark"
                 android:textSize="@dimen/_12sdp" />
 

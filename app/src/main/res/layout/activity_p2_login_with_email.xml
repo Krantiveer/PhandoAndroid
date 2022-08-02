@@ -108,7 +108,7 @@
             android:id="@+id/signup"
             style="@style/LoginOutlineButtonStyle"
             android:onClick="signup"
-            android:text="New on DFlix? Sign Up!"
+            android:text="@string/new_on_dflix_sign_up"
             android:textColor="@color/red_dark"
             app:strokeColor="@color/transparent" />
 

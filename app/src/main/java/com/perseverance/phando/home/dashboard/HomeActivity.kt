@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -135,7 +136,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
         tc?.setOnClickListener(menuOnClickListener)
         privacyPolicy?.setOnClickListener(menuOnClickListener)
         aboutus?.setOnClickListener(menuOnClickListener)
-
+        drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         llProfile.setOnClickListener {
             drawer_layout.closeDrawer(Gravity.LEFT);
             openProfile()

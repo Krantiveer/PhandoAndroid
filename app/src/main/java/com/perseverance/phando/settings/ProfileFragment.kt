@@ -61,8 +61,8 @@ class ProfileFragment : BaseFragment() {
             tc.id -> openWebview(requireActivity(), Constants.URL_TC)
             privacyPolicy.id -> openWebview(requireActivity(), Constants.URL_PRIVACY_POLICY)
             aboutus.id -> openWebview(requireActivity(), Constants.URL_ABOUT_US)
-            rate.id -> rateApplication()
-            share.id -> shareApplication()
+//            rate.id -> rateApplication()
+//            share.id -> shareApplication()
         }
     }
 

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "773191982578",
+    "project_id": "vyas-publication",
+    "storage_bucket": "vyas-publication.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773191982578:android:63292ccbf0421c3ee51f6b",
+        "android_client_info": {
+          "package_name": "com.vyas.ott"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773191982578-lr52m3mu101gv8lf4c2rkf1mkopvcl5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0nyvy588bQO5Ab9h7CD6B6_7Hgk28TXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773191982578-lr52m3mu101gv8lf4c2rkf1mkopvcl5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

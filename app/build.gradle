@@ -48,10 +48,10 @@ android {
             storePassword 'candor'
         }
         configVyas{
-            keyAlias 'dnetott'
-            keyPassword 'dnetott'
-            storeFile file('C:\\Phando\\keystore\\dnet\\dnet.jks')
-            storePassword 'dnetott'
+            keyAlias 'vyastv'
+            keyPassword 'vyastv'
+            storeFile file('C:\\Phando\\keystore\\vyas\\vyas.jks')
+            storePassword 'vyastv'
         }
     }
 

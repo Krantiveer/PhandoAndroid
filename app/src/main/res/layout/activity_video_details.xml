@@ -92,7 +92,7 @@
                 android:layout_marginTop="@dimen/_15sdp"
                 android:layout_marginRight="@dimen/_15sdp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_top_logo" />
+                android:src="@drawable/ic_top_logo_left" />
 
             <ImageView
                 android:id="@+id/imgHeaderBottom"
@@ -105,7 +105,7 @@
                 android:layout_marginBottom="@dimen/_25sdp"
                 android:layout_marginRight="@dimen/_10sdp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_top_logo" />
+                android:src="@drawable/ic_top_logo_left" />
         </FrameLayout>
 
         <include

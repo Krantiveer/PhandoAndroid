@@ -1019,11 +1019,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 download.gone()
             } else {
                 mediaMetadata?.can_download?.let {
-                    if (it) {
-                        download.gone()
-                    } else {
-                        download.gone()
-                    }
+//                    if (it) {
+//                        download.gone()
+//                    } else {
+//                        download.gone()
+//                    }
                 }
             }
             if (it == 1) {

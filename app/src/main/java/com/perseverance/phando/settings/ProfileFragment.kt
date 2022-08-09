@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.toast
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseFragment
 import com.perseverance.phando.Constants
@@ -24,6 +25,7 @@ import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.home.dashboard.mylist.UserListActivity
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.dashboard.viewmodel.DashboardViewModel
+import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
 import com.perseverance.phando.home.profile.UserProfileViewModel
 import com.perseverance.phando.home.profile.login.LoginActivity
 import com.perseverance.phando.utils.*
@@ -47,13 +49,20 @@ class ProfileFragment : BaseFragment() {
     }
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
+//    cvDownload.setOnClickListener {
+//        if (allData == null || allData.isEmpty()) {
+//            toast("Download is empty")
+//            return@setOnClickListener
+//        }
+//        val intent = Intent(this@ProfileActivity, OfflineMediaListActivity::class.java)
+//        startActivity(intent)
+//    }
 
     val menuOnClickListener = View.OnClickListener {
         when (it.id) {
@@ -61,6 +70,10 @@ class ProfileFragment : BaseFragment() {
             tc.id -> openWebview(requireActivity(), Constants.URL_TC)
             privacyPolicy.id -> openWebview(requireActivity(), Constants.URL_PRIVACY_POLICY)
             aboutus.id -> openWebview(requireActivity(), Constants.URL_ABOUT_US)
+            txtDownload.id -> {
+                val intent = Intent(requireActivity(), OfflineMediaListActivity::class.java)
+                startActivity(intent)
+            }
 //            rate.id -> rateApplication()
 //            share.id -> shareApplication()
         }
@@ -116,7 +129,7 @@ class ProfileFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        homeActivityViewModel.title.value="Profile"
+        homeActivityViewModel.title.value = "Profile"
 
         help?.setOnClickListener(menuOnClickListener)
         tc?.setOnClickListener(menuOnClickListener)
@@ -124,6 +137,7 @@ class ProfileFragment : BaseFragment() {
         aboutus?.setOnClickListener(menuOnClickListener)
         rate?.setOnClickListener(menuOnClickListener)
         share?.setOnClickListener(menuOnClickListener)
+        txtDownload?.setOnClickListener(menuOnClickListener)
 
         txtSettings.setOnClickListener {
             startActivity(Intent(requireActivity(),
@@ -241,9 +255,9 @@ class ProfileFragment : BaseFragment() {
                     }
                 }
                 LoadingStatus.SUCCESS -> {
-                    if(!it.data?.user?.paypal_subscriptions.isNullOrEmpty()){
+                    if (!it.data?.user?.paypal_subscriptions.isNullOrEmpty()) {
                         txtBilling.visible()
-                    }else{
+                    } else {
                         txtBilling.gone()
                     }
 

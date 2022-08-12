@@ -37,10 +37,11 @@ class HomeFragmentHorizontalListItemViewHolder(
             itemView.img_thumbnail)
         itemView.txtTitle.text = item.title
 
-        item.rating?.let {
-            itemView.rating.visible()
-            itemView.rating.text = decimalFormat(item.rating!!)
-        }
+        /* item.rating?.let {
+             itemView.rating.visible()
+             itemView.rating.text = decimalFormat(item.rating!!)
+         }?:*/
+        itemView.rating.gone()
 //         itemView.duration.text = item.formatedDuration
         itemView.txtTitle.visible()
         item.duration?.let {

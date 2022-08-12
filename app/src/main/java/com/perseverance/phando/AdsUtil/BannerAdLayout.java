@@ -12,8 +12,8 @@ import androidx.lifecycle.OnLifecycleEvent;
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+//import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+//import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.perseverance.phando.db.AppDatabase;
 import com.perseverance.phando.utils.MyLog;
 
@@ -22,7 +22,7 @@ import java.util.List;
 public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
     int adListIndex = 0;
     List<AdModel> bannerList = null;
-    PublisherAdView adView = null;
+//    PublisherAdView adView = null;
     com.facebook.ads.AdView facebookAdView = null;
 
     public BannerAdLayout(Context context) {
@@ -75,38 +75,38 @@ public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
     }
 
     private void loadAdmob(final AdModel banner1) {
-        adView = new PublisherAdView(this.getContext());
+//        adView = new PublisherAdView(this.getContext());
         //AdSize customAdSize = new AdSize(250, 250);
         // adView.setAdSizes(AdSize.SMART_BANNER);
-        adView.setAdSizes(AdSize.BANNER);
-        adView.setAdUnitId(banner1.getPublisherId());
-        adView.setAdListener(new AdListener() {
-            @Override
-            public void onAdLoaded() {
-                BannerAdLayout.this.removeAllViews();
-                BannerAdLayout.this.addView(adView);
-                MyLog.i("banner", "Admob loaded  " + banner1.getPublisherId());
-
-            }
-
-            @Override
-            public void onAdFailedToLoad(int errorCode) {
-                MyLog.i("banner", adListIndex + ">banner admob failed " + banner1.getPublisherId() + " " + errorCode);
-
-                adListIndex++;
-                loadBanner();
-            }
-
-
-        });
+//        adView.setAdSizes(AdSize.BANNER);
+//        adView.setAdUnitId(banner1.getPublisherId());
+//        adView.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdLoaded() {
+//                BannerAdLayout.this.removeAllViews();
+//                BannerAdLayout.this.addView(adView);
+//                MyLog.i("banner", "Admob loaded  " + banner1.getPublisherId());
+//
+//            }
+//
+//            @Override
+//            public void onAdFailedToLoad(int errorCode) {
+//                MyLog.i("banner", adListIndex + ">banner admob failed " + banner1.getPublisherId() + " " + errorCode);
+//
+//                adListIndex++;
+//                loadBanner();
+//            }
+//
+//
+//        });
 //        AdConfig.setRequestConfiguration();
         // Create an ad request.
-        PublisherAdRequest.Builder publisherAdRequestBuilder = new PublisherAdRequest.Builder();
+//        PublisherAdRequest.Builder publisherAdRequestBuilder = new PublisherAdRequest.Builder();
         // Add the PublisherAdView to the view hierarchy.
         // BannerAdLayout.this.removeAllViews();
         // BannerAdLayout.this.addView(adView);
 
-        adView.loadAd(publisherAdRequestBuilder.build());
+//        adView.loadAd(publisherAdRequestBuilder.build());
     }
 
     private void loadFacebook(final AdModel banner1) {
@@ -149,23 +149,23 @@ public class BannerAdLayout extends LinearLayout implements LifecycleObserver {
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     void onResume() {
-        if (adView != null) {
-            adView.resume();
-        }
+//        if (adView != null) {
+//            adView.resume();
+//        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     void onPause() {
-        if (adView != null) {
-            adView.pause();
-        }
+//        if (adView != null) {
+//            adView.pause();
+//        }
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     void onDestroy() {
-        if (adView != null) {
-            adView.destroy();
-        }
+//        if (adView != null) {
+//            adView.destroy();
+//        }
         if (facebookAdView != null) {
             facebookAdView.destroy();
         }

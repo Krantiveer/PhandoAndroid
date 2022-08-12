@@ -27,8 +27,8 @@ object TrackingUtils {
         MyLog.e("VideoEvent", label + " " + action)
         gaTracker?.send(HitBuilders.EventBuilder()
                 .setCategory(if (category.isNullOrEmpty()) "Phando Video" else category)
-                .setLabel(label)
-                .setAction(action)
+                .setLabel(label!!)
+                .setAction(action!!)
                 .build())
     }
 }

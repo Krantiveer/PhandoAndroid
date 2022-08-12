@@ -35,7 +35,7 @@ public class AdConfig {
         AdRequest.Builder builder = new AdRequest.Builder();
         if (BuildConfig.DEBUG) {
             for (String testDevices : GOOGLE_TEST_DEVICES) {
-                builder.addTestDevice(testDevices);
+//                builder.addTestDevice(testDevices);
             }
         }
 

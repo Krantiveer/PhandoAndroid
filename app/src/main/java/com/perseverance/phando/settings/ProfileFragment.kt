@@ -31,7 +31,17 @@ import com.perseverance.phando.home.profile.login.LoginActivity
 import com.perseverance.phando.utils.*
 import com.perseverance.phando.utils.Util.Companion.openWebview
 import com.videoplayer.VideoSdkUtil
+import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.android.synthetic.main.fragment_profile.*
+import kotlinx.android.synthetic.main.fragment_profile.aboutus
+import kotlinx.android.synthetic.main.fragment_profile.help
+import kotlinx.android.synthetic.main.fragment_profile.llProfile
+import kotlinx.android.synthetic.main.fragment_profile.privacyPolicy
+import kotlinx.android.synthetic.main.fragment_profile.tc
+import kotlinx.android.synthetic.main.fragment_profile.txtBilling
+import kotlinx.android.synthetic.main.fragment_profile.txtDownload
+import kotlinx.android.synthetic.main.fragment_profile.txtSettings
+import kotlinx.android.synthetic.main.fragment_profile.txtWishlist
 
 class ProfileFragment : BaseFragment() {
     override var screenName = BaseConstants.PROFILE_SCREEN
@@ -138,6 +148,14 @@ class ProfileFragment : BaseFragment() {
         rate?.setOnClickListener(menuOnClickListener)
         share?.setOnClickListener(menuOnClickListener)
         txtDownload?.setOnClickListener(menuOnClickListener)
+
+        val allData = downloadMetadataDao.getAllDownloadData()
+
+        if (allData == null || allData.isEmpty()) {
+            txtDownload.gone()
+        } else {
+            txtDownload.gone()
+        }
 
         txtSettings.setOnClickListener {
             startActivity(Intent(requireActivity(),

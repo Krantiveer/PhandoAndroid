@@ -5,20 +5,20 @@
         android:icon="@drawable/ic_home_new"
         android:title="Browse" />
 
-    <!--    <item-->
-    <!--        android:id="@+id/navigation_category"-->
-    <!--        android:icon="@drawable/ic_category_white"-->
-    <!--        android:title="@string/category" /> -->
+        <item
+            android:id="@+id/navigation_category"
+            android:icon="@drawable/ic_category_white"
+            android:title="@string/category" />
 
-    <item
-        android:id="@+id/navigation_sports"
-        android:icon="@drawable/ic_noun_movies_4458587"
-        android:title="Movies" />
+<!--    <item-->
+<!--        android:id="@+id/navigation_sports"-->
+<!--        android:icon="@drawable/ic_noun_movies_4458587"-->
+<!--        android:title="Movies" />-->
 
-    <item
-        android:id="@+id/navigation_my_list"
-        android:icon="@drawable/ic_live"
-        android:title="Live" />
+<!--    <item-->
+<!--        android:id="@+id/navigation_my_list"-->
+<!--        android:icon="@drawable/ic_live"-->
+<!--        android:title="Live" />-->
 
     <item
         android:id="@+id/navigation_search"

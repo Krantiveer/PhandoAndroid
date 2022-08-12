@@ -142,9 +142,9 @@ class HomeActivity : BaseScreenTrackingActivity(),
             openProfile()
         }
 
-        imgHeaderImage.setOnClickListener {
+//        imgHeaderImage.setOnClickListener {
 //            drawer_layout.openDrawer(Gravity.LEFT);
-        }
+//        }
 
         val allData = downloadMetadataDao.getAllDownloadData()
 

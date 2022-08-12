@@ -191,7 +191,7 @@
                 android:clickable="true"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:layout_constraintEnd_toStartOf="@+id/favorite"
                 app:layout_constraintStart_toEndOf="@+id/share"
                 app:layout_constraintTop_toTopOf="@+id/share">

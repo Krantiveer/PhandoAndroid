@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
@@ -53,7 +55,7 @@ class CategoryListFragment : BaseFragment(), CategoryListAdapter.AdapterClick {
     private fun setAdapter() {
         mListAdapter = CategoryListAdapter(requireContext(), categoryTabListList, this)
         rvList.layoutManager =
-            GridLayoutManager(context, 2)
+            LinearLayoutManager(requireContext())
         rvList.adapter = mListAdapter
     }
 

@@ -23,6 +23,7 @@
     <string name="fb_login_protocol_scheme">fb311473857665281</string>
 
     <string name="Rs">\u20B9</string>
+    <string name="register_yourself_on">Register yourself on Vyas Publication</string>
 
     <string name="default_notification_channel_id">com.perseverance.vyas</string>
     <string name="new_on_dflix_sign_up">New on Vyas Publication? Sign Up!</string>

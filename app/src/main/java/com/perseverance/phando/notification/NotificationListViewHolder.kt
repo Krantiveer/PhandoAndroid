@@ -36,9 +36,9 @@ class NotificationListViewHolder(itemView: View, listener: AdapterClickListener)
         itemView.img_thumbnail.resizeView(ListItemThumbnail(), true)
         itemView.title.text = video.title
 
-        video.rating?.let {
+        /*video.rating?.let {
             itemView.rating.text = it.toString()
-        } ?: itemView.rating.gone()
+        } ?:*/ itemView.rating.gone()
 
 //
 //        video.duration?.let {

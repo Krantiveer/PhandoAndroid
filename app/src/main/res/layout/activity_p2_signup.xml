@@ -36,7 +36,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:fontFamily="@font/asap_bold"
-                android:text="Register yourself on DFlix"
+                android:text="@string/register_yourself_on"
                 android:textColor="@color/white_main"
                 android:textSize="@dimen/_14sdp" />
 

@@ -54,19 +54,19 @@ class DashboardListFragment : BaseFragment(), DashboardListAdapter.AdapterClick,
     var mListAdapter: DashboardListAdapter? = null
 
     private fun setAdapter() {
-        if (DashboardListFragmentArgs.fromBundle(requireArguments()).view == "1") {
-            adapter =
-                HomeFragmentParentListAdapter(activity as Context, this, childFragmentManager)
-            rvList.layoutManager = LinearLayoutManager(activity)
-            adapter?.addAll(mArrayList)
-            rvList.adapter = adapter
-        } else {
-            mListAdapter = DashboardListAdapter(requireContext(), mArrayList, this)
-            rvList.layoutManager =
-                GridLayoutManager(requireContext(), 2)
-
-            rvList.adapter = mListAdapter
-        }
+//        if (DashboardListFragmentArgs.fromBundle(requireArguments()).view == "1") {
+//            adapter =
+//                HomeFragmentParentListAdapter(activity as Context, this, childFragmentManager)
+//            rvList.layoutManager = LinearLayoutManager(activity)
+//            adapter?.addAll(mArrayList)
+//            rvList.adapter = adapter
+//        } else {
+//            mListAdapter = DashboardListAdapter(requireContext(), mArrayList, this)
+//            rvList.layoutManager =
+//                GridLayoutManager(requireContext(), 2)
+//
+//            rvList.adapter = mListAdapter
+//        }
     }
 
 
@@ -96,15 +96,15 @@ class DashboardListFragment : BaseFragment(), DashboardListAdapter.AdapterClick,
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        homeActivityViewModel.title.value =
-            DashboardListFragmentArgs.fromBundle(requireArguments()).typeName
-
-        dataFilters.apply {
-            type = DashboardListFragmentArgs.fromBundle(requireArguments()).type
-            genre_id = ""
-            filter = ""
-            filter_type = ""
-        }
+//        homeActivityViewModel.title.value =
+//            DashboardListFragmentArgs.fromBundle(requireArguments()).typeName
+//
+//        dataFilters.apply {
+//            type = DashboardListFragmentArgs.fromBundle(requireArguments()).type
+//            genre_id = ""
+//            filter = ""
+//            filter_type = ""
+//        }
 //        dataFilters = Gson().fromJson(intent.getStringExtra("FILTER"), DataFilters::class.java)
 
         browseFragmentViewModel.getBrowseList()

@@ -38,12 +38,15 @@ class MyListViewHolder(itemView: View, listener: AdapterClickListener) : BaseVie
         Utils.displayImage(itemView.context, video.thumbnail,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder, itemView.img_thumbnail)
+
         itemView.img_thumbnail.resizeView(ListItemThumbnail(), true)
         itemView.title.text = video.title
 
-        video.rating?.let {
+       /* video.rating?.let {
             itemView.rating.text = it.toString()
-        } ?: itemView.rating.gone()
+        } ?:*/
+
+        itemView.rating.gone()
 
 
         itemView.details.text = video.detail

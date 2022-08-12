@@ -37,10 +37,10 @@ class MyPurchaseListViewHolder(itemView: View, listener: AdapterClickListener) :
                 R.drawable.video_placeholder, itemView.img_thumbnail)
         itemView.img_thumbnail.resizeView(ListItemThumbnail(), true)
         itemView.title.text = video.title
-
+/*
         video.rating?.let {
             itemView.rating.text = it.toString()
-        } ?: itemView.rating.gone()
+        } ?:*/ itemView.rating.gone()
 
 
         itemView.details.text = video.detail

@@ -14,6 +14,88 @@
       },
       "oauth_client": [
         {
+          "client_id": "773191982578-ngfbg3ms10j5johblnff7bkmkp6oc0bf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vyas.ott",
+            "certificate_hash": "686c90fc0ee61a0caab7d77b5693a391b5c69a60"
+          }
+        },
+        {
+          "client_id": "773191982578-rkkfjil63tagtoh50v85kaem95eje7h9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vyas.ott",
+            "certificate_hash": "7253ed0997ffc60beec01c356b7110ff6c28a021"
+          }
+        },
+        {
+          "client_id": "773191982578-lr52m3mu101gv8lf4c2rkf1mkopvcl5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0nyvy588bQO5Ab9h7CD6B6_7Hgk28TXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773191982578-lr52m3mu101gv8lf4c2rkf1mkopvcl5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773191982578:android:9f033daf6eacbba8e51f6b",
+        "android_client_info": {
+          "package_name": "com.vyas.tv"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "773191982578-3n2mjldeaul2cafbimq7tmdvj1udsnhg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.vyas.tv",
+            "certificate_hash": "7253ed0997ffc60beec01c356b7110ff6c28a021"
+          }
+        },
+        {
+          "client_id": "773191982578-lr52m3mu101gv8lf4c2rkf1mkopvcl5a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0nyvy588bQO5Ab9h7CD6B6_7Hgk28TXw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "773191982578-lr52m3mu101gv8lf4c2rkf1mkopvcl5a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:773191982578:android:1e126d4bbaa300d6e51f6b",
+        "android_client_info": {
+          "package_name": "com.vyaspublications.ott"
+        }
+      },
+      "oauth_client": [
+        {
           "client_id": "773191982578-lr52m3mu101gv8lf4c2rkf1mkopvcl5a.apps.googleusercontent.com",
           "client_type": 3
         }

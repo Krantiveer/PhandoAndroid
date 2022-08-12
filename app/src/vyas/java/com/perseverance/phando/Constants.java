@@ -8,7 +8,7 @@ public class Constants {
 
     public static final boolean BUILD_PROD = BuildConfig.BUILD_TYPE.equalsIgnoreCase("PROD");
 //    public static final String  BASE_URL_PROD = "https://dflixott.com/";
-    public static final String  BASE_URL_PROD = "https://vyas.phando.com/";
+    public static final String  BASE_URL_PROD = "https://vp.mokshmargdharm.org/";
 
     public static final String BASE_URL_STAGE = "https://phunflixqa.phando.com/";
 

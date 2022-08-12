@@ -146,8 +146,8 @@ android {
         }
         vyas {
             applicationId "com.vyaspublications.ott"
-            versionCode 5
-            versionName "1.4"
+            versionCode 6
+            versionName "1.5"
             signingConfig signingConfigs.configVyas
         }
 
@@ -242,7 +242,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-crashlytics:18.2.12'
 
     //implementation files('src/main/libs/razorpay-upi-intent-sdk.jar')
-    implementation 'com.razorpay:checkout:1.5.13'
+    implementation 'com.razorpay:checkout:1.6.24'
     implementation 'com.github.aabhasr1:OtpView:v1.1.2-ktx'
     implementation 'com.hbb20:ccp:2.3.8'
 

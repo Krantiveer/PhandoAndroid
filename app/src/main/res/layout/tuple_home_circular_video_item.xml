@@ -18,10 +18,10 @@
             android:id="@+id/img_thumbnail"
             android:layout_width="444dp"
             android:layout_height="444dp"
-            app:srcCompat="@drawable/ic_circular_play_placeholder"
             android:adjustViewBounds="true"
+            android:contentDescription="@string/app_name"
             android:scaleType="fitCenter"
-            android:contentDescription="@string/app_name" />
+            app:srcCompat="@drawable/ic_circular_play_placeholder" />
 
         <!--<ImageView
             android:layout_width="@dimen/_20sdp"

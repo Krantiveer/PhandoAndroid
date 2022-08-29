@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 class HomeFragmentHorizontalListItemViewHolder(
     itemView: View,
     listener: AdapterClickListener,
-    val imageOrientation: Int? = 0,
+    val imageOrientation: Int? = 0
 ) : BaseViewHolder<Video, AdapterClickListener>(itemView, listener) {
 
     init {
@@ -46,7 +46,7 @@ class HomeFragmentHorizontalListItemViewHolder(
         itemView.txtTitle.visible()
         item.duration?.let {
             itemView.duration.visible()
-            itemView.duration.text = getDurationString(item.duration)
+            itemView.duration.text = item.getFormatedDuration()
         }
         val duration: Int? = item.duration
 

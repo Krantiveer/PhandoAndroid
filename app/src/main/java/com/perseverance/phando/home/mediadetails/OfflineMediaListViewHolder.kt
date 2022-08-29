@@ -16,7 +16,8 @@ import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.item_my_list.view.*
 
 
-class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener) : BaseViewHolder<DownloadMetadata, AdapterClickListener>(itemView, listener) {
+class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener) :
+    BaseViewHolder<DownloadMetadata, AdapterClickListener>(itemView, listener) {
 
     init {
         itemView.setOnClickListener { v -> listener.onItemClick(v.tag) }
@@ -26,19 +27,31 @@ class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener)
     override fun onBind(downloadMetadata: DownloadMetadata) {
         itemView.tag = downloadMetadata
         Utils.displayImage(itemView.context, downloadMetadata.thumbnail,
-                R.drawable.video_placeholder,
-                R.drawable.video_placeholder, itemView.img_thumbnail)
+            R.drawable.video_placeholder,
+            R.drawable.video_placeholder, itemView.img_thumbnail)
+
         itemView.img_thumbnail.resizeView(ListItemThumbnail(), true)
-        itemView.title.text = downloadMetadata.title
-        itemView.details.text = downloadMetadata.description
+
+        if (!downloadMetadata.title.isNullOrEmpty() && !downloadMetadata.title.equals("null")) {
+            itemView.title.text = downloadMetadata.title
+        } else {
+            itemView.title.gone()
+        }
+
+        if (!downloadMetadata.description.isNullOrEmpty() && !downloadMetadata.description.equals("null")) {
+            itemView.details.text = downloadMetadata.description!!.replace("null","")
+        } else {
+            itemView.details.gone()
+        }
+
         itemView.rating.gone()
+
         itemView.option.setOnClickListener {
             val wrapper: Context = ContextThemeWrapper(itemView.context, R.style.popup_option)
             val popup = PopupMenu(wrapper, itemView.option)
             popup.inflate(R.menu.menu_my_list_options)
             popup.setOnMenuItemClickListener(object : PopupMenu.OnMenuItemClickListener {
                 override fun onMenuItemClick(item: MenuItem?): Boolean {
-
                     return when (item?.itemId) {
                         R.id.menu_delete -> {
                             listener.onItemClick(downloadMetadata.document_id)

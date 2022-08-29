@@ -84,8 +84,8 @@ class ProfileFragment : BaseFragment() {
                 val intent = Intent(requireActivity(), OfflineMediaListActivity::class.java)
                 startActivity(intent)
             }
-//            rate.id -> rateApplication()
-//            share.id -> shareApplication()
+            rate.id -> rateApplication()
+            share.id -> shareApplication()
         }
     }
 
@@ -154,7 +154,7 @@ class ProfileFragment : BaseFragment() {
         if (allData == null || allData.isEmpty()) {
             txtDownload.gone()
         } else {
-            txtDownload.gone()
+            txtDownload.visible()
         }
 
         txtSettings.setOnClickListener {

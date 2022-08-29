@@ -4,7 +4,6 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'androidx.navigation.safeargs'
 apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 32
@@ -88,7 +87,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable false
+            debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
             buildConfigField("String","TOPIC","\"com.perseverance.vyas\"")
             buildConfigField("String","DOMAIN_URI","\"https://vyas.page.link\"")
@@ -146,8 +145,8 @@ android {
         }
         vyas {
             applicationId "com.vyaspublications.ott"
-            versionCode 6
-            versionName "1.5"
+            versionCode 7
+            versionName "1.6"
             signingConfig signingConfigs.configVyas
         }
 
@@ -238,8 +237,8 @@ dependencies {
     // Recommended: Add the Firebase SDK for Google Analytics.
     implementation 'com.google.firebase:firebase-analytics:21.1.0'
 
-    // Add the Firebase SDK for Crashlytics.
-    implementation 'com.google.firebase:firebase-crashlytics:18.2.12'
+//    // Add the Firebase SDK for Crashlytics.
+//    implementation 'com.google.firebase:firebase-crashlytics:18.2.12'
 
     //implementation files('src/main/libs/razorpay-upi-intent-sdk.jar')
     implementation 'com.razorpay:checkout:1.6.24'
@@ -263,6 +262,9 @@ dependencies {
     implementation "net.gotev:uploadservice:$uploadServiceVersion"
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.17'
 
-
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.11.0'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.11.0'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.11.0'
+    implementation 'com.google.android.exoplayer:extension-ima:2.11.0'
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
 }

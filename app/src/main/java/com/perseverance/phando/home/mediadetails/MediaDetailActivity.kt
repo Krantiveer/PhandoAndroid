@@ -30,6 +30,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
+import com.google.android.exoplayer2.source.ProgressiveMediaSource
+import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.dynamiclinks.ktx.*
@@ -65,10 +71,11 @@ import com.perseverance.phando.utils.*
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
 import kotlinx.android.synthetic.main.activity_video_details.*
+import kotlinx.android.synthetic.main.audio_player_controller.*
 import kotlinx.android.synthetic.main.content_detail.*
 
 class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
-    PhandoPlayerCallback, PurchaseOptionSelection {
+    PhandoPlayerCallback, PurchaseOptionSelection, Player.EventListener {
     override var screenName = ""
     private lateinit var purchaseOption: PurchaseOption
     private var razorpayOrdertId: String? = null
@@ -302,54 +309,100 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     private var trailerListAdapter: TrailerListAdapter? = null
     private var relatedEpisodeListAdapter: RelatedEpisodeListAdapter? = null
 
+
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
-        nextEpisode.gone()
         MyLog.d("debugUrl", mediaUrl)
-        playerThumbnailContainer.gone()
-        phandoPlayerView.visible()
-        play.gone()
-        val intent = Intent()
-        val uri = Uri.parse(mediaUrl)
-        // val uri = Uri.parse("https://seventv.livebox.co.in/sevenwonderstvhls/live.m3u8")
-        val subtitleUri = ArrayList<String>()
-        mediaMetadata?.cc_files?.let {
-            if (it.isNotEmpty()) {
-                it.forEach { ccInfo ->
-                    subtitleUri.add("${ccInfo.url},${ccInfo.mime_type},${ccInfo.language_code}")
+        nextEpisode.gone()
+
+        if (mediaMetadata?.media_type?.equals("audio")!!) {
+            audio.visible()
+            imgAudioThumb.visible()
+            playerThumbnailContainer.visible()
+            download.gone()
+            audio.showController()
+            audio.setControllerShowTimeoutMs(0);
+            audio.setControllerHideOnTouch(false);
+            Utils.displayImage(this,
+                mediaMetadata?.thumbnail,
+                R.drawable.video_placeholder,
+                R.drawable.video_placeholder,
+                imgAudioThumb
+            )
+            setAudioPlayer(mediaUrl)
+        } else {
+            imgAudioThumb.gone()
+            audio.gone()
+            playerThumbnailContainer.gone()
+            phandoPlayerView.visible()
+            play.gone()
+            val intent = Intent()
+            val uri = Uri.parse(mediaUrl)
+            // val uri = Uri.parse("https://seventv.livebox.co.in/sevenwonderstvhls/live.m3u8")
+            val subtitleUri = ArrayList<String>()
+            mediaMetadata?.cc_files?.let {
+                if (it.isNotEmpty()) {
+                    it.forEach { ccInfo ->
+                        subtitleUri.add("${ccInfo.url},${ccInfo.mime_type},${ccInfo.language_code}")
+                    }
                 }
             }
-        }
-        var isLive = false
-        mediaMetadata?.is_live?.let {
-            isLive = it == 1
+            var isLive = false
+            mediaMetadata?.is_live?.let {
+                isLive = it == 1
+            }
+
+            val subtitleInfo: VideoPlayerMetadata.SubtitleInfo? =
+                if (subtitleUri == null || subtitleUri.isEmpty()) null else VideoPlayerMetadata.SubtitleInfo(
+                    subtitleUri,
+                    "application/ttml+xml",
+                    "en")
+            val sample: VideoPlayerMetadata = UriSample(
+                null,
+                uri,
+                null,
+                isLive,
+                null,
+                if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
+                null,
+                subtitleInfo
+                //,null
+            )
+            intent.putExtra(
+                PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
+            val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
+            intent.putExtra(PhandoPlayerView.ABR_ALGORITHM_EXTRA, abrAlgorithm)
+            intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
+            intent.putExtra(PhandoPlayerView.PLAYER_LOGO, R.mipmap.ic_launcher)
+            intent.putExtra(PhandoPlayerView.KEY_POSITION, seekTo)
+            sample.addToIntent(intent)
+            phandoPlayerView.setVideoData(intent)
+            phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
+
         }
 
-        val subtitleInfo: VideoPlayerMetadata.SubtitleInfo? =
-            if (subtitleUri == null || subtitleUri.isEmpty()) null else VideoPlayerMetadata.SubtitleInfo(
-                subtitleUri,
-                "application/ttml+xml",
-                "en")
-        val sample: VideoPlayerMetadata = UriSample(
-            null,
-            uri,
-            null,
-            isLive,
-            null,
-            if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
-            null,
-            subtitleInfo
-            //,null
-        )
-        intent.putExtra(
-            PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
-        val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
-        intent.putExtra(PhandoPlayerView.ABR_ALGORITHM_EXTRA, abrAlgorithm)
-        intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
-        intent.putExtra(PhandoPlayerView.PLAYER_LOGO, R.mipmap.ic_launcher)
-        intent.putExtra(PhandoPlayerView.KEY_POSITION, seekTo)
-        sample.addToIntent(intent)
-        phandoPlayerView.setVideoData(intent)
-        phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
+    }
+
+    lateinit var audioPlayer: SimpleExoPlayer
+    fun setAudioPlayer(mediaUrl: String) {
+        val renderersFactory = DefaultRenderersFactory(this)
+        val trackSelectionFactory = AdaptiveTrackSelection.Factory()
+        val trackSelectSelector = DefaultTrackSelector(trackSelectionFactory)
+        val loadControl = DefaultLoadControl()
+
+        audioPlayer = ExoPlayerFactory.newSimpleInstance(this,
+            renderersFactory,
+            trackSelectSelector,
+            loadControl)
+        audioPlayer.addListener(this)
+        audioPlayer.playWhenReady = true
+        val dataSourceFactory = DefaultDataSourceFactory(this, getString(R.string.app_name))
+        val extractorsFactory = DefaultExtractorsFactory()
+
+        val mediaSource = ProgressiveMediaSource
+            .Factory(dataSourceFactory, extractorsFactory)
+            .createMediaSource(Uri.parse(mediaUrl))
+        audioPlayer.prepare(mediaSource)
+        audio.player = audioPlayer
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -397,6 +450,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder,
                 playerThumbnail)
+
+            Utils.displayImage(this,
+                it.thumbnail,
+                R.drawable.video_placeholder,
+                R.drawable.video_placeholder,
+                imgAudioThumb
+            )
         }
         favorite.setOnClickListener {
             mediaMetadata?.can_share?.let {
@@ -528,6 +588,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
         watchNow.setOnClickListener {
             playVideo()
+            if (mediaMetadata?.media_type.equals("audio")) {
+                audioPlayer.seekTo(0)
+                audioPlayer.playWhenReady
+            }
         }
 
         viewMore.setOnClickListener {
@@ -1049,9 +1113,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 //            otherText.add(it.toString())
 //            ratingLogo.visible()
 //        }
-        mediaMetadata?.maturity_rating?.let {
-            otherText.add(it)
-        }
+//        mediaMetadata?.maturity_rating?.let {
+//            otherText.add(it)
+//        }
         mediaMetadata?.genres?.let {
             otherText.addAll(it)
         }
@@ -1275,6 +1339,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     override fun onResume() {
         super.onResume()
         mListener?.enable()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (this::audioPlayer.isInitialized && audioPlayer != null) {
+            audioPlayer.release()
+        }
     }
 
     override fun onPause() {

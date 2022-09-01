@@ -1436,6 +1436,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                         R.drawable.video_placeholder,
                         R.drawable.video_placeholder,
                         playerThumbnail)
+
+                    if (this::audioPlayer.isInitialized && audioPlayer != null) {
+                        audioPlayer.release()
+                    }
+
                     mediaDetailViewModel.refreshMediaMetadata(data)
                     mediaDetailViewModel.loginFor.value = 0
                     baseVideo = data
@@ -1449,6 +1454,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     baseVideo.title = data.id.toString()
                     baseVideo.is_free = data.is_free
                     baseVideo.type = data.type
+
+                    if (this::audioPlayer.isInitialized && audioPlayer != null) {
+                        audioPlayer.release()
+                    }
                     mediaDetailViewModel.refreshMediaMetadata(baseVideo)
 //                    startActivity(getDetailIntent(this@MediaDetailActivity, baseVideo))
 //                    finish()

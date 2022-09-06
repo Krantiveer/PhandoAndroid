@@ -1339,19 +1339,35 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     override fun onResume() {
         super.onResume()
         mListener?.enable()
+
     }
 
     override fun onStop() {
         super.onStop()
         if (this::audioPlayer.isInitialized && audioPlayer != null) {
-            audioPlayer.release()
+            audioPlayer?.playWhenReady = false
+            releasePlayer()
         }
     }
+
+    private fun releasePlayer() {
+        try {
+            if (this::audioPlayer.isInitialized && audioPlayer != null) {
+                audioPlayer?.release()
+            }
+        } catch (e: Exception) {
+
+        }
+    }
+
 
     override fun onPause() {
         super.onPause()
         mListener?.disable()
         updateCurrentPositionOnServer()
+        if (this::audioPlayer.isInitialized && audioPlayer != null) {
+            audioPlayer?.playWhenReady = false
+        }
     }
 
     private fun updateCurrentPositionOnServer() {
@@ -1431,16 +1447,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     intent.putExtra(Key.CATEGORY, data)
                     startActivity(intent)
                 } else {
+                    if (this::audioPlayer.isInitialized && audioPlayer != null) {
+                        audioPlayer.playWhenReady = false
+                        audioPlayer.stop()
+                    }
                     Utils.displayImage(this,
                         data.thumbnail,
                         R.drawable.video_placeholder,
                         R.drawable.video_placeholder,
                         playerThumbnail)
-
-                    if (this::audioPlayer.isInitialized && audioPlayer != null) {
-                        audioPlayer.release()
-                    }
-
                     mediaDetailViewModel.refreshMediaMetadata(data)
                     mediaDetailViewModel.loginFor.value = 0
                     baseVideo = data

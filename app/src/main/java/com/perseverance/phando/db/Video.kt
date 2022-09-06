@@ -12,6 +12,7 @@ data class Video(
     var thumbnail: String? = null,
     var description: String? = null,
     val detail: String? = null,
+    val media_type: String? = null,
     val duration: Int? = null,
     val poster: String? = null,
     val genres: List<String>? = null,

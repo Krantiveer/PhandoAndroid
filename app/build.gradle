@@ -145,8 +145,8 @@ android {
         }
         vyas {
             applicationId "com.vyaspublications.ott"
-            versionCode 8
-            versionName "1.7"
+            versionCode 9
+            versionName "1.8"
             signingConfig signingConfigs.configVyas
         }
 

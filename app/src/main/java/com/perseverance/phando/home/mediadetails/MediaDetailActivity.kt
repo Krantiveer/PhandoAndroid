@@ -314,7 +314,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         MyLog.d("debugUrl", mediaUrl)
         nextEpisode.gone()
 
-        if (mediaMetadata?.media_type?.equals("audio")!!) {
+       /* if (mediaMetadata?.media_type?.equals("audio")!!) {
             audio.visible()
             imgAudioThumb.visible()
             playerThumbnailContainer.visible()
@@ -329,7 +329,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 imgAudioThumb
             )
             setAudioPlayer(mediaUrl)
-        } else {
+        } else {*/
             imgAudioThumb.gone()
             audio.gone()
             playerThumbnailContainer.gone()
@@ -378,7 +378,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             phandoPlayerView.setVideoData(intent)
             phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
 
-        }
+
 
     }
 
@@ -1176,6 +1176,23 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         // play video if live media or last_watch_time > 0
 //        if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
         playVideo()
+
+        if (mediaMetadata?.media_type?.equals("audio")!!) {
+            audio.visible()
+            imgAudioThumb.visible()
+            playerThumbnailContainer.visible()
+            download.gone()
+            audio.showController()
+            audio.setControllerShowTimeoutMs(0);
+            audio.setControllerHideOnTouch(false);
+            Utils.displayImage(this,
+                mediaMetadata?.thumbnail,
+                R.drawable.video_placeholder,
+                R.drawable.video_placeholder,
+                imgAudioThumb
+            )
+            setAudioPlayer(mediaMetadata!!.media_url)
+        }
 //        }
 
         mediaMetadata?.next_media?.let {
@@ -1367,6 +1384,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         updateCurrentPositionOnServer()
         if (this::audioPlayer.isInitialized && audioPlayer != null) {
             audioPlayer?.playWhenReady = false
+            audioPlayer.setPlayWhenReady(false)
         }
     }
 

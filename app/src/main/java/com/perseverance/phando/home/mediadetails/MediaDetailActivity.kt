@@ -311,13 +311,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
-        MyLog.d("@@debugUrl", mediaUrl)
+        MyLog.d("debugUrl", mediaUrl)
         nextEpisode.gone()
 
-       /* if (mediaMetadata?.media_type?.equals("audio")!!) {
+        if (mediaMetadata?.media_type?.equals("audio")!!) {
+            releasePlayer()
             audio.visible()
             imgAudioThumb.visible()
             playerThumbnailContainer.visible()
+            play.gone()
             download.gone()
             audio.showController()
             audio.setControllerShowTimeoutMs(0);
@@ -329,9 +331,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 imgAudioThumb
             )
             setAudioPlayer(mediaUrl)
-        }
-
-        else {*/
+        } else {
             imgAudioThumb.gone()
             audio.gone()
             playerThumbnailContainer.gone()
@@ -357,8 +357,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 if (subtitleUri == null || subtitleUri.isEmpty()) null else VideoPlayerMetadata.SubtitleInfo(
                     subtitleUri,
                     "application/ttml+xml",
-                    "en"
-                )
+                    "en")
             val sample: VideoPlayerMetadata = UriSample(
                 null,
                 uri,
@@ -371,8 +370,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 //,null
             )
             intent.putExtra(
-                PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false
-            )
+                PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
             val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
             intent.putExtra(PhandoPlayerView.ABR_ALGORITHM_EXTRA, abrAlgorithm)
             intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
@@ -381,6 +379,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             sample.addToIntent(intent)
             phandoPlayerView.setVideoData(intent)
             phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
+
+        }
 
     }
 
@@ -734,61 +734,21 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     private fun playVideo() {
-
-        Log.e("@@playVideo", mediaMetadata!!.media_url)
         when (mediaPlaybackData.mediaCode) {
             "free" -> {
                 mediaMetadata?.media_reference_type?.let {
                     if (it == "media_trailor") {
-
-                        if (mediaMetadata?.media_type?.equals("audio")!!) {
-                            audio.visible()
-                            imgAudioThumb.visible()
-                            playerThumbnailContainer.visible()
-                            download.gone()
-                            phandoPlayerView.gone()
-                            audio.showController()
-                            audio.setControllerShowTimeoutMs(0);
-                            audio.setControllerHideOnTouch(false);
-                            audio.setControllerHideOnTouch(false);
-                            Utils.displayImage(this,
-                                mediaMetadata?.thumbnail,
-                                R.drawable.video_placeholder,
-                                R.drawable.video_placeholder,
-                                imgAudioThumb
-                            )
-                            setAudioPlayer(mediaMetadata!!.media_url)
-                        }  else {
-                            playVideoTrailer()
-                        }
+                        playVideoTrailer()
                     } else {
                         mediaMetadata?.media_url?.let {
-                            if (mediaMetadata?.media_type?.equals("audio")!!) {
-                                audio.visible()
-                                imgAudioThumb.visible()
-                                playerThumbnailContainer.visible()
-                                download.gone()
-                                phandoPlayerView.gone()
-                                audio.showController()
-                                audio.controllerShowTimeoutMs = 0
-                                audio.controllerHideOnTouch = false
-                                Utils.displayImage(this, mediaMetadata?.thumbnail, R.drawable.video_placeholder,
-                                    R.drawable.video_placeholder,
-                                    imgAudioThumb
-                                )
-                                setAudioPlayer(mediaMetadata!!.media_url)
-                            }  else {
-                                isVideoPlayed = true
-                                isTrailerPlaying = false
-                                play.gone()
-                                videoTitle.text = mediaMetadata?.title
-                                gaTitle = mediaMetadata?.title ?: "media_title_not_found"
-                                setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app,
-                                    mediaUrl = mediaMetadata?.media_url!!,
-                                    seekTo = mediaMetadata!!.last_watch_time)
-                            }
-
-
+                            isVideoPlayed = true
+                            isTrailerPlaying = false
+                            play.gone()
+                            videoTitle.text = mediaMetadata?.title
+                            gaTitle = mediaMetadata?.title ?: "media_title_not_found"
+                            setDataToPlayer(addUrl = mediaMetadata?.ad_url_mobile_app,
+                                mediaUrl = mediaMetadata?.media_url!!,
+                                seekTo = mediaMetadata!!.last_watch_time)
                         }
                     }
                 } ?: kotlin.run {
@@ -1218,23 +1178,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         // play video if live media or last_watch_time > 0
 //        if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
         playVideo()
-
-     /*   if (mediaMetadata?.media_type?.equals("audio")!!) {
-            audio.visible()
-            imgAudioThumb.visible()
-            playerThumbnailContainer.visible()
-            download.gone()
-            audio.showController()
-            audio.setControllerShowTimeoutMs(0);
-            audio.setControllerHideOnTouch(false);
-            Utils.displayImage(this,
-                mediaMetadata?.thumbnail,
-                R.drawable.video_placeholder,
-                R.drawable.video_placeholder,
-                imgAudioThumb
-            )
-            setAudioPlayer(mediaMetadata!!.media_url)
-        }*/
 //        }
 
         mediaMetadata?.next_media?.let {
@@ -1426,7 +1369,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         updateCurrentPositionOnServer()
         if (this::audioPlayer.isInitialized && audioPlayer != null) {
             audioPlayer?.playWhenReady = false
-            audioPlayer.setPlayWhenReady(false)
         }
     }
 
@@ -1500,6 +1442,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
     override fun onItemClick(data: Any) {
         updateCurrentPositionOnServer()
+        releasePlayer()
+
         when (data) {
             is Video -> {
                 if ("T".equals(data.type)) {
@@ -1507,10 +1451,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     intent.putExtra(Key.CATEGORY, data)
                     startActivity(intent)
                 } else {
-                    if (this::audioPlayer.isInitialized && audioPlayer != null) {
-                        audioPlayer.playWhenReady = false
-                        audioPlayer.stop()
-                    }
                     Utils.displayImage(this,
                         data.thumbnail,
                         R.drawable.video_placeholder,
@@ -1530,9 +1470,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     baseVideo.is_free = data.is_free
                     baseVideo.type = data.type
 
-                    if (this::audioPlayer.isInitialized && audioPlayer != null) {
-                        audioPlayer.release()
-                    }
+
                     mediaDetailViewModel.refreshMediaMetadata(baseVideo)
 //                    startActivity(getDetailIntent(this@MediaDetailActivity, baseVideo))
 //                    finish()

@@ -48,7 +48,7 @@
                 app:use_controller="true"
                 app:hide_on_touch="false"
                 android:visibility="gone"
-                app:controller_layout_id="@layout/audio_player_controller"/>
+                app:controller_layout_id="@layout/exo_playback_control_view"/>
 
             <com.videoplayer.PhandoPlayerView
                 android:id="@+id/phandoPlayerView"

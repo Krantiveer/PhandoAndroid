@@ -72,6 +72,7 @@ import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
 import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.audio_player_controller.*
+import kotlinx.android.synthetic.main.audio_player_controller.view.*
 import kotlinx.android.synthetic.main.content_detail.*
 
 class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
@@ -666,6 +667,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         //ad.loadAds(BannerType.SCREEN_DETAIL)
     }
 
+    private fun pausePlayer() {
+        audioPlayer.setPlayWhenReady(false)
+        audioPlayer.getPlaybackState()
+    }
+
+    private fun startPlayer() {
+        audioPlayer.setPlayWhenReady(true)
+        audioPlayer.getPlaybackState()
+    }
     private fun startDownload() {
         mediaMetadata?.media_url?.let {
             if (it.isNullOrEmpty()) {
@@ -979,7 +989,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                                 buyMedia.tag = it
                             }
                         }
-
                     } else {
                         when (it.key) {
                             "rent_price" -> {
@@ -994,7 +1003,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                             }
                         }
                     }
-
                 }
             }
             "only_rent" -> {
@@ -1500,7 +1508,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
     override fun onItemClick(data: Any) {
         updateCurrentPositionOnServer()
+
         when (data) {
+
             is Video -> {
                 if ("T".equals(data.type)) {
                     val intent = Intent(this@MediaDetailActivity, SeriesActivity::class.java)

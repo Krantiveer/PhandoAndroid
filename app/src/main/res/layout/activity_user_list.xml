@@ -21,7 +21,10 @@
             android:background="@color/app_theme_color"
             app:layout_scrollFlags="scroll|enterAlways"
             app:theme="@style/HomeToolbarTheme"
-            app:titleTextColor="@color/white"></androidx.appcompat.widget.Toolbar>
+            app:titleTextColor="@color/white">
+
+
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <com.google.android.material.card.MaterialCardView

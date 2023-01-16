@@ -309,30 +309,35 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     private var trailerListAdapter: TrailerListAdapter? = null
     private var relatedEpisodeListAdapter: RelatedEpisodeListAdapter? = null
 
+    lateinit var audioPlayer: SimpleExoPlayer
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
         MyLog.d("debugUrl", mediaUrl)
         nextEpisode.gone()
 
         if (mediaMetadata?.media_type?.equals("audio")!!) {
+
             releasePlayer()
             audio.visible()
-            imgAudioThumb.visible()
+
+         //   imgAudioThumb.visible()
             playerThumbnailContainer.visible()
             play.gone()
             download.gone()
             audio.showController()
-            audio.setControllerShowTimeoutMs(0);
-            audio.setControllerHideOnTouch(false);
-            Utils.displayImage(this,
+            audio.setControllerShowTimeoutMs(0)
+
+            audio.setControllerHideOnTouch(false)
+
+           /* Utils.displayImage(this,
                 mediaMetadata?.thumbnail,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder,
                 imgAudioThumb
-            )
+            )*/
             setAudioPlayer(mediaUrl)
         } else {
-            imgAudioThumb.gone()
+         //   imgAudioThumb.gone()
             audio.gone()
             playerThumbnailContainer.gone()
             phandoPlayerView.visible()
@@ -384,8 +389,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
     }
 
-    lateinit var audioPlayer: SimpleExoPlayer
+
+
     fun setAudioPlayer(mediaUrl: String) {
+
         val renderersFactory = DefaultRenderersFactory(this)
         val trackSelectionFactory = AdaptiveTrackSelection.Factory()
         val trackSelectSelector = DefaultTrackSelector(trackSelectionFactory)
@@ -405,6 +412,22 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             .createMediaSource(Uri.parse(mediaUrl))
         audioPlayer.prepare(mediaSource)
         audio.player = audioPlayer
+
+        audioPlayer.addListener(object :Player.EventListener{
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                super.onPlayerStateChanged(playWhenReady, playbackState)
+                if (playbackState == Player.STATE_ENDED) {
+
+                    Log.e("@@state", playbackState.toString())
+
+                }
+
+            }
+
+
+        })
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -453,12 +476,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 R.drawable.video_placeholder,
                 playerThumbnail)
 
-            Utils.displayImage(this,
-                it.thumbnail,
-                R.drawable.video_placeholder,
-                R.drawable.video_placeholder,
-                imgAudioThumb
-            )
+          /*  if (imgAudioThumb!= null){
+                Utils.displayImage(this,
+                    it.thumbnail,
+                    R.drawable.video_placeholder,
+                    R.drawable.video_placeholder,
+                    imgAudioThumb
+                )
+            }*/
+
         }
         favorite.setOnClickListener {
             mediaMetadata?.can_share?.let {
@@ -663,6 +689,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
             }
         }
+
+
+
         //ad.loadAds(BannerType.SCREEN_DETAIL)
     }
 

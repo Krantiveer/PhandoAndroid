@@ -536,7 +536,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                     sheetBehavior?.setState(BottomSheetBehavior.STATE_COLLAPSED)
                 }
             }
-
             is CategoryTab -> {
                 if (data.isFilter) {
                     if (sheetBehavior?.state != BottomSheetBehavior.STATE_EXPANDED) {
@@ -600,7 +599,6 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
 
             }
         }
-
     }
 
     private fun observeUserProfile() {

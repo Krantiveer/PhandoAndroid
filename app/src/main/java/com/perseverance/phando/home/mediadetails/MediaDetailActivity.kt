@@ -329,12 +329,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
             audio.setControllerHideOnTouch(false)
 
-           /* Utils.displayImage(this,
+            Utils.displayImage(this,
                 mediaMetadata?.thumbnail,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder,
                 imgAudioThumb
-            )*/
+            )
             setAudioPlayer(mediaUrl)
         } else {
          //   imgAudioThumb.gone()
@@ -1123,14 +1123,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
             if (it == 1) {
                 txtPlay.text = "Go Live"
-            }
-        }
-
-        mediaMetadata?.can_download?.let {
-            if (it) {
-                download.visible()
-            } else {
-                download.gone()
             }
         }
         mediaDetailViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)

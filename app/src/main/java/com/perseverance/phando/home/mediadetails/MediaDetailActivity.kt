@@ -323,7 +323,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
          //   imgAudioThumb.visible()
             playerThumbnailContainer.visible()
             play.gone()
-            download.gone()
+            download.visible()
             audio.showController()
             audio.setControllerShowTimeoutMs(0)
 
@@ -1123,6 +1123,14 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
             if (it == 1) {
                 txtPlay.text = "Go Live"
+            }
+        }
+
+        mediaMetadata?.can_download?.let {
+            if (it) {
+                download.visible()
+            } else {
+                download.gone()
             }
         }
         mediaDetailViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)

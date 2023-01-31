@@ -1,5 +1,6 @@
 package com.perseverance.phando.home.mediadetails
 
+
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -61,6 +62,7 @@ import com.perseverance.phando.home.mediadetails.payment.PurchaseOption
 import com.perseverance.phando.home.mediadetails.payment.PurchaseOptionBottomSheetFragment
 import com.perseverance.phando.home.mediadetails.payment.PurchaseOptionSelection
 import com.perseverance.phando.home.profile.login.LoginActivity
+import com.perseverance.phando.home.series.Episode
 import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.home.videolist.BaseCategoryListAdapter
 import com.perseverance.phando.payment.paymentoptions.PaymentActivity
@@ -89,6 +91,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
     var baseVideo: Video? = null
     var gaTitle: String? = ""
+    var episodesList: ArrayList<Episode>? = ArrayList<Episode>()
+    var position = 0
 
     companion object {
         const val LOGIN_FOR_RENT = 1
@@ -138,6 +142,35 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     val arg = Bundle()
                     arg.apply {
                         putParcelable(ARG_VIDEO, video)
+                        if (trailerId != null) {
+                            if (trailerId.isNotBlank() && trailerId != "0") {
+                                putExtra(TRAILER_ID, trailerId)
+                            }
+                        }
+                    }
+                    putExtras(arg)
+                }
+                return intent
+            }
+        }
+
+        fun getDetailIntentList(
+            context: Context,
+            video: Video,
+            trailerId: String? = "",
+            fromDyLink: Boolean = false,
+            episodes: ArrayList<Episode>
+        ): Intent {
+            if (video.is_free == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
+                return Intent(context, LoginActivity::class.java)
+            } else {
+                val intent = Intent(context, MediaDetailActivity::class.java)
+                intent.apply {
+                    putExtra("fromDyLink", fromDyLink)
+                    val arg = Bundle()
+                    arg.apply {
+                        putParcelable(ARG_VIDEO, video)
+                        putSerializable("seasonList", episodes)
                         if (trailerId != null) {
                             if (trailerId.isNotBlank() && trailerId != "0") {
                                 putExtra(TRAILER_ID, trailerId)
@@ -309,35 +342,32 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     private var trailerListAdapter: TrailerListAdapter? = null
     private var relatedEpisodeListAdapter: RelatedEpisodeListAdapter? = null
 
-    lateinit var audioPlayer: SimpleExoPlayer
+    lateinit var audioPlayerExpo: SimpleExoPlayer
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
         MyLog.d("debugUrl", mediaUrl)
         nextEpisode.gone()
 
         if (mediaMetadata?.media_type?.equals("audio")!!) {
-
             releasePlayer()
             audio.visible()
-
-         //   imgAudioThumb.visible()
+            imgAudioThumbNail.visible()
             playerThumbnailContainer.visible()
             play.gone()
             download.visible()
             audio.showController()
             audio.setControllerShowTimeoutMs(0)
-
             audio.setControllerHideOnTouch(false)
 
             Utils.displayImage(this,
                 mediaMetadata?.thumbnail,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder,
-                imgAudioThumb
+                imgAudioThumbNail
             )
             setAudioPlayer(mediaUrl)
         } else {
-         //   imgAudioThumb.gone()
+            imgAudioThumbNail.gone()
             audio.gone()
             playerThumbnailContainer.gone()
             phandoPlayerView.visible()
@@ -398,27 +428,32 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         val trackSelectSelector = DefaultTrackSelector(trackSelectionFactory)
         val loadControl = DefaultLoadControl()
 
-        audioPlayer = ExoPlayerFactory.newSimpleInstance(this,
+        audioPlayerExpo = ExoPlayerFactory.newSimpleInstance(this,
             renderersFactory,
             trackSelectSelector,
             loadControl)
-        audioPlayer.addListener(this)
-        audioPlayer.playWhenReady = true
+        audioPlayerExpo.addListener(this)
+        audioPlayerExpo.playWhenReady = true
         val dataSourceFactory = DefaultDataSourceFactory(this, getString(R.string.app_name))
         val extractorsFactory = DefaultExtractorsFactory()
 
         val mediaSource = ProgressiveMediaSource
             .Factory(dataSourceFactory, extractorsFactory)
             .createMediaSource(Uri.parse(mediaUrl))
-        audioPlayer.prepare(mediaSource)
-        audio.player = audioPlayer
-
-        audioPlayer.addListener(object :Player.EventListener{
+        audioPlayerExpo.prepare(mediaSource)
+        audio.player = audioPlayerExpo
+        audioPlayerExpo.addListener(object :Player.EventListener{
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 super.onPlayerStateChanged(playWhenReady, playbackState)
                 if (playbackState == Player.STATE_ENDED) {
 
                     Log.e("@@state", playbackState.toString())
+                    mediaMetadata?.next_media?.let {
+                        nextMediaMetadata?.let {
+                            onGetVideoMetaDataSuccess(it)
+                        }
+                    }
+
 
                 }
 
@@ -426,8 +461,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
         })
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -468,6 +501,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         } catch (e: Exception) {
         }
         baseVideo = intent?.getParcelableExtra(ARG_VIDEO)
+        episodesList = intent?.getSerializableExtra("seasonList") as ArrayList<Episode>?
         baseVideo?.let {
             mediaDetailViewModel.refreshMediaMetadata(it)
             Utils.displayImage(this,
@@ -476,14 +510,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 R.drawable.video_placeholder,
                 playerThumbnail)
 
-          /*  if (imgAudioThumb!= null){
-                Utils.displayImage(this,
-                    it.thumbnail,
-                    R.drawable.video_placeholder,
-                    R.drawable.video_placeholder,
-                    imgAudioThumb
-                )
-            }*/
+            /*  if (imgAudioThumb!= null){
+                  Utils.displayImage(this,
+                      it.thumbnail,
+                      R.drawable.video_placeholder,
+                      R.drawable.video_placeholder,
+                      imgAudioThumb
+                      imgAudioThumb
+                  )
+              }*/
 
         }
         favorite.setOnClickListener {
@@ -617,8 +652,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         watchNow.setOnClickListener {
             playVideo()
             if (mediaMetadata?.media_type.equals("audio")) {
-                audioPlayer.seekTo(0)
-                audioPlayer.playWhenReady
+                audioPlayerExpo.seekTo(0)
+                audioPlayerExpo.playWhenReady
             }
         }
 
@@ -691,6 +726,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
 
 
+//        Log.e("@@mediaurl", mediaMetadata!!.media_url)
+        setAudioPlayer("mediaMetadata!!.media_url")
 
         //ad.loadAds(BannerType.SCREEN_DETAIL)
     }
@@ -834,7 +871,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         prepareShareMedia(mediaPlaybackData.data.share_url)
 
     }
-
     private fun playVideoTrailer(tId: Int? = null) {
         var trailerId: Int? = tId ?: mediaPlaybackData.data.trailer_id
         if (!isVideoPlayed && !isTrailerPlaying) {
@@ -856,8 +892,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
         }
     }
-
-
     private fun updateTrailerList(trailerId: Int) {
         mediaMetadata?.trailers?.forEach {
             it.isSelected = it.id == trailerId
@@ -1125,6 +1159,14 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 txtPlay.text = "Go Live"
             }
         }
+
+        mediaMetadata?.can_download?.let {
+            if (it) {
+                download.visible()
+            } else {
+                download.gone()
+            }
+        }
         mediaDetailViewModel.refreshDownloadStatus(mediaMetadata?.media_url!!)
         var description = mediaMetadata?.detail
         mediaMetadata?.other_credits?.let {
@@ -1194,7 +1236,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         mediaDetailViewModel.isLiked.postValue(mediaMetadata?.is_like)
         mediaDetailViewModel.isDisliked.postValue(mediaMetadata?.is_dislike)
         setRelatedVideo()
-
 
 //        if (!isTrailerPlaying && play.visibility != View.VISIBLE) {
 //            playVideo()
@@ -1353,6 +1394,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onBackPressed() {
+
+        releasePlayer()
         when (resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 if (fromDyLink) {
@@ -1371,36 +1414,38 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         super.onResume()
         mListener?.enable()
 
+        if(audioPlayerExpo != null) {
+            audioPlayerExpo.seekTo(position.toLong())
+            audioPlayerExpo.playWhenReady = true
+        }
+
     }
 
     override fun onStop() {
         super.onStop()
-        if (this::audioPlayer.isInitialized && audioPlayer != null) {
-            audioPlayer?.playWhenReady = false
-            releasePlayer()
+        if (this::audioPlayerExpo.isInitialized && audioPlayerExpo != null) {
+            // releasePlayer()
         }
     }
 
     private fun releasePlayer() {
         try {
-            if (this::audioPlayer.isInitialized && audioPlayer != null) {
-                audioPlayer?.release()
+            if (this::audioPlayerExpo.isInitialized && audioPlayerExpo != null) {
+                audioPlayerExpo?.release()
             }
         } catch (e: Exception) {
 
         }
     }
-
-
     override fun onPause() {
         super.onPause()
         mListener?.disable()
         updateCurrentPositionOnServer()
-        if (this::audioPlayer.isInitialized && audioPlayer != null) {
-            audioPlayer?.playWhenReady = false
+        if(audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
+            position = audioPlayerExpo.contentPosition.toInt()
+            audioPlayerExpo.setPlayWhenReady(false)
         }
     }
-
     private fun updateCurrentPositionOnServer() {
         if (isTrailerPlaying) {
             return
@@ -1468,11 +1513,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
         }
     }
-
     override fun onItemClick(data: Any) {
         updateCurrentPositionOnServer()
         releasePlayer()
-
         when (data) {
             is Video -> {
                 if ("T".equals(data.type)) {

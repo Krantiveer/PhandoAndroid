@@ -19,6 +19,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -112,7 +113,18 @@ public class DemoDownloadService extends DownloadService {
             if (download.state == Download.STATE_COMPLETED) {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction("android.intent.action.OfflineMediaListActivity");
-                PendingIntent intent1 = PendingIntent.getActivity(context, 1000, sendIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+                PendingIntent intent1 = null;
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    intent1 = PendingIntent.getActivity(context, 1000, sendIntent, PendingIntent.FLAG_IMMUTABLE);
+                }
+                else
+                {
+                    intent1 = PendingIntent.getActivity(context, 1000, sendIntent,PendingIntent.FLAG_ONE_SHOT);
+                }
+
+              //  PendingIntent intent1 = PendingIntent.getActivity(context, 1000, sendIntent, PendingIntent.FLAG_IMMUTABLE);
                 notification =
                         notificationHelper.buildDownloadCompletedNotification(
                                 R.drawable.ic_download_done,

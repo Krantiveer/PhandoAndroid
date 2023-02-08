@@ -338,8 +338,6 @@ class HomeActivity : BaseScreenTrackingActivity(),
         }
 
     }
-
-
     private fun onGetAppInfoSuccess(appInfo: AppInfo) {
         val storeVersion = appInfo.currentVersion
         val forceUpdate = appInfo.isForceUpdate
@@ -361,7 +359,6 @@ class HomeActivity : BaseScreenTrackingActivity(),
             dialog.setTitle("Update Available")
             dialog.setMessage("A new version of " + getString(R.string.app_name) + " is available on Play Store. Do you want to update?")
             dialog.setCancelable(false)
-
             dialog.setPositiveButton("Yes, update") { dialog, which ->
                 try {
                     startActivity(Intent(Intent.ACTION_VIEW,
@@ -370,10 +367,8 @@ class HomeActivity : BaseScreenTrackingActivity(),
                     startActivity(Intent(Intent.ACTION_VIEW,
                         Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
                 }
-
                 this@HomeActivity.finish()
             }
-
             if (!forceUpdate) {
                 dialog.setNegativeButton("No, leave it!") { dialog, which -> }
             }

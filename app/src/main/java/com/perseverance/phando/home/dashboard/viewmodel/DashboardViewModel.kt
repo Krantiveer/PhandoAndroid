@@ -110,9 +110,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             }
         })
     }
-
     fun callForFilters() {
-
         val call: Call<ArrayList<Filter>> = apiService.filters
         call.enqueue(object : Callback<ArrayList<Filter>> {
             override fun onResponse(
@@ -137,7 +135,6 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
             }
         })
     }
-
     var mLanguagesList = MutableLiveData<ArrayList<Language>>()
 
     fun clickLanguage() {

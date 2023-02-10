@@ -41,7 +41,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        MyLog.e("RemoteMessage", remoteMessage.data.toString())
+        MyLog.e("@@RemoteMessage", remoteMessage.data.toString())
         try {
             val data = remoteMessage.data
             val id = data?.get("id")

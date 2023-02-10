@@ -354,6 +354,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             imgAudioThumbNail.visible()
             playerThumbnailContainer.visible()
             play.gone()
+           // playerThumbnail.gone()
             download.visible()
             audio.showController()
             audio.setControllerShowTimeoutMs(0)
@@ -363,7 +364,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 mediaMetadata?.thumbnail,
                 R.drawable.video_placeholder,
                 R.drawable.video_placeholder,
-                imgAudioThumbNail
+                playerThumbnail
             )
             setAudioPlayer(mediaUrl)
         } else {

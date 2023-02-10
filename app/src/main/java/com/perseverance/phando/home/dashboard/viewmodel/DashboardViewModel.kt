@@ -63,6 +63,7 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 
             if (PreferencesUtils.getLoggedStatus().isNotEmpty()) {
                 token = task.result
+                Log.e("@@token", token)
             }
 
             val call = apiService.getAppInfo("Android", token)

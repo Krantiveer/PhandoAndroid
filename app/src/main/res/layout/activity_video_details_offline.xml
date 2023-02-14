@@ -14,12 +14,13 @@
         android:orientation="vertical">
 
         <FrameLayout
+
             android:id="@+id/fragmentContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <FrameLayout
+           <!-- <FrameLayout
                 android:id="@+id/playerThumbnailContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -29,10 +30,9 @@
                     android:id="@+id/playerThumbnail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingTop="@dimen/_20sdp"
                     android:scaleType="fitXY" />
 
-            </FrameLayout>
+            </FrameLayout>-->
 
             <com.videoplayer.PhandoPlayerView
                 android:id="@+id/phandoPlayerView"
@@ -50,6 +50,7 @@
                 app:srcCompat="@drawable/play_logo" />
 
             <ImageView
+
                 android:id="@+id/imgHeaderImage"
                 android:layout_width="@dimen/_35sdp"
                 android:layout_height="@dimen/_35sdp"

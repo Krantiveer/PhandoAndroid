@@ -227,8 +227,8 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/_12sdp" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/txtDownload"
+                <TextView
+                    android:id="@+id/txtDownloadOption"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_baseline_download_for_offline"

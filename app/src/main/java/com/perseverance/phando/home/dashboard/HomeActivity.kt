@@ -149,12 +149,12 @@ class HomeActivity : BaseScreenTrackingActivity(),
         val allData = downloadMetadataDao.getAllDownloadData()
 
         if (allData == null || allData.isEmpty()) {
-            txtDownload.gone()
+            txtDownloadOption.gone()
         } else {
-            txtDownload.gone()
+            txtDownloadOption.gone()
         }
 
-        txtDownload.setOnClickListener {
+        txtDownloadOption.setOnClickListener {
             if (allData == null || allData.isEmpty()) {
                 toast("Download is empty")
                 return@setOnClickListener

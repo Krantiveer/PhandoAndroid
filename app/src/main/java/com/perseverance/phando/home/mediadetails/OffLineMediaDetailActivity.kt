@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
@@ -32,12 +33,11 @@ import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
+import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.activity_video_details_offline.detailContent
 import kotlinx.android.synthetic.main.activity_video_details_offline.fragmentContainer
 import kotlinx.android.synthetic.main.activity_video_details_offline.phandoPlayerView
 import kotlinx.android.synthetic.main.activity_video_details_offline.play
-import kotlinx.android.synthetic.main.activity_video_details_offline.playerThumbnail
-import kotlinx.android.synthetic.main.activity_video_details_offline.playerThumbnailContainer
 import kotlinx.android.synthetic.main.activity_video_details_offline.root
 import kotlinx.android.synthetic.main.activity_video_details_offline.toolbar
 import kotlinx.android.synthetic.main.content_detail_offline.*
@@ -77,7 +77,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     }
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
-        playerThumbnailContainer.gone()
+//        playerThumbnailContainer.visible()
         phandoPlayerView.visible()
         val intent = Intent()
         val uri = Uri.parse(mediaUrl)
@@ -99,7 +99,9 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         intent.putExtra(PhandoPlayerView.KEY_POSITION, seekTo)
         sample.addToIntent(intent)
         phandoPlayerView.setVideoData(intent)
-        phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
+        phandoPlayerView.setDefaultArtwork(getDrawable(R.drawable.app_logo))
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -122,7 +124,8 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         recyclerView.addItemDecoration(decoration)
         playerViewModel.message.observe(this, messageObserver)
         downloadMetadata = intent?.getSerializableExtra(ARG_VIDEO) as DownloadMetadata
-        Utils.displayImage(this, downloadMetadata?.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
+        Log.e("@@thumbnailData",downloadMetadata?.thumbnail.toString() )
+        Utils.displayImage(this, downloadMetadata?.thumbnail.toString(), R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
         detailContent.visible()
         videoTitle.text = downloadMetadata?.title
         videoDescription.text = downloadMetadata?.description

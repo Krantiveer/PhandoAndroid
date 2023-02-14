@@ -183,7 +183,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
         }
     }
-
     var isVideoPlayed = false
     var isTrailerPlaying = false
     private var isPlayerstartSent = false
@@ -511,15 +510,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 R.drawable.video_placeholder,
                 playerThumbnail)
 
-            /*  if (imgAudioThumb!= null){
+              if (imgAudioThumbNail!= null){
                   Utils.displayImage(this,
                       it.thumbnail,
                       R.drawable.video_placeholder,
                       R.drawable.video_placeholder,
-                      imgAudioThumb
-                      imgAudioThumb
+                      imgAudioThumbNail
+
                   )
-              }*/
+              }
 
         }
         favorite.setOnClickListener {

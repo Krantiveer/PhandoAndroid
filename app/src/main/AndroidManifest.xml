@@ -220,6 +220,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".home.mediadetails.NotificationActionService"/>
+        <service android:name=".home.mediadetails.OnClearFromRecentService"/>
     </application>
 
 </manifest>

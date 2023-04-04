@@ -64,6 +64,9 @@ public class CreateNotification {
                 drw_next = R.drawable.exo_icon_next;
             }
 
+
+
+
             //create notification
             notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.app_logo)
@@ -78,7 +81,7 @@ public class CreateNotification {
                     .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0, 1, 2)
                         .setMediaSession(mediaSessionCompat.getSessionToken()))
-                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .build();
 
             notificationManagerCompat.notify(1, notification);

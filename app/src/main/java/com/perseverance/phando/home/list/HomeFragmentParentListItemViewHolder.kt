@@ -37,8 +37,6 @@ open class HomeFragmentParentListItemViewHolder(itemView: View, listener: Adapte
             }
         }?: itemView.txt_see_all.gone()
 
-
-
     }
 
 }

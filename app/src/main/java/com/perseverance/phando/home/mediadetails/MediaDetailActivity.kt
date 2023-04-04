@@ -454,26 +454,27 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             .createMediaSource(Uri.parse(mediaUrl))
         audioPlayerExpo.prepare(mediaSource)
         audio.player = audioPlayerExpo
-
         isPlaying = true
         audioPlayerExpo.addListener(object :Player.EventListener{
             override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                 super.onPlayerStateChanged(playWhenReady, playbackState)
                 Log.e("@@state", playWhenReady.toString())
                 if (playbackState == Player.STATE_ENDED) {
-
-
                     mediaMetadata?.next_media?.let {
                         nextMediaMetadata?.let {
                             onGetVideoMetaDataSuccess(it)
                         }
                     }
                 }
+                if (playbackState == Player.STATE_READY) {
 
+                    progressBarAudio.gone()
+                }
 
+                if (playbackState == Player.STATE_BUFFERING) {
+                    progressBarAudio.visible()
+                }
             }
-
-
         })
     }
 
@@ -768,7 +769,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 CreateNotification.CHANNEL_ID,
-                "KOD Dev", NotificationManager.IMPORTANCE_LOW
+                "KOD Dev", NotificationManager.IMPORTANCE_HIGH
             )
             notificationManager = getSystemService(NotificationManager::class.java)
             if (notificationManager != null) {
@@ -1328,6 +1329,16 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             logViewContentEvent(it.media_id, it.type, it.title)
         }
         prepareShareMedia(mediaPlayBackData.data.share_url)
+
+        if (imgAudioThumbNail!= null){
+            Utils.displayImage(this,
+                mediaPlaybackData.data.thumbnail,
+                R.drawable.video_placeholder,
+                R.drawable.video_placeholder,
+                imgAudioThumbNail
+
+            )
+        }
     }
 
     private fun setRelatedVideo() {
@@ -1883,18 +1894,17 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     override fun onTrackPause() {
-        CreateNotification.createNotification(
-            this@MediaDetailActivity,  episodes!!.get(positionSong),
-            R.drawable.ic_play_arrow_black_24dp, positionSong, episodes!!.size - 1
-        )
-        play.setImageResource(R.drawable.ic_play_arrow_black_24dp)
-
+        if (episodes!= null){
+            CreateNotification.createNotification(
+                this@MediaDetailActivity, episodes!![positionSong],
+                R.drawable.ic_play_arrow_black_24dp, positionSong, episodes!!.size - 1
+            )
+            play.setImageResource(R.drawable.ic_play_arrow_black_24dp)
+        }
         isPlaying = false
-        mListener?.disable()
-        updateCurrentPositionOnServer()
         if(audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
             position = audioPlayerExpo.contentPosition.toInt()
-            audioPlayerExpo.setPlayWhenReady(false)
+            audioPlayerExpo.playWhenReady = false
         }
     }
 

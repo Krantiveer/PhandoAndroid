@@ -249,16 +249,30 @@ public class DownloadTracker {
                 downloadHelper.release();
                 return;
             }
-            trackSelectionDialog =
+
+
+            if (!fragmentManager.isDestroyed()) {
+                trackSelectionDialog =
+                        TrackSelectionDialog.createForMappedTrackInfoAndParameters(
+                                /* titleId= */ R.string.exo_download_description,
+                                mappedTrackInfo,
+                                trackSelectorParameters,
+                                /* allowAdaptiveSelections =*/ false,
+                                /* allowMultipleOverrides= */ true,
+                                /* onClickListener= */ this,
+                                /* onDismissListener= */ this);
+                trackSelectionDialog.show(fragmentManager, /* tag= */ null);
+            }
+          /*  trackSelectionDialog =
                     TrackSelectionDialog.createForMappedTrackInfoAndParameters(
-                            /* titleId= */ R.string.exo_download_description,
+                            *//* titleId= *//* R.string.exo_download_description,
                             mappedTrackInfo,
                             trackSelectorParameters,
-                            /* allowAdaptiveSelections =*/ false,
-                            /* allowMultipleOverrides= */ true,
-                            /* onClickListener= */ this,
-                            /* onDismissListener= */ this);
-            trackSelectionDialog.show(fragmentManager, /* tag= */ null);
+                            *//* allowAdaptiveSelections =*//* false,
+                            *//* allowMultipleOverrides= *//* true,
+                            *//* onClickListener= *//* this,
+                            *//* onDismissListener= *//* this);
+            trackSelectionDialog.show(fragmentManager, *//* tag= *//* null);*/
         }
 
         @Override

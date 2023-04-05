@@ -200,6 +200,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
     var nextMediaMetadata: MediaplaybackData? = null
+    var prevMediaMetadata: MediaplaybackData? = null
 
     private val notificationDao by lazy {
         AppDatabase.getInstance(this@MediaDetailActivity)?.notificationDao()
@@ -259,6 +260,37 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 progressBar.gone()
                 it.data?.let {
                     nextMediaMetadata = it
+                }
+
+            }
+        }
+
+    }
+    private val prevVideoMetadataModelObserver = Observer<DataLoadingStatus<MediaplaybackData>> {
+
+        when (it.status) {
+
+            LoadingStatus.LOADING -> {
+                // progressBar.visible()
+
+            }
+            LoadingStatus.ERROR -> {
+//                progressBar.gone()
+//                if (it.message.equals("Please Subscribe")) {
+//                    val intent = Intent(this@MediaDetailActivity, SubscriptionPackageActivity::class.java)
+//                    startActivityForResult(intent, 101)
+//                } else {
+//                    it.message?.let {
+//                        Toast.makeText(this@MediaDetailActivity, it, Toast.LENGTH_LONG).show()
+//                        mediaMetadata = null
+//                    }
+//
+//                }
+            }
+            LoadingStatus.SUCCESS -> {
+                progressBar.gone()
+                it.data?.let {
+                    prevMediaMetadata = it
                 }
 
             }
@@ -505,6 +537,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             .observe(this, videoMetadataModelObserver)
         mediaDetailViewModel.getNextEpisodeVideoDetailMutableLiveData()
             .observe(this, nextVideoMetadataModelObserver)
+
+        mediaDetailViewModel.getPrevEpisodeVideoDetailMutableLiveData()
+            .observe(this, prevVideoMetadataModelObserver)
         mediaDetailViewModel.message.observe(this, messageObserver)
 
         mediaDetailViewModel.isInWishlist.observe(this, favoriteObserver)
@@ -1208,7 +1243,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
         }
         actionControlers.visible()
-
         mediaMetadata?.is_live?.let {
             download.isEnabled = it == 0
             if (it == 1) {
@@ -1226,7 +1260,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 txtPlay.text = "Go Live"
             }
         }
-
         mediaMetadata?.can_download?.let {
             if (it) {
                 download.visible()
@@ -1321,6 +1354,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
         mediaMetadata?.next_media?.let {
             mediaDetailViewModel.getNextEpisodeMediaMetadata(Video().apply {
+                type = it.type
+                id = it.id
+            })
+        }
+
+        mediaMetadata?.prev_media?.let {
+            mediaDetailViewModel.getPrevEpisodeMediaMetadata(Video().apply {
                 type = it.type
                 id = it.id
             })
@@ -1873,8 +1913,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         positionSong--
         CreateNotification.createNotification(
             this@MediaDetailActivity, episodes!!.get(positionSong),
-            R.drawable.exo_icon_previous, positionSong, episodes!!.size - 1
+            R.drawable.player_pause, positionSong, episodes!!.size - 1
         )
+        mediaMetadata?.prev_media?.let {
+            prevMediaMetadata?.let {
+                onGetVideoMetaDataSuccess(it)
+            }
+        }
 
     }
 

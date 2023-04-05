@@ -43,6 +43,7 @@ data class MediaMetadata(
         val document_media_id: Int,
         val last_watch_time: Long = 0,
         val next_media: NextMedia? = null,
+        val prev_media: PrevMedia? = null,
         val intro: IntroInfo? = null,
         val series: Series? = null,
         val share_url: String,

@@ -29,11 +29,16 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
         0
     }
     val nextEpisodeReloadTrigger = MutableLiveData<Video>()
+    val prevEpisodeReloadTrigger = MutableLiveData<Video>()
 
     var mediaMetadata: LiveData<DataLoadingStatus<MediaplaybackData>> = Transformations.switchMap(reloadTrigger) {
         mediaDetailRepository.callForVideoDetails(it)
     }
     var nextEpisodeMediaMetadata: LiveData<DataLoadingStatus<MediaplaybackData>> = Transformations.switchMap(nextEpisodeReloadTrigger) {
+        mediaDetailRepository.callForVideoDetails(it)
+    }
+
+    var prevEpisodeMediaMetadata: LiveData<DataLoadingStatus<MediaplaybackData>> = Transformations.switchMap(prevEpisodeReloadTrigger) {
         mediaDetailRepository.callForVideoDetails(it)
     }
     var isInWishlist = MutableLiveData<Int>().apply {
@@ -165,6 +170,15 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
     fun getNextEpisodeMediaMetadata(baseVideo: Video?) {
         baseVideo?.let {
             nextEpisodeReloadTrigger.value = it
+        }
+
+    }
+
+    fun getPrevEpisodeVideoDetailMutableLiveData(): LiveData<DataLoadingStatus<MediaplaybackData>> = prevEpisodeMediaMetadata
+
+    fun getPrevEpisodeMediaMetadata(baseVideo: Video?) {
+        baseVideo?.let {
+            prevEpisodeReloadTrigger.value = it
         }
 
     }

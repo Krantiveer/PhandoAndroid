@@ -34,6 +34,20 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun notificationDao(): NotificationDao
     abstract fun walletDetailDao(): WalletDetailDao
 
+
+    fun getInstance(context: Context): AppDatabase {
+        if (INSTANCE == null) {
+            synchronized(AppDatabase::class) {
+                INSTANCE = Room.databaseBuilder(context.applicationContext,
+                    AppDatabase::class.java, DATABASE_NAME)
+                    .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
+                    .build()
+            }
+        }
+        return INSTANCE!!
+    }
+
     companion object {
         private var INSTANCE: AppDatabase? = null
         private const val DATABASE_NAME = "Database"

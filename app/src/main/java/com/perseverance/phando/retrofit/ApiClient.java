@@ -7,6 +7,8 @@ import android.text.format.Formatter;
 import com.google.gson.Gson;
 import com.perseverance.phando.BuildConfig;
 import com.perseverance.phando.Session;
+import com.perseverance.phando.db.AppDatabase;
+import com.perseverance.phando.db.dao.DownloadMetadataDao;
 import com.perseverance.phando.factory.FeatureConfigFactory;
 import com.perseverance.phando.home.dashboard.HomeActivity;
 import com.perseverance.phando.home.profile.login.LoginActivity;
@@ -41,6 +43,7 @@ public class ApiClient {
     private static final String REST_HOST_LOGIN = FeatureConfigFactory.getFeatureConfigInterfaceInstance().getBaseAPIUrl();
     private static Retrofit retrofit = null;
     private static Retrofit retrofitLogin = null;
+
 
 //    public static Retrofit getLoginClient() {
 //
@@ -95,6 +98,8 @@ public class ApiClient {
         public Response intercept(Chain chain) throws IOException {
             Response response = chain.proceed(chain.request());
 
+
+
             if (response.code() == 401) {
                 ResponseBody body = response.body();
                 String bodyString = body.string();
@@ -104,6 +109,9 @@ public class ApiClient {
                         || errorModel.getStatus_code() != null && errorModel.getStatus_code().equalsIgnoreCase("E0002")) {
                     PreferencesUtils.setLoggedIn("");
                     PreferencesUtils.deleteAllPreferences();
+
+                    // need to check below line
+                    AppDatabase.Companion.getInstance(null).downloadMetadataDao().deleteAll();
                     Intent loginIntent = new Intent(Session.Companion.getInstance(), HomeActivity.class);
                     loginIntent.putExtra("msg", errorModel.getMessage());
                     loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

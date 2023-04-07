@@ -59,6 +59,7 @@ import com.perseverance.phando.settings.SettingsActivity
 import com.perseverance.phando.splash.AppInfo
 import com.perseverance.phando.splash.AppInfoModel
 import com.perseverance.phando.utils.*
+import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_home.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -237,7 +238,10 @@ class HomeActivity : BaseScreenTrackingActivity(),
                 }
 
                 override fun onPositiveButtonPressed() {
-
+                    PreferencesUtils.setLoggedIn("")
+                    PreferencesUtils.deleteAllPreferences()
+                    downloadMetadataDao?.deleteAll()
+                    VideoSdkUtil.deleteAllDownloadedVideo(this@HomeActivity.application)
                 }
 
             })

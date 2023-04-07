@@ -519,7 +519,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         setContentView(R.layout.activity_video_details)
 
 
-
+        setAudioPlayer("mediaMetadata!!.media_url")
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
@@ -528,6 +528,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             landscape()
         } else {
+
             potrate()
         }
         val decoration = BaseRecycleMarginDecoration(this@MediaDetailActivity)
@@ -786,7 +787,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
 //        Log.e("@@mediaurl", mediaMetadata!!.media_url)
-        setAudioPlayer("mediaMetadata!!.media_url")
+
 
         exo_pause.setOnClickListener{
             if (isPlaying){
@@ -1469,7 +1470,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     private fun potrate() {
-        root.fitsSystemWindows = true;
+        root.fitsSystemWindows = true
         root.requestApplyInsets()
         showSystemUI()
         handler.post {
@@ -1479,7 +1480,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             fragmentContainer.layoutParams.height = height
             fragmentContainer.layoutParams.width = width
         }
+        if(audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
+            position = audioPlayerExpo.contentPosition.toInt()
+            audioPlayerExpo.setPlayWhenReady(false)
+        }
         setRelatedVideo()
+
+
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

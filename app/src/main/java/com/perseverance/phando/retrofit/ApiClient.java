@@ -111,7 +111,7 @@ public class ApiClient {
                     PreferencesUtils.deleteAllPreferences();
 
                     // need to check below line
-                    AppDatabase.Companion.getInstance(null).downloadMetadataDao().deleteAll();
+                 //   AppDatabase.Companion.getInstance(null).downloadMetadataDao().deleteAll();
                     Intent loginIntent = new Intent(Session.Companion.getInstance(), HomeActivity.class);
                     loginIntent.putExtra("msg", errorModel.getMessage());
                     loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

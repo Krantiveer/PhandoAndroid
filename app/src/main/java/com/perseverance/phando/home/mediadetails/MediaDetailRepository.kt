@@ -1,6 +1,7 @@
 package com.perseverance.phando.home.mediadetails
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.perseverance.phando.constants.BaseConstants
@@ -39,6 +40,7 @@ class MediaDetailRepository(private val application: Application) {
                 if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
                 } else {
+                    Log.e("@@res", t!!.message.toString())
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to load data"))
                 }
             }

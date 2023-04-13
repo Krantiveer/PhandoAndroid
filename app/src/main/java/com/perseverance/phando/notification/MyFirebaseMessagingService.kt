@@ -175,18 +175,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 val androidChannel = NotificationChannel(CHANNEL_ID,
                         CHANNEL_NAME, NotificationManager.IMPORTANCE_HIGH)
                 androidChannel.enableLights(true)
-
                 if (isNotificationVibrateIsOn) {
                     androidChannel.enableVibration(true)
                 } else {
                     androidChannel.enableVibration(false)
                 }
-
                 androidChannel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
                 mManager.createNotificationChannel(androidChannel)
-
             }
-
             mManager.notify(Random().nextInt(100) + 1, notificationBuilder.build())
         } catch (e: Exception) {
             MyLog.e("sendNotification_failed")

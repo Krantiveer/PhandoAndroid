@@ -48,7 +48,7 @@ class Session : VideoPlayerApplication() {
         }
         FirebaseMessaging.getInstance().subscribeToTopic(BuildConfig.TOPIC).addOnCompleteListener {
             if (it.isSuccessful) {
-                if (BuildConfig.DEBUG) MyLog.e("topic ${BuildConfig.TOPIC} subscribed")
+                if (BuildConfig.DEBUG) MyLog.e("@@topic ${BuildConfig.TOPIC} subscribed")
             } else {
                 if (BuildConfig.DEBUG) MyLog.e("topic ${BuildConfig.TOPIC} subscribtion error")
             }

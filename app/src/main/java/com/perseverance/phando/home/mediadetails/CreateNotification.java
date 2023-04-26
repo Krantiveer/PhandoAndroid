@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -14,10 +15,12 @@ import androidx.core.app.NotificationManagerCompat;
 import com.perseverance.phando.R;
 import com.perseverance.phando.home.series.Episode;
 
+import java.io.IOException;
+import java.net.URL;
+
 public class CreateNotification {
 
     public static final String CHANNEL_ID = "channel1";
-
     public static final String ACTION_PREVIUOS = "actionprevious";
     public static final String ACTION_PLAY = "actionplay";
     public static final String ACTION_NEXT = "actionnext";
@@ -30,8 +33,6 @@ public class CreateNotification {
 
             NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
             MediaSessionCompat mediaSessionCompat = new MediaSessionCompat( context, "tag");
-
-            Bitmap icon = BitmapFactory.decodeResource(context.getResources(), R.drawable.app_logo);
 
             PendingIntent pendingIntentPrevious;
             int drw_previous;
@@ -63,16 +64,11 @@ public class CreateNotification {
                         intentNext, PendingIntent.FLAG_IMMUTABLE);
                 drw_next = R.drawable.exo_icon_next;
             }
-
-
-
-
-            //create notification
             notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.drawable.app_logo)
+                    .setLargeIcon(BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.app_logo))
                     .setContentTitle(track.getTitle())
                     .setContentText(track.getDetail())
-                    .setLargeIcon(icon)
                     .setOnlyAlertOnce(true)//show notification for only first time
                     .setShowWhen(false)
                     .addAction(drw_previous, "Previous", pendingIntentPrevious)

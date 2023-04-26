@@ -153,6 +153,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     .setPriority(NotificationCompat.PRIORITY_MAX)
                     .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 
+
+
             resource?.let {
                 val style = NotificationCompat.BigPictureStyle()
                 style.bigPicture(it)

@@ -1587,7 +1587,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         updateCurrentPositionOnServer()
         if(audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
             position = audioPlayerExpo.contentPosition.toInt()
-            audioPlayerExpo.setPlayWhenReady(false)
+            audioPlayerExpo.playWhenReady = true
         }
     }
     private fun updateCurrentPositionOnServer() {

@@ -16,11 +16,12 @@
         <FrameLayout
 
             android:id="@+id/fragmentContainer"
+            android:background="@color/app_theme_color"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-           <!-- <FrameLayout
+            <FrameLayout
                 android:id="@+id/playerThumbnailContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -32,9 +33,10 @@
                     android:layout_height="match_parent"
                     android:scaleType="fitXY" />
 
-            </FrameLayout>-->
+            </FrameLayout>
 
             <com.videoplayer.PhandoPlayerView
+
                 android:id="@+id/phandoPlayerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

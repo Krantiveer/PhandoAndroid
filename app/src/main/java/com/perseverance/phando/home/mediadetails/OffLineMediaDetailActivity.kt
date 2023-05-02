@@ -77,7 +77,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     }
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
-//        playerThumbnailContainer.visible()
+        fragmentContainer.visible()
         phandoPlayerView.visible()
         val intent = Intent()
         val uri = Uri.parse(mediaUrl)
@@ -91,7 +91,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
                 null,
                 null)
         intent.putExtra(
-                PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
+            PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
         val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
         intent.putExtra(PhandoPlayerView.ABR_ALGORITHM_EXTRA, abrAlgorithm)
         intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
@@ -99,7 +99,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         intent.putExtra(PhandoPlayerView.KEY_POSITION, seekTo)
         sample.addToIntent(intent)
         phandoPlayerView.setVideoData(intent)
-        phandoPlayerView.setDefaultArtwork(getDrawable(R.drawable.app_logo))
+     //   phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
 
 
     }

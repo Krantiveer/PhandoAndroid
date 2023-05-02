@@ -193,12 +193,16 @@
             android:name=".payment.ccavenue.activity.WebViewCcavenueActivity"
             android:exported="false"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
         <activity
             android:name=".payment.ccavenue.activity.StatusActivity"
             android:exported="false"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <service
             android:name=".AdsUtil.AdNetworkService"

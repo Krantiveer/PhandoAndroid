@@ -269,4 +269,6 @@ dependencies {
     implementation 'com.afollestad.assent:core:3.0.0-RC4'
     implementation 'com.squareup.picasso:picasso:2.8'
 
+    implementation 'com.github.mergehez:ArgPlayer:v3.1'
+
 }

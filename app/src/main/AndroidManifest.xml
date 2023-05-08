@@ -17,7 +17,7 @@
         android:resizeableActivity="false"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:name"
+        tools:replace="allowBackup, label"
         tools:targetApi="n">
         <activity
             android:name=".category.DashboardListActivity"

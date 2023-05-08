@@ -33,6 +33,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.arges.sepan.argmusicplayer.Models.ArgAudio
+import com.arges.sepan.argmusicplayer.PlayerViews.ArgPlayerSmallView
 import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.exoplayer2.*
@@ -79,6 +81,7 @@ import com.videoplayer.VideoPlayerMetadata.UriSample
 import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.audio_player_controller.*
 import kotlinx.android.synthetic.main.content_detail.*
+
 
 class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     PhandoPlayerCallback, PurchaseOptionSelection, Player.EventListener, Playable {
@@ -393,7 +396,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
         if (mediaMetadata?.media_type?.equals("audio")!!) {
             releasePlayer()
-            audio.visible()
+            argmusicplayer.visible()
             imgAudioThumbNail.visible()
             playerThumbnailContainer.visible()
             play.gone()
@@ -409,7 +412,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 R.drawable.video_placeholder,
                 playerThumbnail
             )
-            setAudioPlayer(mediaUrl)
+
+            val url = "https://www.gotinenstranan.com/songs/joan-baez-north-country-blues.mp3"
+            val audio = ArgAudio.createFromURL("Joan Baez", "North Country Blues", url)
+
+            val argMusicPlayer = findViewById<View>(R.id.argmusicplayer) as ArgPlayerSmallView
+            argMusicPlayer.play(audio)
+            //setAudioPlayer(mediaUrl)
         } else {
             imgAudioThumbNail.gone()
             audio.gone()
@@ -467,6 +476,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
     fun setAudioPlayer(mediaUrl: String) {
 
+
+
+
         val renderersFactory = DefaultRenderersFactory(this)
         val trackSelectionFactory = AdaptiveTrackSelection.Factory()
         val trackSelectSelector = DefaultTrackSelector(trackSelectionFactory)
@@ -519,7 +531,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         setContentView(R.layout.activity_video_details)
 
 
-        setAudioPlayer("mediaMetadata!!.media_url")
+     //   setAudioPlayer("mediaMetadata!!.media_url")
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
@@ -786,6 +798,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
 
 
+
 //        Log.e("@@mediaurl", mediaMetadata!!.media_url)
 
 
@@ -821,8 +834,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 CreateNotification.ACTION_PREVIUOS -> onTrackPrevious()
                 CreateNotification.ACTION_PLAY -> if (isPlaying) {
                     onTrackPause()
+                    isPlaying = false
                 } else {
                     onTrackPlay()
+                    isPlaying = false
                 }
                 CreateNotification.ACTION_NEXT -> onTrackNext()
             }
@@ -1558,7 +1573,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         super.onResume()
         mListener?.enable()
 
-        if(audioPlayerExpo != null) {
+        if(audioPlayerExpo != null  && isPlaying) {
             audioPlayerExpo.seekTo(position.toLong())
             audioPlayerExpo.playWhenReady = true
         }

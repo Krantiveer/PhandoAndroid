@@ -10,10 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Created by trilokinathyadav on 07-11-2017.
- */
-
 public class AdConfig {
 //    public static final String FB_AD_1 = "144081699640724_144082426307318";
     public static final String FB_AD_1 = "";

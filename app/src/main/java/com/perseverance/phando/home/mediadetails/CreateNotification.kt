@@ -1,143 +1,139 @@
-package com.perseverance.phando.home.mediadetails;
+package com.perseverance.phando.home.mediadetails
 
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
+import android.app.Notification
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.os.AsyncTask
+import android.os.Build
+import android.support.v4.media.session.MediaSessionCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestOptions
+import com.perseverance.phando.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.withContext
+import java.lang.Exception
+import java.net.URL
 
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
-import com.perseverance.phando.R;
-import com.perseverance.phando.home.series.Episode;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-public class CreateNotification {
-
-    public static final String CHANNEL_ID = "channel1";
-    public static final String ACTION_PREVIUOS = "actionprevious";
-    public static final String ACTION_PLAY = "actionplay";
-    public static final String ACTION_NEXT = "actionnext";
-
-    public static Notification notification;
-   private static NotificationCompat.Builder builder;
-    private static Bitmap bitmapFinal;
+object CreateNotification {
+    const val CHANNEL_ID = "channel1"
+    const val ACTION_PREVIUOS = "actionprevious"
+    const val ACTION_PLAY = "actionplay"
+    const val ACTION_NEXT = "actionnext"
+    var notification: Notification? = null
+    private val serviceJob = SupervisorJob()
+    private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
 
-    public static void createNotification(Context context, RelatedEpisode track, int playbutton, int pos, int size){
+    private val builder: NotificationCompat.Builder? = null
+    private var bitmapFinal: Bitmap? = null
+     fun createNotification(
+        context: Context?,
+        track: RelatedEpisode,
+        playbutton: Int,
+        pos: Int,
+        size: Int
+    ) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
 
-
-
-           /* DownloadImageTask task = new DownloadImageTask(context, 101, track, playbutton, pos, size);
+            /* DownloadImageTask task = new DownloadImageTask(context, 101, track, playbutton, pos, size);
             task.execute(track.getThumbnail());*/
-
-            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-            MediaSessionCompat mediaSessionCompat = new MediaSessionCompat( context, "tag");
-
-            PendingIntent pendingIntentPrevious;
-            int drw_previous;
-            if (pos == 0){
-                pendingIntentPrevious = null;
-                drw_previous = 0;
+            val notificationManagerCompat = NotificationManagerCompat.from(
+                context!!
+            )
+            val mediaSessionCompat = MediaSessionCompat(context, "tag")
+            val pendingIntentPrevious: PendingIntent?
+            val drw_previous: Int
+            if (pos == 0) {
+                pendingIntentPrevious = null
+                drw_previous = 0
             } else {
-                Intent intentPrevious = new Intent(context, NotificationActionService.class)
-                        .setAction(ACTION_PREVIUOS);
-                pendingIntentPrevious = PendingIntent.getBroadcast(context, 0,
-                        intentPrevious, PendingIntent.FLAG_IMMUTABLE);
-                drw_previous = R.drawable.exo_icon_previous;
+                val intentPrevious = Intent(context, NotificationActionService::class.java)
+                    .setAction(ACTION_PREVIUOS)
+                pendingIntentPrevious = PendingIntent.getBroadcast(
+                    context, 0,
+                    intentPrevious, PendingIntent.FLAG_IMMUTABLE
+                )
+                drw_previous = R.drawable.exo_icon_previous
             }
-
-            Intent intentPlay = new Intent(context, NotificationActionService.class)
-                    .setAction(ACTION_PLAY);
-            PendingIntent pendingIntentPlay = PendingIntent.getBroadcast(context, 0,
-                    intentPlay, PendingIntent.FLAG_IMMUTABLE);
-
-            PendingIntent pendingIntentNext;
-            int drw_next;
-            if (pos == size){
-                pendingIntentNext = null;
-                drw_next = 0;
+            val intentPlay = Intent(context, NotificationActionService::class.java)
+                .setAction(ACTION_PLAY)
+            val pendingIntentPlay = PendingIntent.getBroadcast(
+                context, 0,
+                intentPlay, PendingIntent.FLAG_IMMUTABLE
+            )
+            val pendingIntentNext: PendingIntent?
+            val drw_next: Int
+            if (pos == size) {
+                pendingIntentNext = null
+                drw_next = 0
             } else {
-                Intent intentNext = new Intent(context, NotificationActionService.class)
-                        .setAction(ACTION_NEXT);
-                pendingIntentNext = PendingIntent.getBroadcast(context, 0,
-                        intentNext, PendingIntent.FLAG_IMMUTABLE);
-                drw_next = R.drawable.exo_icon_next;
+                val intentNext = Intent(context, NotificationActionService::class.java)
+                    .setAction(ACTION_NEXT)
+                pendingIntentNext = PendingIntent.getBroadcast(
+                    context, 0,
+                    intentNext, PendingIntent.FLAG_IMMUTABLE
+                )
+                drw_next = R.drawable.exo_icon_next
             }
-           notification  = new NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.app_logo)
-               //  .setLargeIcon(bitmapFinal)
-                    .setContentTitle(track.getTitle())
-                    .setContentText(track.getDetail())
-                    .setOnlyAlertOnce(true)//show notification for only first time
-                    .setShowWhen(false)
-                    .addAction(drw_previous, "Previous", pendingIntentPrevious)
-                    .addAction(playbutton, "Play", pendingIntentPlay)
-                    .addAction(drw_next, "Next", pendingIntentNext)
-                    .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
+            //resolveUriAsBitmap(Uri.parse(track.thumbnail), context)
+
+            notification = NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.app_logo) //  .setLargeIcon(bitmapFinal)
+                .setContentTitle(track.title)
+             //   .setLargeIcon( resolveUriAsBitmap(Uri.parse(track.thumbnail), context))
+                .setContentText(track.detail)
+                .setOnlyAlertOnce(true) //show notification for only first time
+                .setShowWhen(false)
+                .addAction(drw_previous, "Previous", pendingIntentPrevious)
+                .addAction(playbutton, "Play", pendingIntentPlay)
+                .addAction(drw_next, "Next", pendingIntentNext)
+                .setStyle(
+                    androidx.media.app.NotificationCompat.MediaStyle()
                         .setShowActionsInCompactView(0, 1, 2)
-                        .setMediaSession(mediaSessionCompat.getSessionToken()))
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .build();
-            notificationManagerCompat.notify(1, notification);
+                        .setMediaSession(mediaSessionCompat.getSessionToken())
+                )
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .build()
+
+            notificationManagerCompat.notify(1, notification!!)
         }
     }
 
-
-
-    private static class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
-        private Context mContext;
-        private int mNotificationId;
-      private   RelatedEpisode trackm;
-      private   int playbuttonm;
-      private int posm;
-      private int sizem;
-
-        public DownloadImageTask(Context context, int notificationId ,RelatedEpisode track, int playbutton, int pos, int size) {
-            mContext = context;
-            mNotificationId = notificationId;
-            trackm = track;
-            playbuttonm = playbutton;
-            posm = pos;
-            sizem = size;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            String imageUrl = urls[0];
-            Bitmap bitmap = null;
+/*    private class DownloadImageTask(
+        private val mContext: Context,
+        private val mNotificationId: Int,
+        private val trackm: RelatedEpisode,
+        private val playbuttonm: Int,
+        private val posm: Int,
+        private val sizem: Int
+    ) : AsyncTask<String?, Void?, Bitmap?>() {
+        protected override fun doInBackground(vararg urls: String): Bitmap? {
+            val imageUrl = urls[0]
+            var bitmap: Bitmap? = null
             try {
-                InputStream in = new java.net.URL(imageUrl).openStream();
-                bitmap = BitmapFactory.decodeStream(in);
-                bitmapFinal= bitmap;
-            } catch (Exception e) {
-                e.printStackTrace();
+                val `in` = URL(imageUrl).openStream()
+                bitmap = BitmapFactory.decodeStream(`in`)
+                bitmapFinal = bitmap
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
-            return bitmap;
+            return bitmap
         }
 
-        @Override
-        protected void onPostExecute(Bitmap result ) {
+        override fun onPostExecute(result: Bitmap?) {
             if (result != null) {
-
-
-                notification.largeIcon = result;
-            /*    Intent intent = new Intent(mContext, MediaDetailActivity.class);
+                notification!!.largeIcon = result
+                *//*    Intent intent = new Intent(mContext, MediaDetailActivity.class);
                 PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, intent, 0);
 
 
@@ -192,11 +188,26 @@ public class CreateNotification {
                         .setPriority(NotificationCompat.PRIORITY_HIGH);
 
                // NotificationManagerCompat notificationManager = NotificationManagerCompat.from(mContext);
-                notificationManagerCompat.notify(mNotificationId, builder.build());*/
+                notificationManagerCompat.notify(mNotificationId, builder.build());*//*
             }
         }
-    }
+    }*/
+
+  /*  private  fun resolveUriAsBitmap(uri: Uri, context: Context?): Bitmap? {
+        return withContext(Dispatchers.IO) {
+            // Block on downloading artwork.
+            Glide.with(context!!).applyDefaultRequestOptions(glideOptions)
+                .asBitmap()
+                .load(uri)
+                .submit(NOTIFICATION_LARGE_ICON_SIZE, NOTIFICATION_LARGE_ICON_SIZE)
+                .get()
+        }
+    }*/
+    const val NOTIFICATION_LARGE_ICON_SIZE = 144 // px
+    private val glideOptions = RequestOptions()
+        .fallback(R.drawable.app_logo)
+        .diskCacheStrategy(DiskCacheStrategy.DATA)
+
+
 
 }
-
-

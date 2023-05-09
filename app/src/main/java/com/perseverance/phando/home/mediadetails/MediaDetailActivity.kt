@@ -396,15 +396,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
         if (mediaMetadata?.media_type?.equals("audio")!!) {
             releasePlayer()
-            argmusicplayer.visible()
+            audio.visible()
             imgAudioThumbNail.visible()
             playerThumbnailContainer.visible()
             play.gone()
            // playerThumbnail.gone()
             download.visible()
             audio.showController()
-            audio.setControllerShowTimeoutMs(0)
-            audio.setControllerHideOnTouch(false)
+            audio.controllerShowTimeoutMs = 0
+            audio.controllerHideOnTouch = false
 
             Utils.displayImage(this,
                 mediaMetadata?.thumbnail,
@@ -412,13 +412,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 R.drawable.video_placeholder,
                 playerThumbnail
             )
-
-            val url = "https://www.gotinenstranan.com/songs/joan-baez-north-country-blues.mp3"
-            val audio = ArgAudio.createFromURL("Joan Baez", "North Country Blues", url)
-
-            val argMusicPlayer = findViewById<View>(R.id.argmusicplayer) as ArgPlayerSmallView
-            argMusicPlayer.play(audio)
-            //setAudioPlayer(mediaUrl)
+            setAudioPlayer(mediaUrl)
         } else {
             imgAudioThumbNail.gone()
             audio.gone()
@@ -471,13 +465,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
 
     }
-
-
-
     fun setAudioPlayer(mediaUrl: String) {
-
-
-
 
         val renderersFactory = DefaultRenderersFactory(this)
         val trackSelectionFactory = AdaptiveTrackSelection.Factory()
@@ -511,10 +499,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     }
                 }
                 if (playbackState == Player.STATE_READY) {
-
                     progressBarAudio.gone()
                 }
-
                 if (playbackState == Player.STATE_BUFFERING) {
                     progressBarAudio.visible()
                 }
@@ -530,8 +516,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
         setContentView(R.layout.activity_video_details)
 
-
-     //   setAudioPlayer("mediaMetadata!!.media_url")
+        setAudioPlayer("mediaMetadata!!.media_url")
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar!!.setDisplayShowHomeEnabled(true)
@@ -803,8 +788,19 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
         exo_pause.setOnClickListener{
+            Log.e("@@isPlayingPause", isPlaying.toString())
             if (isPlaying){
                 onTrackPause()
+            } else {
+                onTrackPlay()
+            }
+        }
+
+        exo_play.setOnClickListener{
+            Log.e("@@isPlayingPlay", isPlaying.toString())
+            if (isPlaying){
+                onTrackPause()
+
             } else {
                 onTrackPlay()
             }
@@ -826,7 +822,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
         }
     }
-
     var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.extras!!.getString("actionname")
@@ -834,10 +829,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 CreateNotification.ACTION_PREVIUOS -> onTrackPrevious()
                 CreateNotification.ACTION_PLAY -> if (isPlaying) {
                     onTrackPause()
-                    isPlaying = false
                 } else {
                     onTrackPlay()
-                    isPlaying = false
                 }
                 CreateNotification.ACTION_NEXT -> onTrackNext()
             }

@@ -1291,13 +1291,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             directors.visible()
         }
 
-//        mediaMetadata?.rating?.let {
-//            otherText.add(it.toString())
-//            ratingLogo.visible()
-//        }
-//        mediaMetadata?.maturity_rating?.let {
-//            otherText.add(it)
-//        }
         mediaMetadata?.genres?.let {
             otherText.addAll(it)
         }
@@ -1344,22 +1337,14 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         mediaDetailViewModel.isInWishlist.postValue(mediaMetadata?.is_wishlist)
         mediaDetailViewModel.isLiked.postValue(mediaMetadata?.is_like)
         mediaDetailViewModel.isDisliked.postValue(mediaMetadata?.is_dislike)
-
-
-//        if (!isTrailerPlaying && play.visibility != View.VISIBLE) {
-//            playVideo()
-//        } else {
-//            if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
-//                playVideo()
-//            }
-//        }
-
-        // play video if live media or last_watch_time > 0
-//        if (mediaMetadata!!.last_watch_time > 0 || mediaMetadata?.is_live == 1) {
         playVideo()
-
         setRelatedVideo()
-//        }
+
+        if (isPlaying) {
+            onTrackPlay()
+        } else {
+            onTrackPause()
+        }
 
         mediaMetadata?.next_media?.let {
             mediaDetailViewModel.getNextEpisodeMediaMetadata(Video().apply {
@@ -1428,11 +1413,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
                // position = index
-                if (isPlaying) {
-                    onTrackPlay()
-                } else {
-                    onTrackPause()
-                }
+
             } else {
                 episodeContainer.gone()
             }
@@ -1592,7 +1573,10 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     override fun onPause() {
         super.onPause()
         mListener?.disable()
-        updateCurrentPositionOnServer()
+        if (mediaMetadata!!.type=="M"  || mediaMetadata!!.type=="AL"){
+            updateCurrentPositionOnServer()
+        }
+
         if(audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
             position = audioPlayerExpo.contentPosition.toInt()
             audioPlayerExpo.playWhenReady = true
@@ -1969,6 +1953,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     override fun onTrackNext() {
+        Log.e("@@next", positionSong.toString())
         positionSong++
         CreateNotification.createNotification(
             this@MediaDetailActivity, episodes!!.get(positionSong),

@@ -128,7 +128,8 @@ public interface ApiService {
 
     @GET("mediabygenresid")
     Call<List<Video>> getVideosByCategory(@Query("genres_id") String categoryId,
-                                          @Query("limit") String limit, @Query("content_type") String type);
+                                          @Query("limit") String limit,
+                                          @Query("device_type") String device_type,@Query("content_type") String type);
 
     @GET("showwishlist")
     Call<List<Video>> getMyVideoList(@Query("limit") String limit);
@@ -193,6 +194,7 @@ public interface ApiService {
     @GET("mediasearch")
     Call<List<Video>> searchVideo(
             @Query("term") String search,
+            @Query("device_type") String device_type,
             @Query("genre_id") String genre_id,
             @Query("language_id") String filter,
             @Query("limit") String limit);
@@ -201,16 +203,19 @@ public interface ApiService {
     @GET("mediaplayback")
     Call<MediaMetadata> getVideoMetadataWithFlavour(@Header("Authorization") String authorization,
                                                     @Query("type") String type,
+                                                    @Query("device_type") String device_type,
                                                     @Query("id") String id);
 
     @GET("mediaplayback")
     Call<MediaplaybackData> getMediaMatadata(@Query("id") String id,
+                                             @Query("device_type") String device_type,
                                              @Query("type") String type
     );
 
     @GET("dashboard")
     Call<List<BrowseData>> getBrowseDataList(
             @Query("type") String type,
+            @Query("device_type") String device_type,
             @Query("genre_id") String genre_id,
             @Query("filter") String filter,
             @Query("filter_type") String filter_type,

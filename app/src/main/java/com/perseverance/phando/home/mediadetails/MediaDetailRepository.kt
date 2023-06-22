@@ -25,7 +25,7 @@ class MediaDetailRepository(private val application: Application) {
     fun callForVideoDetails(video: Video): MutableLiveData<DataLoadingStatus<MediaplaybackData>> {
         val data: MutableLiveData<DataLoadingStatus<MediaplaybackData>> = MutableLiveData<DataLoadingStatus<MediaplaybackData>>()
         data.postValue(DataLoadingStatus(LoadingStatus.LOADING, ""))
-        val call = apiService.getMediaMatadata(video.id.toString(), video.type) as Call<MediaplaybackData>
+        val call = apiService.getMediaMatadata(video.id.toString(),"android", video.type) as Call<MediaplaybackData>
         call.enqueue(object : Callback<MediaplaybackData> {
             override fun onResponse(call: Call<MediaplaybackData>?, response: Response<MediaplaybackData>) {
                 if (response.isSuccessful) {

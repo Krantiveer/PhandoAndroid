@@ -1923,18 +1923,24 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     override fun onTrackPlay() {
-        CreateNotification.createNotification(
-            this@MediaDetailActivity, episodes!!.get(positionSong),
-            R.drawable.player_pause, positionSong, episodes!!.size - 1
-        )
-        play.setImageResource(R.drawable.player_play)
 
-        isPlaying = true
+        if ( episodes!!.size!=0){
 
-        if(audioPlayerExpo != null) {
-            audioPlayerExpo.seekTo(position.toLong())
-            audioPlayerExpo.playWhenReady = true
+            CreateNotification.createNotification(
+                this@MediaDetailActivity, episodes!!.get(positionSong),
+                R.drawable.player_pause, positionSong, episodes!!.size - 1
+            )
+            play.setImageResource(R.drawable.player_play)
+
+            isPlaying = true
+
+            if(audioPlayerExpo != null) {
+                audioPlayerExpo.seekTo(position.toLong())
+                audioPlayerExpo.playWhenReady = true
+            }
         }
+
+
     }
 
     override fun onTrackPause() {

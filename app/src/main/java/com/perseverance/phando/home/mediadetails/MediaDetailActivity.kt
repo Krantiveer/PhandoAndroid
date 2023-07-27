@@ -788,7 +788,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
         exo_pause.setOnClickListener{
-            Log.e("@@isPlayingPause", isPlaying.toString())
             if (isPlaying){
                 onTrackPause()
             } else {
@@ -797,7 +796,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
 
         exo_play.setOnClickListener{
-            Log.e("@@isPlayingPlay", isPlaying.toString())
             if (isPlaying){
                 onTrackPause()
 
@@ -1573,14 +1571,19 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     override fun onPause() {
         super.onPause()
         mListener?.disable()
-        if (mediaMetadata!!.type=="M"  || mediaMetadata!!.type=="AL"){
-            updateCurrentPositionOnServer()
+
+
+        if (mediaMetadata!= null){
+            if (mediaMetadata!!.type=="M"  || mediaMetadata!!.type=="AL"){
+                updateCurrentPositionOnServer()
+            }
+
+            if(audioPlayerExpo != null && audioPlayerExpo.playWhenReady) {
+                position = audioPlayerExpo.contentPosition.toInt()
+                audioPlayerExpo.playWhenReady = true
+            }
         }
 
-        if(audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
-            position = audioPlayerExpo.contentPosition.toInt()
-            audioPlayerExpo.playWhenReady = true
-        }
     }
     private fun updateCurrentPositionOnServer() {
         if (isTrailerPlaying) {
@@ -1658,7 +1661,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     val intent = Intent(this@MediaDetailActivity, SeriesActivity::class.java)
                     intent.putExtra(Key.CATEGORY, data)
                     startActivity(intent)
-                } else {
+                }
+                else {
                     Utils.displayImage(this,
                         data.thumbnail,
                         R.drawable.video_placeholder,
@@ -1902,7 +1906,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 // Log.i("previewLink", it.toString())
             }
             dynamicLink = result?.shortLink.toString()
-            Log.e("dynamicLink**", dynamicLink)
+            Log.e("@@dynamicLink**", dynamicLink)
         }.addOnFailureListener {
             it.printStackTrace()
         }
@@ -1944,7 +1948,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     override fun onTrackPause() {
-        if (episodes!= null){
+        if (episodes != null && episodes!!.isNotEmpty()) {
             CreateNotification.createNotification(
                 this@MediaDetailActivity, episodes!![positionSong],
                 R.drawable.ic_play_arrow_black_24dp, positionSong, episodes!!.size - 1
@@ -1952,7 +1956,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             play.setImageResource(R.drawable.ic_play_arrow_black_24dp)
         }
         isPlaying = false
-        if(audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
+        if (audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
             position = audioPlayerExpo.contentPosition.toInt()
             audioPlayerExpo.playWhenReady = false
         }

@@ -4,8 +4,11 @@
     package="com.perseverance.phando">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 
     <application
         android:name=".Session"
@@ -227,6 +230,18 @@
 
         <receiver android:name=".home.mediadetails.NotificationActionService"/>
         <service android:name=".home.mediadetails.OnClearFromRecentService"/>
+
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.vyaspublications.ott.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
     </application>
 
 </manifest>

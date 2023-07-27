@@ -25,7 +25,7 @@ class MediaListViewModel(application: Application) : AndroidViewModel(applicatio
 
     fun callForVideos(id: String, pageCount: Int, limit: Int, type: String = "") {
 
-        val call: Call<List<Video>> = apiServiceLogin.getVideosByCategory(id, "$pageCount,$limit", type)
+        val call: Call<List<Video>> = apiServiceLogin.getVideosByCategory(id, "$pageCount,$limit","android", type)
         call.enqueue(object : Callback<List<Video>> {
 
             override fun onResponse(call: Call<List<Video>>?, response: Response<List<Video>>?) {

@@ -65,7 +65,6 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
                 token = task.result
                 Log.e("@@token", token)
             }
-
             val call = apiService.getAppInfo("Android", token)
             call.enqueue(object : Callback<AppInfo> {
 
@@ -86,7 +85,6 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     fun callForGenres() {
-
         val call = apiService.generes as Call<List<Category>>
         call.enqueue(object : Callback<List<Category>> {
             override fun onResponse(

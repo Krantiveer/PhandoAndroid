@@ -165,11 +165,11 @@ class HomeActivity : BaseScreenTrackingActivity(),
             startActivity(intent)
         }
 
-        txtSettings.setOnClickListener {
+      /*  txtSettings.setOnClickListener {
             drawer_layout.closeDrawer(Gravity.LEFT);
             startActivity(Intent(this,
                 SettingsActivity::class.java))
-        }
+        }*/
 
         llCategory.setOnClickListener {
             if (!isCatVisible) {

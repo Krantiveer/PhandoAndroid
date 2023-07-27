@@ -43,6 +43,22 @@
                 android:keepScreenOn="true"
                 android:visibility="gone" />
 
+            <com.google.android.exoplayer2.ui.PlayerView
+
+                android:id="@+id/audioOfflineMedia"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:keepScreenOn="true"
+                app:show_timeout="0"
+                app:show_buffering="always"
+                app:resize_mode="fill"
+                app:use_controller="true"
+                app:controller_layout_id="@layout/audio_player_controller"
+                app:hide_on_touch="false"
+                android:visibility="gone"
+                />
+
+
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/play"
                 android:layout_width="@dimen/_50sdp"

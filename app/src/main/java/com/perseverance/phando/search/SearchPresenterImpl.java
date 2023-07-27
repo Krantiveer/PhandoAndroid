@@ -31,7 +31,7 @@ public class SearchPresenterImpl implements SearchPresenter, Callback<List<Video
     public void search(int pageCount, String query, boolean showProgress, DataFilters dataFilters) {
         if (showProgress) listener.showProgress("Searching videos...");
         ApiService service = ApiClient.getLoginClient().create(ApiService.class);
-        Call<List<Video>> call = service.searchVideo(query, dataFilters.getGenre_id(), dataFilters.getFilter(), pageCount + "," + BaseConstants.LIMIT_VIDEOS);
+        Call<List<Video>> call = service.searchVideo(query,"android", dataFilters.getGenre_id(), dataFilters.getFilter(), pageCount + "," + BaseConstants.LIMIT_VIDEOS);
         MyLog.e("Search Video Url: " + call.request().url().toString());
         call.enqueue(this);
     }

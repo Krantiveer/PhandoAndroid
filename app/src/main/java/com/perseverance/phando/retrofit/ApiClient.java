@@ -155,6 +155,8 @@ public class ApiClient {
                     .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept", "application/json; charset=utf-8")
                     .addHeader("IpAddress", Session.Companion.getRemoteIp())
+                    .addHeader("devicetype", "android")
+                    .addHeader("appversion", "12")
 //                    .addHeader("IpAddress", "107.181.177.130")
                     .build();
             return chain.proceed(newRequest);

@@ -1,6 +1,7 @@
 package com.perseverance.phando.home.mediadetails
 
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.NotificationChannel
@@ -10,12 +11,11 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.net.UrlQuerySanitizer
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
+import android.os.*
 import android.provider.Settings
 import android.text.Html
 import android.text.Spannable
@@ -28,6 +28,9 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -81,6 +84,14 @@ import com.videoplayer.VideoPlayerMetadata.UriSample
 import kotlinx.android.synthetic.main.activity_video_details.*
 import kotlinx.android.synthetic.main.audio_player_controller.*
 import kotlinx.android.synthetic.main.content_detail.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.BufferedInputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 
 class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
@@ -394,6 +405,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         MyLog.d("debugUrl", mediaUrl)
         nextEpisode.gone()
 
+        Log.e("@@type", mediaMetadata?.media_type.toString())
         if (mediaMetadata?.media_type?.equals("audio")!!) {
             releasePlayer()
             audio.visible()
@@ -414,6 +426,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             )
             setAudioPlayer(mediaUrl)
         } else {
+            download.visible()
             imgAudioThumbNail.gone()
             audio.gone()
             playerThumbnailContainer.gone()
@@ -508,6 +521,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         })
     }
 
+    private  var viewModel: DownloadViewModel? = null
+
+    private val NOTIFICATION_ID = 1
+    private lateinit var notificationManagerCompat: NotificationManagerCompat
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.apply {
@@ -516,6 +536,21 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
         setContentView(R.layout.activity_video_details)
 
+        viewModel = ViewModelProvider(this).get(DownloadViewModel::class.java)
+        notificationManagerCompat = NotificationManagerCompat.from(this)
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channelId = "download_channel"
+            val channelName = "Download Channel"
+            val importance = NotificationManager.IMPORTANCE_LOW
+
+            val notificationChannel = NotificationChannel(channelId, channelName, importance)
+            notificationChannel.setShowBadge(false)
+
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
         setAudioPlayer("mediaMetadata!!.media_url")
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
@@ -579,12 +614,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
         }
         favorite.setOnClickListener {
-            mediaMetadata?.can_share?.let {
+
+           /* mediaMetadata?.can_share?.let {
                 if (it != 1) {
                     toast("Add to My List is restricted for this media.")
                     return@setOnClickListener
                 }
-            }
+            }*/
             val token = PreferencesUtils.getLoggedStatus()
             if (token.isEmpty()) {
                 val intent = Intent(this@MediaDetailActivity, LoginActivity::class.java)
@@ -630,7 +666,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
             shareVideoUrl()
         }
-
         download.setOnClickListener {
 //            mediaMetadata?.can_share?.let {
 //                if (it!=1){
@@ -651,6 +686,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     return@setOnClickListener
                 }
             }
+
+          /* if (mediaMetadata?.media_type.equals("audio")) {
+                startDownloadMp3()
+                }  else {*/
+
+
+
             mediaDetailViewModel.downloadStatus.value?.let {
                 val mBottomSheetDialog = BottomSheetDialog(this)
                 val sheetView: View =
@@ -702,7 +744,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 startDownload()
 
             }
+
         }
+
+
+        viewModel!!.downloadProgress.observe(this, Observer { progress ->
+            Log.d("@@DownloadProgress", "Download Progress: $progress%")
+        })
         play.setOnClickListener {
             playVideo()
         }
@@ -807,6 +855,112 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         //ad.loadAds(BannerType.SCREEN_DETAIL)
     }
 
+    fun startDownloadMp3() {
+
+
+        val readPermission = Manifest.permission.READ_EXTERNAL_STORAGE
+        val writePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
+
+        val permissionsToRequest = mutableListOf<String>()
+
+        if (ContextCompat.checkSelfPermission(this, readPermission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(readPermission)
+        }
+
+        if (ContextCompat.checkSelfPermission(this, writePermission) != PackageManager.PERMISSION_GRANTED) {
+            permissionsToRequest.add(writePermission)
+        }
+
+        if (permissionsToRequest.isNotEmpty()) {
+            ActivityCompat.requestPermissions(this, permissionsToRequest.toTypedArray(), 10)
+        } else {
+            // Permissions are already granted; you can perform file operations here
+
+
+
+            val mp3Url = mediaMetadata?.media_url
+        //    val mp3Url = "https://vyas.b-cdn.net/audios/series/25/season/26/episode_251_1682236510.mp3" // Replace with your download URL
+            val fileName = mediaMetadata?.title // Replace with the desired file name
+            val hiddenFolder = File(filesDir, ".myHiddenFolder")
+            val destinationFile = File(hiddenFolder, fileName)
+
+            if (!hiddenFolder.exists()) {
+                hiddenFolder.mkdirs()
+            }
+
+
+            val notificationBuilder = NotificationCompat.Builder(this, "download_channel")
+                .setSmallIcon(R.drawable.ic_download)
+                .setContentTitle("Downloading File")
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setOngoing(true)
+                .setOnlyAlertOnce(true)
+                .setProgress(100, 0, false) // Initialize the ProgressBar
+
+            notificationManager!!.notify(NOTIFICATION_ID, notificationBuilder.build())
+
+            GlobalScope.launch(Dispatchers.IO) {
+                try {
+                    val urlConnection = URL(mp3Url).openConnection() as HttpURLConnection
+                    urlConnection.connect()
+
+                    val fileLength = urlConnection.contentLength.toLong()
+
+                    val inputStream = BufferedInputStream(urlConnection.inputStream)
+                    val outputStream = FileOutputStream(destinationFile)
+                    val buffer = ByteArray(1024)
+                    var total: Long = 0
+                    var bytesRead: Int
+
+                    while (inputStream.read(buffer).also { bytesRead = it } != -1) {
+                        total += bytesRead
+                        val progress = (total * 100 / fileLength).toInt()
+
+                        Handler(Looper.getMainLooper()).post {
+                            // Update the notification progress on the main thread
+                            notificationBuilder.setProgress(100, progress, false)
+                            notificationManager!!.notify(NOTIFICATION_ID, notificationBuilder.build())
+                        }
+
+                        outputStream.write(buffer, 0, bytesRead)
+                        Log.e("@@progress",progress.toString() )
+
+                        if (progress==100){
+                            outputStream.flush()
+                            outputStream.close()
+                            inputStream.close()
+
+                            // Download complete
+                            Handler(Looper.getMainLooper()).post {
+                                notificationBuilder.setProgress(0, 0, false)
+                                notificationBuilder.setContentText("Download Complete")
+                                notificationBuilder.setOngoing(false)
+                                notificationManager!!.notify(NOTIFICATION_ID, notificationBuilder.build())
+                            }
+                        }
+
+                    }
+
+
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    // Handle download error
+                    Handler(Looper.getMainLooper()).post {
+                        notificationBuilder.setContentText("Download Failed")
+                        notificationBuilder.setOngoing(false)
+                        notificationManager!!.notify(NOTIFICATION_ID, notificationBuilder.build())
+                    }
+                }
+            }
+
+
+
+        }
+
+    }
+
+
 
     private fun createChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -835,6 +989,27 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
     }
 
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            10 -> {
+                if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
+                    val mp3Url = mediaMetadata?.media_url
+                    val destinationFile = File(filesDir, "yourfile.mp3")
+
+                    mp3Url?.let { viewModel!!.downloadFile(it, destinationFile) }
+                } else {
+                   Utils.showErrorToast(this, "Please allow Permissions", 1000)
+                }
+            }
+        }
+    }
+
+
     private fun startDownload() {
         mediaMetadata?.media_url?.let {
             if (it.isNullOrEmpty()) {
@@ -848,6 +1023,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
                 when (result.status) {
                     LoadingStatus.SUCCESS -> {
+
+                        Log.e("@@downloadUrl", mediaMetadata?.media_url.toString())
                         val videoPlayerMetadata = UriSample(
                             null,
                             Uri.parse(mediaMetadata?.media_url),
@@ -857,9 +1034,18 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                             null,
                             null,
                             null)
-                        VideoSdkUtil.startDownload(this@MediaDetailActivity,
-                            videoPlayerMetadata,
-                            mediaMetadata?.title)
+
+                        if (mediaMetadata?.media_type?.equals("audio")!!) {
+                            VideoSdkUtil.startDownloadMp3(this@MediaDetailActivity,
+                                videoPlayerMetadata,
+                                mediaMetadata?.title)
+                        }else {
+                            VideoSdkUtil.startDownload(this@MediaDetailActivity,
+                                videoPlayerMetadata,
+                                mediaMetadata?.title)
+                        }
+
+
                         downloadMetadataDao.insert(DownloadMetadata(mediaMetadata?.document_media_id!!.toString(),
                             mediaMetadata?.title,
                             mediaMetadata?.getDirectors() + "\n" + mediaMetadata?.detail + "\n" + mediaMetadata?.other_credits,
@@ -1594,6 +1780,13 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 if (it > 0) {
                     mediaDetailViewModel.setContinueWatchingTime(mediaMetaData?.document_media_id.toString(),
                         it.toString())
+
+                    val currentPosition = phandoPlayerView.currentPosition.toLong()
+
+                    TrackingUtils.sendVideoPlayBackTime(currentPosition,mediaMetaData.title,
+                        mediaMetadata?.analytics_category_id,
+                        "PlaybackTime")
+
                 }
             }
         }
@@ -1912,23 +2105,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
     }
 
-    override fun onTrackPrevious() {
-        positionSong--
-        CreateNotification.createNotification(
-            this@MediaDetailActivity, episodes!!.get(positionSong),
-            R.drawable.player_pause, positionSong, episodes!!.size - 1
-        )
-        mediaMetadata?.prev_media?.let {
-            prevMediaMetadata?.let {
-                onGetVideoMetaDataSuccess(it)
-            }
-        }
 
-    }
 
     override fun onTrackPlay() {
 
-        if ( episodes!!.size!=0){
+        if (episodes!!.isNotEmpty()){
 
             CreateNotification.createNotification(
                 this@MediaDetailActivity, episodes!!.get(positionSong),
@@ -1971,6 +2152,19 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         )
         mediaMetadata?.next_media?.let {
             nextMediaMetadata?.let {
+                onGetVideoMetaDataSuccess(it)
+            }
+        }
+
+    }
+    override fun onTrackPrevious() {
+        positionSong--
+        CreateNotification.createNotification(
+            this@MediaDetailActivity, episodes!!.get(positionSong),
+            R.drawable.player_pause, positionSong, episodes!!.size - 1
+        )
+        mediaMetadata?.prev_media?.let {
+            prevMediaMetadata?.let {
                 onGetVideoMetaDataSuccess(it)
             }
         }

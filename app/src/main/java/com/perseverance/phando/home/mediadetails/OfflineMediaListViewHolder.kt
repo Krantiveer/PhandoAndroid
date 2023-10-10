@@ -45,6 +45,7 @@ class OfflineMediaListViewHolder(itemView: View, listener: AdapterClickListener)
         }
 
         itemView.rating.gone()
+        itemView.free.gone()
 
         itemView.option.setOnClickListener {
             val wrapper: Context = ContextThemeWrapper(itemView.context, R.style.popup_option)

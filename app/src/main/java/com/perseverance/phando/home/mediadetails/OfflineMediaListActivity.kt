@@ -7,6 +7,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.MenuItem
 import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
@@ -30,6 +31,7 @@ import com.videoplayer.VideoPlayerMetadata
 import com.videoplayer.VideoSdkUtil
 import kotlinx.android.synthetic.main.activity_offline_media.*
 import kotlinx.android.synthetic.main.layout_header_new.*
+import java.io.File
 
 class OfflineMediaListActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     override var screenName="OfflineMediaList"
@@ -55,6 +57,28 @@ class OfflineMediaListActivity : BaseScreenTrackingActivity(), AdapterClickListe
         imgBack.setOnClickListener {
             finish()
         }
+
+     /*   val hiddenFolder = File(filesDir, ".myHiddenFolder")
+        val mp3Files = hiddenFolder.listFiles { file -> file.isFile && file.extension == "mp3" }
+
+        if (mp3Files != null && mp3Files.isNotEmpty()) {
+            // Iterate through the list of MP3 files
+            for (mp3File in mp3Files) {
+                if (mp3File.exists()) {
+                    val fileUri = Uri.fromFile(mp3File)
+
+                    Log.e("@@mp3", fileUri.path.toString())
+
+                    // Now you can use 'fileUri' to work with each MP3 file individually
+                } else {
+                    // Handle the case where the file doesn't exist
+                }
+            }
+        } else {
+            // Handle the case where no MP3 files were found in the hidden folder
+        }*/
+
+
         val manager = LinearLayoutManager(this@OfflineMediaListActivity)
         recyclerView.layoutManager = manager
         recyclerView.setHasFixedSize(true)

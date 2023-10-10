@@ -31,4 +31,14 @@ object TrackingUtils {
                 .setAction(action!!)
                 .build())
     }
+
+    fun sendVideoPlayBackTime(currentPosition: Long?,videoName: String?, category: String?, action: String?) {
+        MyLog.e("@@PlayBackTime", videoName + " " + action)
+        gaTracker?.send(HitBuilders.EventBuilder()
+            .setCategory("Video")
+                .setLabel(videoName!!)
+                .setAction(action!!)
+            .setValue(currentPosition!!)
+                .build())
+    }
 }

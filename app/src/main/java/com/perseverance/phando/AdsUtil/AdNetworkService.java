@@ -98,6 +98,9 @@ public class AdNetworkService extends IntentService {
 
             Request newRequest = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer " + token)
+                    .addHeader("publisherid", "80")
+                    .addHeader("devicetype", "android")
+                    .addHeader("appversion", "12")
                     .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept", "application/json; charset=utf-8")
                     .build();

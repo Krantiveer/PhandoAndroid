@@ -20,6 +20,8 @@ import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -42,7 +44,7 @@ import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
 import com.perseverance.phando.utils.*
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
-import kotlinx.android.synthetic.main.activity_video_details.*
+import kotlinx.android.synthetic.main.activity_offline_media.*
 import kotlinx.android.synthetic.main.activity_video_details_offline.*
 import kotlinx.android.synthetic.main.activity_video_details_offline.detailContent
 import kotlinx.android.synthetic.main.activity_video_details_offline.fragmentContainer
@@ -54,6 +56,8 @@ import kotlinx.android.synthetic.main.activity_video_details_offline.root
 import kotlinx.android.synthetic.main.activity_video_details_offline.toolbar
 import kotlinx.android.synthetic.main.audio_player_controller.*
 import kotlinx.android.synthetic.main.content_detail_offline.*
+import kotlinx.android.synthetic.main.content_detail_offline.recyclerView
+import java.io.File
 
 class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     PhandoPlayerCallback, Player.EventListener, Playable {
@@ -183,6 +187,12 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         } else {
             portrate()
         }
+
+
+
+
+
+
         val decoration = BaseRecycleMarginDecoration(this@OffLineMediaDetailActivity)
         recyclerView.addItemDecoration(decoration)
         playerViewModel.message.observe(this, messageObserver)
@@ -274,10 +284,13 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
                 })
         }
+
+
+
+
+
         play.setOnClickListener {
-
             playVideo()
-
         }
         viewMore.setOnClickListener {
             if (videoDescription.visibility == View.VISIBLE) {
@@ -312,7 +325,6 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     private fun playVideo() {
         downloadMetadata?.media_url?.let {
             play.gone()
-
             setDataToPlayer(addUrl = null, mediaUrl = downloadMetadata?.media_url!!, seekTo = 0)
             currentSongId = downloadMetadata?.document_id!!.toInt()
         }

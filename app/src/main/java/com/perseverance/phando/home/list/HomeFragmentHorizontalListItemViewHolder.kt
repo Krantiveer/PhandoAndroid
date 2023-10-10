@@ -1,12 +1,15 @@
 package com.perseverance.phando.home.list
 
 import android.view.View
-import com.perseverance.patrikanews.utils.*
+import com.perseverance.patrikanews.utils.gone
+import com.perseverance.patrikanews.utils.invisible
+import com.perseverance.patrikanews.utils.resizeView
+import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.R
 import com.perseverance.phando.db.Video
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.genericAdopter.BaseViewHolder
-import com.perseverance.phando.resize.ListItemThumbnail
+import com.perseverance.phando.resize.GridItemThumbnail
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.tuple_home_video_item.view.*
 
@@ -29,12 +32,14 @@ class HomeFragmentHorizontalListItemViewHolder(
             itemView.free.visible()
         }
 
-        itemView.img_thumbnail.resizeView(ListItemThumbnail(imageOrientation))
-        Utils.displayImage(itemView.context,
-            if (imageOrientation == 0) item.thumbnail else item.poster,
+        itemView.img_thumbnail.resizeView(GridItemThumbnail(imageOrientation))
+        Utils.displayImage(
+            itemView.context,
+            if (imageOrientation == 0) item.thumbnail else item.thumbnail,
             R.drawable.video_placeholder,
             R.drawable.error_placeholder,
-            itemView.img_thumbnail)
+            itemView.img_thumbnail
+        )
         itemView.txtTitle.text = item.title
 
         /* item.rating?.let {

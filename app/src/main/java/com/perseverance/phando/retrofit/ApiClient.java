@@ -152,6 +152,7 @@ public class ApiClient {
             final String token = PreferencesUtils.getLoggedStatus();
             Request newRequest = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer " + token)
+                    .addHeader("publisherid", "80")
                     .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept", "application/json; charset=utf-8")
                     .addHeader("IpAddress", Session.Companion.getRemoteIp())

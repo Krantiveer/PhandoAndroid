@@ -89,12 +89,14 @@ public class VideoSdkUtil {
         VideoPlayerApplication videoPlayerApplication = (VideoPlayerApplication) appCompatActivity.getApplication();
         DownloadTracker downloadTracker = videoPlayerApplication.getDownloadTracker();
 
+
         int downloadUnsupportedStringId = getDownloadUnsupportedStringId(intentAsSample);
         if (downloadUnsupportedStringId != 0) {
             Toast.makeText(videoPlayerApplication, downloadUnsupportedStringId, Toast.LENGTH_LONG)
                     .show();
         } else {
             VideoPlayerMetadata.UriSample uriSample = (VideoPlayerMetadata.UriSample) intentAsSample;
+          //  Log.e("@@extension",  uriSample.extension);
             RenderersFactory renderersFactory =
                     //videoPlayerApplication.buildRenderersFactory(isNonNullAndChecked(preferExtensionDecodersMenuItem));
                     videoPlayerApplication.buildRenderersFactory(false);
@@ -103,6 +105,30 @@ public class VideoSdkUtil {
                     playerTitle,
                     uriSample.uri,
                     uriSample.extension,
+                    renderersFactory);
+        }
+    }
+
+    public static void startDownloadMp3(AppCompatActivity appCompatActivity, VideoPlayerMetadata intentAsSample, String playerTitle) {
+        VideoPlayerApplication videoPlayerApplication = (VideoPlayerApplication) appCompatActivity.getApplication();
+        DownloadTracker downloadTracker = videoPlayerApplication.getDownloadTracker();
+
+
+        int downloadUnsupportedStringId = getDownloadUnsupportedStringId(intentAsSample);
+        if (downloadUnsupportedStringId != 0) {
+            Toast.makeText(videoPlayerApplication, downloadUnsupportedStringId, Toast.LENGTH_LONG)
+                    .show();
+        } else {
+            VideoPlayerMetadata.UriSample uriSample = (VideoPlayerMetadata.UriSample) intentAsSample;
+          //  Log.e("@@extension",  uriSample.extension);
+            RenderersFactory renderersFactory =
+                    //videoPlayerApplication.buildRenderersFactory(isNonNullAndChecked(preferExtensionDecodersMenuItem));
+                    videoPlayerApplication.buildRenderersFactory(false);
+            downloadTracker.toggleDownload(
+                    appCompatActivity.getSupportFragmentManager(),
+                    playerTitle,
+                    uriSample.uri,
+                    "mp3",
                     renderersFactory);
         }
     }

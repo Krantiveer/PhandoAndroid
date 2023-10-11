@@ -542,7 +542,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             val channelId = "download_channel"
             val channelName = "Download Channel"
-            val importance = NotificationManager.IMPORTANCE_LOW
+            val importance = NotificationManager.IMPORTANCE_HIGH
 
             val notificationChannel = NotificationChannel(channelId, channelName, importance)
             notificationChannel.setShowBadge(false)

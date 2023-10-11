@@ -59,6 +59,8 @@
     <color name="theme_color">#FFFFFF</color>
     <color name="circular_background_stroke_color">#FFFFFF</color>
 
+    <color name="bottom_nav">#281739</color>
+
     <!--Phase 2-->
     <color name="login_background">@color/bg_app</color>
     <color name="login_card_background">@color/gray_charcoal_dark</color>

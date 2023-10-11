@@ -487,7 +487,22 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
                         val intent = Intent(activity, SeriesActivity::class.java)
                         intent.putExtra(Key.CATEGORY, data)
                         startActivity(intent)
-                    } else {
+                    }
+
+                    else if (data.type.equals("GENRE")){
+                        data.id.let {
+                            val intent1 = Intent(requireContext(), BaseVideoListActivity::class.java).apply {
+                                putExtra("id", data.id.toString())
+                                putExtra("title", data.title)
+
+
+                            }
+                            startActivity(intent1)
+
+                        }
+                    }
+
+                    else {
                         startActivity(MediaDetailActivity.getDetailIntent(activity as Context,
                             data))
                         Utils.animateActivity(activity, "next")

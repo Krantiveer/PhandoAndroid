@@ -28,6 +28,11 @@ class HomeFragmentChildListAdapter(context: Context, listener: AdapterClickListe
 
                 return HomeFragmentVerticalListItemViewHolder(inflate(R.layout.tuple_home_video_item_list_style, parent), listener, imageOrientation)
             }
+
+            "GENRE" -> {
+                return GenreItemViewHolder(inflate(R.layout.genre_item_images, parent), listener, imageOrientation)
+            }
+
             "CONTINUE_WATCHING" -> {
                 return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener, 0)
                 //   return HomeFragmentContinueWatchingItemViewHolder(inflate(R.layout.tuple_home_video_item_list_style, parent), listener)

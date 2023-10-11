@@ -19,37 +19,37 @@ android {
         configDreamFlix {
             keyAlias 'dreamflix'
             keyPassword 'dreamflix'
-            storeFile file('C:\\Phando\\keystore\\DreamFlix\\dreamflix.jks')
+            storeFile file('downloads\\Phando\\keystore\\DreamFlix\\dreamflix.jks')
             storePassword 'dreamflix'
         }
         configOhogujarati {
             keyAlias 'ohogujarati'
             keyPassword 'ohogujarati'
-            storeFile file('C:\\Phando\\keystore\\ohogujarati\\ohogujarati.jks')
+            storeFile file('downloads\\Phando\\keystore\\ohogujarati\\ohogujarati.jks')
             storePassword 'ohogujarati'
         }
         configCinemobs {
             keyAlias 'ohogujarati'
             keyPassword 'ohogujarati'
-            storeFile file('C:\\Phando\\keystore\\ohogujarati\\ohogujarati.jks')
+            storeFile file('downloads\\Phando\\keystore\\ohogujarati\\ohogujarati.jks')
             storePassword 'ohogujarati'
         }
         configMitwa {
             keyAlias 'mitwatv'
             keyPassword 'mitwatv'
-            storeFile file('C:\\Phando\\keystore\\mitwa\\mitwatv.jks')
+            storeFile file('downloads\\Phando\\keystore\\mitwa\\mitwatv.jks')
             storePassword 'mitwatv'
         }
         configCandor {
             keyAlias 'candor'
             keyPassword 'candor'
-            storeFile file('C:\\Phando\\keystore\\candor\\candor.jks')
+            storeFile file('downloads\\Phando\\keystore\\candor\\candor.jks')
             storePassword 'candor'
         }
         configVyas{
             keyAlias 'vyastv'
             keyPassword 'vyastv'
-            storeFile file('C:\\Phando\\keystore\\vyas\\vyas.jks')
+            storeFile file('/Users/android/Downloads/Phando/keystore/vyas/vyas.jks')
             storePassword 'vyastv'
         }
     }

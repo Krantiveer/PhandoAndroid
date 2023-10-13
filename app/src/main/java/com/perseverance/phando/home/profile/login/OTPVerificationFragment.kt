@@ -5,9 +5,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
+import androidx.navigation.NavOptions
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
+import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
@@ -93,16 +96,21 @@ class OTPVerificationFragment : BaseOTPVerificationFragment() {
 //        linkMobile.gone()
 //    }
 //
-    fun onVerifyOtpSuccess(loginResponse: LoginResponse) {
-        countDownTimer?.cancel()
-        PreferencesUtils.setLoggedIn(loginResponse.accessToken)
+fun onVerifyOtpSuccess(loginResponse: LoginResponse) {
+    countDownTimer?.cancel()
+    PreferencesUtils.setLoggedIn(loginResponse.accessToken)
 
-        if (requireActivity().intent.hasExtra("login_error")) {
-            startActivity(Intent(requireContext(), HomeActivity::class.java))
-        }
+    if (requireActivity().intent.hasExtra("login_error")) {
+        startActivity(Intent(requireContext(), HomeActivity::class.java))
+    }
+    else {
 
+        startActivity(Intent(requireContext(), HomeActivity::class.java))
         appCompatActivity.setResult(Activity.RESULT_OK)
         appCompatActivity.finish()
     }
+
+
+}
 
 }

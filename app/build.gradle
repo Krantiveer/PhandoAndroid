@@ -49,7 +49,7 @@ android {
         configVyas{
             keyAlias 'vyastv'
             keyPassword 'vyastv'
-            storeFile file('/Users/android/Downloads/Phando/keystore/vyas/vyas.jks')
+            storeFile file('C:\\Phando\\keystore\\vyas\\vyas.jks')
             storePassword 'vyastv'
         }
     }

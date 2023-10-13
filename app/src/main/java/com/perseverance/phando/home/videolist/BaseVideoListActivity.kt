@@ -3,6 +3,7 @@ package com.perseverance.phando.home.videolist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -65,6 +66,7 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
 //        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         id = intent.getStringExtra("id") ?: ""
+        Log.e("@@id", id)
         title = intent.getStringExtra("title") ?: ""
         type = intent.getStringExtra("type") ?: ""
         imageOrientation = intent.getIntExtra("imageOrientation", 0)

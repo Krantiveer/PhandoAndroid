@@ -26,7 +26,7 @@ class MediaDetailViewModel(application: Application) : AndroidViewModel(applicat
 
     val reloadTrigger = MutableLiveData<Video>()
     val loginFor = MutableLiveData<Int>().apply {
-        0
+
     }
     val nextEpisodeReloadTrigger = MutableLiveData<Video>()
     val prevEpisodeReloadTrigger = MutableLiveData<Video>()

@@ -530,7 +530,12 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back));
         if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            landscape()
+            if (mediaMetadata?.media_type?.equals("audio")!!) {
+                potrate()
+            }  else {
+                landscape()
+            }
+
         } else {
 
             potrate()
@@ -1712,7 +1717,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     override fun onStop() {
         super.onStop()
         if (this::audioPlayerExpo.isInitialized && audioPlayerExpo != null) {
-            // releasePlayer()
+             releasePlayer()
         }
     }
 
@@ -1817,8 +1822,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
     }
     override fun onItemClick(data: Any) {
-        updateCurrentPositionOnServer()
         releasePlayer()
+        updateCurrentPositionOnServer()
+
         when (data) {
             is Video -> {
                 if ("T".equals(data.type)) {

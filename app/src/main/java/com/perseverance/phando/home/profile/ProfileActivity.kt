@@ -231,7 +231,7 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                     if (it.data.current_subscription != null){
 
                         if(it.data.price != null){
-                            myPackagePrice.text = it.data.current_subscription.plan.currency+" " +it.data.price.toString()
+                       //     myPackagePrice.text = it.data.current_subscription.plan.currency+" " +it.data.price.toString()
                         }
                     }
 

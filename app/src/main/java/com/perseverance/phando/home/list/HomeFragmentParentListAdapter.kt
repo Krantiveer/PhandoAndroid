@@ -10,13 +10,13 @@ import com.perseverance.phando.genericAdopter.GenericRecyclerViewAdapter
 import com.perseverance.phando.home.dashboard.models.BrowseData
 
 
-class HomeFragmentParentListAdapter(context: Context, listener: AdapterClickListener, var fm: FragmentManager) : GenericRecyclerViewAdapter<BrowseData, AdapterClickListener, BaseViewHolder<BrowseData, AdapterClickListener>>(context, listener) {
-
+class HomeFragmentParentListAdapter(context: Context, listener: AdapterClickListener) :
+    GenericRecyclerViewAdapter<BrowseData, AdapterClickListener, BaseViewHolder<BrowseData,
+            AdapterClickListener>>(context, listener) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<BrowseData, AdapterClickListener> {
         return HomeFragmentParentListItemViewHolder(inflate(R.layout.home_widget, parent), listener)
-
-
     }
 
 }
+

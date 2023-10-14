@@ -2,10 +2,12 @@ package com.perseverance.phando.ui
 
 import android.content.Context
 import android.view.Gravity
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.recyclerview.widget.GridLayoutManager
 import com.perseverance.phando.db.Language
 import com.perseverance.phando.dialogs.BaseDialog
+import com.perseverance.phando.utils.PreferencesUtils
 import kotlinx.android.synthetic.main.dialog_language.*
 
 class LanguagesDialog(
@@ -15,7 +17,6 @@ class LanguagesDialog(
     mList: ArrayList<Language>,
     var mClick: ItemClick,
 ) : BaseDialog(context, themeResId), LanguageListAdapter.AdapterClick {
-
     companion object {
         var isOpen = false
     }
@@ -37,7 +38,7 @@ class LanguagesDialog(
         setCanceledOnTouchOutside(false)
         setUserListAdapter()
         for (data in mUserList) {
-            if (data.isSelected) {
+            if (data.isLanguageSelected) {
                 mSelectedList.add(data)
             }
         }
@@ -49,22 +50,33 @@ class LanguagesDialog(
     }
 
     override fun initListeners() {
+
+
+        txtSkip.setOnClickListener{
+
+            dismissDialog()
+        }
+        imgBack.setOnClickListener{
+            // PreferencesUtils.setLanguageSelectedSkip(true)
+            dismissDialog()
+        }
+
         btnSave.setOnClickListener {
-            if (mSelectedList.size >= 1) {
-                for (data in mSelectedList) {
-                    if (languageId.isEmpty()) {
-                        languageId.append(data.id)
-                    } else {
-                        languageId.append(",${data.id}")
-                    }
+            /* if (mSelectedList.size >= 1) {*/
+            for (data in mSelectedList) {
+                if (languageId.isEmpty()) {
+                    languageId.append(data.id)
+                } else {
+                    languageId.append(",${data.id}")
                 }
-                mClick.onItemClick(languageId)
-                dismissDialog()
-            } else {
-                Toast.makeText(mContext,
-                    "Please select at least one language!!",
-                    Toast.LENGTH_SHORT).show()
             }
+            mClick.onItemClick(languageId)
+            dismissDialog()
+            /* } else {
+                 Toast.makeText(mContext,
+                     "Please select at least one language!!",
+                     Toast.LENGTH_SHORT).show()
+             }*/
         }
     }
 
@@ -82,7 +94,7 @@ class LanguagesDialog(
     }
 
     override fun onItemClick(data: Language) {
-        if (data.isSelected) {
+        if (data.isLanguageSelected) {
             mSelectedList.add(data)
         } else {
             mSelectedList.remove(data)

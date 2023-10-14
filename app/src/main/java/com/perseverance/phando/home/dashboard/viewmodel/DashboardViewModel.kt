@@ -11,6 +11,7 @@ import com.perseverance.phando.db.Category
 import com.perseverance.phando.db.Filter
 import com.perseverance.phando.db.Language
 import com.perseverance.phando.home.dashboard.models.CategoryTab
+import com.perseverance.phando.home.generes.GenresResponse
 import com.perseverance.phando.retrofit.ApiClient
 import com.perseverance.phando.retrofit.ApiService
 import com.perseverance.phando.retrofit.NullResponseError
@@ -29,6 +30,8 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
     var onCategoryClick = MutableLiveData<CategoryTab>()
     var onLanguageClick = MutableLiveData<Boolean>()
     var title = MutableLiveData<String>()
+    var generesList = MutableLiveData<ArrayList<GenresResponse>?>()
+
 
     private var apiService: ApiService = ApiClient.getLoginClient().create(ApiService::class.java)
 
@@ -187,6 +190,31 @@ class DashboardViewModel(application: Application) : AndroidViewModel(applicatio
 
             override fun onFailure(call: Call<ArrayList<Language>>?, t: Throwable?) {
                 MyLog.e("", "Language not found")
+            }
+        })
+    }
+
+    fun callForGenresList() {
+        val call = apiService.generesList as Call<ArrayList<GenresResponse>>
+        call.enqueue(object : Callback<ArrayList<GenresResponse>> {
+            override fun onResponse(
+                call: Call<ArrayList<GenresResponse>>?,
+                response: Response<ArrayList<GenresResponse>>?,
+            ) {
+                if (response?.body() == null) {
+                    onFailure(call, NullResponseError())
+                } else {
+                    val data = response.body()
+                    if (data?.isNotEmpty() == true) {
+
+                        generesList.value= data
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<ArrayList<GenresResponse>>?, t: Throwable?) {
+                MyLog.e("", "Filter not found")
             }
         })
     }

@@ -24,6 +24,7 @@ data class Video(
     val poster_vertical: String? = null,
     val price: Int? = null,
     var rating: Int? = null,
+    var date: String? = null,
     val thumbnail_vertical: String? = null,
 ) : Parcelable {
 

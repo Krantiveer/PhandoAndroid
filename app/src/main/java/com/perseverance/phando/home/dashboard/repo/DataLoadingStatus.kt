@@ -11,5 +11,5 @@ class DataLoadingStatus<T>(
 
         val status: LoadingStatus = LoadingStatus.SUCCESS,
         val message: String? = null,
-        val data: T? = null
+    val data: T? = null
 )

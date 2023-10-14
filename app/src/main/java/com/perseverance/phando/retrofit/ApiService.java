@@ -1,6 +1,7 @@
 package com.perseverance.phando.retrofit;
 
 
+import com.perseverance.phando.contactus.SuccessResponse;
 import com.perseverance.phando.data.BaseResponse;
 import com.perseverance.phando.data.NotificationsSettingsModel;
 import com.perseverance.phando.data.ParentSettingPost;
@@ -13,6 +14,7 @@ import com.perseverance.phando.home.dashboard.models.BrowseData;
 import com.perseverance.phando.home.dashboard.models.CategoryTab;
 import com.perseverance.phando.home.dashboard.mylist.MyPurchaseListResponse;
 import com.perseverance.phando.home.dashboard.mylist.UpdateMyListResponse;
+import com.perseverance.phando.home.generes.GenresResponse;
 import com.perseverance.phando.home.mediadetails.MediaMetadata;
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadataResponse;
 import com.perseverance.phando.home.mediadetails.downloads.MediaUrlResponse;
@@ -22,6 +24,7 @@ import com.perseverance.phando.home.profile.login.SocialLoggedInUser;
 import com.perseverance.phando.home.profile.model.CountryCode;
 import com.perseverance.phando.home.series.TVSeriesResponseData;
 import com.perseverance.phando.home.series.TVSeriesResponseDataNew;
+import com.perseverance.phando.notification.NotificationData;
 import com.perseverance.phando.payment.paymentoptions.TCResponseData;
 import com.perseverance.phando.payment.paymentoptions.WalletDetailResponseData;
 import com.perseverance.phando.payment.paymentoptions.WalletHistoryResponseData;
@@ -53,8 +56,22 @@ public interface ApiService {
     @GET("userappversion")
     Call<AppInfo> getAppInfo(@Query("app_type") String appType,@Query("device_id") String device_id);
 
+
+
+    @FormUrlEncoded
+    @POST("contact/send")
+    Call<SuccessResponse> contactUs(@Field("first_name") String name,
+                                    @Field("email_id") String email_id,
+                                    @Field("mobile_number") String mobile_number,
+                                    @Field("comment") String comment);
+    @GET("notification-list")
+    Call<ArrayList<NotificationData>> getNotifications();
     @GET("package")
     Call<Package> getPackageDetails();
+
+
+    @GET("genres")
+    Call<ArrayList<GenresResponse>> getGeneresList();
 
     @POST("razorpay/order/create")
     @FormUrlEncoded

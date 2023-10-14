@@ -36,9 +36,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/img_thumbnail"
+
                 android:layout_alignRight="@+id/img_thumbnail"
-                android:visibility="gone"
                 android:id="@+id/free"
                 android:textColor="@color/white"
                 android:text="Premium"

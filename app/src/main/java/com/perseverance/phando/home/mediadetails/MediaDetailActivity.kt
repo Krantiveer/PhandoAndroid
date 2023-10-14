@@ -174,34 +174,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
             }
         }
 
-        fun getDetailIntentList(
-            context: Context,
-            video: Video,
-            trailerId: String? = "",
-            fromDyLink: Boolean = false,
-            episodes: ArrayList<Episode>
-        ): Intent {
-            if (video.is_free == 0 && PreferencesUtils.getLoggedStatus().isEmpty()) {
-                return Intent(context, LoginActivity::class.java)
-            } else {
-                val intent = Intent(context, MediaDetailActivity::class.java)
-                intent.apply {
-                    putExtra("fromDyLink", fromDyLink)
-                    val arg = Bundle()
-                    arg.apply {
-                        putParcelable(ARG_VIDEO, video)
-                        putSerializable("seasonList", episodes)
-                        if (trailerId != null) {
-                            if (trailerId.isNotBlank() && trailerId != "0") {
-                                putExtra(TRAILER_ID, trailerId)
-                            }
-                        }
-                    }
-                    putExtras(arg)
-                }
-                return intent
-            }
-        }
     }
     var isVideoPlayed = false
     var isTrailerPlaying = false
@@ -1162,6 +1134,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 }
             }
         }
+        Log.e("@@share_url",mediaPlaybackData.data.share_url )
         prepareShareMedia(mediaPlaybackData.data.share_url)
 
     }
@@ -1711,8 +1684,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
     @SuppressLint("SourceLockedOrientationActivity")
     override fun onBackPressed() {
-
-        releasePlayer()
         when (resources.configuration.orientation) {
             Configuration.ORIENTATION_PORTRAIT -> {
                 if (fromDyLink) {
@@ -2067,8 +2038,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         logger.logEvent(AppEventsConstants.EVENT_NAME_VIEWED_CONTENT, params)
     }
 
-    private lateinit var dynamicLink: String
+    private  var dynamicLink: String? = null
     private fun prepareShareMedia(linkUrl: String) {
+        Log.e("@@shareLink", linkUrl)
         val sanitizer = UrlQuerySanitizer()
         sanitizer.allowUnregisteredParamaters = true
         sanitizer.parseUrl(linkUrl)
@@ -2099,7 +2071,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 // Log.i("previewLink", it.toString())
             }
             dynamicLink = result?.shortLink.toString()
-            Log.e("@@dynamicLink**", dynamicLink)
+            Log.e("@@dynamicLink**", dynamicLink!!)
         }.addOnFailureListener {
             it.printStackTrace()
         }

@@ -5,70 +5,21 @@
     android:layout_height="match_parent"
     android:background="@color/bg_app">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbar"
+    <include
+        android:id="@+id/header"
+        layout="@layout/layout_header_new"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:padding="0dp"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:theme="@style/HomeToolbarTheme">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="left|center_vertical"
-                android:orientation="horizontal">
-
-
-                <ImageView
-                    android:id="@+id/imgHeaderImage"
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_30sdp"
-                    android:background="@color/white"
-                    android:padding="@dimen/_2sdp"
-                    android:scaleType="fitXY"
-                    android:src="@drawable/app_logo"
-                    android:visibility="gone" />
-
-
-                <TextView
-                    android:id="@+id/textViewTitle"
-                    fontPath="fonts/Roboto-Medium.ttf"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/_5sdp"
-                    android:ellipsize="end"
-                    android:fontFamily="@font/asap_regular"
-                    android:maxLines="2"
-                    android:text="Subscription Packages"
-                    android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                    android:textColor="@color/white_main"
-                    android:visibility="visible"
-                    tools:ignore="MissingPrefix" />
-
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
+        android:layout_height="wrap_content" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/bg_app"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar">
+        app:layout_constraintTop_toBottomOf="@id/header">
 
         <LinearLayout
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/bg_app"
@@ -89,18 +40,21 @@
             </LinearLayout>
 
             <LinearLayout
+                android:layout_marginTop="@dimen/_20sdp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <TextView
+                    android:layout_marginStart="@dimen/_10sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Choose Package"
                     android:textColor="@color/white"
-                    android:textSize="@dimen/_18sdp" />
+                    android:textSize="@dimen/_12sdp" />
 
                 <androidx.recyclerview.widget.RecyclerView
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:id="@+id/card_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

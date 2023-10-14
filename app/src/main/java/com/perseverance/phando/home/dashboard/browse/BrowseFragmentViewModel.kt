@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import com.perseverance.phando.db.Video
 import com.perseverance.phando.home.dashboard.models.BrowseData
 import com.perseverance.phando.home.dashboard.models.CategoryTab
 import com.perseverance.phando.home.dashboard.models.DataFilters
@@ -14,10 +15,12 @@ import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 class BrowseFragmentViewModel(application: Application) : AndroidViewModel(application) {
     private var browseListRepository: BrowseListRepository = BrowseListRepository(application)
     private val reloadTrigger = MutableLiveData<DataFilters>()
+    val reloadMapTrigger = MutableLiveData<String>()
 
-    var data: LiveData<DataLoadingStatus<List<BrowseData>>> = Transformations.switchMap(reloadTrigger) {
-        browseListRepository.browseListData(it)
-    }
+    var data: LiveData<DataLoadingStatus<List<BrowseData>>> =
+        Transformations.switchMap(reloadTrigger) {
+            browseListRepository.browseListData(it)
+        }
 
     fun getBrowseList(): LiveData<DataLoadingStatus<List<BrowseData>>> = data
 
@@ -26,6 +29,13 @@ class BrowseFragmentViewModel(application: Application) : AndroidViewModel(appli
         reloadTrigger.value = dataFilters
     }
 
-    fun getCategoryTabList(): MutableLiveData<DataLoadingStatus<List<CategoryTab>>> = browseListRepository.categoryTabListData()
+    fun getCategoryTabList(): MutableLiveData<DataLoadingStatus<List<CategoryTab>>> =
+        browseListRepository.categoryTabListData()
 
+
+
+
+    fun refreshMapListDataData(dataFilters: String) {
+        reloadMapTrigger.value = dataFilters
+    }
 }

@@ -90,7 +90,7 @@ android {
             debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
             buildConfigField("String","TOPIC","\"com.perseverance.vyasstage\"")
-            buildConfigField("String","DOMAIN_URI","\"https://vyas.page.link\"")
+            buildConfigField("String","DOMAIN_URI","\"https://vyaspublications.page.link\"")
             //http://qa.phunflix.com
         }
 
@@ -270,5 +270,10 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.8'
 
     implementation 'com.github.mergehez:ArgPlayer:v3.1'
+
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    implementation 'com.github.smarteist:autoimageslider:1.3.9'
+
 
 }

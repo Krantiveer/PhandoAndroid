@@ -13,8 +13,8 @@
         android:right="0dp"
         android:top="0dp"
         android:bottom="0dp" />
-    <solid android:color="@color/bottom_nav" />
+    <solid android:color="@color/color_back_card" />
     <stroke
         android:width="@dimen/_1sdp"
-        android:color="@color/bottom_nav" />
+        android:color="@color/color_back_card" />
 </shape>

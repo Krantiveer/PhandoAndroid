@@ -9,6 +9,9 @@ import org.jetbrains.annotations.NotNull;
 public class BaseConstants {
 
 
+
+    public static final String CONTACT_ACTIVITY = "CONTACT_ACTIVITY";
+
     public static final int LIMIT_VIDEOS = 100;
     public static final String FEATURED_VIDEO_CATEGORY = "-2";
     public static final String LATEST_VIDEO_CATEGORY = "-3";
@@ -57,6 +60,7 @@ public class BaseConstants {
     public static final String LOGIN_WITH_MOBILE_SCREEN = "LoginWithMobile";
     public static final String FORGOT_PASSWORD_SCREEN = "ForgotPassword";
     public static final String SET_PASSWORD_SCREEN = "SetPassword";
+    public static final String GENRES_ACTIVITY = "GenreActivity";
     public static final String CHANGE_PASSWORD_SCREEN = "ChangePassword";
     public static final String OTP_VERIFICATION_SCREEN = "OTPVerification";
 

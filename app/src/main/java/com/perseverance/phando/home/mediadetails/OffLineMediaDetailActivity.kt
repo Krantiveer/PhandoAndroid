@@ -285,10 +285,6 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
                 })
         }
 
-
-
-
-
         play.setOnClickListener {
             playVideo()
         }

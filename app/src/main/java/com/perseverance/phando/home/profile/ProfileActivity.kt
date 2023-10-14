@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -24,6 +25,7 @@ import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.home.dashboard.mylist.UserListActivity
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
 import com.perseverance.phando.home.mediadetails.OfflineMediaListActivity
+import com.perseverance.phando.home.profile.login.LoginActivity
 import com.perseverance.phando.payment.paymentoptions.PaymentActivity
 import com.perseverance.phando.payment.subscription.SubscriptionPackageActivity
 import com.perseverance.phando.utils.*
@@ -100,7 +102,7 @@ class ProfileActivity : BaseScreenTrackingActivity() {
         btnLogout.setOnClickListener {
             val alertDialog =
                 MaterialAlertDialogBuilder(this@ProfileActivity, R.style.AlertDialogTheme).create()
-            alertDialog.setIcon(R.mipmap.ic_launcher)
+            alertDialog.setIcon(R.drawable.app_logo)
             alertDialog.setTitle("Logout")
             alertDialog.setMessage(resources.getString(R.string.logout_message))
             alertDialog.setCancelable(false)
@@ -112,7 +114,7 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                 downloadMetadataDao?.deleteAll()
                 VideoSdkUtil.deleteAllDownloadedVideo(this@ProfileActivity.application)
 
-                val intent = Intent(this@ProfileActivity, HomeActivity::class.java)
+                val intent = Intent(this@ProfileActivity, LoginActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
                 finish()
@@ -122,6 +124,8 @@ class ProfileActivity : BaseScreenTrackingActivity() {
             }
             alertDialog.show()
         }
+
+
 
         val allData = downloadMetadataDao.getAllDownloadData()
         if (allData == null || allData.isNullOrEmpty()) {
@@ -214,17 +218,41 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                     Utils.displayCircularProfileImage(this@ProfileActivity, it.data?.user?.image,
                         R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, avatar)
 
-                    it.data?.is_subscribed?.let {
-                        if (it == 0) {
-                            btnSubscribe.text = "Subscribe"
-                        } else {
-                            btnSubscribe.text = "View Subscriptions"
+                    if(it.data.subscription_start_date != null){
+                        myPackageDateTime.text = "Expires on " + it.data.subscription_end_date
+                    }
+
+                    if(it.data.current_subscription != null){
+                        userSubId.text = "Subscriber ID : " + it.data.current_subscription.id
+                    }
+                    if(it.data.package_name != null){
+                        myPackageName.text = it.data.package_name
+                    }
+                    if (it.data.current_subscription != null){
+
+                        if(it.data.price != null){
+                            myPackagePrice.text = it.data.current_subscription.plan.currency+" " +it.data.price.toString()
                         }
                     }
+
+                    it.data.is_subscribed.let {
+                        if (it == 0) {
+                            cardSubPlan.gone()
+                            btnCancelSubs.gone()
+                            lytSubs.gone()
+                        } else {
+                            cardSubPlan.visible()
+                            btnCancelSubs.visible()
+                            lytSubs.visible()
+
+                        }
+                    }
+
                 }
             }
         })
     }
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -239,6 +267,8 @@ class ProfileActivity : BaseScreenTrackingActivity() {
     override fun onResume() {
         super.onResume()
         userProfileViewModel.refreshUserProfile()
+
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

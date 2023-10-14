@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/_10sdp"
+    android:background="@color/color_back_card"
     android:elevation="@dimen/_2sdp"
-    android:background="@color/red_light_new"
     android:gravity="center_vertical"
     android:orientation="vertical"
     app:cardCornerRadius="@dimen/_5sdp">
@@ -13,8 +13,8 @@
     <RelativeLayout
         android:id="@+id/llMain"
         android:layout_width="match_parent"
-        android:background="@color/red_light_new"
         android:layout_height="wrap_content"
+        android:background="@color/color_back_card"
         android:gravity="center_vertical"
         android:orientation="vertical">
 
@@ -24,20 +24,39 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:visibility="gone"
             android:layout_margin="@dimen/_4sdp"
-            android:src="@drawable/ic_check" />
+            android:src="@drawable/ic_check"
+            android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/txtName"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center"
             android:padding="@dimen/_15sdp"
-            android:text="Sector 1"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_14sdp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Sector 1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp" />
+
+            <TextView
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_below="@+id/txtName"
+                android:id="@+id/txtNameOriginal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sector 1"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp" />
+
+        </LinearLayout>
+
 
         <!--    <View-->
         <!--        android:layout_width="match_parent"-->

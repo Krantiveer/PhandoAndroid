@@ -91,8 +91,8 @@ abstract class BaseBrowseFragmentNew : BaseFragment(), AdapterClickListener {
             }
             LoadingStatus.SUCCESS -> {
                 progressBar.gone()
-                adapter =
-                    HomeFragmentParentListAdapter(activity as Context, this, childFragmentManager)
+
+                    adapter = HomeFragmentParentListAdapter(activity as Context, this)
                 recyclerViewUpcomingVideos.adapter = adapter
                 it.data?.let { browseDataList ->
                     if (browseDataList.isNotEmpty()) {

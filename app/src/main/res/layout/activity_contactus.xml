@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_app"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/layout_header_new"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/_20sdp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <ProgressBar
+                        android:id="@+id/progressBarCircle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:elevation="@dimen/_5sdp"
+                        android:visibility="gone" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            style="@style/LoginHintTextStyleBlack"
+                            android:text="Name*"
+                            android:visibility="gone" />
+                        <!-- Name Label -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/LoginTextInputLayoutStyle"
+                            app:hintAnimationEnabled="false"
+                            app:hintEnabled="false">
+
+                            <EditText
+                                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                android:id="@+id/tvFirstName"
+                                style="@style/LoginInputStyle"
+                                android:hint="First Name"
+                                android:inputType="text"
+                                android:maxLength="35" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/LoginTextInputLayoutStyle"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            app:hintAnimationEnabled="false"
+                            app:hintEnabled="false">
+
+                            <EditText
+                                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                                android:id="@+id/tvLastName"
+                                style="@style/LoginInputStyle"
+                                android:hint="Last Name"
+                                android:inputType="text"
+                                android:maxLength="35" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <!-- Name Label -->
+                        <TextView
+                            android:id="@+id/label_lastName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="left"
+                            android:minWidth="80dp"
+                            android:text="Last Name"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_12sdp"
+                            android:visibility="gone" />
+                        <!-- Name Label -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"
+                            android:visibility="gone"
+                            app:hintAnimationEnabled="false"
+                            app:hintEnabled="false">
+
+                            <EditText
+                                android:id="@+id/input_last_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@color/base_grey_color"
+                                android:hint="Last Name"
+                                android:inputType="textEmailAddress"
+                                android:padding="@dimen/_8sdp"
+                                android:text=""
+                                android:visibility="gone" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                        <!-- Name Label -->
+                        <TextView
+                            style="@style/LoginHintTextStyleBlack"
+                            android:inputType="textEmailAddress"
+                            android:text="Email*"
+                            android:visibility="gone" />
+                        <!-- Name Label -->
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/LoginTextInputLayoutStyle"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            app:hintAnimationEnabled="false"
+                            app:hintEnabled="false">
+
+                            <EditText
+                                android:id="@+id/tvEmailId"
+                                style="@style/LoginInputStyle"
+                                android:hint="Email ID"
+                                android:inputType="textEmailAddress" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <!-- Mobile Label -->
+                        <TextView
+                            style="@style/LoginHintTextStyleBlack"
+                            android:text="Mobile*"
+                            android:visibility="gone" />
+                        <!-- Name Label -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:background="@drawable/input_background"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                          <!--  <com.google.android.material.textview.MaterialTextView
+                                android:layout_width="wrap_content"
+                                android:padding="@dimen/_5sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:textColor="@color/colorPrimaryDark"
+                                android:text="TZ +91"
+                                android:textSize="@dimen/_12sdp" />-->
+
+                            <com.hbb20.CountryCodePicker
+
+                                android:id="@+id/ccpNumber"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:ccp_autoFormatNumber="false"
+                                app:ccp_contentColor="@color/black_main"
+                                app:ccp_defaultPhoneCode="91"
+                                app:ccp_showFlag="false"
+                                app:ccp_textSize="@dimen/_12sdp" />
+                            <View
+                                android:layout_width="@dimen/_1sdp"
+                                android:layout_height="match_parent"
+                                android:layout_marginVertical="@dimen/_5sdp"
+                                android:layout_marginEnd="@dimen/_5sdp"
+                                android:background="@color/grey" />
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/LoginTextInputLayoutStyleNoBackgroung"
+                                app:hintAnimationEnabled="false"
+                                app:hintEnabled="false">
+
+                                <EditText
+                                    android:id="@+id/inputMobileContact"
+                                    style="@style/LoginInputStyleNoBackground"
+                                    android:hint="Mobile number*"
+                                    android:inputType="phone"
+                                    android:maxLength="10" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_12sdp"
+                            android:background="@drawable/input_background"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/LoginTextInputLayoutStyle"
+                                android:layout_marginTop="@dimen/_5sdp"
+                                app:hintAnimationEnabled="false"
+                                app:hintEnabled="false">
+
+                                <EditText
+
+                                    android:id="@+id/tvComment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/_100sdp"
+                                    android:layout_gravity="start"
+                                    android:background="@color/black"
+                                    android:gravity="start"
+                                    android:hint="Comments"
+                                    android:inputType="textEmailAddress"
+                                    android:paddingStart="@dimen/_10sdp"
+                                    android:paddingEnd="@dimen/_10sdp"
+                                    android:textColor="@color/black_main" />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSubmit"
+                            style="@style/LoginButtonStyle"
+                            android:text="Submit"
+                            app:backgroundTint="@color/red_dark" />
+
+                        <LinearLayout
+                            android:id="@+id/loginWith"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginLeft="@dimen/_30sdp"
+                                android:layout_marginRight="@dimen/_10sdp"
+                                android:layout_weight="1"
+                                android:background="@color/white_main" />
+
+                            <com.google.android.material.textview.MaterialTextView
+                                style="@style/LoginTextStyleBlack"
+                                android:gravity="center"
+                                android:paddingLeft="@dimen/_10sdp"
+                                android:text="Or"
+                                android:textColor="@color/white_main"
+                                android:textSize="@dimen/_12sdp"
+                                android:textStyle="normal" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginLeft="@dimen/_10sdp"
+                                android:layout_marginRight="@dimen/_30sdp"
+                                android:layout_weight="1"
+                                android:background="@color/white_main" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginBottom="@dimen/_20sdp"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/loginWith">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical">
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/linkMobile"
+                                    style="@style/LoginButtonStyle"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:drawableStart="@drawable/ic_whatsapps"
+                                    android:text="Connect via Whatsapp"
+                                    android:textSize="@dimen/_10sdp" />
+
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/linkEmail"
+                                    style="@style/LoginButtonStyle"
+                                    android:layout_marginTop="@dimen/_5sdp"
+                                    android:drawableStart="@drawable/ic_login_email"
+                                    android:text="Connect via Email"
+                                    android:textSize="@dimen/_10sdp" />
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </FrameLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+
+    </LinearLayout>
+
+</LinearLayout>
+
+

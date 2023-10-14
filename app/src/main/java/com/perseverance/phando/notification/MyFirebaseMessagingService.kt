@@ -74,7 +74,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             val baseVideo = Video()
             baseVideo.id = id?.toInt()
             baseVideo.thumbnail = thumbnail
-            baseVideo.title = notificationTitle
+            baseVideo.title = title
             baseVideo.type = type
             baseVideo.description = detail
             baseVideo.rating = rating?.toInt()
@@ -85,28 +85,28 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             notificationModel.dbID = dbId
             notificationModel.id = id?.toInt()
             notificationModel.thumbnail = thumbnail
-            notificationModel.title = notificationTitle
+            notificationModel.title = title
             notificationModel.type = type
             notificationModel.description = detail
-            notificationModel.rating = rating?.toInt()
+          //  notificationModel.rating = rating?.toInt()
             notificationModel.free = isFree!!.toInt()
 
             AppDatabase.getInstance(this)?.notificationDao()?.insert(notificationModel)
 
             if (thumbnail.isNullOrBlank()) {
-                sendNotification(notificationTitle = notificationTitle, body = detail, baseVideo = baseVideo, dbId = dbId)
+                sendNotification(notificationTitle = title, body = detail, baseVideo = baseVideo, dbId = dbId)
             } else {
                 Glide.with(Session.instance!!.applicationContext).asBitmap().load(thumbnail)
                         //.apply(RequestOptions().override(100, 100))
                         .listener(object : RequestListener<Bitmap> {
                             override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Bitmap>?, isFirstResource: Boolean): Boolean {
-                                sendNotification(notificationTitle = notificationTitle, body = detail, baseVideo = baseVideo, dbId = dbId)
+                                sendNotification(notificationTitle = title, body = detail, baseVideo = baseVideo, dbId = dbId)
                                 if (BuildConfig.DEBUG) MyLog.e("Notification image onLoadFailed - ${e?.message}")
                                 return false
                             }
 
                             override fun onResourceReady(resource: Bitmap?, model: Any?, target: Target<Bitmap>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                                sendNotification(notificationTitle = notificationTitle, body = detail, resource = resource, baseVideo = baseVideo, dbId = dbId)
+                                sendNotification(notificationTitle = title, body = detail, resource = resource, baseVideo = baseVideo, dbId = dbId)
                                 return true
                             }
 
@@ -114,7 +114,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
 
         } catch (e: Exception) {
-            if (BuildConfig.DEBUG) MyLog.e("NOTIFICATION_EXCEPTION - ${e?.message}")
+            if (BuildConfig.DEBUG) MyLog.e("@@NOTIFICATION_EXCEPTION - ${e?.message}")
         }
 
     }
@@ -133,17 +133,26 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             } else {
                 intent = MediaDetailActivity.getDetailIntent(this, baseVideo)
 
+
             }
             intent.putExtra(Key.NOTIFICATION_DB_ID, dbId)
-            val pendingIntent = PendingIntent.getActivity(this, 101, intent,
-                    PendingIntent.FLAG_UPDATE_CURRENT)
+            val pendingIntent: PendingIntent
+            pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                PendingIntent.getActivity(this, 101, intent,
+                    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                )
+            } else {
+                PendingIntent.getActivity(this, 101, intent, PendingIntent.FLAG_UPDATE_CURRENT
+                )
+            }
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+
 
 
             val notificationBuilder = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setLargeIcon(BitmapFactory.decodeResource(resources,
                             R.drawable.app_logo))
-                    .setSmallIcon(R.drawable.ic_notification)
+                    .setSmallIcon(R.drawable.app_logo)
                     .setAutoCancel(true)
                     .setContentTitle(if (TextUtils.isEmpty(notificationTitle)) resources.getString(R.string.app_name) else notificationTitle)
                     .setContentText(body)
@@ -187,7 +196,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             }
             mManager.notify(Random().nextInt(100) + 1, notificationBuilder.build())
         } catch (e: Exception) {
-            MyLog.e("sendNotification_failed")
+
+            MyLog.e("@@sendNotification_failed", e.localizedMessage)
         }
     }
 

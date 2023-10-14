@@ -44,7 +44,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
 //        }
         viewHolder.package_name_zulo.setText(packageDetails.get(i).getPackageName());
         // viewHolder.package_name.setText(packageDetails.get(i).getPackagePrice());
-        viewHolder.package_price.setText(packageDetails.get(i).getPackagePrice());
+        viewHolder.package_price.setText(packageDetails.get(i).getCurrencySymbol()+" "+packageDetails.get(i).getPackagePrice());
         viewHolder.package_interval.setText("/-for " + packageDetails.get(i).getInterval_count() + " " + packageDetails.get(i).getPackageInterval());
         viewHolder.container.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,7 +60,7 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView package_price, package_interval, package_name_zulo;
+        private TextView package_price, package_interval, package_name_zulo, package_rupee_symbol;
         private CardView container;
 
         public ViewHolder(View view) {
@@ -70,9 +70,8 @@ public class DataAdapter extends RecyclerView.Adapter<DataAdapter.ViewHolder> {
             package_name_zulo = view.findViewById(R.id.package_name_zulo);
             package_price = view.findViewById(R.id.package_price);
             package_interval = view.findViewById(R.id.package_interval);
+            package_rupee_symbol = view.findViewById(R.id.package_rupee_symbol);
 
         }
     }
-
-
 }

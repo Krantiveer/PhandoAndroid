@@ -25,10 +25,10 @@
         android:icon="@drawable/ic_fn_global_search"
         android:title="Search" />
 
-    <item
+   <!-- <item
         android:id="@+id/navigation_profile"
         android:icon="@drawable/ic_user_avatar"
-        android:title="Profile" />
+        android:title="Profile" />-->
 
     <!--
         <item

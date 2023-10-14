@@ -28,14 +28,21 @@ class LanguageListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.txtName.text = mData[position].language
 
-        if (mData[position].isSelected) {
+        if (mData[position].language_text != null){
+            holder.txtNameOriginal.text = mData[position].language_text
+        }
+
+        if (mData[position].isLanguageSelected ) {
             holder.imgChecked.visible()
+
         } else {
             holder.imgChecked.gone()
         }
 
+
         holder.itemView.setOnClickListener {
-            mData[position].isSelected = !mData[position].isSelected
+            mData[position].isLanguageSelected = !mData[position].isLanguageSelected
+            //  mData[position].isSelected = !mData[position].isSelected
             mClick.onItemClick(mData[position])
             notifyItemChanged(position)
         }
@@ -52,6 +59,7 @@ class LanguageListAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var txtName = itemView.txtName
+        var txtNameOriginal = itemView.txtNameOriginal
         var imgChecked = itemView.imgChecked
     }
 

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/app_theme_color"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -17,17 +18,83 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvList"
-            android:layout_width="match_parent"
+
+        <LinearLayout
             android:background="@color/bg_app"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:nestedScrollingEnabled="true" />
+            android:orientation="vertical">
+
+            <androidx.core.widget.NestedScrollView
+                android:background="@color/bg_app"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
 
+                <LinearLayout
+                    android:background="@color/bg_app"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <FrameLayout
+                        android:id="@+id/mainContainer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.smarteist.autoimageslider.SliderView
+                            android:id="@+id/slider"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/_180sdp"
+                            android:background="@color/black_main"
+                            app:sliderAnimationDuration="600"
+                            app:sliderAutoCycleDirection="back_and_forth"
+                            app:sliderIndicatorAnimationDuration="600"
+                            app:sliderIndicatorEnabled="true"
+                            app:sliderIndicatorGravity="center_horizontal|bottom"
+                            app:sliderIndicatorMargin="15dp"
+                            app:sliderIndicatorOrientation="horizontal"
+                            app:sliderIndicatorPadding="3dp"
+                            app:sliderIndicatorRadius="2dp"
+                            app:sliderIndicatorSelectedColor="#005A5A5A"
+                            app:sliderIndicatorUnselectedColor="#00FFFFFF"
+                            app:sliderScrollTimeInSec="1" />
+
+                        <ImageView
+                            android:id="@+id/imgPrev"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start|center"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:src="@drawable/ic_prev_banner" />
+
+                        <ImageView
+                            android:id="@+id/imgNext"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end|center"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:src="@drawable/ic_next_banner" />
+
+
+                    </FrameLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvList"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/bg_app"
+                        android:nestedScrollingEnabled="true" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
+
+        android:textColor="@color/black"
         android:id="@+id/txtNoData"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

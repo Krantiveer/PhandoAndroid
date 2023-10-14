@@ -49,7 +49,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingTop="64dp"
         android:paddingRight="@dimen/activity_horizontal_margin"
-        android:textColor="@color/red_light"
+        android:textColor="@color/white"
         android:textSize="16sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

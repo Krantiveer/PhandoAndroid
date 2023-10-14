@@ -6,29 +6,50 @@
     android:layout_marginHorizontal="@dimen/_10sdp"
     android:layout_marginBottom="@dimen/_5sdp"
     android:layout_marginTop="@dimen/_5sdp"
+    android:background="@color/color_back_card"
+    android:backgroundTint="@color/color_back_card"
     android:elevation="@dimen/_2sdp"
     android:gravity="center_vertical"
     android:orientation="vertical"
     app:cardCornerRadius="@dimen/_5sdp">
 
     <LinearLayout
+        android:layout_gravity="center"
         android:id="@+id/llMain"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/red_light_new"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
+        android:layout_height="@dimen/_50sdp"
+        android:background="@color/color_back_card"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_marginStart="@dimen/_10sdp"
+            android:id="@+id/imgCatImage"
+            android:layout_gravity="center"
+            android:src="@drawable/video_placeholder"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"/>
 
         <TextView
+
+            android:textAllCaps="false"
+            android:layout_weight="1"
             android:id="@+id/txtName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
+            android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/_5sdp"
             android:padding="@dimen/_10sdp"
             android:text="Sector 1"
             android:textColor="@color/black"
             android:textSize="@dimen/_14sdp" />
+
+        <ImageView
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_arrow_right_app"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"/>
 
         <!--    <View-->
         <!--        android:layout_width="match_parent"-->

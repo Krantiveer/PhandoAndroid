@@ -42,6 +42,25 @@ public class PackageDetails {
         this.packageInterval = packageInterval;
     }
 
+    @SerializedName("currency")
+    private String currency;
+
+    @SerializedName("currency_symbol")
+    private String currencySymbol;
+
+    public String getCurrency() {
+        return currency;
+    }
+
+
+    public String getCurrencySymbol() {
+        return currencySymbol;
+    }
+
+    public void setCurrency(String currency) {
+        this.currency = currency;
+    }
+
     public String getPackageId() {
         return packageId;
     }

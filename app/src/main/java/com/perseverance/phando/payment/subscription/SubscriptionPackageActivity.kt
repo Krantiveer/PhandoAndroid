@@ -20,6 +20,8 @@ import com.perseverance.phando.retrofit.ApiService
 import com.razorpay.Checkout
 import com.razorpay.PaymentResultListener
 import kotlinx.android.synthetic.main.activity_package_new.*
+import kotlinx.android.synthetic.main.layout_header_new.imgBack
+import kotlinx.android.synthetic.main.layout_header_new.txtTitle
 import org.json.JSONObject
 import java.util.*
 
@@ -44,10 +46,11 @@ class SubscriptionPackageActivity : BaseScreenTrackingActivity(), DataAdapter.On
     }
 
     private fun initViews() {
-        val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        supportActionBar!!.setDisplayShowHomeEnabled(true)
+        txtTitle.text = "Subscribe Now"
+
+        imgBack.setOnClickListener {
+            finish()
+        }
         recyclerView = findViewById<View>(R.id.card_recycler_view) as RecyclerView
         recyclerView!!.setHasFixedSize(true)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(applicationContext)

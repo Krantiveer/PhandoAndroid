@@ -19,9 +19,6 @@ import kotlinx.android.synthetic.main.item_top_banner.view.*
 import java.lang.reflect.Field
 
 
-/**
- * TODO: document your custom view class.
- */
 open class BaseHomeHeaderView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyle: Int = 0) : ConstraintLayout(context, attrs, defStyle) {
 
     var counter = 0
@@ -52,15 +49,28 @@ open class BaseHomeHeaderView @JvmOverloads constructor(context: Context, attrs:
         mainContainer.requestLayout()
         mainContainer.layoutParams.height = height
         mainContainer.layoutParams.width = width
-    }
 
+        imgPrev.setOnClickListener{
+            val currPos: Int = bannerViewPager.currentItem
+            if (currPos != 0) {
+                bannerViewPager.currentItem = currPos - 1
+            }
+        }
+        imgNext.setOnClickListener{
+            val currPos: Int = bannerViewPager.currentItem
+            if ((currPos + 1) != bannerViewPager.adapter?.count) {
+                bannerViewPager.currentItem = currPos + 1
+            }
+        }
+    }
     fun setData(list: List<Video>, tabLayout: TabLayout, childFragmentManager: FragmentManager) {
         this.list = list
         if (list.isNotEmpty()) {
+            bannerViewPager.setSaveEnabled(false)
             bannerViewPager.adapter = BannerViewPagerAdapter(list, childFragmentManager)
             bannerViewPager.setClipToPadding(false)
-            bannerViewPager.setPadding(50, 0, 50, 50)
-            bannerViewPager.pageMargin = 25
+            bannerViewPager.setPadding(0, 0, 0, 0)
+            bannerViewPager.pageMargin = 10
             tabLayout.setupWithViewPager(bannerViewPager, true)
             if (list.size < 2) {
                 tabLayout.invisible()

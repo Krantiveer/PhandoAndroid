@@ -68,4 +68,10 @@ class LoginWithEmailFragment : BaseUserLoginFragment() {
     override fun onGetOtpSuccess(baseResponse: BaseResponse) {
     }
 
+
+    override fun onGetOtpSuccessSocial(baseResponse: BaseResponse) {
+
+    }
+
+
 }

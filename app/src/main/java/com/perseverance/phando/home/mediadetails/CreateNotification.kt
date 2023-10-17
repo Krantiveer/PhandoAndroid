@@ -99,8 +99,8 @@ object CreateNotification {
             notification = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.app_logo) //  .setLargeIcon(bitmapFinal)
                .setContentTitle(track.title)
-                .setLargeIcon(BitmapFactory.decodeResource(context.resources,
-                    R.drawable.app_logo))
+             //   .setLargeIcon(BitmapFactory.decodeResource(context.resources,
+             //       R.drawable.app_logo))
               //  .setCustomContentView(notificationLayout)
                // .setCustomBigContentView(notificationLayout)
              //   .setLargeIcon( resolveUriAsBitmap(Uri.parse(track.thumbnail), context))

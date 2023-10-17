@@ -3,6 +3,7 @@ package com.perseverance.phando.home.profile.login
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ImageView
@@ -26,6 +27,8 @@ import com.perseverance.phando.utils.PreferencesUtils
 open abstract class BaseUserLoginFragment : BaseSocialLoginFragment() {
 
     abstract fun onGetOtpSuccess(baseResponse: BaseResponse)
+    abstract fun onGetOtpSuccessSocial(baseResponse: BaseResponse)
+
     private var linkMobile: Button? = null
     private var linkEmail: Button? = null
     private var linkGmail: Button? = null
@@ -53,14 +56,10 @@ open abstract class BaseUserLoginFragment : BaseSocialLoginFragment() {
 
                 var loginResponse = it.data
                 loginResponse?.let {
-                    onLoginSuccess(it)
+                    onLoginSuccess(it, "Email")
                 }
-
-
             }
-
         }
-
     }
     val getOtpObserver = Observer<DataLoadingStatus<BaseResponse>> {
         dismissProgress()
@@ -83,6 +82,30 @@ open abstract class BaseUserLoginFragment : BaseSocialLoginFragment() {
                 }
 
 
+            }
+
+        }
+
+    }
+    val getOtpObserverSocial = Observer<DataLoadingStatus<BaseResponse>> {
+        dismissProgress()
+
+        when (it?.status) {
+            LoadingStatus.LOADING -> {
+                showProgress()
+            }
+            LoadingStatus.ERROR -> {
+                it.message?.let {
+                    toast(it, Toast.LENGTH_LONG)
+                }
+            }
+            LoadingStatus.SUCCESS -> {
+
+                var loginResponse = it.data
+                loginResponse?.let {
+                    toast(it.message, Toast.LENGTH_LONG)
+                    onGetOtpSuccessSocial(loginResponse)
+                }
             }
 
         }
@@ -114,17 +137,10 @@ open abstract class BaseUserLoginFragment : BaseSocialLoginFragment() {
                 } ?: loginResponse?.message?.let {
                     toast(it, Toast.LENGTH_LONG)
                 }
-
-
             }
-
         }
-
     }
-
     //abstract fun onLoginSuccess(loginResponse: LoginResponse)
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         userProfileViewModel.loginUserData.observe(this, loginObserver)
@@ -192,18 +208,35 @@ open abstract class BaseUserLoginFragment : BaseSocialLoginFragment() {
     }
 
     fun onSocialUserRegisterSuccess(loginResponse: LoginResponse) {
-        onLoginSuccess(loginResponse)
+        onLoginSuccess(loginResponse, "Social")
     }
 
-    fun onLoginSuccess(loginResponse: LoginResponse) {
+    fun onLoginSuccess(loginResponse: LoginResponse, type : String) {
+        Log.e("@@", loginResponse.accessToken)
         PreferencesUtils.setLoggedIn(loginResponse.accessToken)
         if (requireActivity().intent.hasExtra("login_error")) {
-            startActivity(Intent(requireContext(), HomeActivity::class.java))
+            startActivity(Intent(requireContext(), LoginActivity::class.java))
         }
-        appCompatActivity.setResult(RESULT_OK)
-        appCompatActivity.finish()
-    }
 
+        if (loginResponse.mobile== null){
+            if (type.equals("Email")){
+                startActivity(Intent(requireContext(), HomeActivity::class.java))
+                appCompatActivity.setResult(RESULT_OK)
+                appCompatActivity.finish()
+            }  else {
+                val navOption = NavOptions.Builder().setPopUpTo(R.id.P2LoginWithMobileNoActivity, false).build()
+                navigator.navigate(R.id.P2LoginWithMobileAfterSocial, null, navOption)
+            }
+
+
+        }  else {
+
+            startActivity(Intent(requireContext(), HomeActivity::class.java))
+            appCompatActivity.setResult(RESULT_OK)
+            appCompatActivity.finish()
+        }
+
+    }
     override fun onSocialUserLoginSuccess(loggedInUser: SocialLoggedInUser) {
         doSocialLogin(loggedInUser)
     }

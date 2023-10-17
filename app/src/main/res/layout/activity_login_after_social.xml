@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_app"
+    tools:context="com.perseverance.phando.home.profile.login.LoginFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/logo"
+                layout="@layout/common_app_logo"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:id="@+id/points_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/logo">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/_20sdp"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingTop="@dimen/_5sdp">
+
+                        <com.google.android.material.textview.MaterialTextView
+                            style="@style/LoginTextStyleBlack"
+                            android:layout_width="match_parent"
+                            android:id="@+id/tvScreen"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="@dimen/_20sdp"
+                            android:gravity="center"
+                            android:text="Please Enter Mobile Number"
+                            android:textSize="@dimen/_12sdp" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            style="@style/LoginHintTextStyleBlack"
+                            android:text="Enter mobile number"
+                            android:visibility="gone" />
+                        <!-- Email Label -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/_5sdp"
+                            android:background="@drawable/input_background"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/_2sdp">
+
+                            <com.hbb20.CountryCodePicker
+                                android:id="@+id/ccp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:ccp_autoFormatNumber="false"
+                                app:ccp_arrowColor="@color/red_dark"
+                                app:ccp_contentColor="@color/black_main"
+                                app:ccp_defaultPhoneCode="91"
+                                app:ccp_showFlag="false"
+                                app:ccp_textSize="@dimen/_12sdp" />
+                            <View
+                                android:layout_width="@dimen/_1sdp"
+                                android:layout_height="match_parent"
+                                android:layout_marginEnd="@dimen/_5sdp"
+                                android:layout_marginVertical="@dimen/_5sdp"
+                                android:background="@color/grey"/>
+                            <com.google.android.material.textfield.TextInputLayout
+                                style="@style/LoginTextInputLayoutStyleNoBackgroung"
+                                android:layout_marginEnd="@dimen/_10sdp"
+                                app:hintAnimationEnabled="false"
+                                app:hintEnabled="false">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/inputMobile"
+                                    style="@style/LoginInputStyleNoBackground"
+                                    android:hint="Mobile No."
+                                    android:inputType="phone"
+                                    android:maxLength="10"
+                                    android:paddingLeft="0dp" />
+                            </com.google.android.material.textfield.TextInputLayout>
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/nextSocial"
+                            style="@style/LoginButtonStyle"
+                            android:text="Next"
+                            app:backgroundTint="@color/red_dark" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                style="@style/LoginTextStyleBlack"
+                android:layout_width="match_parent"
+                android:id="@+id/tvSkip"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:gravity="center"
+                android:text="Skip"
+                android:textSize="@dimen/_12sdp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

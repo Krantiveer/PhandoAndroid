@@ -62,9 +62,14 @@ class GenresBrowse : BaseScreenTrackingActivity(),
 
         data.id.let {
             val intent1 = Intent(this, BaseVideoListActivity::class.java).apply {
+                if (data.posterOrientation.equals("horizontal")){
+                    putExtra("imageOrientation", 0)
+                }  else {
+                    putExtra("imageOrientation", 1)
+                }
                 putExtra("id", data.id.toString())
                 putExtra("title", data.name)
-                putExtra("imageOrientation", data.posterOrientation)
+
                 Log.e("@@posterorientation", data.posterOrientation.toString())
 
             }

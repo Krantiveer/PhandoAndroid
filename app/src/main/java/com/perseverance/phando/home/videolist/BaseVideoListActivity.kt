@@ -3,7 +3,6 @@ package com.perseverance.phando.home.videolist
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
@@ -24,8 +23,6 @@ import com.perseverance.phando.home.series.SeriesActivity
 import com.perseverance.phando.ui.WaitingDialog
 import com.perseverance.phando.utils.*
 import com.perseverance.phando.videoplayer.VideosModel
-import kotlinx.android.synthetic.main.activity_base_list.*
-import kotlinx.android.synthetic.main.activity_dashboard_list.*
 import kotlinx.android.synthetic.main.fragment_base.*
 import kotlinx.android.synthetic.main.layout_header_new.*
 
@@ -33,7 +30,6 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
     AdapterClickListener {
 
     override var screenName = BaseConstants.VIDEO_CATEGORY_SCREEN
-
     private var waitingDialog: WaitingDialog? = null
     private lateinit var id: String
     private lateinit var title: String
@@ -66,9 +62,9 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
 //        supportActionBar!!.setDisplayShowHomeEnabled(true)
 
         id = intent.getStringExtra("id") ?: ""
-        Log.e("@@id", id)
         title = intent.getStringExtra("title") ?: ""
-        type = intent.getStringExtra("type") ?: ""
+        type = intent.getStringExtra("type")?:""
+
         imageOrientation = intent.getIntExtra("imageOrientation", 0)
 //        setTitle(title)
 
@@ -84,9 +80,15 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         val manager = GridLayoutManager(this@BaseVideoListActivity, 2)
         rv_season_episodes.layoutManager = manager
         rv_season_episodes.setHasFixedSize(true)
-        val decoration = BaseRecycleMarginDecoration(this@BaseVideoListActivity)
-        rv_season_episodes.addItemDecoration(decoration)
-        adapter = BaseCategoryListAdapter(this@BaseVideoListActivity, this, imageOrientation)
+        /* val decoration = BaseRecycleMarginDecoration(this@BaseVideoListActivity)
+         rv_season_episodes.addItemDecoration(decoration)*/
+        if (imageOrientation.equals("vertical") ||imageOrientation.equals("1")){
+            adapter = BaseCategoryListAdapter(this@BaseVideoListActivity, this, 1)
+
+        }  else {
+            adapter = BaseCategoryListAdapter(this@BaseVideoListActivity, this, 0)
+
+        }
         val videos = ArrayList<Video>()
         adapter?.items = videos
         rv_season_episodes.adapter = adapter
@@ -126,7 +128,6 @@ class BaseVideoListActivity : BaseScreenTrackingActivity(), SwipeRefreshLayout.O
         super.onDestroy()
         dismissProgress()
     }
-
     fun onGetVideosSuccess(
         tempVideos: List<Video>,
         type: BaseConstants.Video,

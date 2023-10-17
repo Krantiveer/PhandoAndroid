@@ -452,6 +452,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
     fun setAudioPlayer(mediaUrl: String) {
 
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         val renderersFactory = DefaultRenderersFactory(this)
         val trackSelectionFactory = AdaptiveTrackSelection.Factory()
         val trackSelectSelector = DefaultTrackSelector(trackSelectionFactory)
@@ -491,6 +494,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 }
             }
         })
+
+
     }
 
     private  var viewModel: DownloadViewModel? = null
@@ -1633,7 +1638,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         }
         if(audioPlayerExpo != null && audioPlayerExpo.getPlayWhenReady()) {
             position = audioPlayerExpo.contentPosition.toInt()
-            audioPlayerExpo.setPlayWhenReady(false)
+            audioPlayerExpo.setPlayWhenReady(true)
         }
         setRelatedVideo()
 
@@ -1733,7 +1738,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     override fun onPause() {
         super.onPause()
         mListener?.disable()
-
 
         if (mediaMetadata!= null){
             if (mediaMetadata!!.type=="M"  || mediaMetadata!!.type=="AL"){

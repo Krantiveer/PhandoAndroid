@@ -1,6 +1,7 @@
 package com.perseverance.phando.home.profile
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.common.util.SharedPreferencesUtils
 import com.google.gson.Gson
@@ -107,6 +108,7 @@ class UserProfileRepository(private val application: Application) {
                 if (t is ApiClient.NoConnectivityException) {
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
                 } else {
+                    Log.e("@@", t!!.message.toString())
                     data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to login"))
                 }
             }
@@ -414,6 +416,37 @@ class UserProfileRepository(private val application: Application) {
 
         return data
     }
+
+    fun getOTPFromSocial(map: Map<String, String>): MutableLiveData<DataLoadingStatus<BaseResponse>> {
+
+        val data: MutableLiveData<DataLoadingStatus<BaseResponse>> = MutableLiveData<DataLoadingStatus<BaseResponse>>()
+        data.postValue(DataLoadingStatus(LoadingStatus.LOADING, "Loading data"))
+
+        //  val call = apiService.getOTPFromSocial("Bearer "+acces_token,map)
+        val call = apiService.getOTPFromSocial(map)
+        call.enqueue(object : Callback<BaseResponse> {
+            override fun onResponse(call: Call<BaseResponse>?, response: Response<BaseResponse>) {
+
+                if (response.isSuccessful) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.SUCCESS, "", response.body()))
+                } else {
+                    val errorModel = Gson().fromJson(response.errorBody()?.string(), ErrorModel::class.java)
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, errorModel.message))
+                }
+
+            }
+
+            override fun onFailure(call: Call<BaseResponse>?, t: Throwable?) {
+                if (t is ApiClient.NoConnectivityException) {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, BaseConstants.NETWORK_ERROR))
+                } else {
+                    data.postValue(DataLoadingStatus(LoadingStatus.ERROR, "Unable to get otp"))
+                }
+            }
+        })
+        return data
+    }
+
 
     suspend fun removeUserDownload(param: ArrayList<String>): DataLoadingStatus<BaseResponse> {
         try {

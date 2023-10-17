@@ -12,6 +12,7 @@ import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.toast
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
+import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.home.dashboard.HomeActivity
 import com.perseverance.phando.home.dashboard.repo.DataLoadingStatus
 import com.perseverance.phando.home.dashboard.repo.LoadingStatus
@@ -112,5 +113,11 @@ fun onVerifyOtpSuccess(loginResponse: LoginResponse) {
 
 
 }
+
+
+    override fun onGetOtpSuccessSocial(baseResponse: BaseResponse) {
+
+    }
+
 
 }

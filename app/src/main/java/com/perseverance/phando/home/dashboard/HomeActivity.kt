@@ -158,12 +158,21 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
         contactus.setOnClickListener {
             drawer_layout.closeDrawer(Gravity.RIGHT);
-            startActivity(
-                Intent(
-                    this,
-                    Contactus::class.java
-                )
-            )
+                val token = PreferencesUtils.getLoggedStatus()
+                if (token.isEmpty()) {
+                    val intent = Intent(this, LoginActivity::class.java)
+                    startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+                } else {
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Contactus::class.java
+                        )
+                    )
+                }
+
+
             /*drawer_layout.closeDrawer(Gravity.LEFT)
             openWebview("https://lokdhunstage.phando.com/contactus")*/
         }
@@ -185,9 +194,19 @@ class HomeActivity : BaseScreenTrackingActivity(),
         }
 
         lytMyDownloads.setOnClickListener {
+
             drawer_layout.closeDrawer(Gravity.RIGHT);
-             val intent = Intent(this, OfflineMediaListActivity::class.java)
-            startActivity(intent)
+            val token = PreferencesUtils.getLoggedStatus()
+            if (token.isEmpty()) {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+            } else {
+
+
+                val intent = Intent(this, OfflineMediaListActivity::class.java)
+                startActivity(intent)
+            }
+
         }
 
         drawer_layout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -233,8 +252,16 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
         crdPlan.setOnClickListener {
             drawer_layout.closeDrawer(Gravity.RIGHT);
-            val intent = Intent(this@HomeActivity, SubscriptionPackageActivity::class.java)
-            startActivityForResult(intent, 101)
+
+            val token = PreferencesUtils.getLoggedStatus()
+            if (token.isEmpty()) {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+            } else {
+                val intent = Intent(this@HomeActivity, SubscriptionPackageActivity::class.java)
+                startActivityForResult(intent, 101)
+            }
+
         }
 
         llCategory.setOnClickListener {
@@ -253,8 +280,15 @@ class HomeActivity : BaseScreenTrackingActivity(),
         }
 
         txtWishlist.setOnClickListener {
-            drawer_layout.closeDrawer(Gravity.RIGHT);
-            startActivity(Intent(this@HomeActivity, UserListActivity::class.java))
+            val token = PreferencesUtils.getLoggedStatus()
+            if (token.isEmpty()) {
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
+            } else {
+                drawer_layout.closeDrawer(Gravity.RIGHT);
+                startActivity(Intent(this@HomeActivity, UserListActivity::class.java))
+            }
+
         }
 
 
@@ -568,7 +602,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
             LoadingStatus.ERROR -> {
                 lytBill.gone()
                 txtLanguage.gone()
-           //     lytMyDownloads.gone()
+                lytMyDownloads.gone()
                 txtName.text = "Log in"
                 txtPhoneNumber.text = "For better experience"
                 it.message?.let {
@@ -578,11 +612,37 @@ class HomeActivity : BaseScreenTrackingActivity(),
             LoadingStatus.SUCCESS -> {
                 Utils.displayCircularProfileImage(this, it.data?.user?.image,
                     R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile1)
+                lytMyDownloads.visible()
+                txtLanguage.visible()
+                lytBill.visible()
+
+
 
                 it.data?.user?.name.let { name ->
                     txtName.text = name
                 } ?: {
                     txtName.text = ""
+                }
+
+                it.data?.whatsapp_no.let { whatsapp_no ->
+
+                    PreferencesUtils.setWhatsAppNumber(whatsapp_no)
+                } ?: {
+
+                }
+
+                it.data?.whatsapp_text.let { whatsapp_text ->
+
+                    PreferencesUtils.setWhatsText(whatsapp_text)
+                } ?: {
+
+                }
+
+                it.data?.email.let { email ->
+
+                    PreferencesUtils.setEmailContactus(email)
+                } ?: {
+
                 }
                 it.data?.user?.email.let { email ->
                     txtPhoneNumber.text = email

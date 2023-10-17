@@ -63,6 +63,7 @@ class ChangePasswordOTPVerificationFragment : BaseOTPVerificationFragment() {
         }
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         userProfileViewModel.verifyOTPForForgotPasswordData.observe(viewLifecycleOwner, verifyOtpForforgotPsswordObserver)
@@ -73,6 +74,10 @@ class ChangePasswordOTPVerificationFragment : BaseOTPVerificationFragment() {
         map["mobile"] = mobileNo
         userProfileViewModel.getOTP(map)
         linkMobile.gone()
+    }
+
+    override fun onGetOtpSuccessSocial(baseResponse: BaseResponse) {
+
     }
 
 //    override fun onCreate(savedInstanceState: Bundle?) {

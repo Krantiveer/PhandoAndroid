@@ -12,6 +12,9 @@ public class LoginResponse {
     @SerializedName("hint")
     public String hint;
 
+    @SerializedName("mobile")
+    public String mobile;
+
 
     /*
     {

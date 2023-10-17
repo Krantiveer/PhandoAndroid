@@ -11,6 +11,7 @@ import com.facebook.appevents.AppEventsConstants
 import com.facebook.appevents.AppEventsLogger
 import com.perseverance.phando.R
 import com.perseverance.phando.constants.BaseConstants
+import com.perseverance.phando.data.BaseResponse
 import com.perseverance.phando.retrofit.LoginResponse
 import com.perseverance.phando.utils.Utils
 import kotlinx.android.synthetic.main.activity_p2_signup.*
@@ -113,5 +114,11 @@ class SignupFragment : BaseSignupFragment() {
         params.putString(AppEventsConstants.EVENT_PARAM_REGISTRATION_METHOD, "AppSignup")
         logger.logEvent(AppEventsConstants.EVENT_NAME_COMPLETED_REGISTRATION, params)
     }
+
+
+    override fun onGetOtpSuccessSocial(baseResponse: BaseResponse) {
+
+    }
+
 
 }

@@ -48,16 +48,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                style="?android:attr/progressBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_5sdp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@id/hint"
-                app:layout_constraintLeft_toRightOf="@id/hint"
-                app:layout_constraintTop_toTopOf="@id/hint" />
+
 
             <!--            <androidx.appcompat.widget.AppCompatEditText-->
             <!--                android:id="@+id/queryInput"-->
@@ -71,8 +62,8 @@
             <!--                app:layout_constraintLeft_toLeftOf="parent"-->
             <!--                app:layout_constraintRight_toLeftOf="@id/filter"-->
             <!--                app:layout_constraintTop_toBottomOf="@id/hint"-->
-
             <!--                />-->
+
             <androidx.appcompat.widget.SearchView
                 android:id="@+id/searchView"
                 android:layout_width="0dp"
@@ -82,7 +73,7 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true"
                 android:iconifiedByDefault="false"
-                app:defaultQueryHint="Type to search channels"
+                app:defaultQueryHint="Type to search Movies/Series/Channels"
                 app:iconifiedByDefault="false"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toLeftOf="@id/filter"
@@ -164,6 +155,18 @@
             android:nestedScrollingEnabled="false"
             android:paddingBottom="@dimen/_50sdp"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchContainer" />
+
+        <ProgressBar
+            android:visibility="gone"
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_5sdp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"

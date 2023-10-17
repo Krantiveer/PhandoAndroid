@@ -127,7 +127,7 @@
 
                 <com.perseverance.phando.home.dashboard.browse.BaseHomeHeaderView
                     android:id="@+id/homeHeaderView"
-                    android:layout_width="409dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     tools:layout_editor_absoluteX="1dp" />
 

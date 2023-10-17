@@ -21,6 +21,12 @@
         android:name="com.perseverance.phando.home.profile.login.LoginWithMobileNoFragment">
 
     </fragment>
+
+    <fragment
+        android:id="@+id/P2LoginWithMobileAfterSocial"
+        android:name="com.perseverance.phando.home.profile.login.LoginWithMobileAfterSocial">
+
+    </fragment>
     <fragment
         android:id="@+id/P2SignupActivity"
         android:name="com.perseverance.phando.home.profile.login.SignupFragment"

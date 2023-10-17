@@ -70,6 +70,19 @@ class UserProfileViewModel(application: Application) : BaseViewModel(application
     fun refreshUserProfile() {
         reloadTrigger.value = true
     }
+    private val getOTPTriggerSocial = MutableLiveData<Map<String, String>>()
+
+    val getOTPTDataSocial: LiveData<DataLoadingStatus<BaseResponse>> =
+        Transformations.switchMap(getOTPTriggerSocial) {
+            it?.let {
+                userProfileRepository.getOTPFromSocial(it)
+            }
+
+        }
+
+    fun getOTPSocial(map: Map<String, String>) {
+        getOTPTriggerSocial.postValue(map)
+    }
 
     //notifcations settings
     private var notifcationData: LiveData<DataLoadingStatus<NotificationsSettingsModel>> =

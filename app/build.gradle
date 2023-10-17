@@ -89,7 +89,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
-            buildConfigField("String","TOPIC","\"com.perseverance.vyasstage\"")
+            buildConfigField("String","TOPIC","\"com.perseverance.vyas\"")
             buildConfigField("String","DOMAIN_URI","\"https://vyaspublications.page.link\"")
             //http://qa.phunflix.com
         }

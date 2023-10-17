@@ -10,6 +10,10 @@ public class Constants {
 //    public static final String  BASE_URL_PROD = "https://dflixott.com/";
 //   public static final String  BASE_URL_PROD = "https://vp.mokshmargdharm.org/";
     public static final String  BASE_URL_PROD = "https://vyaspublication.mokshmargdharm.org/";
+  //  public static final String  BASE_URL_PROD = "https://vyasstage.vdoapi.com/";
+
+   // public static final String  BASE_URL_PROD = "https://vyasuat.vdoapi.com/";
+
 
     public static final String BASE_URL_STAGE = "https://phunflixqa.phando.com/";
 

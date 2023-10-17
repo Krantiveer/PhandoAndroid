@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/mainContainer"
     android:layout_width="match_parent"
-
     android:layout_height="wrap_content">
 
     <androidx.viewpager.widget.ViewPager
@@ -11,5 +10,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg_app" />
+
+    <ImageView
+
+        android:id="@+id/imgPrev"
+        android:src="@drawable/ic_prev_banner"
+        android:layout_gravity="start|center"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"/>
+
+    <ImageView
+        android:id="@+id/imgNext"
+        android:src="@drawable/ic_next_banner"
+        android:layout_gravity="end|center"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"/>
 
 </FrameLayout>

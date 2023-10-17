@@ -231,18 +231,18 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                     if (it.data.current_subscription != null){
 
                         if(it.data.price != null){
-                       //     myPackagePrice.text = it.data.current_subscription.plan.currency+" " +it.data.price.toString()
+                            myPackagePrice.text = it.data.current_subscription.plan.currency+" " +it.data.price.toString()
                         }
                     }
 
                     it.data.is_subscribed.let {
                         if (it == 0) {
                             cardSubPlan.gone()
-                            btnCancelSubs.gone()
+                            //btnCancelSubs.gone()
                             lytSubs.gone()
                         } else {
                             cardSubPlan.visible()
-                            btnCancelSubs.visible()
+                           // btnCancelSubs.visible()
                             lytSubs.visible()
 
                         }

@@ -3,6 +3,7 @@ package com.perseverance.phando.retrofit;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.text.format.Formatter;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.perseverance.phando.BuildConfig;
@@ -98,13 +99,14 @@ public class ApiClient {
         public Response intercept(Chain chain) throws IOException {
             Response response = chain.proceed(chain.request());
 
-
-
             if (response.code() == 401) {
                 ResponseBody body = response.body();
                 String bodyString = body.string();
                 MediaType contentType = body.contentType();
                 ErrorModel errorModel = new Gson().fromJson(bodyString, ErrorModel.class);
+
+                Log.e("@@Response", String.valueOf(response.code()));
+
                 if (errorModel.getMessage().equalsIgnoreCase("You've been logged out because we have detected another login from your ID on a different device. You are not allowed to login on more than one device at a time.")
                         || errorModel.getStatus_code() != null && errorModel.getStatus_code().equalsIgnoreCase("E0002")) {
                     PreferencesUtils.setLoggedIn("");
@@ -116,6 +118,20 @@ public class ApiClient {
                     loginIntent.putExtra("msg", errorModel.getMessage());
                     loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     Session.Companion.getInstance().startActivity(loginIntent);
+                    errorModel.setMessage(null);
+                }
+
+                if (errorModel.getMessage().equalsIgnoreCase("Please login.")
+                        || errorModel.getStatus_code() != null && errorModel.getStatus_code().equalsIgnoreCase("E0003")) {
+                    PreferencesUtils.setLoggedIn("");
+                    PreferencesUtils.deleteAllPreferences();
+
+                    // need to check below line
+                 //   AppDatabase.Companion.getInstance(null).downloadMetadataDao().deleteAll();
+                   /* Intent loginIntent = new Intent(Session.Companion.getInstance(), HomeActivity.class);
+                    loginIntent.putExtra("msg", errorModel.getMessage());
+                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    Session.Companion.getInstance().startActivity(loginIntent);*/
                     errorModel.setMessage(null);
                 }
 
@@ -153,6 +169,7 @@ public class ApiClient {
             Request newRequest = chain.request().newBuilder()
                     .addHeader("Authorization", "Bearer " + token)
                     .addHeader("publisherid", "94")
+                 //   .addHeader("publisherid", "80")
                     .addHeader("Content-Type", "application/json; charset=utf-8")
                     .addHeader("Accept", "application/json; charset=utf-8")
                     .addHeader("IpAddress", Session.Companion.getRemoteIp())

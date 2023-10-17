@@ -58,6 +58,10 @@ public interface ApiService {
 
 
 
+    @POST("send-otp-social-login-user")
+    @FormUrlEncoded
+    Call<BaseResponse> getOTPFromSocial(@FieldMap Map<String, String> bodyMap);
+
     @FormUrlEncoded
     @POST("contact/send")
     Call<SuccessResponse> contactUs(@Field("first_name") String name,

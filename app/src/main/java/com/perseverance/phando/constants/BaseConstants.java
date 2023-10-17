@@ -12,6 +12,8 @@ public class BaseConstants {
 
     public static final String CONTACT_ACTIVITY = "CONTACT_ACTIVITY";
 
+    public static final String LOGIN_WITH_MOBILE_SCREEN_SOCIAL = "LoginWithMobileSocial";
+
     public static final int LIMIT_VIDEOS = 100;
     public static final String FEATURED_VIDEO_CATEGORY = "-2";
     public static final String LATEST_VIDEO_CATEGORY = "-3";

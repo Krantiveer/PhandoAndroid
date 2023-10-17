@@ -99,6 +99,7 @@
 
 
             <LinearLayout
+
                 android:id="@+id/lytSubs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -339,7 +340,7 @@
                 android:textSize="@dimen/_14sdp"
                 android:textStyle="bold" />
 
-            <com.google.android.material.textview.MaterialTextView
+          <!--  <com.google.android.material.textview.MaterialTextView
                 android:visibility="gone"
                 android:id="@+id/btnCancelSubs"
                 android:layout_width="wrap_content"
@@ -351,7 +352,7 @@
                 android:text="Cancel Subscription"
                 android:textColor="#E53935"
                 android:textSize="@dimen/_14sdp"
-                android:textStyle="bold" />
+                android:textStyle="bold" />-->
 
 
         </LinearLayout>

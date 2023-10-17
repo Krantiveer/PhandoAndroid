@@ -376,11 +376,13 @@ class SearchFragment : BaseFragment(), VideoSelectedListener, SearchView, Adapte
     }
 
     override fun showProgress(message: String) {
-
+        progressBar.visible()
     }
 
     override fun dismissProgress() {
-
+        if (progressBar != null){
+            progressBar.gone()
+        }
     }
 
     override fun onPause() {

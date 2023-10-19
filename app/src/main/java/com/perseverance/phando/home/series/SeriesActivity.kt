@@ -135,21 +135,6 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         seasonSelector.setSelection(0)
-//        val selectedSeason = tvSeriesResponseData.seasons[0]
-//        refreshThumbnailAndData(selectedSeason)
-//        try {
-//            episodeAdapter.addAll(selectedSeason.episodes)
-//            if (selectedSeason.episodes.isNullOrEmpty()) vw_episodes_container.gone()
-//        } catch (e: Exception) {
-//            vw_episodes_container.gone()
-//        }
-//        try {
-//            trailerAdapter.addAll(selectedSeason.trailers)
-//            if (selectedSeason.trailers.isNullOrEmpty()) vw_trailer_container.gone()
-//        } catch (e: Exception) {
-//            vw_trailer_container.gone()
-//        }
-
         vw_play_series.setOnClickListener {
             if (tvSeriesResponseData.seasons.isNullOrEmpty()) {
                 return@setOnClickListener
@@ -190,8 +175,8 @@ class SeriesActivity : BaseScreenTrackingActivity(), AdapterClickListener {
     }
 
     private fun refreshThumbnailAndData(selectedSeason: Season) {
-        Utils.displayImage(this@SeriesActivity, selectedSeason.thumbnail,
-                R.drawable.video_placeholder, R.drawable.error_placeholder, banner_img)
+      /*  Utils.displayImage(this@SeriesActivity, selectedSeason.thumbnail,
+                R.drawable.video_placeholder, R.drawable.error_placeholder, banner_img)*/
         selectedSeason.episodes.let { episodeAdapter.items = it
             if(it.isEmpty()) vw_episodes_container.gone()} ?:vw_episodes_container.gone()
         selectedSeason.trailers?.let { trailerAdapter.items = it

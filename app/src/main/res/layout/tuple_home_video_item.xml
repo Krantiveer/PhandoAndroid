@@ -70,7 +70,7 @@
                 android:minHeight="@dimen/_1sdp"
                 android:padding="0dp"
                 android:progress="45"
-                android:progressTint="@color/red_normal"
+                android:progressTint="#ffffff"
                 android:visibility="invisible" />
 
         </RelativeLayout>

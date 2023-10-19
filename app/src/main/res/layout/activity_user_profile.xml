@@ -99,7 +99,7 @@
 
 
             <LinearLayout
-
+                android:visibility="gone"
                 android:id="@+id/lytSubs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -125,6 +125,7 @@
             </LinearLayout>
 
             <androidx.cardview.widget.CardView
+                android:visibility="gone"
                 android:id="@+id/cardSubPlan"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_60sdp"

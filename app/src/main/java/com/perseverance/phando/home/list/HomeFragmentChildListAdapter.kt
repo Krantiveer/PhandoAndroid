@@ -34,7 +34,7 @@ class HomeFragmentChildListAdapter(context: Context, listener: AdapterClickListe
             }
 
             "CONTINUE_WATCHING" -> {
-                return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener, 0)
+                return HomeFragmentHorizontalListItemViewHolder(inflate(R.layout.tuple_home_video_item, parent), listener, imageOrientation)
                 //   return HomeFragmentContinueWatchingItemViewHolder(inflate(R.layout.tuple_home_video_item_list_style, parent), listener)
             }
             else -> {

@@ -231,7 +231,7 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                     if (it.data.current_subscription != null){
 
                         if(it.data.price != null){
-                            myPackagePrice.text = it.data.current_subscription.plan.currency+" " +it.data.price.toString()
+//                            myPackagePrice.text = it.data.current_subscription.plan.currency+" " +it.data.price.toString()
                         }
                     }
 
@@ -241,9 +241,9 @@ class ProfileActivity : BaseScreenTrackingActivity() {
                             //btnCancelSubs.gone()
                             lytSubs.gone()
                         } else {
-                            cardSubPlan.visible()
+                            cardSubPlan.gone()
                            // btnCancelSubs.visible()
-                            lytSubs.visible()
+                            lytSubs.gone()
 
                         }
                     }

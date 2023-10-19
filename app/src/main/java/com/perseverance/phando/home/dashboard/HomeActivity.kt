@@ -134,8 +134,10 @@ class HomeActivity : BaseScreenTrackingActivity(),
             txtTitle.text = it.toString()
             if (it.isEmpty()) {
                 imgCenter.visible()
+                imgCenterSec.visible()
             } else {
                 imgCenter.gone()
+                imgCenterSec.gone()
             }
         })
 
@@ -195,17 +197,8 @@ class HomeActivity : BaseScreenTrackingActivity(),
 
         lytMyDownloads.setOnClickListener {
 
-            drawer_layout.closeDrawer(Gravity.RIGHT);
-            val token = PreferencesUtils.getLoggedStatus()
-            if (token.isEmpty()) {
-                val intent = Intent(this, LoginActivity::class.java)
-                startActivityForResult(intent, LoginActivity.REQUEST_CODE_LOGIN)
-            } else {
-
-
                 val intent = Intent(this, OfflineMediaListActivity::class.java)
                 startActivity(intent)
-            }
 
         }
 
@@ -219,13 +212,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
             drawer_layout.openDrawer(Gravity.RIGHT);
        }
 
-        val allData = downloadMetadataDao.getAllDownloadData()
 
-        if (allData == null || allData.isEmpty()) {
-            //txtDownloadOption.gone()
-        } else {
-           // txtDownloadOption.gone()
-        }
 
        /* txtDownloadOption.setOnClickListener {
             if (allData == null || allData.isEmpty()) {
@@ -602,7 +589,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
             LoadingStatus.ERROR -> {
                 lytBill.gone()
                 txtLanguage.gone()
-                lytMyDownloads.gone()
+            //    lytMyDownloads.gone()
                 txtName.text = "Log in"
                 txtPhoneNumber.text = "For better experience"
                 it.message?.let {
@@ -612,7 +599,7 @@ class HomeActivity : BaseScreenTrackingActivity(),
             LoadingStatus.SUCCESS -> {
                 Utils.displayCircularProfileImage(this, it.data?.user?.image,
                     R.drawable.ic_user_avatar, R.drawable.ic_user_avatar, imgHeaderProfile1)
-                lytMyDownloads.visible()
+              //  lytMyDownloads.visible()
                 txtLanguage.visible()
                 lytBill.visible()
 
@@ -690,6 +677,14 @@ class HomeActivity : BaseScreenTrackingActivity(),
         userProfileViewModel.refreshWallet()
         homeActivityViewModel.callForAppInfo()
         homeActivityViewModel.callLanguage()
+
+        val allData = downloadMetadataDao.getAllDownloadData()
+
+        if (allData == null || allData.isEmpty()) {
+            lytMyDownloads.gone()
+        } else {
+            lytMyDownloads.visible()
+        }
 
         val strProfile = PreferencesUtils.getStringPreferences("profile")
         val userProfileData = Gson().fromJson(strProfile, UserProfileData::class.java)

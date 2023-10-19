@@ -25,6 +25,7 @@ object CreateNotification {
     const val CHANNEL_ID = "channel1"
     const val ACTION_PREVIUOS = "actionprevious"
     const val ACTION_PLAY = "actionplay"
+    const val ACTION_STOP = "actionStop"
     const val ACTION_NEXT = "actionnext"
     var notification: Notification? = null
      fun createNotification(
@@ -170,13 +171,7 @@ object CreateNotification {
                 )
                 drw_next = R.drawable.exo_icon_next
             }
-            //resolveUriAsBitmap(Uri.parse(track.thumbnail), context)
-
-
             val notificationLayout = RemoteViews(context.packageName, R.layout.custom_notification_layout)
-
-          //  Log.e("@@thumbnail", track.thumbnail)
-
 
             notificationLayout.setTextViewText(R.id.tvAudioNameNotif, track.title)
             notificationLayout.setTextViewText(R.id.tvAppTitle, "Vyas")
@@ -194,8 +189,8 @@ object CreateNotification {
             notification = NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.app_logo) //  .setLargeIcon(bitmapFinal)
                .setContentTitle(track.title)
-                .setLargeIcon(BitmapFactory.decodeResource(context.resources,
-                    R.drawable.app_logo))
+              /*  .setLargeIcon(BitmapFactory.decodeResource(context.resources,
+                    R.drawable.app_logo))*/
               //  .setCustomContentView(notificationLayout)
                // .setCustomBigContentView(notificationLayout)
              //   .setLargeIcon( resolveUriAsBitmap(Uri.parse(track.thumbnail), context))
@@ -212,7 +207,6 @@ object CreateNotification {
                 )
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .build()
-
             notificationManagerCompat.notify(1, notification!!)
         }
     }

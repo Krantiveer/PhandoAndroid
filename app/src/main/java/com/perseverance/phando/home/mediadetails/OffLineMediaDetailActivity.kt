@@ -20,8 +20,6 @@ import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -37,27 +35,18 @@ import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
 import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
-import com.perseverance.phando.constants.BaseConstants
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.genericAdopter.AdapterClickListener
 import com.perseverance.phando.home.mediadetails.downloads.DownloadMetadata
-import com.perseverance.phando.utils.*
+import com.perseverance.phando.utils.BaseRecycleMarginDecoration
+import com.perseverance.phando.utils.DialogUtils
+import com.perseverance.phando.utils.Util
+import com.perseverance.phando.utils.Utils
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
-import kotlinx.android.synthetic.main.activity_offline_media.*
 import kotlinx.android.synthetic.main.activity_video_details_offline.*
-import kotlinx.android.synthetic.main.activity_video_details_offline.detailContent
-import kotlinx.android.synthetic.main.activity_video_details_offline.fragmentContainer
-import kotlinx.android.synthetic.main.activity_video_details_offline.imgHeaderImage
-import kotlinx.android.synthetic.main.activity_video_details_offline.phandoPlayerView
-import kotlinx.android.synthetic.main.activity_video_details_offline.play
-import kotlinx.android.synthetic.main.activity_video_details_offline.playerThumbnail
-import kotlinx.android.synthetic.main.activity_video_details_offline.root
-import kotlinx.android.synthetic.main.activity_video_details_offline.toolbar
 import kotlinx.android.synthetic.main.audio_player_controller.*
 import kotlinx.android.synthetic.main.content_detail_offline.*
-import kotlinx.android.synthetic.main.content_detail_offline.recyclerView
-import java.io.File
 
 class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     PhandoPlayerCallback, Player.EventListener, Playable {
@@ -95,10 +84,10 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     private var downloadMetadata: DownloadMetadata? = null
 
     val downloadMetadataDao by lazy {
-        AppDatabase.getInstance(this)?.downloadMetadataDao()
+        AppDatabase.getInstance(this).downloadMetadataDao()
     }
 
-     var audioPlayerExpo: SimpleExoPlayer? = null
+    var audioPlayerExpo: SimpleExoPlayer? = null
     var isPlaying = false
 
     var position = 0
@@ -108,14 +97,13 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
 
-        if (mediaUrl!!.endsWith(".mp3")){
+        if (mediaUrl.endsWith(".mp3")) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                    createChannel()
-                    registerReceiver(broadcastReceiver, IntentFilter("TRACKS_TRACKS"))
-                    startService(Intent(baseContext, OnClearFromRecentService::class.java))
-                }
-
+                createChannel()
+                registerReceiver(broadcastReceiver, IntentFilter("TRACKS_TRACKS"))
+                startService(Intent(baseContext, OnClearFromRecentService::class.java))
+            }
 
 
             phandoPlayerView.onDestroy()
@@ -133,9 +121,13 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
                 downloadMetadata!!.title.toString()
             )
 
-        }
-        else {
-
+        } else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (notificationManager != null) {
+                    notificationManager!!.cancelAll()
+                    unregisterReceiver(broadcastReceiver)
+                }
+            }
             videoTitle.text = downloadMetadata!!.title
             playerThumbnail.gone()
             releasePlayer()
@@ -187,10 +179,6 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         } else {
             portrate()
         }
-
-
-
-
 
 
         val decoration = BaseRecycleMarginDecoration(this@OffLineMediaDetailActivity)
@@ -247,7 +235,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            if (downloadMetadata!!.media_url!!.endsWith(".mp3")){
+            if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
 
                 createChannel()
                 registerReceiver(broadcastReceiver, IntentFilter("TRACKS_TRACKS"))
@@ -269,7 +257,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
                     }
 
                     override fun onPositiveButtonPressed() {
-                        downloadMetadataDao?.insert(downloadMetadata!!.apply {
+                        downloadMetadataDao.insert(downloadMetadata!!.apply {
                             status = 1
                         })
                         VideoSdkUtil.deleteDownloadedInfo(
@@ -298,22 +286,22 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
             }
         }
 
-      /*  exo_pause.setOnClickListener {
-            if (isPlaying) {
-                onTrackPause()
-            } else {
-                onTrackPlay()
-            }
-        }
+        /*  exo_pause.setOnClickListener {
+              if (isPlaying) {
+                  onTrackPause()
+              } else {
+                  onTrackPlay()
+              }
+          }
 
-        exo_play.setOnClickListener {
-            if (isPlaying) {
-                onTrackPause()
+          exo_play.setOnClickListener {
+              if (isPlaying) {
+                  onTrackPause()
 
-            } else {
-                onTrackPlay()
-            }
-        }*/
+              } else {
+                  onTrackPlay()
+              }
+          }*/
 
 
     }
@@ -328,7 +316,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
     private fun setRelatedVideo() {
 
-        downloadMetadataDao?.getAllDownloadLiveData()?.observe(this, Observer {
+        downloadMetadataDao.getAllDownloadLiveData().observe(this, Observer {
             if (it.isNotEmpty()) {
                 relatedContainer.visible()
                 val manager = GridLayoutManager(this@OffLineMediaDetailActivity, 2)
@@ -353,10 +341,10 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
                         onTrackPause()
                     }
 
-                } }
-            else {
-                    relatedContainer.gone()
                 }
+            } else {
+                relatedContainer.gone()
+            }
 
 
         })
@@ -378,7 +366,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     }
 
     fun landscope() {
-        root.fitsSystemWindows = false;
+        root.fitsSystemWindows = false
         root.requestApplyInsets()
         hideSystemUI()
         handler.post {
@@ -391,7 +379,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     }
 
     fun portrate() {
-        root.fitsSystemWindows = true;
+        root.fitsSystemWindows = true
         root.requestApplyInsets()
         showSystemUI()
         handler.post {
@@ -400,6 +388,11 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
             fragmentContainer.requestLayout()
             fragmentContainer.layoutParams.height = height
             fragmentContainer.layoutParams.width = width
+        }
+
+        if (audioPlayerExpo != null && audioPlayerExpo!!.playWhenReady) {
+            position = audioPlayerExpo!!.contentPosition.toInt()
+            audioPlayerExpo!!.playWhenReady = true
         }
         setRelatedVideo()
     }
@@ -419,7 +412,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item?.itemId) {
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
             }
@@ -447,7 +440,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         runOnUiThread {
             mListener?.enable()
 
-            if (downloadMetadata!!.media_url!!.endsWith(".mp3")){
+            if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
 
                 if (audioPlayerExpo != null && isPlaying) {
                     audioPlayerExpo!!.seekTo(position.toLong())
@@ -463,7 +456,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         super.onPause()
         mListener?.disable()
 
-        if (downloadMetadata!!.media_url!!.endsWith(".mp3")){
+        if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
 
             if (audioPlayerExpo != null && audioPlayerExpo!!.playWhenReady) {
                 position = audioPlayerExpo!!.contentPosition.toInt()
@@ -702,7 +695,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
             play.setImageResource(R.drawable.ic_play_arrow_black_24dp)
         }
         isPlaying = false
-        if (audioPlayerExpo != null && audioPlayerExpo!!.getPlayWhenReady()) {
+        if (audioPlayerExpo != null && audioPlayerExpo!!.playWhenReady) {
             position = audioPlayerExpo!!.contentPosition.toInt()
             audioPlayerExpo!!.playWhenReady = false
         }
@@ -714,17 +707,18 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
         if (positionSong < episodes!!.size) {
 
-            if (episodes!![positionSong].media_url!!.endsWith(".mp3")){
+            if (episodes!![positionSong].media_url!!.endsWith(".mp3")) {
                 CreateNotification.createNotificationDownload(
                     this@OffLineMediaDetailActivity, episodes!!.get(positionSong),
-                    R.drawable.player_pause, positionSong, episodes!!.size - 1)
+                    R.drawable.player_pause, positionSong, episodes!!.size - 1
+                )
 
                 setAudioPlayer(
                     episodes!!.get(positionSong).media_url.toString(),
                     episodes!!.get(positionSong).thumbnail.toString(),
                     episodes!!.get(positionSong).title.toString()
                 )
-            }  else {
+            } else {
                 playVideo()
             }
 
@@ -758,8 +752,8 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
     override fun onStop() {
         super.onStop()
-        if (downloadMetadata!!.media_url!!.endsWith(".mp3")){
-            if ( audioPlayerExpo != null) {
+        if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
+            if (audioPlayerExpo != null) {
                 releasePlayer()
             }
         }
@@ -768,7 +762,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
     private fun releasePlayer() {
         try {
-            if ( audioPlayerExpo != null) {
+            if (audioPlayerExpo != null) {
                 audioPlayerExpo?.release()
             }
         } catch (e: Exception) {
@@ -778,34 +772,34 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
     private fun createChannel() {
 
-       /* if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
+        /* if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
 
-            if (isPlaying) {
-                onTrackPlay()
-            } else {
-                onTrackPause()
-            }
+             if (isPlaying) {
+                 onTrackPlay()
+             } else {
+                 onTrackPause()
+             }
 
-        }*/
+         }*/
         val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel(
-                    CreateNotification.CHANNEL_ID,
-                    "KOD Dev", NotificationManager.IMPORTANCE_HIGH
-                )
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
+            NotificationChannel(
+                CreateNotification.CHANNEL_ID,
+                "KOD Dev", NotificationManager.IMPORTANCE_HIGH
+            )
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
         notificationManager = getSystemService(NotificationManager::class.java)
-            if (notificationManager != null) {
-                notificationManager!!.createNotificationChannel(channel)
-            }
+        if (notificationManager != null) {
+            notificationManager!!.createNotificationChannel(channel)
+        }
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        if (downloadMetadata!!.media_url!!.endsWith(".mp3")){
+        if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 if (notificationManager != null) {

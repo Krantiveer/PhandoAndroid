@@ -119,6 +119,7 @@
                 style="@style/LoginTextStyleBlack"
                 android:layout_width="match_parent"
                 android:id="@+id/tvSkip"
+                android:visibility="gone"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/_20sdp"
                 android:gravity="center"

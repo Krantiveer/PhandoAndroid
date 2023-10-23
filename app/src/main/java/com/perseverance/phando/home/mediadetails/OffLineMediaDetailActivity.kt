@@ -1,39 +1,27 @@
 package com.perseverance.phando.home.mediadetails
 
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
 import android.widget.TextView
 import android.widget.Toast
+import com.perseverance.phando.BaseScreenTrackingActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
-import com.google.android.exoplayer2.*
-import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection
-import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.newgendroid.news.utils.AppDialogListener
 import com.perseverance.patrikanews.utils.getViewModel
 import com.perseverance.patrikanews.utils.gone
 import com.perseverance.patrikanews.utils.visible
-import com.perseverance.phando.BaseScreenTrackingActivity
 import com.perseverance.phando.R
 import com.perseverance.phando.db.AppDatabase
 import com.perseverance.phando.genericAdopter.AdapterClickListener
@@ -44,17 +32,19 @@ import com.perseverance.phando.utils.Util
 import com.perseverance.phando.utils.Utils
 import com.videoplayer.*
 import com.videoplayer.VideoPlayerMetadata.UriSample
-import kotlinx.android.synthetic.main.activity_video_details_offline.*
+import kotlinx.android.synthetic.main.activity_video_details_offline.detailContent
+import kotlinx.android.synthetic.main.activity_video_details_offline.fragmentContainer
+import kotlinx.android.synthetic.main.activity_video_details_offline.phandoPlayerView
+import kotlinx.android.synthetic.main.activity_video_details_offline.play
+import kotlinx.android.synthetic.main.activity_video_details_offline.playerThumbnail
+import kotlinx.android.synthetic.main.activity_video_details_offline.playerThumbnailContainer
+import kotlinx.android.synthetic.main.activity_video_details_offline.root
+import kotlinx.android.synthetic.main.activity_video_details_offline.toolbar
 import kotlinx.android.synthetic.main.audio_player_controller.*
 import kotlinx.android.synthetic.main.content_detail_offline.*
 
-class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
-    PhandoPlayerCallback, Player.EventListener, Playable {
-    override var screenName = "OffLineMediaDetail"
-    var notificationManager: NotificationManager? = null
-
-    var episodes: List<DownloadMetadata>? = ArrayList<DownloadMetadata>()
-
+class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener, PhandoPlayerCallback {
+    override var screenName="OffLineMediaDetail"
     companion object {
         const val ARG_VIDEO = "param_video"
         fun getDetailIntent(context: Context, downloadMetadata: DownloadMetadata): Intent {
@@ -84,90 +74,51 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     private var downloadMetadata: DownloadMetadata? = null
 
     val downloadMetadataDao by lazy {
-        AppDatabase.getInstance(this).downloadMetadataDao()
+        AppDatabase.getInstance(this)?.downloadMetadataDao()
     }
 
-    var audioPlayerExpo: SimpleExoPlayer? = null
-    var isPlaying = false
-
-    var position = 0
-    var positionSong = 0
-    var currentSongId: Int = 0
-
-
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
+        playerThumbnailContainer.visible()
+        phandoPlayerView.visible()
+        val intent = Intent()
+        val uri = Uri.parse(mediaUrl)
+        val sample: VideoPlayerMetadata = UriSample(
+            null,
+            uri,
+            null,
+            false,
+            null,
+            if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
+            null,
+            null)
+        intent.putExtra(
+            PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false)
+        val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
+        intent.putExtra(PhandoPlayerView.ABR_ALGORITHM_EXTRA, abrAlgorithm)
+        intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
+        //    intent.putExtra(PhandoPlayerView.PLAYER_LOGO, R.mipmap.ic_launcher)
+        intent.putExtra(PhandoPlayerView.KEY_POSITION, seekTo)
+        sample.addToIntent(intent)
+        phandoPlayerView.setVideoData(intent)
 
-        if (mediaUrl.endsWith(".mp3")) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        /*Utils.displayImage(
+            this,
+            thumbnail,
+            R.drawable.video_placeholder,
+            R.drawable.video_placeholder,
+            imgAudioThumbNail
+        )*/
 
-                createChannel()
-                registerReceiver(broadcastReceiver, IntentFilter("TRACKS_TRACKS"))
-                startService(Intent(baseContext, OnClearFromRecentService::class.java))
-            }
+        videoTitle.text = downloadMetadata!!.title
 
-
-            phandoPlayerView.onDestroy()
-            Log.e("@@media_url", downloadMetadata!!.media_url!!)
-            audioOfflineMedia.visible()
-            download.visible()
-            audioOfflineMedia.showController()
-            audioOfflineMedia.controllerShowTimeoutMs = 0
-            audioOfflineMedia.controllerHideOnTouch = false
-
-
-            setAudioPlayer(
-                mediaUrl,
-                downloadMetadata!!.thumbnail.toString(),
-                downloadMetadata!!.title.toString()
-            )
-
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (notificationManager != null) {
-                    notificationManager!!.cancelAll()
-                    unregisterReceiver(broadcastReceiver)
-                }
-            }
-            videoTitle.text = downloadMetadata!!.title
-            playerThumbnail.gone()
-            releasePlayer()
-            audioOfflineMedia.gone()
-            phandoPlayerView.visible()
-            play.gone()
-            val intent = Intent()
-            val uri = Uri.parse(mediaUrl)
-            val sample: VideoPlayerMetadata = UriSample(
-                null,
-                uri,
-                null,
-                false,
-                null,
-                if (addUrl.isNullOrEmpty()) null else Uri.parse(addUrl),
-                null,
-                null
-            )
-            intent.putExtra(
-                PhandoPlayerView.PREFER_EXTENSION_DECODERS_EXTRA, false
-            )
-            val abrAlgorithm = PhandoPlayerView.ABR_ALGORITHM_DEFAULT
-            intent.putExtra(PhandoPlayerView.ABR_ALGORITHM_EXTRA, abrAlgorithm)
-            intent.putExtra(PhandoPlayerView.TUNNELING_EXTRA, false)
-            intent.putExtra(PhandoPlayerView.PLAYER_LOGO, R.mipmap.ic_launcher)
-            intent.putExtra(PhandoPlayerView.KEY_POSITION, seekTo)
-            sample.addToIntent(intent)
-            phandoPlayerView.setVideoData(intent)
-            //   phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
-
-        }
+        //    phandoPlayerView.setDefaultArtwork(getDrawable(R.mipmap.ic_launcher))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.apply {
-            setFlags(
-                WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE
-            )
+            setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE)
         }
 
         setContentView(R.layout.activity_video_details_offline)
@@ -179,20 +130,11 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         } else {
             portrate()
         }
-
-
         val decoration = BaseRecycleMarginDecoration(this@OffLineMediaDetailActivity)
         recyclerView.addItemDecoration(decoration)
         playerViewModel.message.observe(this, messageObserver)
         downloadMetadata = intent?.getSerializableExtra(ARG_VIDEO) as DownloadMetadata
-        Log.e("@@thumbnailData", downloadMetadata?.thumbnail.toString())
-        Utils.displayImage(
-            this,
-            downloadMetadata?.thumbnail.toString(),
-            R.drawable.video_placeholder,
-            R.drawable.video_placeholder,
-            playerThumbnail
-        )
+        Utils.displayImage(this, downloadMetadata?.thumbnail, R.drawable.video_placeholder, R.drawable.video_placeholder, playerThumbnail)
         detailContent.visible()
         videoTitle.text = downloadMetadata?.title
         videoDescription.text = downloadMetadata?.description
@@ -201,12 +143,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
         mListener = object : SimpleOrientationEventListener(this@OffLineMediaDetailActivity) {
             override fun onChanged(lastOrientation: Int, orientation: Int) {
-                if (Settings.System.getInt(
-                        contentResolver,
-                        Settings.System.ACCELEROMETER_ROTATION,
-                        0
-                    ) != 1
-                ) {
+                if (Settings.System.getInt(contentResolver, Settings.System.ACCELEROMETER_ROTATION, 0) != 1) {
                     return
                 }
 
@@ -232,49 +169,29 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         mListener?.enable()
         setRelatedVideo()
         playVideo()
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-
-            if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
-
-                createChannel()
-                registerReceiver(broadcastReceiver, IntentFilter("TRACKS_TRACKS"))
-                startService(Intent(baseContext, OnClearFromRecentService::class.java))
-            }
-
-        }
-
         download.setOnClickListener {
-            DialogUtils.showDialog(
-                this@OffLineMediaDetailActivity,
-                "Alert!",
-                "Do you want to delete saved video",
-                "Yes",
-                "No",
-                object : AppDialogListener {
-                    override fun onNegativeButtonPressed() {
+            DialogUtils.showDialog(this@OffLineMediaDetailActivity, "Alert!", "Do you want to delete saved video", "Yes", "No", object : AppDialogListener {
+                override fun onNegativeButtonPressed() {
 
-                    }
+                }
 
-                    override fun onPositiveButtonPressed() {
-                        downloadMetadataDao.insert(downloadMetadata!!.apply {
-                            status = 1
-                        })
-                        VideoSdkUtil.deleteDownloadedInfo(
-                            application,
-                            this@OffLineMediaDetailActivity.downloadMetadata?.media_url
-                        )
-                        Handler().postDelayed({
-                            finish()
-                        }, 1000)
+                override fun onPositiveButtonPressed() {
+                    downloadMetadataDao?.insert(downloadMetadata!!.apply {
+                        status = 1
+                    })
+                    VideoSdkUtil.deleteDownloadedInfo(application, this@OffLineMediaDetailActivity.downloadMetadata?.media_url)
+                    Handler().postDelayed({
+                        finish()
+                    }, 1000)
 
-                    }
+                }
 
-                })
+            })
         }
-
         play.setOnClickListener {
+
             playVideo()
+
         }
         viewMore.setOnClickListener {
             if (videoDescription.visibility == View.VISIBLE) {
@@ -286,23 +203,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
             }
         }
 
-        /*  exo_pause.setOnClickListener {
-              if (isPlaying) {
-                  onTrackPause()
-              } else {
-                  onTrackPlay()
-              }
-          }
-
-          exo_play.setOnClickListener {
-              if (isPlaying) {
-                  onTrackPause()
-
-              } else {
-                  onTrackPlay()
-              }
-          }*/
-
+        video_previous.visible()
 
     }
 
@@ -310,13 +211,13 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         downloadMetadata?.media_url?.let {
             play.gone()
             setDataToPlayer(addUrl = null, mediaUrl = downloadMetadata?.media_url!!, seekTo = 0)
-            currentSongId = downloadMetadata?.document_id!!.toInt()
         }
+
     }
 
     private fun setRelatedVideo() {
 
-        downloadMetadataDao.getAllDownloadLiveData().observe(this, Observer {
+        downloadMetadataDao?.getAllDownloadLiveData()?.observe(this, Observer {
             if (it.isNotEmpty()) {
                 relatedContainer.visible()
                 val manager = GridLayoutManager(this@OffLineMediaDetailActivity, 2)
@@ -324,29 +225,10 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
                 recyclerView.setHasFixedSize(true)
                 val adapter = SavedMediaListAdapter(this@OffLineMediaDetailActivity, this)
                 adapter.items = it
-                episodes = it
-
-                episodes!!.forEachIndexed { index, element ->
-                    if (element.document_id == currentSongId.toString()) {
-                        Log.e("@@in", index.toString())
-                        positionSong = index
-                    }
-                }
                 recyclerView.adapter = adapter
-                if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
-
-                    if (isPlaying) {
-                        onTrackPlay()
-                    } else {
-                        onTrackPause()
-                    }
-
-                }
             } else {
                 relatedContainer.gone()
             }
-
-
         })
     }
 
@@ -363,10 +245,11 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
                 // runHandler(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
             }
         }
+
     }
 
     fun landscope() {
-        root.fitsSystemWindows = false
+        root.fitsSystemWindows = false;
         root.requestApplyInsets()
         hideSystemUI()
         handler.post {
@@ -379,7 +262,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     }
 
     fun portrate() {
-        root.fitsSystemWindows = true
+        root.fitsSystemWindows = true;
         root.requestApplyInsets()
         showSystemUI()
         handler.post {
@@ -388,11 +271,6 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
             fragmentContainer.requestLayout()
             fragmentContainer.layoutParams.height = height
             fragmentContainer.layoutParams.width = width
-        }
-
-        if (audioPlayerExpo != null && audioPlayerExpo!!.playWhenReady) {
-            position = audioPlayerExpo!!.contentPosition.toInt()
-            audioPlayerExpo!!.playWhenReady = true
         }
         setRelatedVideo()
     }
@@ -412,7 +290,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        when (item?.itemId) {
             android.R.id.home -> {
                 onBackPressed()
             }
@@ -437,18 +315,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
     override fun onResume() {
         super.onResume()
-        runOnUiThread {
-            mListener?.enable()
-
-            if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
-
-                if (audioPlayerExpo != null && isPlaying) {
-                    audioPlayerExpo!!.seekTo(position.toLong())
-                    audioPlayerExpo!!.playWhenReady = true
-                }
-            }
-
-        }
+        mListener?.enable()
 
     }
 
@@ -456,14 +323,6 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         super.onPause()
         mListener?.disable()
 
-        if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
-
-            if (audioPlayerExpo != null && audioPlayerExpo!!.playWhenReady) {
-                position = audioPlayerExpo!!.contentPosition.toInt()
-                audioPlayerExpo!!.playWhenReady = true
-            }
-
-        }
     }
 
     override fun onItemClick(data: Any) {
@@ -483,8 +342,7 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
 
     override fun onSettingClicked() {
         val mBottomSheetDialog = BottomSheetDialog(this)
-        val sheetView: View =
-            layoutInflater.inflate(R.layout.bottomsheet_settings_control_options, null)
+        val sheetView: View = layoutInflater.inflate(R.layout.bottomsheet_settings_control_options, null)
         mBottomSheetDialog.setContentView(sheetView)
         val settingVideoQuality = sheetView.findViewById<TextView>(R.id.settingVideoQuality)
         val settingVideoCC = sheetView.findViewById<TextView>(R.id.settingVideoCC)
@@ -501,28 +359,6 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
     }
 
     override fun onPlayerEvent(playerTrackingEvent: PlayerTrackingEvent?) {
-
-        playerTrackingEvent?.let {
-
-
-            if (it.action == "playerstart") {
-
-            } else {
-
-                when (it.action) {
-                    "adplay" -> {
-                        imgHeaderImage.gone()
-                    }
-                    "aderror" -> imgHeaderImage.visible()
-                    "adended" -> imgHeaderImage.visible()
-                    "play-100" -> {
-                        onTrackNext()
-                    }
-                    else -> {
-                    }
-                }
-            }
-        }
 
     }
 
@@ -582,234 +418,6 @@ class OffLineMediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickLis
         window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
-    }
-
-    fun setAudioPlayer(mediaUrl: String, thumbnail: String, title: String) {
-
-        releasePlayer()
-        Utils.displayImage(
-            this,
-            thumbnail,
-            R.drawable.video_placeholder,
-            R.drawable.video_placeholder,
-            imgAudioThumbNail
-        )
-
-        videoTitle.text = title
-        val renderersFactory = DefaultRenderersFactory(this)
-        val trackSelectionFactory = AdaptiveTrackSelection.Factory()
-        val trackSelectSelector = DefaultTrackSelector(trackSelectionFactory)
-        val loadControl = DefaultLoadControl()
-
-        audioPlayerExpo = ExoPlayerFactory.newSimpleInstance(
-            this,
-            renderersFactory,
-            trackSelectSelector,
-            loadControl
-        )
-        audioPlayerExpo!!.addListener(this)
-        audioPlayerExpo!!.playWhenReady = true
-        val dataSourceFactory = DefaultDataSourceFactory(this, getString(R.string.app_name))
-        val extractorsFactory = DefaultExtractorsFactory()
-
-        val mediaSource = ProgressiveMediaSource
-            .Factory(dataSourceFactory, extractorsFactory)
-            .createMediaSource(Uri.parse(mediaUrl))
-        audioPlayerExpo!!.prepare(mediaSource)
-        audioOfflineMedia.player = audioPlayerExpo
-        isPlaying = true
-        audioPlayerExpo!!.addListener(object : Player.EventListener {
-            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
-                super.onPlayerStateChanged(playWhenReady, playbackState)
-                Log.e("@@state", playWhenReady.toString())
-                if (playbackState == Player.STATE_ENDED) {
-
-                    onTrackNext()
-                }
-                if (playbackState == Player.STATE_READY) {
-                    progressBarAudio.gone()
-                }
-                if (playbackState == Player.STATE_BUFFERING) {
-                    progressBarAudio.visible()
-                }
-            }
-        })
-    }
-
-    var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val action = intent.extras!!.getString("actionname")
-            when (action) {
-                CreateNotification.ACTION_PREVIUOS -> onTrackPrevious()
-                CreateNotification.ACTION_PLAY -> if (isPlaying) {
-                    onTrackPause()
-                } else {
-                    onTrackPlay()
-                }
-                CreateNotification.ACTION_NEXT -> onTrackNext()
-            }
-        }
-    }
-
-
-    override fun onTrackPrevious() {
-        positionSong--
-        CreateNotification.createNotificationDownload(
-            this@OffLineMediaDetailActivity, episodes!!.get(positionSong),
-            R.drawable.player_pause, positionSong, episodes!!.size - 1
-        )
-        setAudioPlayer(
-            episodes!!.get(positionSong).media_url.toString(),
-            episodes!!.get(positionSong).thumbnail.toString(),
-            episodes!!.get(positionSong).title.toString()
-        )
-        /* mediaMetadata?.prev_media?.let {
-             prevMediaMetadata?.let {
-                 onGetVideoMetaDataSuccess(it)
-             }
-         }*/
-
-    }
-
-    override fun onTrackPlay() {
-        CreateNotification.createNotificationDownload(
-            this@OffLineMediaDetailActivity, episodes!!.get(positionSong),
-            R.drawable.player_pause, positionSong, episodes!!.size - 1
-        )
-        play.setImageResource(R.drawable.player_play)
-
-        isPlaying = true
-
-        if (audioPlayerExpo != null) {
-            audioPlayerExpo!!.seekTo(position.toLong())
-            audioPlayerExpo!!.playWhenReady = true
-        }
-    }
-
-    override fun onTrackPause() {
-        if (downloadMetadata != null) {
-            CreateNotification.createNotificationDownload(
-                this@OffLineMediaDetailActivity, episodes!!.get(positionSong),
-                R.drawable.ic_play_arrow_black_24dp, positionSong, episodes!!.size - 1
-            )
-            play.setImageResource(R.drawable.ic_play_arrow_black_24dp)
-        }
-        isPlaying = false
-        if (audioPlayerExpo != null && audioPlayerExpo!!.playWhenReady) {
-            position = audioPlayerExpo!!.contentPosition.toInt()
-            audioPlayerExpo!!.playWhenReady = false
-        }
-    }
-
-    override fun onTrackNext() {
-        Log.e("@@next", positionSong.toString())
-        positionSong++
-
-        if (positionSong < episodes!!.size) {
-
-            if (episodes!![positionSong].media_url!!.endsWith(".mp3")) {
-                CreateNotification.createNotificationDownload(
-                    this@OffLineMediaDetailActivity, episodes!!.get(positionSong),
-                    R.drawable.player_pause, positionSong, episodes!!.size - 1
-                )
-
-                setAudioPlayer(
-                    episodes!!.get(positionSong).media_url.toString(),
-                    episodes!!.get(positionSong).thumbnail.toString(),
-                    episodes!!.get(positionSong).title.toString()
-                )
-            } else {
-                playVideo()
-            }
-
-
-        } else {
-            // Handle the case when the current song is the last song
-            // You can choose to restart the playlist or perform any other desired action
-        }
-    }
-
-
-    /* override fun onTrackNext() {
-         Log.e("@@next", positionSong.toString())
-         positionSong++
-         CreateNotification.createNotificationDownload(
-             this@OffLineMediaDetailActivity, episodes!!.get(positionSong),
-             R.drawable.player_pause, positionSong, episodes!!.size - 1
-         )
-
-         setAudioPlayer(
-             episodes!!.get(positionSong).media_url.toString(),
-             episodes!!.get(positionSong).thumbnail.toString(),
-             episodes!!.get(positionSong).title.toString()
-         )
-         *//* mediaMetadata?.next_media?.let {
-                nextMediaMetadata?.let {
-                    onGetVideoMetaDataSuccess(it)
-                }
-            }*//*
-    }*/
-
-    override fun onStop() {
-        super.onStop()
-        if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
-            if (audioPlayerExpo != null) {
-                releasePlayer()
-            }
-        }
-
-    }
-
-    private fun releasePlayer() {
-        try {
-            if (audioPlayerExpo != null) {
-                audioPlayerExpo?.release()
-            }
-        } catch (e: Exception) {
-
-        }
-    }
-
-    private fun createChannel() {
-
-        /* if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
-
-             if (isPlaying) {
-                 onTrackPlay()
-             } else {
-                 onTrackPause()
-             }
-
-         }*/
-        val channel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel(
-                CreateNotification.CHANNEL_ID,
-                "KOD Dev", NotificationManager.IMPORTANCE_HIGH
-            )
-        } else {
-            TODO("VERSION.SDK_INT < O")
-        }
-        notificationManager = getSystemService(NotificationManager::class.java)
-        if (notificationManager != null) {
-            notificationManager!!.createNotificationChannel(channel)
-        }
-
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        if (downloadMetadata!!.media_url!!.endsWith(".mp3")) {
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                if (notificationManager != null) {
-                    notificationManager!!.cancelAll()
-                    unregisterReceiver(broadcastReceiver)
-                }
-            }
-
-        }
-
     }
 
 }

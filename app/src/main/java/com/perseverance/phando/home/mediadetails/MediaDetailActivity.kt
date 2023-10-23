@@ -1803,7 +1803,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     override fun onStop() {
         super.onStop()
         if (this::audioPlayerExpo.isInitialized && audioPlayerExpo != null) {
-           // releasePlayer()
+            releasePlayer()
         }
     }
 
@@ -1838,6 +1838,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         if (isTrailerPlaying) {
             return
         }
+
+        if (mediaMetadata?.media_type?.equals("audio")!!) {
+            return
+        }
+
         mediaMetadata?.let { mediaMetaData ->
             phandoPlayerView.currentPosition.let {
                 if (it > 0) {

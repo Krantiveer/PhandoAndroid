@@ -57,7 +57,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         minSdkVersion 21
-        targetSdkVersion 32
+        targetSdkVersion 33
         vectorDrawables.useSupportLibrary = true
         android.applicationVariants.all { variant ->
             variant.outputs.all {
@@ -87,7 +87,7 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable true
+            debuggable false
             buildConfigField("String","AD_NETWORK_BASE_URL","\"http://admaster.in/api-v1/\"")
             buildConfigField("String","TOPIC","\"com.perseverance.vyas\"")
             buildConfigField("String","DOMAIN_URI","\"https://vyaspublications.page.link\"")
@@ -145,8 +145,8 @@ android {
         }
         vyas {
             applicationId "com.vyaspublications.ott"
-            versionCode 12
-            versionName "2.0"
+            versionCode 15
+            versionName "2.4"
             signingConfig signingConfigs.configVyas
         }
 

@@ -96,7 +96,7 @@ import java.net.URL
 
 class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     PhandoPlayerCallback, PurchaseOptionSelection, Player.EventListener, Playable {
-    override var screenName = ""
+    override var screenName = "MediaDetailActivity"
     private lateinit var purchaseOption: PurchaseOption
     private var fromDyLink = false
     val STRIKE_THROUGH_SPAN = StrikethroughSpan()
@@ -375,10 +375,9 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     lateinit var audioPlayerExpo: SimpleExoPlayer
 
     private fun setDataToPlayer(addUrl: String? = null, mediaUrl: String, seekTo: Long = 0) {
-        MyLog.d("debugUrl", mediaUrl)
+
         nextEpisode.gone()
 
-        Log.e("@@type", mediaMetadata?.media_type.toString())
         if (mediaMetadata?.media_type?.equals("audio")!!) {
             releasePlayer()
             audio.visible()
@@ -504,9 +503,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
     }
-
     private var viewModel: DownloadViewModel? = null
-
     private val NOTIFICATION_ID = 1
     private lateinit var notificationManagerCompat: NotificationManagerCompat
 
@@ -1850,9 +1847,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                         mediaMetaData.document_media_id.toString(),
                         it.toString()
                     )
-
                     val currentPosition = 0L
-
                     TrackingUtils.sendVideoPlayBackTime(
                         currentPosition, mediaMetaData.title,
                         mediaMetadata?.analytics_category_id,

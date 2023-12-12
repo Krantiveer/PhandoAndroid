@@ -11,8 +11,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
-
     <application
         android:name=".Session"
         android:allowBackup="false"
@@ -25,6 +23,9 @@
         android:theme="@style/AppTheme"
         tools:replace="android:name,android:allowBackup"
         tools:targetApi="n">
+        <activity
+            android:name=".home.series.AudioSeriesList"
+            android:exported="false" />
         <activity
             android:name=".category.DashboardListActivity"
             android:exported="false" />
@@ -91,7 +92,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".home.generes.GenresBrowse"
             android:exported="false" />
@@ -116,7 +116,6 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait" />
-
         <activity
             android:name=".settings.NotificationsSettingsActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -135,12 +134,9 @@
             android:exported="false"
             android:launchMode="singleTask"
             android:screenOrientation="sensorPortrait" />
-
-
         <activity
             android:name=".contactus.Contactus"
             android:exported="false" />
-
         <activity
             android:name=".search.SearchResultActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -177,7 +173,6 @@
             android:name=".home.mediadetails.OfflineMediaListActivity"
             android:exported="true"
             android:parentActivityName=".home.dashboard.HomeActivity"
-
             android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.OfflineMediaListActivity" />
@@ -188,7 +183,6 @@
         <activity
             android:name=".home.profile.ProfileActivity"
             android:exported="false"
-
             android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".customtab.WebviewActivity"
@@ -203,21 +197,16 @@
             android:name=".home.dashboard.mylist.UserListActivity"
             android:exported="false"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".payment.ccavenue.activity.WebViewCcavenueActivity"
             android:exported="false"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".payment.ccavenue.activity.StatusActivity"
             android:exported="false"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <service
             android:name=".AdsUtil.AdNetworkService"
@@ -240,20 +229,19 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".home.mediadetails.NotificationActionService"/>
-        <service android:name=".home.mediadetails.OnClearFromRecentService"/>
+        <receiver android:name=".home.mediadetails.NotificationActionService" />
 
+        <service android:name=".home.mediadetails.OnClearFromRecentService" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.vyaspublications.ott.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

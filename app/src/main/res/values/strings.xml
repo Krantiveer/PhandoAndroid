@@ -9,8 +9,8 @@
     <string name="close">Close</string>
     <string name="no">No</string>
     <string name="close_app_message">Do you want to close the app?</string>
-        <string name="logout_message">Do you want to logout?\nYou will lose your all downloaded data</string>
-<!--    <string name="logout_message">Do you want to logout?</string>-->
+    <string name="logout_message">Do you want to logout?\nYou will lose your all downloaded data</string>
+    <!--    <string name="logout_message">Do you want to logout?</string>-->
     <string name="yes">Yes</string>
     <string name="proceed">Proceed</string>
 

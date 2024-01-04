@@ -111,6 +111,7 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     var episodes: List<RelatedEpisode>? = ArrayList<RelatedEpisode>()
     var isPlaying = false
     var currentSongId: Int = 0
+    var isfirsttime=false
 
     companion object {
         const val LOGIN_FOR_RENT = 1
@@ -182,7 +183,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     var notificationManager: NotificationManager? = null
     var position = 0
     var positionSong = 0
-
 
     var nextMediaMetadata: MediaplaybackData? = null
     var prevMediaMetadata: MediaplaybackData? = null
@@ -488,6 +488,11 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                 if (playbackState == Player.STATE_ENDED) {
                     mediaMetadata?.next_media?.let {
                         nextMediaMetadata?.let {
+                            onGetVideoMetaDataSuccess(it)
+                        }
+                    }
+                    mediaMetadata?.prev_media?.let {
+                        prevMediaMetadata?.let {
                             onGetVideoMetaDataSuccess(it)
                         }
                     }
@@ -963,13 +968,17 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.extras!!.getString("actionname")
             when (action) {
-                CreateNotification.ACTION_PREVIUOS -> onTrackPrevious()
+                CreateNotification.ACTION_PREVIUOS -> {
+                    onTrackPrevious()
+                }
                 CreateNotification.ACTION_PLAY -> if (isPlaying) {
                     onTrackPause()
                 } else {
                     onTrackPlay()
                 }
-                CreateNotification.ACTION_NEXT -> onTrackNext()
+                CreateNotification.ACTION_NEXT ->{
+                    onTrackNext()
+                }
             }
         }
     }
@@ -1559,7 +1568,6 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
         } else {
             onTrackPause()
         }
-
         mediaMetadata?.next_media?.let {
             mediaDetailViewModel.getNextEpisodeMediaMetadata(Video().apply {
                 type = it.type
@@ -1625,6 +1633,8 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                         if (element.id == currentSongId) {
                             Log.e("@@in", index.toString())
                             positionSong = index
+
+                            Log.e("@@krantipause1", positionSong.toString())
                         }
                     }
                 }
@@ -1653,6 +1663,18 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
                     if (element.id == currentSongId) {
                         Log.e("@@in", index.toString())
                         positionSong = index
+
+                        Log.e("@@krantipause2", positionSong.toString())
+                        if (!isfirsttime) {
+                            isfirsttime = true
+                            PreferenceUtils.getInstance().setNotiDataPref(
+                                this,
+                                positionSong.toString()
+                            )
+                        }
+
+                        Log.e("@@krantipauseprefimain", PreferenceUtils.getInstance().getNotiDataPref(this))
+
                     }
                 }
 
@@ -2144,10 +2166,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
 
 
     override fun onTrackPlay() {
+        Log.e("@@krantipause", positionSong.toString())
+        Log.e("@@krantipauseprefiplay", PreferenceUtils.getInstance().getNotiDataPref(this)
+        )
+
         if (episodes!!.isNotEmpty()) {
+
             CreateNotification.createNotification(
-                this@MediaDetailActivity, episodes!!.get(positionSong),
-                R.drawable.player_pause, positionSong, episodes!!.size - 1
+                this@MediaDetailActivity, episodes!!.get(PreferenceUtils.getInstance().getNotiDataPref(this).toInt()),
+                R.drawable.baseline_pause_24, PreferenceUtils.getInstance().getNotiDataPref(this).toInt(), episodes!!.size - 1
             )
             play.setImageResource(R.drawable.player_play)
             isPlaying = true
@@ -2161,11 +2188,15 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     override fun onTrackPause() {
+        Log.e("@@krantipause", positionSong.toString())
+
         if (episodes != null && episodes!!.isNotEmpty()) {
+/*
             CreateNotification.createNotification(
                 this@MediaDetailActivity, episodes!![positionSong],
                 R.drawable.ic_play_arrow_black_24dp, positionSong, episodes!!.size - 1
             )
+*/
             play.setImageResource(R.drawable.ic_play_arrow_black_24dp)
         }
         isPlaying = false
@@ -2176,12 +2207,21 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     override fun onTrackNext() {
-        Log.e("@@next", positionSong.toString())
-        positionSong++
-        CreateNotification.createNotification(
-            this@MediaDetailActivity, episodes!!.get(positionSong),
-            R.drawable.player_pause, positionSong, episodes!!.size - 1
+
+        positionSong=PreferenceUtils.getInstance().getNotiDataPref(this).toInt() +1
+
+        Log.e("@@krantinext", positionSong.toString())
+
+        PreferenceUtils.getInstance().setNotiDataPref(
+            this,
+            positionSong.toString()
         )
+        Log.e("@@krantipauseprefi_NEXT", PreferenceUtils.getInstance().getNotiDataPref(this))
+
+        /*CreateNotification.createNotification(
+            this@MediaDetailActivity, episodes!!.get(positionSong),
+            R.drawable.baseline_pause_24, positionSong, episodes!!.size - 1
+        )*/
         mediaMetadata?.next_media?.let {
             nextMediaMetadata?.let {
                 onGetVideoMetaDataSuccess(it)
@@ -2191,16 +2231,31 @@ class MediaDetailActivity : BaseScreenTrackingActivity(), AdapterClickListener,
     }
 
     override fun onTrackPrevious() {
-        positionSong--
-        CreateNotification.createNotification(
-            this@MediaDetailActivity, episodes!!.get(positionSong),
-            R.drawable.player_pause, positionSong, episodes!!.size - 1
-        )
+
+        positionSong=PreferenceUtils.getInstance().getNotiDataPref(this).toInt() -1
+
+        Log.e("@@krantiprevious", positionSong.toString())
+
+
+        Log.e("@@krantipauseprefiprev", PreferenceUtils.getInstance().getNotiDataPref(this))
+
+        /*  CreateNotification.createNotification(
+              this@MediaDetailActivity, episodes!!.get(positionSong),
+              R.drawable.baseline_pause_24, positionSong, episodes!!.size - 1
+          )*/
+        if(mediaMetadata?.prev_media!=null){
+            PreferenceUtils.getInstance().setNotiDataPref(
+                this,
+                positionSong.toString()
+            )
+        }
         mediaMetadata?.prev_media?.let {
             prevMediaMetadata?.let {
                 onGetVideoMetaDataSuccess(it)
             }
         }
+
+
 
     }
 

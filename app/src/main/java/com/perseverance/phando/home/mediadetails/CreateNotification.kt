@@ -86,7 +86,7 @@ object CreateNotification {
 
             notificationLayout.setTextViewText(R.id.tvAudioNameNotif, track.title)
             notificationLayout.setTextViewText(R.id.tvAppTitle, "Vyas")
-            notificationLayout.setImageViewResource(R.id.btnPlayPauseNotif, R.drawable.ic_play)
+            notificationLayout.setImageViewResource(R.id.btnPlayPauseNotif, R.drawable.player_pause)
             notificationLayout.setImageViewResource(R.id.iViewNotif,R.drawable.app_logo)
 
             notificationLayout.setProgressBar(R.id.seekBarNotif, 100, 10, false)
@@ -217,7 +217,7 @@ object CreateNotification {
         .diskCacheStrategy(DiskCacheStrategy.DATA)
 
     private fun setPlayPauseButtonState(contentView: RemoteViews, isPlaying: Boolean) {
-        val buttonIconRes = if (isPlaying) R.drawable.player_pause else R.drawable.ic_play
+        val buttonIconRes = if (isPlaying) R.drawable.baseline_pause_24 else R.drawable.ic_play_arrow_black_24dp
         contentView.setImageViewResource(R.id.btnPlayPauseNotif, buttonIconRes)
     }
 

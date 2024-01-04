@@ -3,8 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/grey"
     android:gravity="center_vertical"
     android:orientation="vertical"
+
     android:padding="2dp">
 
 
@@ -17,15 +19,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:padding="2dp"
-            />
+            android:padding="2dp" />
 
         <LinearLayout
-            android:orientation="vertical"
             android:id="@+id/arg_music_panel_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/iViewNotif">
+            android:layout_toEndOf="@id/iViewNotif"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/layInfoNotif"
@@ -38,7 +39,6 @@
                 android:weightSum="1">
 
                 <TextView
-                    android:textSize="@dimen/_8sdp"
                     android:id="@+id/tvAppTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -46,7 +46,9 @@
                     android:maxHeight="44dp"
                     android:paddingTop="5dp"
                     android:paddingBottom="2dp"
-                    android:text="@string/placeholder_song_title" />
+                    android:text="@string/placeholder_song_title"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_8sdp" />
 
 
                 <TextView
@@ -57,55 +59,53 @@
                     android:maxHeight="44dp"
                     android:paddingTop="5dp"
                     android:paddingBottom="2dp"
+                    android:visibility="gone"
+
                     android:text="@string/placeholder_song_title" />
 
                 <LinearLayout
                     android:id="@+id/layControlsNotif"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginEnd="@dimen/_5sdp"
                     android:layout_marginStart="5dp"
-                    android:gravity="center"
+                    android:layout_marginEnd="@dimen/_5sdp"
+                    android:gravity="end"
+                    android:visibility="gone"
                     android:orientation="horizontal">
 
                     <ImageButton
                         android:id="@+id/btnPlayPauseNotif"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:background="@android:color/transparent"
-                        android:padding="10dp"
-                        android:scaleType="fitXY"
-                        android:backgroundTint="@color/red_dark"
-                        android:src="@drawable/arg_pause"/>
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_play_arrow_black_24dp" />
 
                     <ImageButton
                         android:id="@+id/btnNextNotif"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:background="@android:color/transparent"
-                        android:padding="10dp"
-                        android:scaleType="fitXY"
-                        android:src="@drawable/arg_next"
-                        />
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/baseline_skip_next_24" />
 
                     <ImageButton
-                        android:visibility="gone"
                         android:id="@+id/btnCloseNotif"
                         android:layout_width="30dp"
                         android:layout_height="30dp"
                         android:background="@android:color/transparent"
+                        android:contentDescription="@string/close_button"
                         android:padding="5dp"
                         android:scaleType="fitXY"
                         android:src="@drawable/arg_close"
-                        android:contentDescription="@string/close_button"
+                        android:visibility="gone"
                         app:tint="?android:attr/colorControlNormal" />
                 </LinearLayout>
 
                 <RelativeLayout
-                    android:layout_marginBottom="@dimen/_5sdp"
                     android:id="@+id/relLayProgressNotif"
                     android:layout_width="match_parent"
                     android:layout_height="20dp"
+                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/_5sdp"
                     android:gravity="center_vertical">
 
                     <TextView
@@ -114,6 +114,7 @@
                         android:layout_height="match_parent"
                         android:layout_alignParentStart="true"
                         android:gravity="center"
+                        android:textColor="@color/black"
                         android:text="@string/placeholder_song_time"
                         android:textSize="12sp" />
 
@@ -135,6 +136,8 @@
                         android:layout_alignParentEnd="true"
                         android:gravity="center"
                         android:text="@string/placeholder_song_time"
+                        android:textColor="@color/black"
+
                         android:textSize="12sp" />
                 </RelativeLayout>
             </LinearLayout>
